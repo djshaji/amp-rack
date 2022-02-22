@@ -10,7 +10,7 @@
 
 class SharedLibrary {
 public:
-    SharedLibrary(std::string plugin_file);
+    SharedLibrary(char * plugin_file);
 
     std::string so_file ;
     std::vector<const LADSPA_Descriptor *> descriptors;

@@ -5,6 +5,7 @@
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
+    discoverPlugins();
 }
 
 void Engine::setRecordingDeviceId(int32_t deviceId) {
@@ -32,7 +33,6 @@ bool Engine::setEffectOn(bool isOn) {
         if (isOn) {
             success = openStreams() == oboe::Result::OK;
             if (success) {
-                discoverPlugins();
                 mFullDuplexPass.start();
                 mIsEffectOn = isOn;
             }
@@ -249,12 +249,16 @@ void Engine::onErrorAfterClose(oboe::AudioStream *oboeStream,
 }
 
 void Engine::discoverPlugins () {
+    IN
     if (libraries.size() != 0) {
         // we only run this once
         LOGE("tried to re-discover plugins! not allowed") ;
+        OUT
         return ;
     }
 
     SharedLibrary * sharedLibrary = new SharedLibrary ("libamp.so");
+    sharedLibrary->load();
     libraries.push_back(sharedLibrary);
+    OUT
 }

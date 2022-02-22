@@ -4,8 +4,8 @@ void SharedLibrary::setSampleRate (unsigned long _sampleRate) {
     sampleRate = _sampleRate ;
 }
 
-SharedLibrary::SharedLibrary (std::string plugin_file) {
-so_file = plugin_file ;
+SharedLibrary::SharedLibrary (char * plugin_file) {
+    so_file = std::string (plugin_file) ;
 }
 
 //> Returns NULL if ok, error otherwise
