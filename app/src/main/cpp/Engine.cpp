@@ -5,8 +5,6 @@
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
-    discoverPlugins();
-    addPluginToRack(0, 0);
 }
 
 void Engine::setRecordingDeviceId(int32_t deviceId) {
@@ -35,6 +33,8 @@ bool Engine::setEffectOn(bool isOn) {
             success = openStreams() == oboe::Result::OK;
             if (success) {
                 mFullDuplexPass.start();
+                discoverPlugins();
+                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }
         } else {
@@ -273,6 +273,7 @@ void Engine::buildPluginChain () {
         mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = p->descriptor->connect_port ;
         mFullDuplexPass.run [mFullDuplexPass.activePlugins] = p->descriptor->run ;
         mFullDuplexPass.handle [mFullDuplexPass.activePlugins] = p->handle ;
+        mFullDuplexPass.descriptor [mFullDuplexPass.activePlugins] = p->descriptor;
         mFullDuplexPass.activePlugins ++ ;
     }
 }

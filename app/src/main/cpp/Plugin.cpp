@@ -1,7 +1,7 @@
 #include "Plugin.h"
 
 Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate) {
-    if (descriptor == NULL) {
+    if (_descriptor == NULL) {
         LOGF ("[%s:%s] null descriptor passed", __FILE__, __PRETTY_FUNCTION__ );
         return ;
     }
@@ -15,15 +15,19 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
     }
 
     handle = (LADSPA_Handle *) descriptor -> instantiate (descriptor, sampleRate);
+    if (descriptor->activate) {
+        descriptor->activate (handle);
+    }
+
     LOGD("[%s] loaded plugin %s", __PRETTY_FUNCTION__ , descriptor->Name);
 
     for (int i = 0 ; i < descriptor->PortCount ; i ++) {
         LADSPA_PortDescriptor port = descriptor -> PortDescriptors [i];
         if (LADSPA_IS_PORT_AUDIO(port)) {
             if (LADSPA_IS_PORT_INPUT(port)) {
-                inputPort = port ;
+                inputPort = i ;
             } else if (LADSPA_IS_PORT_OUTPUT(port)) {
-                outputPort = port ;
+                outputPort = i ;
             }
         } else if (LADSPA_IS_PORT_OUTPUT(port)) {
             LOGE("[%s:%d] %s: ladspa port is output but not audio!", descriptor->Name, i, descriptor->PortNames[i]);

@@ -66,11 +66,29 @@ public:
             *outputFloats++ = 0.0; // silence
         }
 
+
+        /*
+        LADSPA_Data amplitude = 1 ;
+        connect_port [0] (handle [0], 0, &amplitude);
+        connect_port [0] (handle [0], 1, (LADSPA_Data *)inputData);
+        connect_port [0] (handle [0], 2, (LADSPA_Data *)outputData);
+        run [0] (handle [0], samplesToProcess);
+         */
+
+//        LOGD("input port %d output port %d", inputPorts [0], outputPorts [0]);
+
+
         for (int i = 0 ; i < activePlugins ; i ++) {
-            connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) inputData);
-            connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) outputData);
-            run [i] (handle [i], samplesToProcess);
+            if (inputPorts [i] != -1)
+                connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) inputData);
+            if (outputPorts [i] != -1)
+                connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) outputData);
+            if (run [i] == NULL)
+                LOGF ("run %d is null", i);
+            else
+                run [i] (handle [i], samplesToProcess);
         }
+
 
 //        OUT ;
         return oboe::DataCallbackResult::Continue;
