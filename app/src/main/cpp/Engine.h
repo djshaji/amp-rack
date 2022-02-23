@@ -6,6 +6,7 @@
 #include <thread>
 #include "FullDuplexPass.h"
 #include "SharedLibrary.h"
+#include "Plugin.h"
 
 class Engine : public oboe::AudioStreamCallback {
 public:
@@ -35,6 +36,7 @@ public:
 
     FullDuplexPass    mFullDuplexPass;
     std::vector <SharedLibrary *> libraries ;
+    std::vector<Plugin *> activePlugins ;
 private:
     bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
@@ -63,6 +65,10 @@ private:
 
 
     void discoverPlugins();
+
+    void addPluginToRack(int libraryIndex, int pluginIndex);
+
+    void buildPluginChain();
 } ;
 
 #endif // __ENGINE__H

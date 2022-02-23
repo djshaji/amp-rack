@@ -6,6 +6,7 @@
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
     discoverPlugins();
+    addPluginToRack(0, 0);
 }
 
 void Engine::setRecordingDeviceId(int32_t deviceId) {
@@ -258,7 +259,28 @@ void Engine::discoverPlugins () {
     }
 
     SharedLibrary * sharedLibrary = new SharedLibrary ("libamp.so");
+    sharedLibrary->setSampleRate(mSampleRate);
     sharedLibrary->load();
     libraries.push_back(sharedLibrary);
+    OUT
+}
+
+void Engine::buildPluginChain () {
+    mFullDuplexPass.activePlugins = 0;
+    for (Plugin *p: activePlugins) {
+        mFullDuplexPass.inputPorts [mFullDuplexPass.activePlugins] = p->inputPort ;
+        mFullDuplexPass.outputPorts [mFullDuplexPass.activePlugins] = p->outputPort ;
+        mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = p->descriptor->connect_port ;
+        mFullDuplexPass.run [mFullDuplexPass.activePlugins] = p->descriptor->run ;
+        mFullDuplexPass.handle [mFullDuplexPass.activePlugins] = p->handle ;
+        mFullDuplexPass.activePlugins ++ ;
+    }
+}
+
+void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
+    IN
+    Plugin * plugin = new Plugin (libraries.at(libraryIndex)->descriptors.at(pluginIndex), (long) mSampleRate);
+    activePlugins .push_back(plugin);
+    buildPluginChain();
     OUT
 }

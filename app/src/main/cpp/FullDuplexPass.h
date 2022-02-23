@@ -22,6 +22,7 @@
 #include "FullDuplexStream.h"
 
 class FullDuplexPass : public FullDuplexStream {
+    //| TODO: Limit number of plugins active in free version?
 public:
     #define MAX_PLUGINS 10 // for now
     void (*connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
@@ -29,10 +30,12 @@ public:
                          LADSPA_Data * DataLocation);
     void (*run [MAX_PLUGINS])(LADSPA_Handle Instance,
                 unsigned long SampleCount);
-
-
     void * handle [MAX_PLUGINS] ;
     const LADSPA_Descriptor * descriptor [MAX_PLUGINS] ;
+    int inputPorts [MAX_PLUGINS] ;
+    int outputPorts [MAX_PLUGINS] ;
+    int activePlugins =  0 ;
+
     virtual oboe::DataCallbackResult
     onBothStreamsReady(
             std::shared_ptr<oboe::AudioStream> inputStream,
@@ -61,6 +64,12 @@ public:
         int32_t samplesLeft = numOutputSamples - numInputSamples;
         for (int32_t i = 0; i < samplesLeft; i++) {
             *outputFloats++ = 0.0; // silence
+        }
+
+        for (int i = 0 ; i < activePlugins ; i ++) {
+            connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) inputData);
+            connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) outputData);
+            run [i] (handle [i], samplesToProcess);
         }
 
 //        OUT ;
