@@ -8,11 +8,11 @@
 #include "PluginControl.h"
 
 class Plugin {
-
-    std::vector <PluginControl *> pluginControls ;
     LADSPA_Data ** portControls ;
     unsigned long sampleRate ;
 public:
+    bool active = true ;
+    std::vector <PluginControl *> pluginControls ;
     const LADSPA_Descriptor * descriptor ;
     int inputPort = -1;
     int outputPort = -1;

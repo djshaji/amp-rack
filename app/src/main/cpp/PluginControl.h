@@ -22,17 +22,17 @@ class PluginControl {
     unsigned long sample_rate = 48000;
 
     enum Type {
-        FLOAT,
-        INT,
-        TOGGLE
+        FLOAT = 0,
+        INT = 1,
+        TOGGLE = 2
     };
-    Type type ;
 
 public:
 
     /* value in the plugin */
     LADSPA_Data val;
     LADSPA_Data *def;
+    Type type ;
 
     LADSPA_Data control_rounding(LADSPA_Data _val);
 

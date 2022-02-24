@@ -10,12 +10,17 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     Context context;
     SwitchMaterial onOff;
     MaterialButton record ;
+    PopupMenu addPluginMenu ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
 
     // Used to load the 'amprack' library on application startup.
@@ -48,6 +54,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 toggleEffect(!b);
             }
         });
+
+        ExtendedFloatingActionButton fab = findViewById(R.id.fab);
+        addPluginMenu = new PopupMenu(context, fab);
+        int libraries = AudioEngine.getSharedLibraries();
+        for (int i = 0 ; i < libraries ; i ++) {
+            for (int plugin = 0 ; plugin < AudioEngine.getPlugins(i) ; plugin ++) {
+                // library * 100 + plugin i.e. first plugin from first library = 0
+                addPluginMenu.getMenu().add()
+            }
+        }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         AudioEngine.setDefaultStreamValues(context);
     }
 

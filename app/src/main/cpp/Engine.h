@@ -31,6 +31,8 @@ public:
 
     bool setAudioApi(oboe::AudioApi);
     bool isAAudioRecommended(void);
+    void addPluginToRack(int libraryIndex, int pluginIndex);
+
     int32_t           mSampleRate = oboe::kUnspecified;
     void * handle ;
 
@@ -65,9 +67,6 @@ private:
 
 
     void discoverPlugins();
-
-    void addPluginToRack(int libraryIndex, int pluginIndex);
-
     void buildPluginChain();
 } ;
 

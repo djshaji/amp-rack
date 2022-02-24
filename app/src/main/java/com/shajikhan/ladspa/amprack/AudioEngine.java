@@ -5,6 +5,23 @@ import android.media.AudioManager;
 import android.os.Build;
 
 public class AudioEngine {
+    static native int getSharedLibraries ();
+    static native String getLibraryName (int library) ;
+    static native int getPlugins (int library) ;
+    static native String getPluginName (int library, int plugin);
+    // activePlugins
+    static native int getPluginControls (int plugin) ;
+    static native float [] getPluginControlValues (int plugin, int control) ;
+
+    // return active plugin *ID*
+    static native int addPlugin (int library, int plugin) ;
+    static native boolean deletePlugin (int plugin) ;
+
+    static native void setPluginControl (int plugin, int control, float value);
+    static native int movePlugin (int plugin, int position) ;
+
+    static native boolean togglePlugin (int plugin, boolean state) ;
+
     static native boolean create () ;
     static native boolean isAAudioRecommended () ;
     static native boolean setAPI(int apiType);
