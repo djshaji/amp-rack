@@ -68,6 +68,8 @@ private:
 
     void discoverPlugins();
     void buildPluginChain();
+
+    void loadPlugins();
 } ;
 
 #endif // __ENGINE__H

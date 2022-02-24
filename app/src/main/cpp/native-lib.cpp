@@ -135,12 +135,20 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getSharedLibraries(JNIEnv *env, jclass clazz) {
     // TODO: implement getSharedLibraries()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
     return engine->libraries.size() ;
 }
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getPlugins(JNIEnv *env, jclass clazz, jint library) {
     // TODO: implement getPlugins()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
     return engine->libraries.at(library)->total_plugins ;
 }
 extern "C"
@@ -148,6 +156,10 @@ JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginControls(JNIEnv *env, jclass clazz,
                                                                 jint plugin) {
     // TODO: implement getPluginControls()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
     return engine->activePlugins.at(plugin)->pluginControls.size();
 }
 extern "C"
@@ -155,6 +167,10 @@ JNIEXPORT jfloatArray JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginControlValues(JNIEnv *env, jclass clazz,
                                                                      jint plugin, jint control) {
     // TODO: implement getPluginControlValues()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
     // [default, min, max, type]
     PluginControl *p = engine ->activePlugins.at(plugin)->pluginControls.at(control) ;
     jfloatArray r = env ->NewFloatArray(4);
@@ -167,6 +183,10 @@ JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_addPlugin(JNIEnv *env, jclass clazz, jint library,
                                                         jint plugin) {
     // TODO: implement addPlugin()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
     engine->addPluginToRack(library, plugin);
     return engine->activePlugins.size();
 }
@@ -181,6 +201,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControl(JNIEnv *env, jcla
                                                                jint plugin, jint control,
                                                                jfloat value) {
     // TODO: implement setPluginControl()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return ;
+    }
     engine->activePlugins.at(plugin)->pluginControls.at(control)->setValue(value);
 }
 extern "C"
@@ -194,6 +218,10 @@ JNIEXPORT jboolean JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_togglePlugin(JNIEnv *env, jclass clazz, jint plugin,
                                                            jboolean state) {
     // TODO: implement togglePlugin()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return false;
+    }
     engine->activePlugins.at(plugin)->active = state ;
 }
 extern "C"
@@ -201,10 +229,31 @@ JNIEXPORT jstring JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getLibraryName(JNIEnv *env, jclass clazz,
                                                              jint library) {
     // TODO: implement getLibraryName()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return NULL;
+    }
+    return env->NewStringUTF(engine->libraries.at(library)->so_file.c_str()) ;
 }
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginName(JNIEnv *env, jclass clazz, jint library,
                                                             jint plugin) {
     // TODO: implement getPluginName()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return NULL;
+    }
+    return env->NewStringUTF(engine->libraries.at(library)->descriptors.at(plugin)->Name);
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginName(JNIEnv *env, jclass clazz,
+                                                                  jint plugin) {
+    // TODO: implement getActivePluginName()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return NULL;
+    }
+    return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->Name);
 }

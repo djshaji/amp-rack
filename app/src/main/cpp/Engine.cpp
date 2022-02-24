@@ -5,6 +5,7 @@
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
+    discoverPlugins();
 }
 
 void Engine::setRecordingDeviceId(int32_t deviceId) {
@@ -33,7 +34,7 @@ bool Engine::setEffectOn(bool isOn) {
             success = openStreams() == oboe::Result::OK;
             if (success) {
                 mFullDuplexPass.start();
-                discoverPlugins();
+                loadPlugins();
                 addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }
@@ -259,8 +260,6 @@ void Engine::discoverPlugins () {
     }
 
     SharedLibrary * sharedLibrary = new SharedLibrary ("libamp.so");
-    sharedLibrary->setSampleRate(mSampleRate);
-    sharedLibrary->load();
     libraries.push_back(sharedLibrary);
     OUT
 }
@@ -284,4 +283,11 @@ void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
     activePlugins .push_back(plugin);
     buildPluginChain();
     OUT
+}
+
+void Engine::loadPlugins () {
+    for (SharedLibrary *sharedLibrary: libraries) {
+        sharedLibrary->setSampleRate(mSampleRate);
+        sharedLibrary->load();
+    }
 }

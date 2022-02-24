@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
+        AudioEngine.create();
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
@@ -59,16 +62,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         addPluginMenu = new PopupMenu(context, fab);
         int libraries = AudioEngine.getSharedLibraries();
         for (int i = 0 ; i < libraries ; i ++) {
+            SubMenu subMenu = addPluginMenu.getMenu().addSubMenu(AudioEngine.getLibraryName(i));
             for (int plugin = 0 ; plugin < AudioEngine.getPlugins(i) ; plugin ++) {
                 // library * 100 + plugin i.e. first plugin from first library = 0
-                addPluginMenu.getMenu().add()
+                subMenu.add(AudioEngine.getPluginName(i, plugin));
             }
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                addPluginMenu.show();
             }
         });
 
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
-        AudioEngine.create();
+//        AudioEngine.create(); // originally was here
     }
     @Override
     protected void onPause() {
