@@ -3,6 +3,7 @@ package com.shajikhan.ladspa.amprack;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     SwitchMaterial onOff;
     MaterialButton record ;
     PopupMenu addPluginMenu ;
+    RecyclerView recyclerView ;
+    DataAdapter dataAdapter ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
 
     // Used to load the 'amprack' library on application startup.
@@ -76,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(dataAdapter);
+
+        // add sample item to recylcer view here
         AudioEngine.setDefaultStreamValues(context);
     }
 
