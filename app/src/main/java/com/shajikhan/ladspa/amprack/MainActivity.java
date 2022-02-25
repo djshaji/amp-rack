@@ -3,6 +3,7 @@ package com.shajikhan.ladspa.amprack;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PopupMenu addPluginMenu ;
     RecyclerView recyclerView ;
     DataAdapter dataAdapter ;
+    RecyclerView.LayoutManager layoutManager ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
 
     // Used to load the 'amprack' library on application startup.
@@ -80,9 +82,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         recyclerView = findViewById(R.id.recyclerView);
+        /*
+        layoutManager = new RecyclerView.LayoutManager() {
+            @Override
+            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+                return null;
+            }
+        } ;
+        recyclerView.setLayoutManager(layoutManager);
+         */
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dataAdapter = new DataAdapter();
         recyclerView.setAdapter(dataAdapter);
 
         // add sample item to recylcer view here
+        dataAdapter.addItem(0, 1);
         AudioEngine.setDefaultStreamValues(context);
     }
 
