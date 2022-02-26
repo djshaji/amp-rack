@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/drawable/rounded_corners_transparent.xml" value="0.292" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/activity_main.xml" value="0.4851586489252815" />
-        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/plugin_ui.xml" value="0.5283630470016207" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/plugin_ui.xml" value="0.5207100591715976" />
       </map>
     </option>
   </component>

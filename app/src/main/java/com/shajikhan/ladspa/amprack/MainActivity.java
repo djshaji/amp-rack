@@ -1,5 +1,6 @@
 package com.shajikhan.ladspa.amprack;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -9,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView recyclerView ;
     DataAdapter dataAdapter ;
     RecyclerView.LayoutManager layoutManager ;
+    int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
 
     // Used to load the 'amprack' library on application startup.
@@ -55,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
+
+        int color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
+        getWindow().setStatusBarColor(color);
+        color = adjustAlpha(color, .5f);
+        primaryColor = color ;
         onOff = findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -82,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         recyclerView = findViewById(R.id.recyclerView);
+//        recyclerView.setBackgroundColor(color);
         /*
         layoutManager = new RecyclerView.LayoutManager() {
             @Override
@@ -96,7 +107,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         recyclerView.setAdapter(dataAdapter);
 
         // add sample item to recylcer view here
+        dataAdapter.setColor(primaryColor);
         dataAdapter.addItem(0, 1);
+        dataAdapter.addItem(1, 2);
+        dataAdapter.notifyDataSetChanged();
         AudioEngine.setDefaultStreamValues(context);
     }
 
@@ -180,4 +194,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             toggleEffect(false);
         }
     }
+
+    public static int getDominantColor(Bitmap bitmap) {
+        // haha!
+        return bitmap.getPixel(0, 0) ;
+    }
+
+    @ColorInt
+    public static int adjustAlpha(@ColorInt int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(alpha, red, green, blue);
+    }
+
 }
