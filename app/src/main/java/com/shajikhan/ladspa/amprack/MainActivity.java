@@ -24,8 +24,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +38,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -122,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
-                builder.setView(inflater.inflate(R.layout.audio_devices_selector, null))
+                LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.audio_devices_selector, null) ;
+                builder.setView(linearLayout)
                         // Add action buttons
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
@@ -137,10 +146,56 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         });
 
                 int i = 0 ;
-                String [] inputs ;
-                for (i = 0 ; i < audioDevicesInput.length ; i ++) {
+//                HashMap<CharSequence, Integer> inputs = new HashMap<>();
+//                HashMap <CharSequence, Integer> outputs = new HashMap<>();
+                ArrayList <String> input_s = new ArrayList<>();
+                ArrayList <String> output_s = new ArrayList<>();
 
+                for (i = 0 ; i < audioDevicesInput.length ; i ++) {
+                    String name = typeToString(audioDevicesInput[i].getType());
+//                    inputs.put(name, audioDevicesInput [i].getId()) ;
+                    input_s.add(name);
                 }
+
+                for (i = 0 ; i < audioDevicesOutput.length ; i ++) {
+                    String name = typeToString(audioDevicesOutput[i].getType());
+//                    outputs.put(name, audioDevicesOutput [i].getId()) ;
+                    output_s.add(name);
+                }
+
+                ArrayAdapter input_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item,input_s);
+                input_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                ArrayAdapter output_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item,output_s);
+                output_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                Spinner in = (Spinner) linearLayout.getChildAt(1) ;
+                Spinner out = (Spinner) linearLayout.getChildAt(3) ;
+                in.setAdapter(input_a);
+                out.setAdapter(output_a);
+
+                in.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        AudioEngine.setRecordingDeviceId(audioDevicesInput[i].getId());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                out.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        AudioEngine.setPlaybackDeviceId(audioDevicesOutput[i].getId());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
 
                 builder.show();
             }
@@ -267,4 +322,53 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return Color.argb(alpha, red, green, blue);
     }
 
+    String typeToString(int type){
+        switch (type) {
+            case AudioDeviceInfo.TYPE_AUX_LINE:
+                return "auxiliary line-level connectors";
+            case AudioDeviceInfo.TYPE_BLUETOOTH_A2DP:
+                return "Bluetooth device supporting the A2DP profile";
+            case AudioDeviceInfo.TYPE_BLUETOOTH_SCO:
+                return "Bluetooth device typically used for telephony";
+            case AudioDeviceInfo.TYPE_BUILTIN_EARPIECE:
+                return "built-in earphone speaker";
+            case AudioDeviceInfo.TYPE_BUILTIN_MIC:
+                return "built-in microphone";
+            case AudioDeviceInfo.TYPE_BUILTIN_SPEAKER:
+                return "built-in speaker";
+            case AudioDeviceInfo.TYPE_BUS:
+                return "BUS";
+            case AudioDeviceInfo.TYPE_DOCK:
+                return "DOCK";
+            case AudioDeviceInfo.TYPE_FM:
+                return "FM";
+            case AudioDeviceInfo.TYPE_FM_TUNER:
+                return "FM tuner";
+            case AudioDeviceInfo.TYPE_HDMI:
+                return "HDMI";
+            case AudioDeviceInfo.TYPE_HDMI_ARC:
+                return "HDMI audio return channel";
+            case AudioDeviceInfo.TYPE_IP:
+                return "IP";
+            case AudioDeviceInfo.TYPE_LINE_ANALOG:
+                return "line analog";
+            case AudioDeviceInfo.TYPE_LINE_DIGITAL:
+                return "line digital";
+            case AudioDeviceInfo.TYPE_TELEPHONY:
+                return "telephony";
+            case AudioDeviceInfo.TYPE_TV_TUNER:
+                return "TV tuner";
+            case AudioDeviceInfo.TYPE_USB_ACCESSORY:
+                return "USB accessory";
+            case AudioDeviceInfo.TYPE_USB_DEVICE:
+                return "USB device";
+            case AudioDeviceInfo.TYPE_WIRED_HEADPHONES:
+                return "wired headphones";
+            case AudioDeviceInfo.TYPE_WIRED_HEADSET:
+                return "wired headset";
+            default:
+            case AudioDeviceInfo.TYPE_UNKNOWN:
+                return "unknown";
+        }
+    }
 }
