@@ -21,10 +21,12 @@ Java_com_shajikhan_ladspa_amprack_MainActivity_stringFromJNI(
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_create(JNIEnv *env, jclass clazz) {
+    IN ;
     if (engine == nullptr) {
         engine = new Engine () ;
     }
 
+    OUT ;
     return (engine != nullptr) ? JNI_TRUE : JNI_FALSE;
 }
 extern "C"

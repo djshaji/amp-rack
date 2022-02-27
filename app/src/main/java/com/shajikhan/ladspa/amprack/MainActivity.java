@@ -75,12 +75,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ExtendedFloatingActionButton fab = findViewById(R.id.fab);
         addPluginMenu = new PopupMenu(context, fab);
+
         int libraries = AudioEngine.getSharedLibraries();
         for (int i = 0 ; i < libraries ; i ++) {
             SubMenu subMenu = addPluginMenu.getMenu().addSubMenu(AudioEngine.getLibraryName(i));
             for (int plugin = 0 ; plugin < AudioEngine.getPlugins(i) ; plugin ++) {
                 // library * 100 + plugin i.e. first plugin from first library = 0
-                subMenu.add(AudioEngine.getPluginName(i, plugin));
+                MenuItem menuItem = subMenu.add(AudioEngine.getPluginName(i, plugin));
+                int finalI = i;
+                int finalPlugin = plugin;
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        int ret = AudioEngine.addPlugin(finalI, finalPlugin) ;
+                        dataAdapter.addItem(finalI * 100 + finalPlugin, ret);
+                        return false;
+                    }
+                });
             }
         }
 
@@ -108,9 +119,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // add sample item to recylcer view here
         dataAdapter.setColor(primaryColor);
+        /*
         dataAdapter.addItem(0, 1);
         dataAdapter.addItem(1, 2);
         dataAdapter.notifyDataSetChanged();
+
+         */
         AudioEngine.setDefaultStreamValues(context);
     }
 
