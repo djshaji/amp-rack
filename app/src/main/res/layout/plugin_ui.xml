@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:background="@drawable/rounded_corners_transparent"
             android:layout_height="wrap_content">
+            <!-- plugin base linear layout-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -44,27 +45,29 @@
                     android:layout_margin="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_marginTop="-20dp"
-                        android:layout_marginLeft="0dp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/comfortaa"
-                        android:text="Gain"
-                        android:rotation="-90"
-                        android:textSize="12dp"/>
-                    <SeekBar
-                        android:padding="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/comfortaa"
-                        android:padding="20dp"/>
+                    android:orientation="vertical">
+                    <!--
+                        <TextView
+                            android:layout_marginTop="-20dp"
+                            android:layout_marginLeft="0dp"
+                            android:textStyle="bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/comfortaa"
+                            android:text="Gain"
+                            android:rotation="-90"
+                            android:textSize="12dp"/>
+                        <SeekBar
+                            android:padding="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/comfortaa"
+                            android:padding="20dp"/>
+                    -->
                 </LinearLayout>
                 <LinearLayout
                     android:layout_marginLeft="10dp"
@@ -78,12 +81,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:layout_gravity="end"
+                        android:background="@drawable/rounded_corners_transparent"
                         android:drawableLeft="@drawable/ic_baseline_keyboard_arrow_up_24"
                         android:gravity="bottom"/>
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="30dp"
                         android:padding="0dp"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corners_transparent"
                         android:layout_marginRight="10dp"
                         android:layout_gravity="end"
                         android:drawableLeft="@drawable/ic_baseline_keyboard_arrow_down_24"

@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
-//        AudioEngine.create(); // originally was here
+        AudioEngine.create(); // originally was here
     }
     @Override
     protected void onPause() {

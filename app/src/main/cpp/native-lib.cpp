@@ -259,3 +259,14 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginName(JNIEnv *env, j
     }
     return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->Name);
 }
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlName(JNIEnv *env, jclass clazz, jint plugin,
+                                                             jint control) {
+    // TODO: implement getControlName()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return NULL;
+    }
+    return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->PortNames [control]);
+}
