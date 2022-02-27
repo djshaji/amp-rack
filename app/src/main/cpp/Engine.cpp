@@ -265,6 +265,8 @@ void Engine::discoverPlugins () {
     libraries.push_back(sharedLibrary1);
     SharedLibrary * sharedLibrary2 = new SharedLibrary ("libcrybabyx.so");
     libraries.push_back(sharedLibrary2);
+    SharedLibrary * sharedLibrary3 = new SharedLibrary ("libtubex.so");
+    libraries.push_back(sharedLibrary3);
     OUT
 }
 

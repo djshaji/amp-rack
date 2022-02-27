@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     DataAdapter dataAdapter ;
     AudioManager audioManager ;
     AudioDeviceInfo [] audioDevicesInput, audioDevicesOutput ;
+    int defaultInputDevice = 0 ;
+    int defaultOutputDevice = 0 ;
     RecyclerView.LayoutManager layoutManager ;
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -174,10 +176,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 in.setAdapter(input_a);
                 out.setAdapter(output_a);
 
+                in.setSelection(defaultInputDevice);
+                out.setSelection(defaultOutputDevice);
+
                 in.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         AudioEngine.setRecordingDeviceId(audioDevicesInput[i].getId());
+                        defaultInputDevice = i ;
                     }
 
                     @Override
@@ -189,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         AudioEngine.setPlaybackDeviceId(audioDevicesOutput[i].getId());
+                        defaultInputDevice = i ;
                     }
 
                     @Override
