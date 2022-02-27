@@ -12,6 +12,8 @@
             <option value="/mnt/data/djshaji/Projects/AmpRack" />
             <option value="/mnt/data/djshaji/Projects/AmpRack/app" />
             <option value="/mnt/data/djshaji/Projects/AmpRack/app/amp" />
+            <option value="/mnt/data/djshaji/Projects/AmpRack/app/crybabyx" />
+            <option value="/mnt/data/djshaji/Projects/AmpRack/app/distortionx" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

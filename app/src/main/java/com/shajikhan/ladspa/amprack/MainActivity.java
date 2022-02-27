@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PopupMenu addPluginMenu ;
     RecyclerView recyclerView ;
     DataAdapter dataAdapter ;
+    AudioManager audioManager ;
+    AudioDeviceInfo [] audioDevicesInput, audioDevicesOutput ;
     RecyclerView.LayoutManager layoutManager ;
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -60,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
+        audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
 
         int color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
         getWindow().setStatusBarColor(color);
@@ -99,6 +109,40 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onClick(View view) {
                 addPluginMenu.show();
+            }
+        });
+
+        MaterialButton settings = findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                // Get the layout inflater
+                LayoutInflater inflater = getLayoutInflater();
+
+                // Inflate and set the layout for the dialog
+                // Pass null as the parent view because its going in the dialog layout
+                builder.setView(inflater.inflate(R.layout.audio_devices_selector, null))
+                        // Add action buttons
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // sign in the user ...
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+
+                int i = 0 ;
+                String [] inputs ;
+                for (i = 0 ; i < audioDevicesInput.length ; i ++) {
+
+                }
+
+                builder.show();
             }
         });
 

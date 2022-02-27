@@ -261,6 +261,10 @@ void Engine::discoverPlugins () {
 
     SharedLibrary * sharedLibrary = new SharedLibrary ("libamp.so");
     libraries.push_back(sharedLibrary);
+    SharedLibrary * sharedLibrary1 = new SharedLibrary ("libdistortionx.so");
+    libraries.push_back(sharedLibrary1);
+    SharedLibrary * sharedLibrary2 = new SharedLibrary ("libcrybabyx.so");
+    libraries.push_back(sharedLibrary2);
     OUT
 }
 

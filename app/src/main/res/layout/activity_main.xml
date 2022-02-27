@@ -43,6 +43,7 @@
                 android:fontFamily="@font/gruppo"
                 android:text="@string/app_name"
                 android:textStyle="bold"
+                android:layout_weight="1"
                 android:shadowRadius="5"
                 android:shadowColor="@color/white"
                 android:textColor="@color/white"
@@ -51,15 +52,21 @@
                 android:layout_width="wrap_content"
                 android:id="@+id/onoff"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="0dp"/>
             <ToggleButton
                 android:layout_marginLeft="5dp"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:textOff="Record"
+                android:textOff="Rec"
                 android:background="@android:color/transparent"
                 android:textOn="Stop"
                 android:drawableRight="@drawable/ic_baseline_fiber_manual_record_24"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="50dp"
+                android:id="@+id/settings"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/ic_baseline_settings_24"/>
 
         </LinearLayout>
 

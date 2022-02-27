@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "Amp Rack"
 include ':app'
 include ':app:amp'
+include ':app:distortionx'
+include ':app:crybabyx'
