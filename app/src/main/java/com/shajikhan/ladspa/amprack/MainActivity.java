@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     int defaultInputDevice = 0 ;
     int defaultOutputDevice = 0 ;
     RecyclerView.LayoutManager layoutManager ;
+    LinearLayout linearLayoutPluginDialog ;
+    PluginDialogAdapter pluginDialogAdapter ;
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
 
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         context = this ;
 
         AudioEngine.create();
+        // load included plugins
+        loadPlugins();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -89,29 +93,40 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        pluginDialog = createPluginDialog();
+
+        RecyclerView recyclerView1 = (RecyclerView) linearLayoutPluginDialog.getChildAt(2);
+        recyclerView1.setLayoutManager(new LinearLayoutManager(this));
+        pluginDialogAdapter = new PluginDialogAdapter();
+        pluginDialogAdapter.setMainActivity(context, this);
+        recyclerView1.setAdapter(pluginDialogAdapter);
+
         ExtendedFloatingActionButton fab = findViewById(R.id.fab);
         addPluginMenu = new PopupMenu(context, fab);
 
         int libraries = AudioEngine.getSharedLibraries();
+        Log.d(TAG, "Creating dialog for " + libraries + " libraries");
         for (int i = 0 ; i < libraries ; i ++) {
             SubMenu subMenu = addPluginMenu.getMenu().addSubMenu(AudioEngine.getLibraryName(i));
             for (int plugin = 0 ; plugin < AudioEngine.getPlugins(i) ; plugin ++) {
                 // library * 100 + plugin i.e. first plugin from first library = 0
-                MenuItem menuItem = subMenu.add(AudioEngine.getPluginName(i, plugin));
+                String name = AudioEngine.getPluginName(i, plugin);
+                MenuItem menuItem = subMenu.add(name);
                 int finalI = i;
                 int finalPlugin = plugin;
+                pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name);
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         int ret = AudioEngine.addPlugin(finalI, finalPlugin) ;
                         dataAdapter.addItem(finalI * 100 + finalPlugin, ret);
+//                        pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name);
                         return false;
                     }
                 });
             }
         }
 
-        pluginDialog = createPluginDialog();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,13 +245,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
-        // load included plugins
-        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
-        for (String s: tapPlugins) {
-            AudioEngine.loadLibrary("lib" + s);
-        }
 
-        AudioEngine.loadPlugins();
         AudioEngine.setDefaultStreamValues(context);
     }
 
@@ -389,8 +398,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = getLayoutInflater();
 
-        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
-        builder.setView(linearLayout)
+        linearLayoutPluginDialog = (LinearLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
+        builder.setView(linearLayoutPluginDialog)
                 // Add action buttons
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -402,4 +411,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return builder.create() ;
     }
 
+    public void addPluginToRack (int pluginID) {
+        int library = pluginID / 100 ;
+        int plug = pluginID - library ;
+        int ret = AudioEngine.addPlugin(library, plug) ;
+        dataAdapter.addItem(pluginID, ret);
+
+    }
+
+    void loadPlugins () {
+        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
+        for (String s: tapPlugins) {
+            AudioEngine.loadLibrary("lib" + s);
+        }
+
+        AudioEngine.loadPlugins();
+
+    }
 }
