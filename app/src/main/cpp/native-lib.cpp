@@ -270,3 +270,29 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlName(JNIEnv *env, jclass
     }
     return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->PortNames [control]);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_loadLibrary(JNIEnv *env, jclass clazz, jstring filename) {
+    // TODO: implement loadLibrary()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return ;
+    }
+    const char *nativeString = env->GetStringUTFChars(filename, 0);
+
+    // use your string
+
+    engine->loadPlugin(const_cast<char *>(nativeString));
+    env->ReleaseStringUTFChars(filename, nativeString);
+
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_loadPlugins(JNIEnv *env, jclass clazz) {
+    // TODO: implement loadPlugins()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return ;
+    }
+    engine ->loadPlugins();
+}

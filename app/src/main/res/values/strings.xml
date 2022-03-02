@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">AmpRack</string>
+    <string-array name="tap_plugins">
+        <item>tap_autopan.so</item>
+        <item>tap_chorusflanger.so</item>
+        <item>tap_deesser.so</item>
+        <item>tap_doubler.so</item>
+        <item>tap_dynamics_m.so</item>
+        <item>tap_dynamics_st.so</item>
+        <item>tap_echo.so</item>
+        <item>tap_eqbw.so</item>
+        <item>tap_eq.so</item>
+        <item>tap_limiter.so</item>
+        <item>tap_pinknoise.so</item>
+        <item>tap_pitch.so</item>
+        <item>tap_reflector.so</item>
+        <item>tap_reverb.so</item>
+        <item>tap_rotspeak.so</item>
+        <item>tap_sigmoid.so</item>
+        <item>tap_tremolo.so</item>
+        <item>tap_tubewarmth.so</item>
+        <item>tap_vibrato.so</item>
+    </string-array>
 </resources>

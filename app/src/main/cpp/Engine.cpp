@@ -5,8 +5,8 @@
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
-    discoverPlugins();
-    loadPlugins();
+//    discoverPlugins();
+//    loadPlugins();
 }
 
 void Engine::setRecordingDeviceId(int32_t deviceId) {
@@ -250,8 +250,16 @@ void Engine::onErrorAfterClose(oboe::AudioStream *oboeStream,
          oboe::convertToText(error));
 }
 
+void Engine::loadPlugin(char * filename) {
+    IN
+    SharedLibrary * sharedLibrary = new SharedLibrary (filename);
+    libraries.push_back(sharedLibrary);
+    OUT
+}
+
 void Engine::discoverPlugins () {
     IN
+
     if (libraries.size() != 0) {
         // we only run this once
         LOGE("tried to re-discover plugins! not allowed") ;
@@ -265,8 +273,10 @@ void Engine::discoverPlugins () {
     libraries.push_back(sharedLibrary1);
     SharedLibrary * sharedLibrary2 = new SharedLibrary ("libcrybabyx.so");
     libraries.push_back(sharedLibrary2);
-    SharedLibrary * sharedLibrary3 = new SharedLibrary ("libtubex.so");
+    SharedLibrary * sharedLibrary3 = new SharedLibrary ("/data/data/com.shajikhan.ladspa.amprack/lib/libtubex.so");
     libraries.push_back(sharedLibrary3);
+    SharedLibrary * sharedLibrary4 = new SharedLibrary ("/data/data/com.shajikhan.ladspa.plugins.tap/lib/libtap_eq.so");
+    libraries.push_back(sharedLibrary4);
     OUT
 }
 

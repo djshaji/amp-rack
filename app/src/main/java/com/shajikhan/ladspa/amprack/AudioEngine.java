@@ -5,6 +5,8 @@ import android.media.AudioManager;
 import android.os.Build;
 
 public class AudioEngine {
+    static native void loadLibrary (String filename);
+    static native void loadPlugins ();
     static native int getSharedLibraries ();
     static native String getLibraryName (int library) ;
     static native int getPlugins (int library) ;

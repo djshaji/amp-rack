@@ -20,7 +20,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
@@ -30,8 +29,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -40,8 +37,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -51,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PopupMenu addPluginMenu ;
     RecyclerView recyclerView ;
     DataAdapter dataAdapter ;
+    AlertDialog pluginDialog ;
     AudioManager audioManager ;
     AudioDeviceInfo [] audioDevicesInput, audioDevicesOutput ;
     int defaultInputDevice = 0 ;
@@ -115,10 +111,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
+        pluginDialog = createPluginDialog();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addPluginMenu.show();
+//                addPluginMenu.show();
+                pluginDialog.show();
             }
         });
 
@@ -231,6 +229,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         dataAdapter.notifyDataSetChanged();
 
          */
+
+        // load included plugins
+        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
+        for (String s: tapPlugins) {
+            AudioEngine.loadLibrary("lib" + s);
+        }
+
+        AudioEngine.loadPlugins();
         AudioEngine.setDefaultStreamValues(context);
     }
 
@@ -378,4 +384,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 return "unknown";
         }
     }
+
+    AlertDialog createPluginDialog () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = getLayoutInflater();
+
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
+        builder.setView(linearLayout)
+                // Add action buttons
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                    }
+                }) ;
+
+        return builder.create() ;
+    }
+
 }

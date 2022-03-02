@@ -39,6 +39,8 @@ public:
     FullDuplexPass    mFullDuplexPass;
     std::vector <SharedLibrary *> libraries ;
     std::vector<Plugin *> activePlugins ;
+    void loadPlugin(char *filename);
+    void loadPlugins();
 private:
     bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
@@ -69,7 +71,6 @@ private:
     void discoverPlugins();
     void buildPluginChain();
 
-    void loadPlugins();
 } ;
 
 #endif // __ENGINE__H
