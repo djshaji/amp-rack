@@ -25,17 +25,29 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
         LADSPA_PortDescriptor port = descriptor -> PortDescriptors [i];
         if (LADSPA_IS_PORT_AUDIO(port)) {
             if (LADSPA_IS_PORT_INPUT(port)) {
-                inputPort = i ;
+                if (inputPort == -1)
+                    inputPort = i ;
             } else if (LADSPA_IS_PORT_OUTPUT(port)) {
-                outputPort = i ;
+                if (outputPort == -1)
+                    outputPort = i ;
             }
         } else if (LADSPA_IS_PORT_OUTPUT(port)) {
             LOGE("[%s:%d] %s: ladspa port is output but not audio!", descriptor->Name, i, descriptor->PortNames[i]);
-            outputPort = port ;
+            // this, erm, doesn't work
+            /*
+            if (outputPort == -1)
+                outputPort = port ;
+            */
         } else {
             PluginControl * pluginControl = new PluginControl (descriptor, i) ;
             descriptor->connect_port (handle, i, &pluginControl->val);
             pluginControls.push_back(pluginControl);
         }
+    }
+}
+
+void Plugin::print () {
+    for (int i = 0 ; i < pluginControls.size() ; i ++) {
+        pluginControls.at(i)->print();
     }
 }

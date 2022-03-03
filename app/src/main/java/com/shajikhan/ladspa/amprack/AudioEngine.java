@@ -1,5 +1,6 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
@@ -26,6 +27,8 @@ public class AudioEngine {
 
     static native boolean togglePlugin (int plugin, boolean state) ;
 
+    static native void debugInfo ();
+
     static native boolean create () ;
     static native boolean isAAudioRecommended () ;
     static native boolean setAPI(int apiType);
@@ -47,4 +50,17 @@ public class AudioEngine {
         }
     }
 
+    static ProgressDialog progress ;
+    static void showProgress (Context context) {
+        progress = new ProgressDialog(context);
+        progress.setTitle("Loading");
+        progress.setIndeterminate(true);
+        progress.setIcon(R.drawable.logo);
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.show();
+    }
+
+    static void hideProgress () {
+        progress.hide();
+    }
 }

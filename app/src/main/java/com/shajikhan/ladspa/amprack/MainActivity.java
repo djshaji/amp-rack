@@ -33,6 +33,8 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
+        AudioEngine.showProgress(context);
         AudioEngine.create();
         // load included plugins
         loadPlugins();
@@ -245,6 +248,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
+        FloatingActionButton debugButton = findViewById(R.id.debug);
+        debugButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioEngine.debugInfo();
+            }
+        });
 
         AudioEngine.setDefaultStreamValues(context);
     }
@@ -265,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onResume() {
         super.onResume();
         AudioEngine.create(); // originally was here
+        loadPlugins();
+
     }
     @Override
     protected void onPause() {
@@ -413,10 +425,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void addPluginToRack (int pluginID) {
         int library = pluginID / 100 ;
-        int plug = pluginID - library ;
+        int plug = pluginID - (library * 100) ;
+        Log.d(TAG, "Adding plugin: " + library + ": " + plug);
         int ret = AudioEngine.addPlugin(library, plug) ;
         dataAdapter.addItem(pluginID, ret);
 
+        Toast.makeText(context, "Added plugin to rack", Toast.LENGTH_LONG).show();
+
+//        Snackbar.make(recyclerView, "Added plugin to rack", Snackbar.LENGTH_LONG)
+//                .show();
     }
 
     void loadPlugins () {

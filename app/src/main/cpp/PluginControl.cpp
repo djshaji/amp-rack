@@ -168,3 +168,12 @@ LADSPA_Data PluginControl::getDefault () {
 LADSPA_Data PluginControl::getValue () {
     return val ;
 }
+
+void PluginControl::print () {
+    LOGD(
+            "-------| Control: %s [%d]\n"
+            "Current: %d\tDefault: %d\tMin: %d\tMax: %d",
+            name, port,
+            val, def, min, max
+            ) ;
+}

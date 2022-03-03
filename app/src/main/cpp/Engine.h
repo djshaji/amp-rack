@@ -37,6 +37,7 @@ public:
     void * handle ;
 
     FullDuplexPass    mFullDuplexPass;
+    bool bootComplete = false ;
     std::vector <SharedLibrary *> libraries ;
     std::vector<Plugin *> activePlugins ;
     void loadPlugin(char *filename);

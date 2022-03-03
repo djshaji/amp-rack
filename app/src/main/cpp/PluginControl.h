@@ -49,6 +49,8 @@ public:
     LADSPA_Data getValue();
 
     PluginControl(const LADSPA_Descriptor *descriptor, int _port);
+
+    void print();
 };
 
 

@@ -78,6 +78,14 @@
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_baseline_bug_report_24"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/debug"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

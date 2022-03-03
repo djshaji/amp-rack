@@ -190,6 +190,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_addPlugin(JNIEnv *env, jclass claz
         return 0;
     }
     engine->addPluginToRack(library, plugin);
+    LOGD("plugins in chain: %d", engine->activePlugins.size());
     return engine->activePlugins.size();
 }
 extern "C"
@@ -295,4 +296,18 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_loadPlugins(JNIEnv *env, jclass cl
         return ;
     }
     engine ->loadPlugins();
+    engine -> bootComplete = true ;
+    jmethodID mid = env->GetStaticMethodID(clazz, "hideProgress", "()V");
+    env->CallStaticVoidMethod(clazz, mid);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_debugInfo(JNIEnv *env, jclass clazz) {
+    // TODO: implement debugInfo()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return ;
+    }
+
+    LOGD("[%s %d] %s: Loaded plugins: %d", __FILE_NAME__, __LINE__, __PRETTY_FUNCTION__ , engine->libraries.size()) ;
 }

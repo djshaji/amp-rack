@@ -12,12 +12,15 @@ class Plugin {
     unsigned long sampleRate ;
 public:
     bool active = true ;
+    LADSPA_Data run_adding_gain = 1 ;
     std::vector <PluginControl *> pluginControls ;
     const LADSPA_Descriptor * descriptor ;
     int inputPort = -1;
     int outputPort = -1;
     LADSPA_Handle *handle ;
     Plugin(const LADSPA_Descriptor * descriptor, unsigned long _sampleRate);
+
+    void print();
 };
 
 #endif // __PLUGIN_H

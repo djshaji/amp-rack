@@ -34,6 +34,9 @@ bool Engine::setEffectOn(bool isOn) {
         if (isOn) {
             success = openStreams() == oboe::Result::OK;
             if (success) {
+                for (int i = 0 ; i < activePlugins.size() ; i ++) {
+                    activePlugins.at(i)->print();
+                }
                 mFullDuplexPass.start();
 //                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
@@ -287,6 +290,9 @@ void Engine::buildPluginChain () {
         mFullDuplexPass.outputPorts [mFullDuplexPass.activePlugins] = p->outputPort ;
         mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = p->descriptor->connect_port ;
         mFullDuplexPass.run [mFullDuplexPass.activePlugins] = p->descriptor->run ;
+        mFullDuplexPass.run_adding [mFullDuplexPass.activePlugins] = p->descriptor->run_adding ;
+        mFullDuplexPass.set_run_adding_gain [mFullDuplexPass.activePlugins] = p->descriptor->set_run_adding_gain ;
+        mFullDuplexPass.run_adding_gain [mFullDuplexPass.activePlugins] = p->run_adding_gain ;
         mFullDuplexPass.handle [mFullDuplexPass.activePlugins] = p->handle ;
         mFullDuplexPass.descriptor [mFullDuplexPass.activePlugins] = p->descriptor;
         mFullDuplexPass.activePlugins ++ ;
@@ -295,6 +301,12 @@ void Engine::buildPluginChain () {
 
 void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
     IN
+    LOGD("Adding plugin %d: %d", libraryIndex, pluginIndex);
+    if (libraryIndex > libraries.size()) {
+        LOGF ("index %d > libraries size %d", libraryIndex, libraries.size()) ;
+        return ;
+    }
+
     Plugin * plugin = new Plugin (libraries.at(libraryIndex)->descriptors.at(pluginIndex), (long) mSampleRate);
     activePlugins .push_back(plugin);
     buildPluginChain();
@@ -302,8 +314,17 @@ void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
 }
 
 void Engine::loadPlugins () {
+    /*
+    if (libraries.size()) {
+        LOGD("%d pLugins already loaded, not loading again", libraries.size());
+        return ;
+    }
+     */
+
     for (SharedLibrary *sharedLibrary: libraries) {
         sharedLibrary->setSampleRate(mSampleRate);
         sharedLibrary->load();
     }
+
+    LOGD("[Audio Engine]: Initialized %d plugins!", libraries.size());
 }
