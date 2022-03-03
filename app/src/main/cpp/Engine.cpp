@@ -288,6 +288,8 @@ void Engine::buildPluginChain () {
     for (Plugin *p: activePlugins) {
         mFullDuplexPass.inputPorts [mFullDuplexPass.activePlugins] = p->inputPort ;
         mFullDuplexPass.outputPorts [mFullDuplexPass.activePlugins] = p->outputPort ;
+        mFullDuplexPass.inputPorts2 [mFullDuplexPass.activePlugins] = p->inputPort2 ;
+        mFullDuplexPass.outputPorts2 [mFullDuplexPass.activePlugins] = p->outputPort2 ;
         mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = p->descriptor->connect_port ;
         mFullDuplexPass.run [mFullDuplexPass.activePlugins] = p->descriptor->run ;
         mFullDuplexPass.run_adding [mFullDuplexPass.activePlugins] = p->descriptor->run_adding ;

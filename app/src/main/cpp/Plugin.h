@@ -16,7 +16,9 @@ public:
     std::vector <PluginControl *> pluginControls ;
     const LADSPA_Descriptor * descriptor ;
     int inputPort = -1;
+    int inputPort2 = -1;
     int outputPort = -1;
+    int outputPort2 = -1;
     LADSPA_Handle *handle ;
     Plugin(const LADSPA_Descriptor * descriptor, unsigned long _sampleRate);
 

@@ -39,7 +39,9 @@ public:
     LADSPA_Data run_adding_gain [MAX_PLUGINS] ;
     const LADSPA_Descriptor * descriptor [MAX_PLUGINS] ;
     int inputPorts [MAX_PLUGINS] ;
+    int inputPorts2 [MAX_PLUGINS] ;
     int outputPorts [MAX_PLUGINS] ;
+    int outputPorts2 [MAX_PLUGINS] ;
     int activePlugins =  0 ;
 
     virtual oboe::DataCallbackResult
@@ -73,12 +75,19 @@ public:
 
 //        LOGD("input port %d output port %d", inputPorts [0], outputPorts [0]);
 
+        float dummySecondChannel [192] ;// arbitrary!
 
         for (int i = 0 ; i < activePlugins ; i ++) {
             if (inputPorts [i] != -1)
                 connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) inputFloats);
             if (outputPorts [i] != -1)
                 connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) inputFloats);
+            /*
+            if (inputPorts2 [i] != -1)
+                connect_port [i] (handle [i], inputPorts2 [i], (LADSPA_Data *) &dummySecondChannel);
+            if (outputPorts2 [i] != -1)
+                connect_port [i] (handle [i], outputPorts2 [i], (LADSPA_Data *) &dummySecondChannel);
+            */
             if (run [i] == NULL)
                 LOGF ("run %d is null", i);
             else
@@ -89,9 +98,8 @@ public:
                 set_run_adding_gain [i] (handle [i], run_adding_gain [i]) ;
         }
 
-
         for (int32_t i = 0; i < samplesToProcess; i++) {
-            *outputFloats++ = *inputFloats++ * 0.95; // do some arbitrary processing
+            *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing
         }
 
         // If there are fewer input samples then clear the rest of the buffer.

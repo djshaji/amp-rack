@@ -27,9 +27,18 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
             if (LADSPA_IS_PORT_INPUT(port)) {
                 if (inputPort == -1)
                     inputPort = i ;
+                else if (inputPort2 == -1)
+                    inputPort2 = i ;
+                else
+                    LOGE("[%s %d]: %s is third input port", descriptor->Name, i, descriptor->PortNames [i]);
             } else if (LADSPA_IS_PORT_OUTPUT(port)) {
                 if (outputPort == -1)
                     outputPort = i ;
+                else if (outputPort2 == -1)
+                    outputPort2 = i ;
+                else
+                    LOGE("[%s %d]: %s is third output port", descriptor->Name, i, descriptor->PortNames [i]);
+
             }
         } else if (LADSPA_IS_PORT_OUTPUT(port)) {
             LOGE("[%s:%d] %s: ladspa port is output but not audio!", descriptor->Name, i, descriptor->PortNames[i]);
