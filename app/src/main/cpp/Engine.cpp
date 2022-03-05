@@ -170,6 +170,7 @@ oboe::AudioStreamBuilder *Engine::setupCommonStreamParameters(
             ->setFormat(mFormat)
             ->setFormatConversionAllowed(true)
             ->setSharingMode(oboe::SharingMode::Exclusive)
+            ->setInputPreset(oboe::VoicePerformance)
             ->setPerformanceMode(oboe::PerformanceMode::LowLatency);
     return builder;
 }
@@ -255,6 +256,7 @@ void Engine::onErrorAfterClose(oboe::AudioStream *oboeStream,
 
 void Engine::loadPlugin(char * filename) {
     IN
+    LOGS("Loading plugin %s", filename);
     SharedLibrary * sharedLibrary = new SharedLibrary (filename);
     libraries.push_back(sharedLibrary);
     OUT

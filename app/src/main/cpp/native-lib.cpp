@@ -291,14 +291,17 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_loadPlugins(JNIEnv *env, jclass clazz) {
     // TODO: implement loadPlugins()
+    IN
     if (engine == NULL) {
         LOGF ("engine is NULL");
+        OUT
         return ;
     }
     engine ->loadPlugins();
     engine -> bootComplete = true ;
     jmethodID mid = env->GetStaticMethodID(clazz, "hideProgress", "()V");
     env->CallStaticVoidMethod(clazz, mid);
+    OUT
 }
 extern "C"
 JNIEXPORT void JNICALL

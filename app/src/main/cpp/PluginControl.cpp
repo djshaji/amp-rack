@@ -171,8 +171,8 @@ LADSPA_Data PluginControl::getValue () {
 
 void PluginControl::print () {
     LOGD(
-            "-------| Control: %s [%d]\n"
-            "Current: %d\tDefault: %d\tMin: %d\tMax: %d",
+            "\t\t\t-------| Control: %s [%d] |-----------\n\t\t"
+            "Current: %f\tDefault: %f\tMin: %f\tMax: %f",
             name, port,
             val, def, min, max
             ) ;

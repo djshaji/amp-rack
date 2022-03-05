@@ -10,7 +10,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
     if (_sampleRate > 0)
         sampleRate = _sampleRate ;
     else {
-        LOGF ("[%s:%s] 0 sample rate passed", __FILE__, __PRETTY_FUNCTION__ );
+        LOGF ("[%s: %s] 0 sample rate passed", __FILE__, __PRETTY_FUNCTION__ );
         sampleRate = 48000 ;
     }
 
@@ -20,6 +20,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
     }
 
     LOGD("[%s] loaded plugin %s", __PRETTY_FUNCTION__ , descriptor->Name);
+    print();
 
     for (int i = 0 ; i < descriptor->PortCount ; i ++) {
         LADSPA_PortDescriptor port = descriptor -> PortDescriptors [i];
@@ -56,6 +57,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
 }
 
 void Plugin::print () {
+    LOGD("--------| Controls for %s |--------------", descriptor->Name) ;
     for (int i = 0 ; i < pluginControls.size() ; i ++) {
         pluginControls.at(i)->print();
     }

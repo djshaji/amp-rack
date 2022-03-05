@@ -64,24 +64,32 @@ public:
         // It is possible that there may be fewer input than output samples.
         int32_t samplesToProcess = std::min(numInputSamples, numOutputSamples);
 
+        process(inputFloats, samplesToProcess);
 
-        /*
-        LADSPA_Data amplitude = 1 ;
-        connect_port [0] (handle [0], 0, &amplitude);
-        connect_port [0] (handle [0], 1, (LADSPA_Data *)inputData);
-        connect_port [0] (handle [0], 2, (LADSPA_Data *)outputData);
-        run [0] (handle [0], samplesToProcess);
-         */
+        for (int32_t i = 0; i < samplesToProcess; i++) {
+            *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing
+        }
 
-//        LOGD("input port %d output port %d", inputPorts [0], outputPorts [0]);
 
-        float dummySecondChannel [192] ;// arbitrary!
+        // If there are fewer input samples then clear the rest of the buffer.
+        int32_t samplesLeft = numOutputSamples - numInputSamples;
+        for (int32_t i = 0; i < samplesLeft; i++) {
+            *outputFloats++ = 0.0; // silence
+        }
+
+//        OUT ;
+        return oboe::DataCallbackResult::Continue;
+    }
+
+    void process (const float * data, int samplesToProcess) {
+        float dummySecondChannel ;// arbitrary!
 
         for (int i = 0 ; i < activePlugins ; i ++) {
             if (inputPorts [i] != -1)
-                connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) inputFloats);
+                connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) data);
             if (outputPorts [i] != -1)
-                connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) inputFloats);
+                connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) data);
+
             /*
             if (inputPorts2 [i] != -1)
                 connect_port [i] (handle [i], inputPorts2 [i], (LADSPA_Data *) &dummySecondChannel);
@@ -92,24 +100,12 @@ public:
                 LOGF ("run %d is null", i);
             else
                 run [i] (handle [i], samplesToProcess);
-            if (run_adding [i] != NULL)
-                run [i] (handle [i], samplesToProcess);
             if (set_run_adding_gain [i] != NULL)
                 set_run_adding_gain [i] (handle [i], run_adding_gain [i]) ;
+            if (run_adding [i] != NULL)
+                run [i] (handle [i], samplesToProcess);
         }
 
-        for (int32_t i = 0; i < samplesToProcess; i++) {
-            *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing
-        }
-
-        // If there are fewer input samples then clear the rest of the buffer.
-        int32_t samplesLeft = numOutputSamples - numInputSamples;
-        for (int32_t i = 0; i < samplesLeft; i++) {
-            *outputFloats++ = 0.0; // silence
-        }
-
-//        OUT ;
-        return oboe::DataCallbackResult::Continue;
     }
 };
 #endif //SAMPLES_FULLDUPLEXPASS_H
