@@ -21,6 +21,8 @@ public:
 
     void setSampleRate(unsigned long _sampleRate);
     char *load(void);
+
+    bool plugin_is_valid(const LADSPA_Descriptor *descriptor);
 };
 
 #endif // SHARED_LIBRARY_H

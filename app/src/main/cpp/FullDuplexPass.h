@@ -64,7 +64,11 @@ public:
         // It is possible that there may be fewer input than output samples.
         int32_t samplesToProcess = std::min(numInputSamples, numOutputSamples);
 
-        process(inputFloats, samplesToProcess);
+        // this
+        // am I devloper yet?
+//        memcpy(outputData, inputData, samplesToProcess);
+        process(inputFloats, numInputSamples);
+
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
             *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing
@@ -100,10 +104,12 @@ public:
                 LOGF ("run %d is null", i);
             else
                 run [i] (handle [i], samplesToProcess);
+            /*
             if (set_run_adding_gain [i] != NULL)
                 set_run_adding_gain [i] (handle [i], run_adding_gain [i]) ;
             if (run_adding [i] != NULL)
                 run [i] (handle [i], samplesToProcess);
+            */
         }
 
     }

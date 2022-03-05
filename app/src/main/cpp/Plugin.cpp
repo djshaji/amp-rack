@@ -19,7 +19,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
         descriptor->activate (handle);
     }
 
-    LOGD("[%s] loaded plugin %s", __PRETTY_FUNCTION__ , descriptor->Name);
+    LOGD("[%s] loaded plugin %s at %u", __PRETTY_FUNCTION__ , descriptor->Name, sampleRate);
     print();
 
     for (int i = 0 ; i < descriptor->PortCount ; i ++) {
