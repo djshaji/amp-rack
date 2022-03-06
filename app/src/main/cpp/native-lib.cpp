@@ -208,6 +208,8 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControl(JNIEnv *env, jcla
         LOGF ("engine is NULL");
         return ;
     }
+
+    LOGD("[%s %d] setting control %s to %f", engine->activePlugins.at(plugin)->descriptor->Name, control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
     engine->activePlugins.at(plugin)->pluginControls.at(control)->setValue(value);
 }
 extern "C"

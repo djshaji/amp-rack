@@ -8,8 +8,6 @@
 class PluginControl {
 
     unsigned long port;
-//    unsigned long ctrl;
-    const char *name;
     const LADSPA_PortDescriptor *desc;
     const LADSPA_PortRangeHint *hint;
     /* values selected in the interface */
@@ -51,6 +49,9 @@ public:
     PluginControl(const LADSPA_Descriptor *descriptor, int _port);
 
     void print();
+
+//    unsigned long ctrl;
+    const char *name;
 };
 
 
