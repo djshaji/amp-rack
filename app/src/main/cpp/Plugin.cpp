@@ -41,23 +41,25 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
                     LOGE("[%s %d]: %s is third output port", descriptor->Name, i, descriptor->PortNames [i]);
 
             }
-        } else if (LADSPA_IS_PORT_OUTPUT(port)) {
+        } else if (/*LADSPA_IS_PORT_OUTPUT(port)*/ false) {
             LOGE("[%s:%d] %s: ladspa port is output but not audio!", descriptor->Name, i, descriptor->PortNames[i]);
             // this, erm, doesn't work
             /*
             if (outputPort == -1)
                 outputPort = port ;
             */
-        } else {
+        } else if (LADSPA_IS_PORT_CONTROL(port) && LADSPA_IS_PORT_INPUT(port)){
             PluginControl * pluginControl = new PluginControl (descriptor, i) ;
-            descriptor->connect_port (handle, i, &pluginControl->val);
+            descriptor->connect_port (handle, i, pluginControl->def);
             pluginControls.push_back(pluginControl);
+        } else {
+            descriptor->connect_port (handle, i, &dummy_output_control_port);
         }
     }
 }
 
 void Plugin::print () {
-    LOGD("--------| Controls for %s |--------------", descriptor->Name) ;
+    LOGD("--------| Controls for %s: %d |--------------", descriptor->Name, descriptor ->PortCount) ;
     for (int i = 0 ; i < pluginControls.size() ; i ++) {
         pluginControls.at(i)->print();
     }

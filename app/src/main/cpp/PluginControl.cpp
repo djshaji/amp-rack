@@ -8,8 +8,10 @@ LADSPA_Data PluginControl::control_rounding(LADSPA_Data _val)
 }
 
 void PluginControl::setValue (float value) {
-    val = value ;
+//    val = value ;
+    *def = value;
 }
+
 
 void PluginControl::setSampleRate (unsigned long rate) {
     sample_rate = rate ;
@@ -67,7 +69,8 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
 //                OUT;
 //            }
 
-        def = &default_value ;
+//        def = &default_value ;
+        def = (float *) malloc (sizeof (long int));
         switch (ladspaPortRangeHintDescriptor & LADSPA_HINT_DEFAULT_MASK) {
             case LADSPA_HINT_DEFAULT_MINIMUM:
                 *def = lower_bound;

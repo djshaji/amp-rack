@@ -19,6 +19,7 @@ public:
     int inputPort2 = -1;
     int outputPort = -1;
     int outputPort2 = -1;
+    LADSPA_Data dummy_output_control_port = 0; // from th pulseaudio ladspa sink module
     LADSPA_Handle *handle ;
     Plugin(const LADSPA_Descriptor * descriptor, unsigned long _sampleRate);
 

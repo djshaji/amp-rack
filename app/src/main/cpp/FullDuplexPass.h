@@ -86,7 +86,7 @@ public:
     }
 
     void process (const float * data, int samplesToProcess) {
-        float dummySecondChannel ;// arbitrary!
+//        float dummySecondChannel [200];// arbitrary!
 
         for (int i = 0 ; i < activePlugins ; i ++) {
             if (inputPorts [i] != -1)
@@ -94,12 +94,12 @@ public:
             if (outputPorts [i] != -1)
                 connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) data);
 
-            /*
+
             if (inputPorts2 [i] != -1)
-                connect_port [i] (handle [i], inputPorts2 [i], (LADSPA_Data *) &dummySecondChannel);
+                connect_port [i] (handle [i], inputPorts2 [i], (LADSPA_Data *) data);
             if (outputPorts2 [i] != -1)
-                connect_port [i] (handle [i], outputPorts2 [i], (LADSPA_Data *) &dummySecondChannel);
-            */
+                connect_port [i] (handle [i], outputPorts2 [i], (LADSPA_Data *) data);
+
             if (run [i] == NULL)
                 LOGF ("run %d is null", i);
             else
