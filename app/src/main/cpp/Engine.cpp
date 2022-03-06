@@ -286,6 +286,7 @@ void Engine::discoverPlugins () {
 }
 
 void Engine::buildPluginChain () {
+    IN
     mFullDuplexPass.activePlugins = 0;
     for (Plugin *p: activePlugins) {
         mFullDuplexPass.inputPorts [mFullDuplexPass.activePlugins] = p->inputPort ;
@@ -301,6 +302,7 @@ void Engine::buildPluginChain () {
         mFullDuplexPass.descriptor [mFullDuplexPass.activePlugins] = p->descriptor;
         mFullDuplexPass.activePlugins ++ ;
     }
+    OUT
 }
 
 void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
@@ -314,6 +316,16 @@ void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
     Plugin * plugin = new Plugin (libraries.at(libraryIndex)->descriptors.at(pluginIndex), (long) mSampleRate);
     activePlugins .push_back(plugin);
     buildPluginChain();
+    OUT
+}
+
+int Engine::deletePluginFromRack (int pIndex) {
+    IN
+    Plugin * p = activePlugins.at(pIndex);
+//    delete p ; this produces a SIGTRAP, but why?
+    activePlugins.erase( next(begin(activePlugins), pIndex));
+    buildPluginChain();
+    return activePlugins.size();
     OUT
 }
 

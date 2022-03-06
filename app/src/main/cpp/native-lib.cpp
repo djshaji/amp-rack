@@ -197,7 +197,12 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_deletePlugin(JNIEnv *env, jclass clazz, jint plugin) {
     // TODO: implement deletePlugin()
+    IN
+    LOGD("Deleting plugin at position %d", plugin);
+    OUT
+    return engine->deletePluginFromRack(plugin);
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControl(JNIEnv *env, jclass clazz,

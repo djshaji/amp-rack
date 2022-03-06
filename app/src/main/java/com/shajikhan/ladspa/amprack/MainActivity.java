@@ -248,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
+        /*
         FloatingActionButton debugButton = findViewById(R.id.debug);
         debugButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,6 +256,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 AudioEngine.debugInfo();
             }
         });
+
+         */
 
         AudioEngine.setDefaultStreamValues(context);
     }

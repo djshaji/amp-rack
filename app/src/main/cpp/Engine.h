@@ -12,6 +12,7 @@ class Engine : public oboe::AudioStreamCallback {
 public:
     Engine() ;
 
+    int deletePluginFromRack(int pIndex);
     void setRecordingDeviceId(int32_t deviceId);
 
     void setPlaybackDeviceId(int32_t deviceId);
