@@ -180,3 +180,7 @@ void PluginControl::print () {
             val, def, min, max
             ) ;
 }
+
+void PluginControl::freeMemory () {
+    free (def);
+}

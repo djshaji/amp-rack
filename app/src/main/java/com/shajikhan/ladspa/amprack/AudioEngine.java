@@ -24,6 +24,8 @@ public class AudioEngine {
 
     static native void setPluginControl (int plugin, int control, float value);
     static native int movePlugin (int plugin, int position) ;
+    static native int movePluginUp (int plugin) ;
+    static native int movePluginDown (int plugin) ;
 
     static native boolean togglePlugin (int plugin, boolean state) ;
 

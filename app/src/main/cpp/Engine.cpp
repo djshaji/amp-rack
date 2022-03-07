@@ -289,6 +289,8 @@ void Engine::buildPluginChain () {
     IN
     mFullDuplexPass.activePlugins = 0;
     for (Plugin *p: activePlugins) {
+        if (!p->active)
+            continue;
         mFullDuplexPass.inputPorts [mFullDuplexPass.activePlugins] = p->inputPort ;
         mFullDuplexPass.outputPorts [mFullDuplexPass.activePlugins] = p->outputPort ;
         mFullDuplexPass.inputPorts2 [mFullDuplexPass.activePlugins] = p->inputPort2 ;
@@ -322,7 +324,11 @@ void Engine::addPluginToRack (int libraryIndex, int pluginIndex) {
 int Engine::deletePluginFromRack (int pIndex) {
     IN
     Plugin * p = activePlugins.at(pIndex);
-//    delete p ; this produces a SIGTRAP, but why?
+    for (PluginControl * control: p->pluginControls) {
+        control->freeMemory();
+    }
+
+    delete p ;
     activePlugins.erase( next(begin(activePlugins), pIndex));
     buildPluginChain();
     return activePlugins.size();
@@ -343,4 +349,32 @@ void Engine::loadPlugins () {
     }
 
     LOGD("[Audio Engine]: Initialized %d plugins!", libraries.size());
+}
+
+int Engine :: moveActivePluginDown (int _p) {
+    IN
+    if (_p == activePlugins.size()) {
+        OUT
+        return _p ;
+    }
+
+    auto it = activePlugins.begin() + _p;
+    std::rotate(it, it + 1, activePlugins.end());
+    buildPluginChain();
+    OUT
+    return _p + 1 ;
+}
+
+int Engine :: moveActivePluginUp (int _p) {
+    IN
+    if (_p == 0) {
+        OUT
+        return _p ;
+    }
+
+    auto it = activePlugins.begin() + _p;
+    std::rotate(it, it - 1, activePlugins.end());
+    buildPluginChain();
+    OUT
+    return _p - 1 ;
 }

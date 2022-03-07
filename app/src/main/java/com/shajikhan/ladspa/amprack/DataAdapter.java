@@ -49,10 +49,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             return ;
         }
 
+        holder.switchMaterial.setUseMaterialThemeColors(true);
+        holder.switchMaterial.setChecked(true);
         holder.switchMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AudioEngine.togglePlugin(position, b);
+                AudioEngine.togglePlugin(holder.getAdapterPosition(), b);
             }
         });
 
@@ -117,6 +119,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     int _pos = holder.getAdapterPosition();
                     Log.d (TAG, "Deleting plugin at position: " + _pos);
                     AudioEngine.deletePlugin(_pos);
+                    linearLayout.removeAllViews();
                     deleteItem(_pos);
                 }
             });
@@ -212,6 +215,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     void deleteItem(int index) {
         plugins.remove(index);
         notifyItemRemoved(index);
+//        notifyItemRangeChanged(0, getItemCount());
     }
 
     void moveItemUp (int index) {

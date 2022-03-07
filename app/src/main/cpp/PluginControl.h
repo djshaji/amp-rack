@@ -52,6 +52,8 @@ public:
 
 //    unsigned long ctrl;
     const char *name;
+
+    void freeMemory();
 };
 
 

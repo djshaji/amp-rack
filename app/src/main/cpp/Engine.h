@@ -43,6 +43,9 @@ public:
     std::vector<Plugin *> activePlugins ;
     void loadPlugin(char *filename);
     void loadPlugins();
+    int moveActivePluginDown(int _p);
+    int moveActivePluginUp(int _p);
+    void buildPluginChain();
 private:
     bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
@@ -71,7 +74,7 @@ private:
 
 
     void discoverPlugins();
-    void buildPluginChain();
+
 
 } ;
 

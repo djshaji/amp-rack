@@ -222,7 +222,10 @@ JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_movePlugin(JNIEnv *env, jclass clazz, jint plugin,
                                                          jint position) {
     // TODO: implement movePlugin()
+    LOGF("%s UNIMPLEMENTED", __PRETTY_FUNCTION__ );
+    return -1 ;
 }
+
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_togglePlugin(JNIEnv *env, jclass clazz, jint plugin,
@@ -233,7 +236,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_togglePlugin(JNIEnv *env, jclass c
         return false;
     }
     engine->activePlugins.at(plugin)->active = state ;
+    engine->buildPluginChain();
+    return engine->activePlugins.at(plugin)->active ;
 }
+
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getLibraryName(JNIEnv *env, jclass clazz,
@@ -320,4 +326,18 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_debugInfo(JNIEnv *env, jclass claz
     }
 
     LOGD("[%s %d] %s: Loaded plugins: %d", __FILE_NAME__, __LINE__, __PRETTY_FUNCTION__ , engine->libraries.size()) ;
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginDown(JNIEnv *env, jclass clazz,
+                                                             jint plugin) {
+    // TODO: implement movePluginDown()
+    return engine ->moveActivePluginDown(plugin);
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginUp(JNIEnv *env, jclass clazz, jint plugin) {
+    // TODO: implement movePluginUp()
+    return engine->moveActivePluginUp(plugin);
 }
