@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     // Used to load the 'amprack' library on application startup.
     static {
         System.loadLibrary("amprack");
+        System.loadLibrary("libsndfile.a");
     }
 
     private ActivityMainBinding binding;
