@@ -13,6 +13,17 @@ project("amprack")
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
+# libsndfile static
+add_library(libsndfile STATIC IMPORTED)
+set_target_properties( # Specifies the target library.
+        libsndfile
+
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+
+        # Provides the path to the library you want to import.
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libsndfile.a )
+
 
 add_library( # Sets the name of the library.
         amprack
@@ -26,7 +37,8 @@ add_library( # Sets the name of the library.
         FullDuplexStream.cpp
         SharedLibrary.cpp
         Plugin.cpp
-        PluginControl.cpp)
+        PluginControl.cpp
+        Export.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -49,7 +61,11 @@ find_package (oboe REQUIRED CONFIG)
 target_link_libraries( # Specifies the target library.
         amprack
         oboe::oboe
+        libsndfile
 
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})
+
+target_include_directories(amprack PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
