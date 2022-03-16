@@ -5,6 +5,7 @@
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
+    fileWriter = new FileWriter ();
 //    discoverPlugins();
 //    loadPlugins();
 }
@@ -38,6 +39,8 @@ bool Engine::setEffectOn(bool isOn) {
                     activePlugins.at(i)->print();
                 }
                 mFullDuplexPass.start();
+                fileWriter->setSampleRate (mSampleRate);
+                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
 //                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }

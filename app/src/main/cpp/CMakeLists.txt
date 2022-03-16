@@ -32,17 +32,18 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
+        vringbuffer.c
+        ringbuffer.c
         native-lib.cpp
         Engine.cpp
+        Export.cpp
+        upwaker.c
+        FileWriter.cpp
         FullDuplexStream.cpp
         SharedLibrary.cpp
         Plugin.cpp
         PluginControl.cpp
-        Export.cpp
-        upwaker.c
-        vringbuffer.c
-        ringbuffer.c
-        FileWriter.cpp)
+        )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

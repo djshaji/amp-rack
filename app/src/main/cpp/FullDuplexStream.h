@@ -73,6 +73,7 @@ public:
      * @param mNumInputBurstsCushion
      */
     void setNumInputBurstsCushion(int32_t numInputBurstsCushion);
+    int32_t              mBufferSize = 0;
 
 private:
 
@@ -96,7 +97,6 @@ private:
     std::shared_ptr<oboe::AudioStream> mInputStream;
     std::shared_ptr<oboe::AudioStream> mOutputStream;
 
-    int32_t              mBufferSize = 0;
     std::unique_ptr<float[]> mInputBuffer;
 };
 

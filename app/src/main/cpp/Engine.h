@@ -7,6 +7,7 @@
 #include "FullDuplexPass.h"
 #include "SharedLibrary.h"
 #include "Plugin.h"
+#include "FileWriter.h"
 
 class Engine : public oboe::AudioStreamCallback {
 public:
@@ -39,8 +40,12 @@ public:
 
     FullDuplexPass    mFullDuplexPass;
     bool bootComplete = false ;
+
+    FileWriter * fileWriter ;
+
     std::vector <SharedLibrary *> libraries ;
     std::vector<Plugin *> activePlugins ;
+
     void loadPlugin(char *filename);
     void loadPlugins();
     int moveActivePluginDown(int _p);
