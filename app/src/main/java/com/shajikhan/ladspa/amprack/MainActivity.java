@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -38,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -58,11 +61,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PluginDialogAdapter pluginDialogAdapter ;
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
+    private static final int READ_STORAGE_REQUEST = 1;
+    private static final int WRITE_STORAGE_REQUEST = 2;
 
     // Used to load the 'amprack' library on application startup.
     static {
         System.loadLibrary("amprack");
-        System.loadLibrary("libsndfile.a");
     }
 
     private ActivityMainBinding binding;
@@ -107,6 +111,27 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ExtendedFloatingActionButton fab = findViewById(R.id.fab);
         addPluginMenu = new PopupMenu(context, fab);
+
+        ToggleButton record = findViewById(R.id.record_button);
+        record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if (!isStoragePermissionGranted()) {
+//                        requestReadStoragePermission();
+                        requestWriteStoragePermission();
+
+                        if (!isStoragePermissionGranted()) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Permission denied. Recording features are disabled.",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                            return ;
+                        }
+                    }
+                }
+            }
+        });
 
         int libraries = AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
@@ -260,6 +285,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
+        File dir = Environment.getExternalStorageDirectory();
+        String path = dir.getAbsolutePath();
+
+        AudioEngine.setExternalStoragePath(path);
         AudioEngine.setDefaultStreamValues(context);
     }
 
@@ -317,32 +346,65 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 PackageManager.PERMISSION_GRANTED);
     }
 
+    private boolean isStoragePermissionGranted() {
+        return
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) ;
+    }
+
     private void requestRecordPermission(){
         ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
                 AUDIO_EFFECT_REQUEST);
     }
+
+    private void requestReadStoragePermission(){
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                READ_STORAGE_REQUEST);
+    }
+
+    private void requestWriteStoragePermission(){
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                WRITE_STORAGE_REQUEST);
+    }
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (AUDIO_EFFECT_REQUEST != requestCode) {
+        if (AUDIO_EFFECT_REQUEST != requestCode && requestCode !=READ_STORAGE_REQUEST && requestCode != WRITE_STORAGE_REQUEST) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
-        if (grantResults.length != 1 ||
-                grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == READ_STORAGE_REQUEST || requestCode == WRITE_STORAGE_REQUEST) {
+            if (grantResults.length != 1 ||
+                    grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(),
+                        "Storage permission denied. Recording and playing features won't work",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
 
-            // User denied the permission, without this we cannot record audio
-            // Show a toast and update the status accordingly
-            Toast.makeText(getApplicationContext(),
-                    "Permission for audio record denied.",
-                    Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            // Permission was granted, start live effect
-            toggleEffect(false);
+        if ( AUDIO_EFFECT_REQUEST == requestCode) {
+            if (grantResults.length != 1 ||
+                    grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                // User denied the permission, without this we cannot record audio
+                // Show a toast and update the status accordingly
+                Toast.makeText(getApplicationContext(),
+                        "Permission denied.",
+                        Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                // Permission was granted, start live effect
+                toggleEffect(false);
+            }
         }
     }
 

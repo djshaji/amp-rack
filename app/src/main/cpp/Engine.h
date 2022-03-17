@@ -42,6 +42,7 @@ public:
     bool bootComplete = false ;
 
     FileWriter * fileWriter ;
+    std::string externalStoragePath ;
 
     std::vector <SharedLibrary *> libraries ;
     std::vector<Plugin *> activePlugins ;

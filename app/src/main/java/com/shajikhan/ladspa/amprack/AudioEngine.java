@@ -30,6 +30,8 @@ public class AudioEngine {
     static native boolean togglePlugin (int plugin, boolean state) ;
 
     static native void debugInfo ();
+    static native void setExternalStoragePath (String path) ;
+    static native void setRecordingActive (boolean active) ;
 
     static native boolean create () ;
     static native boolean isAAudioRecommended () ;

@@ -342,3 +342,29 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginUp(JNIEnv *env, jclass c
     // TODO: implement movePluginUp()
     return engine->moveActivePluginUp(plugin);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setExternalStoragePath(JNIEnv *env, jclass clazz,
+                                                                     jstring path) {
+    // TODO: implement setExternalStoragePath()
+    if (engine == NULL) {
+        HERE LOGF ("engine is NULL");
+        return ;
+    }
+
+    const char *nativeString = env->GetStringUTFChars(path, 0);
+    engine->externalStoragePath = std::string (nativeString);
+    env->ReleaseStringUTFChars(path, nativeString);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setRecordingActive(JNIEnv *env, jclass clazz,
+                                                                 jboolean active) {
+    // TODO: implement setRecordingActive()
+    if (engine == NULL) {
+        HERE LOGF ("engine is NULL");
+        return ;
+    }
+
+    engine->mFullDuplexPass->recordingActive = active ;
+}

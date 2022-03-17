@@ -20,6 +20,7 @@
 #include <dlfcn.h>
 #include "ladspa.h"
 #include "FullDuplexStream.h"
+#include "FileWriter.h"
 
 class FullDuplexPass : public FullDuplexStream {
     //| TODO: Limit number of plugins active in free version?
@@ -43,6 +44,7 @@ public:
     int outputPorts [MAX_PLUGINS] ;
     int outputPorts2 [MAX_PLUGINS] ;
     int activePlugins =  0 ;
+    bool recordingActive = false ;
 
     virtual oboe::DataCallbackResult
     onBothStreamsReady(
@@ -68,12 +70,13 @@ public:
         // am I devloper yet?
 //        memcpy(outputData, inputData, samplesToProcess);
         process(inputFloats, numInputSamples);
-
+        if (recordingActive) {
+            disk_write ((void *) inputFloats, numInputSamples);
+        }
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
             *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing
         }
-
 
         // If there are fewer input samples then clear the rest of the buffer.
         int32_t samplesLeft = numOutputSamples - numInputSamples;

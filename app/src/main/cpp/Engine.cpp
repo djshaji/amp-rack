@@ -40,11 +40,23 @@ bool Engine::setEffectOn(bool isOn) {
                 }
                 mFullDuplexPass.start();
                 fileWriter->setSampleRate (mSampleRate);
+
+                time_t _tm =time(NULL );
+                struct tm * curtime = localtime ( &_tm );
+
+                fileWriter->setFileName(externalStoragePath + "/AmpRack/" + asctime(curtime)) ;
                 fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
+                if (mFullDuplexPass.recordingActive) {
+                    fileWriter->startRecording();
+                }
 //                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }
         } else {
+            if (mFullDuplexPass.recordingActive) {
+                fileWriter->stopRecording() ;
+            }
+
             mFullDuplexPass.stop();
             closeStreams();
             mIsEffectOn = isOn;
