@@ -72,10 +72,10 @@ public:
         process(inputFloats, numInputSamples);
         /* this is not supposed to be called directly.
          * hence the entire vringbuffer stuff
+         */
         if (recordingActive) {
-            FileWriter::disk_write ((void *) inputFloats, numInputSamples);
+            FileWriter::process(numInputSamples, (void *) inputFloats);
         }
-        */
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
             *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing

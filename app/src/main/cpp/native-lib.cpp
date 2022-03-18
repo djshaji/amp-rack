@@ -347,14 +347,17 @@ JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_setExternalStoragePath(JNIEnv *env, jclass clazz,
                                                                      jstring path) {
     // TODO: implement setExternalStoragePath()
+    IN ;
     if (engine == NULL) {
-        HERE LOGF ("engine is NULL");
+        HERE LOGF ("engine is NULL"); OUT
         return ;
     }
 
     const char *nativeString = env->GetStringUTFChars(path, 0);
     engine->externalStoragePath = std::string (nativeString);
     env->ReleaseStringUTFChars(path, nativeString);
+    LOGD("Output file path set to %s", engine->externalStoragePath.c_str());
+    OUT
 }
 extern "C"
 JNIEXPORT void JNICALL

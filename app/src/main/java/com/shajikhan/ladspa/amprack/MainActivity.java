@@ -137,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             return ;
                         }
                         */
+                    } else {
+                        AudioEngine.setRecordingActive(b);
                     }
                 }
             }
@@ -328,6 +330,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onResume();
         AudioEngine.create(); // originally was here
         loadPlugins();
+        File dir = Environment.getExternalStorageDirectory();
+        String path = dir.getAbsolutePath();
+
+        AudioEngine.setExternalStoragePath(path);
+        File defaultDir = new File (path + "/AmpRack/") ;
+        if (!defaultDir.exists()) {
+            Log.d(TAG, "making directory " + path + "/AmpRack/");
+            try {
+                if (!defaultDir.mkdir())
+                    Log.wtf (TAG, "Unable to create directory!");
+            }  catch (Exception e) {
+                Log.w(TAG, "UNable to create directory: " + e.getMessage());
+            }
+        }
 
     }
     @Override

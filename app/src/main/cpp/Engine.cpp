@@ -43,8 +43,8 @@ bool Engine::setEffectOn(bool isOn) {
 
                 time_t _tm =time(NULL );
                 struct tm * curtime = localtime ( &_tm );
-
-                fileWriter->setFileName(externalStoragePath + "/AmpRack/" + asctime(curtime)) ;
+//                asctime(curtime) ;
+                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/tmpfile.wav")) ;
                 fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
                 if (mFullDuplexPass.recordingActive) {
                     fileWriter->startRecording();
