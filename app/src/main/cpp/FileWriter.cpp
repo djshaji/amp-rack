@@ -70,10 +70,10 @@ void FileWriter::openFile () {
     IN
     memset(&sf_info,0,sizeof(SF_INFO));
 
-    sf_info.channels = 2 ;
-    sf_info.samplerate = jack_samplerate ;
+    sf_info.channels = 1 ;
+    sf_info.samplerate = 96000 ;
     sf_info.format = SF_FORMAT_WAV ;
-    sf_info.format |= SF_FORMAT_PCM_16 ;
+    sf_info.format |= SF_FORMAT_FLOAT ;
 
     if(sf_format_check(&sf_info)==0){
         LOGE ("\nFileformat not supported by libsndfile. Try other options.\n");
