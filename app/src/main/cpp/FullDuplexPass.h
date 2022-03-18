@@ -70,9 +70,12 @@ public:
         // am I devloper yet?
 //        memcpy(outputData, inputData, samplesToProcess);
         process(inputFloats, numInputSamples);
+        /* this is not supposed to be called directly.
+         * hence the entire vringbuffer stuff
         if (recordingActive) {
-            disk_write ((void *) inputFloats, numInputSamples);
+            FileWriter::disk_write ((void *) inputFloats, numInputSamples);
         }
+        */
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
             *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing

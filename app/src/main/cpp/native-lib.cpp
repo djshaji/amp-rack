@@ -366,5 +366,5 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setRecordingActive(JNIEnv *env, jc
         return ;
     }
 
-    engine->mFullDuplexPass->recordingActive = active ;
+    engine->mFullDuplexPass.recordingActive = active ;
 }

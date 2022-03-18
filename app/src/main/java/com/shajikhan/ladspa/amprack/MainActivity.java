@@ -1,7 +1,10 @@
 package com.shajikhan.ladspa.amprack;
 
+import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,12 +14,15 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -63,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int AUDIO_EFFECT_REQUEST = 0;
     private static final int READ_STORAGE_REQUEST = 1;
     private static final int WRITE_STORAGE_REQUEST = 2;
+    final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501; // Any value
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -121,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //                        requestReadStoragePermission();
                         requestWriteStoragePermission();
 
+                        /*
                         if (!isStoragePermissionGranted()) {
                             Toast.makeText(getApplicationContext(),
                                     "Permission denied. Recording features are disabled.",
@@ -128,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                     .show();
                             return ;
                         }
+                        */
                     }
                 }
             }
@@ -289,6 +298,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         String path = dir.getAbsolutePath();
 
         AudioEngine.setExternalStoragePath(path);
+        File defaultDir = new File (path + "/AmpRack/") ;
+        if (!defaultDir.exists()) {
+            Log.d(TAG, "making directory " + path + "/AmpRack/");
+             try {
+                 if (!defaultDir.mkdir())
+                     Log.wtf (TAG, "Unable to create directory!");
+             }  catch (Exception e) {
+                 Log.w(TAG, "UNable to create directory: " + e.getMessage());
+             }
+        }
         AudioEngine.setDefaultStreamValues(context);
     }
 
@@ -346,10 +365,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 PackageManager.PERMISSION_GRANTED);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private boolean isStoragePermissionGranted() {
-        return
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) ;
+        return Environment.isExternalStorageManager() ;
+                /*
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) ; &&
+                        (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                                PackageManager.PERMISSION_GRANTED) ;*/
     }
 
     private void requestRecordPermission(){
@@ -367,10 +390,36 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void requestWriteStoragePermission(){
+        /*
         ActivityCompat.requestPermissions(
                 this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE},
                 WRITE_STORAGE_REQUEST);
+         */
+        Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + BuildConfig.APPLICATION_ID));
+        startActivityForResult(intent, APP_STORAGE_ACCESS_REQUEST_CODE);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE)
+        {
+            if (Environment.isExternalStorageManager())
+            {
+                // Permission granted. Now resume your workflow.
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Storage permission denied. Recording and playing features won't work",
+                        Toast.LENGTH_LONG)
+                        .show();
+
+            }
+
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
