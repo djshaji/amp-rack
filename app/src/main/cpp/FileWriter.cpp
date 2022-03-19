@@ -15,9 +15,9 @@ vringbuffer_t * FileWriter::vringbuffer ;
 FileType FileWriter::fileType = OPUS ;
 OpusEncoder *FileWriter::encoder ;
 
-char * extensions [] = {
+static char * extensions [] = {
         ".wav",
-        "opus"
+        ".opus"
 } ;
 
 int FileWriter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size) {
@@ -96,7 +96,7 @@ void FileWriter::openFile () {
 
     if (fileType == OPUS) {
         int err;
-        encoder = opus_encoder_create(jack_samplerate, num_channels, OPUS_APPLICATION_AUDIO, &err);
+        encoder = opus_encoder_create(48000, 1, OPUS_APPLICATION_AUDIO, &err);
         if (err<0) {
             HERE LOGF("failed to create an encoder: %s\n", opus_strerror(err));
         }
@@ -116,7 +116,8 @@ void FileWriter::closeFile () {
 
 int FileWriter::disk_write(void *data,size_t frames) {
     if (fileType == OPUS) {
-        int nbBytes = opus_encode(encoder, (short *) data, frames, (unsigned char *) data, MAX_PACKET_SIZE);
+        LOGD("encoding to opus ... [%d]", frames);
+        int nbBytes = opus_encode(encoder, (short *) data, 160, (unsigned char *) data, MAX_PACKET_SIZE);
         if (nbBytes<0) {
             LOGF("encode failed: %s\n", opus_strerror(nbBytes));
         }

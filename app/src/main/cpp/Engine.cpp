@@ -105,7 +105,17 @@ oboe::Result  Engine::openStreams() {
     warnIfNotLowLatency(mPlayStream);
 
     setupRecordingStreamParameters(&inBuilder, mSampleRate);
+    inBuilder.setBufferCapacityInFrames(160);
+    inBuilder.setFramesPerDataCallback(160);
+    inBuilder.setFramesPerCallback(160);
+
     result = inBuilder.openStream(mRecordingStream);
+
+    oboe::LatencyTuner *latencyTuner = new oboe::LatencyTuner ( *mRecordingStream, 160);
+    latencyTuner->setMinimumBufferSize(160);
+    mRecordingStream->setBufferSizeInFrames(80);
+    latencyTuner->tune();
+    mRecordingStream->setBufferSizeInFrames(80);
     if (result != oboe::Result::OK) {
         LOGE("Failed to open input stream. Error %s", oboe::convertToText(result));
         closeStream(mPlayStream);
