@@ -12,7 +12,13 @@ int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
 vringbuffer_t * FileWriter::vringbuffer ;
+FileType FileWriter::fileType = OPUS ;
+OpusEncoder *FileWriter::encoder ;
 
+char * extensions [] = {
+        ".wav",
+        "opus"
+} ;
 
 int FileWriter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size) {
     IN ;
@@ -71,7 +77,7 @@ void FileWriter::openFile () {
     memset(&sf_info,0,sizeof(SF_INFO));
 
     sf_info.channels = 1 ;
-    sf_info.samplerate = 96000 ;
+    sf_info.samplerate = jack_samplerate * num_channels ;
     sf_info.format = SF_FORMAT_WAV ;
     sf_info.format |= SF_FORMAT_FLOAT ;
 
@@ -88,6 +94,19 @@ void FileWriter::openFile () {
         LOGD("[%s] Opened file %s", __PRETTY_FUNCTION__ ,filename.c_str());
     }
 
+    if (fileType == OPUS) {
+        int err;
+        encoder = opus_encoder_create(jack_samplerate, num_channels, OPUS_APPLICATION_AUDIO, &err);
+        if (err<0) {
+            HERE LOGF("failed to create an encoder: %s\n", opus_strerror(err));
+        }
+
+        err = opus_encoder_ctl(encoder, OPUS_SET_BITRATE(bitRate));
+        if (err<0) {
+            LOGF("failed to set bitrate: %s\n", opus_strerror(err));
+        }
+
+    }
     OUT
 }
 
@@ -96,6 +115,13 @@ void FileWriter::closeFile () {
 }
 
 int FileWriter::disk_write(void *data,size_t frames) {
+    if (fileType == OPUS) {
+        int nbBytes = opus_encode(encoder, (short *) data, frames, (unsigned char *) data, MAX_PACKET_SIZE);
+        if (nbBytes<0) {
+            LOGF("encode failed: %s\n", opus_strerror(nbBytes));
+        }
+    }
+
     if((size_t)sf_writef_float(FileWriter::soundfile, (float *)data,frames) != frames){
         LOGF("Error. Can not write sndfile (%s)\n",
                       sf_strerror(FileWriter::soundfile)
@@ -154,7 +180,7 @@ void FileWriter::setSampleRate (int sampleRate) {
 
 void FileWriter::setFileName (std::string name) {
     IN
-    filename = std::string (name) ;
+    filename = std::string (name) + std::string (extensions [fileType]) ;
     LOGD("[%s] filename set to %s", __PRETTY_FUNCTION__ , name.c_str());
     OUT
 }

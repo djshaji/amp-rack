@@ -10,6 +10,7 @@
 #include <string>
 #include "logging_macros.h"
 #include "sndfile.h"
+#include "opus.h"
 
 // TIL you can do this here also
 #ifdef __cplusplus
@@ -31,11 +32,15 @@ typedef enum  {
     OPUS = 2
 } FileType;
 
+#define MAX_PACKET_SIZE (3*1276)
+
 class FileWriter {
     SF_INFO sf_info ;
     int bitRate = 64000 ;
+    static OpusEncoder *encoder;
+
     static bool ready  ;
-    FileType fileType = WAV;
+    static FileType fileType;
     bool buffer_interleaved = true ;
     static vringbuffer_t * vringbuffer ;
     static int jack_samplerate ;
