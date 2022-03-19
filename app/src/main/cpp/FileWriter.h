@@ -26,9 +26,16 @@ typedef struct buffer_t{
     float *data;
 } buffer_t;
 
+typedef enum  {
+    WAV = 0,
+    OPUS = 2
+} FileType;
+
 class FileWriter {
     SF_INFO sf_info ;
+    int bitRate = 64000 ;
     static bool ready  ;
+    FileType fileType = WAV;
     bool buffer_interleaved = true ;
     static vringbuffer_t * vringbuffer ;
     static int jack_samplerate ;
