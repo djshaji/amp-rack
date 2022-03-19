@@ -159,6 +159,7 @@ oboe::AudioStreamBuilder *Engine::setupRecordingStreamParameters(
     builder->setDeviceId(mRecordingDeviceId)
             ->setDirection(oboe::Direction::Input)
             ->setSampleRate(sampleRate)
+//            ->setFormat(oboe::AudioFormat::I16)
             ->setChannelCount(mInputChannelCount);
     return setupCommonStreamParameters(builder);
 }

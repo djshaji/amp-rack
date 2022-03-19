@@ -29,7 +29,7 @@ typedef struct buffer_t{
 
 typedef enum  {
     WAV = 0,
-    OPUS = 2
+    OPUS = 1
 } FileType;
 
 #define MAX_PACKET_SIZE (3*1276)
@@ -37,7 +37,13 @@ typedef enum  {
 class FileWriter {
     SF_INFO sf_info ;
     int bitRate = 64000 ;
+    static int num_channels;
     static OpusEncoder *encoder;
+    static opus_int16 opusIn[960 * 2];
+    static unsigned char opusOut[MAX_PACKET_SIZE];
+    static int opusRead ;
+
+    static FILE * outputFile ;//for formats other than sndfile
 
     static bool ready  ;
     static FileType fileType;
@@ -52,7 +58,6 @@ class FileWriter {
 
     static int block_size;
     int default_block_size = 384 ;
-    static int num_channels;
     static int
     autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size);
 

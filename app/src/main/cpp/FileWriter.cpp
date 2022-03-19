@@ -2,7 +2,7 @@
 #include <cstring>
 #include "FileWriter.h"
 
-SNDFILE * FileWriter::soundfile ;
+SNDFILE * FileWriter::soundfile = NULL;
 buffer_t *FileWriter::current_buffer;
 int FileWriter::num_channels = 2 ;
 int FileWriter::block_size = 384 ;
@@ -14,6 +14,10 @@ bool FileWriter::ready = false ;
 vringbuffer_t * FileWriter::vringbuffer ;
 FileType FileWriter::fileType = OPUS ;
 OpusEncoder *FileWriter::encoder ;
+opus_int16 FileWriter::opusIn[960 * 2];
+int FileWriter::opusRead = 0;
+unsigned char FileWriter::opusOut[MAX_PACKET_SIZE];
+FILE * FileWriter::outputFile = NULL;
 
 static char * extensions [] = {
         ".wav",
@@ -75,6 +79,8 @@ FileWriter::FileWriter () {
 void FileWriter::openFile () {
     IN
     memset(&sf_info,0,sizeof(SF_INFO));
+    memset (&opusIn, 0, 960*2);
+    memset (&opusOut, 0, 3*1276);
 
     sf_info.channels = 1 ;
     sf_info.samplerate = jack_samplerate * num_channels ;
@@ -86,17 +92,22 @@ void FileWriter::openFile () {
         return ;
     }
 
-    LOGD("[%s] %d %d %d", __PRETTY_FUNCTION__ , sf_info.samplerate, sf_info.channels, sf_info.format);
-    FileWriter::soundfile = sf_open(filename.c_str(),SFM_WRITE,&sf_info);
-    if(soundfile==NULL){ // || ai==10){
-        HERE LOGF ("\nCan not open sndfile \"%s\" for output (%s)\n", filename.c_str(),sf_strerror(NULL));
-    } else {
-        LOGD("[%s] Opened file %s", __PRETTY_FUNCTION__ ,filename.c_str());
+    if (fileType == WAV) {
+        LOGD("[%s] %d %d %d", __PRETTY_FUNCTION__, sf_info.samplerate, sf_info.channels,
+             sf_info.format);
+        FileWriter::soundfile = sf_open(filename.c_str(), SFM_WRITE, &sf_info);
+        if (soundfile == NULL) { // || ai==10){
+            HERE
+            LOGF ("\nCan not open sndfile \"%s\" for output (%s)\n", filename.c_str(),
+                  sf_strerror(NULL));
+        } else {
+            LOGD("[%s] Opened file %s", __PRETTY_FUNCTION__, filename.c_str());
+        }
     }
 
-    if (fileType == OPUS) {
+    else if (fileType == OPUS) {
         int err;
-        encoder = opus_encoder_create(48000, 1, OPUS_APPLICATION_AUDIO, &err);
+        encoder = opus_encoder_create(48000, 2, OPUS_APPLICATION_AUDIO, &err);
         if (err<0) {
             HERE LOGF("failed to create an encoder: %s\n", opus_strerror(err));
         }
@@ -106,20 +117,42 @@ void FileWriter::openFile () {
             LOGF("failed to set bitrate: %s\n", opus_strerror(err));
         }
 
+        outputFile = fopen(filename.c_str(), "w");
     }
     OUT
 }
 
 void FileWriter::closeFile () {
-    IN sf_close(soundfile); OUT
+    IN
+    if (fileType == OPUS && outputFile)  {
+        fclose (outputFile);
+    }
+    if (soundfile)
+        sf_close(soundfile);
+    OUT
 }
 
 int FileWriter::disk_write(void *data,size_t frames) {
     if (fileType == OPUS) {
-        LOGD("encoding to opus ... [%d]", frames);
-        int nbBytes = opus_encode(encoder, (short *) data, 160, (unsigned char *) data, MAX_PACKET_SIZE);
-        if (nbBytes<0) {
-            LOGF("encode failed: %s\n", opus_strerror(nbBytes));
+        if (opusRead < 960) {
+            float * f = static_cast<float *>(data);
+            for (int x = 0 ; x < frames ; x ++) {
+                opusIn[opusRead] = (opus_int )(size_t) f ;
+                opusRead ++ ;
+                *f ++ ;
+            }
+
+            return 1 ;
+
+        } else {
+            int nbBytes = opus_encode(encoder, opusIn, 960, opusOut, MAX_PACKET_SIZE);
+            if (nbBytes<0) {
+                LOGF("encode failed: %s\n", opus_strerror(nbBytes));
+            } else {
+                fwrite(opusOut, sizeof (unsigned char ), opusRead, outputFile) ;
+                opusRead = 0 ;
+                return 1 ;
+            }
         }
     }
 
