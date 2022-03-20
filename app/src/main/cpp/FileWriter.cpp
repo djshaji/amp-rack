@@ -122,7 +122,7 @@ void FileWriter::openFile () {
 //        outputFile = fopen(filename.c_str(), "wb");
         outputFile = NULL ;
         int error = 0 ;
-        LOGD("going to create opus encoder");
+        LOGD("going to create opus encoder with filename: %s", filename.c_str());
         comments = ope_comments_create() ;
         ope_comments_add(comments, "TITLE", "AmpRack Demo");
 

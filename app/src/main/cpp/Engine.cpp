@@ -41,10 +41,16 @@ bool Engine::setEffectOn(bool isOn) {
                 mFullDuplexPass.start();
                 fileWriter->setSampleRate (mSampleRate);
 
-                time_t _tm =time(NULL );
-                struct tm * curtime = localtime ( &_tm );
-//                asctime(curtime) ;
-                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/tmpfile")) ;
+                char buffer [80];
+
+                time_t rawtime;
+                struct tm * timeinfo;
+                time (&rawtime);
+                timeinfo = localtime (&rawtime);
+
+                strftime (buffer,80,"%d-%m-%y__%I.%M%p",timeinfo);
+
+                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/") + std::string (buffer)) ;
                 fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
                 if (mFullDuplexPass.recordingActive) {
                     fileWriter->startRecording();
