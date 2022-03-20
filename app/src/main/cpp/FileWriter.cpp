@@ -19,10 +19,11 @@ int FileWriter::opusRead = 0;
 unsigned char FileWriter::opusOut[MAX_PACKET_SIZE];
 FILE * FileWriter::outputFile = NULL;
 OggOpusEnc * FileWriter:: oggOpusEnc ;
+OggOpusComments *FileWriter::comments;
 
 static char * extensions [] = {
         ".wav",
-        ".opus"
+        ".ogg"
 } ;
 
 int FileWriter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size) {
@@ -121,10 +122,16 @@ void FileWriter::openFile () {
 //        outputFile = fopen(filename.c_str(), "wb");
         outputFile = NULL ;
         int error = 0 ;
-        oggOpusEnc = ope_encoder_create_file(filename.c_str(), NULL, 48000, 2, 0, &error) ;
+        LOGD("going to create opus encoder");
+        comments = ope_comments_create() ;
+        ope_comments_add(comments, "TITLE", "AmpRack Demo");
+
+        oggOpusEnc = ope_encoder_create_file(filename.c_str(), comments, 48000, 1, 0, &error) ;
         if (!error) {
             HERE LOGF("cannot create encoder: %s", ope_strerror(error));
         }
+        err = ope_encoder_ctl(oggOpusEnc, OPUS_SET_BITRATE(bitRate));
+
     }
 
     OUT
@@ -132,16 +139,27 @@ void FileWriter::openFile () {
 
 void FileWriter::closeFile () {
     IN
-    if (fileType == OPUS && outputFile)  {
-        fclose (outputFile);
+    if (fileType == OPUS )  {
+        if (outputFile)
+            fclose (outputFile);
+
+        ope_encoder_drain(oggOpusEnc);
+        ope_encoder_destroy(oggOpusEnc);
+        ope_comments_destroy(comments);
     }
+
     if (soundfile)
         sf_close(soundfile);
     OUT
 }
 
 int FileWriter::disk_write(void *data,size_t frames) {
-    if (fileType == OPUS) {
+    if (fileType== OPUS) {
+        ope_encoder_write_float(oggOpusEnc, (float *)data, frames);
+        return 1;
+    }
+
+    if (fileType == 987) {
         if (opusRead < 960) {
             float * f = static_cast<float *>(data);
             for (int x = 0 ; x < frames ; x ++) {
@@ -153,6 +171,7 @@ int FileWriter::disk_write(void *data,size_t frames) {
             return 1 ;
 
         } else {
+
             int nbBytes = opus_encode(encoder, opusIn, 960, opusOut, MAX_PACKET_SIZE);
             if (nbBytes<0) {
                 LOGF("encode failed: %s\n", opus_strerror(nbBytes));
@@ -161,6 +180,8 @@ int FileWriter::disk_write(void *data,size_t frames) {
                 opusRead = 0 ;
                 return 1 ;
             }
+
+
         }
     }
 

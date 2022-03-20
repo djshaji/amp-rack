@@ -58,8 +58,8 @@ private:
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
     const oboe::AudioFormat mFormat = oboe::AudioFormat::Float; // for easier processing
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;
-    const int32_t     mInputChannelCount = oboe::ChannelCount::Stereo;
-    const int32_t     mOutputChannelCount = oboe::ChannelCount::Stereo;
+    const int32_t     mInputChannelCount = oboe::ChannelCount::Mono;
+    const int32_t     mOutputChannelCount = oboe::ChannelCount::Mono;
 
     std::shared_ptr<oboe::AudioStream> mRecordingStream;
     std::shared_ptr<oboe::AudioStream> mPlayStream;

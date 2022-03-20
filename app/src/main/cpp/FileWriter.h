@@ -40,6 +40,8 @@ typedef enum  {
 class FileWriter {
     SF_INFO sf_info ;
     int bitRate = 64000 ;
+    static OggOpusComments *comments;
+
     static int num_channels;
     static OpusEncoder *encoder;
     static OggOpusEnc * oggOpusEnc ;
