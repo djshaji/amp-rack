@@ -18,6 +18,7 @@ opus_int16 FileWriter::opusIn[960 * 2];
 int FileWriter::opusRead = 0;
 unsigned char FileWriter::opusOut[MAX_PACKET_SIZE];
 FILE * FileWriter::outputFile = NULL;
+OggOpusEnc * FileWriter:: oggOpusEnc ;
 
 static char * extensions [] = {
         ".wav",
@@ -117,8 +118,15 @@ void FileWriter::openFile () {
             LOGF("failed to set bitrate: %s\n", opus_strerror(err));
         }
 
-        outputFile = fopen(filename.c_str(), "w");
+//        outputFile = fopen(filename.c_str(), "wb");
+        outputFile = NULL ;
+        int error = 0 ;
+        oggOpusEnc = ope_encoder_create_file(filename.c_str(), NULL, 48000, 2, 0, &error) ;
+        if (!error) {
+            HERE LOGF("cannot create encoder: %s", ope_strerror(error));
+        }
     }
+
     OUT
 }
 

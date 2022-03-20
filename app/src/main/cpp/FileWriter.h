@@ -11,6 +11,9 @@
 #include "logging_macros.h"
 #include "sndfile.h"
 #include "opus.h"
+#include "opus_multistream.h"
+#include "opus_projection.h"
+#include "opusenc.h"
 
 // TIL you can do this here also
 #ifdef __cplusplus
@@ -39,6 +42,7 @@ class FileWriter {
     int bitRate = 64000 ;
     static int num_channels;
     static OpusEncoder *encoder;
+    static OggOpusEnc * oggOpusEnc ;
     static opus_int16 opusIn[960 * 2];
     static unsigned char opusOut[MAX_PACKET_SIZE];
     static int opusRead ;

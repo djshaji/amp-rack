@@ -33,6 +33,16 @@ set_target_properties( # Specifies the target library.
         # Provides the path to the library you want to import.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopus.a )
 
+add_library(libopusenc STATIC IMPORTED)
+set_target_properties( # Specifies the target library.
+        libopusenc
+
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+
+        # Provides the path to the library you want to import.
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopusenc.a )
+
 
 add_library( # Sets the name of the library.
         amprack
@@ -52,6 +62,7 @@ add_library( # Sets the name of the library.
         SharedLibrary.cpp
         Plugin.cpp
         PluginControl.cpp
+
         )
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -76,6 +87,7 @@ target_link_libraries( # Specifies the target library.
         amprack
         oboe::oboe
         libsndfile
+        libopusenc
         libopus
 
         # Links the target library to the log library
