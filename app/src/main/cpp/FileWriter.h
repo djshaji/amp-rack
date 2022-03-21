@@ -14,6 +14,7 @@
 #include "opus_multistream.h"
 #include "opus_projection.h"
 #include "opusenc.h"
+#include "lame.h"
 
 // TIL you can do this here also
 #ifdef __cplusplus
@@ -32,7 +33,8 @@ typedef struct buffer_t{
 
 typedef enum  {
     WAV = 0,
-    OPUS = 1
+    OPUS = 1,
+    MP3 = 2
 } FileType;
 
 #define MAX_PACKET_SIZE (3*1276)
@@ -41,6 +43,7 @@ class FileWriter {
     SF_INFO sf_info ;
     int bitRate = 64000 ;
     static OggOpusComments *comments;
+    static lame_t lame ;
 
     static int num_channels;
     static OpusEncoder *encoder;

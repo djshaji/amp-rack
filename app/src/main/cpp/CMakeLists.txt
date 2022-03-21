@@ -43,6 +43,16 @@ set_target_properties( # Specifies the target library.
         # Provides the path to the library you want to import.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopusenc.a )
 
+add_library(libmp3lame STATIC IMPORTED)
+set_target_properties( # Specifies the target library.
+        libmp3lame
+
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+
+        # Provides the path to the library you want to import.
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libmp3lame.a )
+
 
 add_library( # Sets the name of the library.
         amprack
@@ -89,6 +99,7 @@ target_link_libraries( # Specifies the target library.
         libsndfile
         libopusenc
         libopus
+        libmp3lame
 
         # Links the target library to the log library
         # included in the NDK.

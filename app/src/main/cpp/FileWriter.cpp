@@ -12,30 +12,27 @@ int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
 vringbuffer_t * FileWriter::vringbuffer ;
-FileType FileWriter::fileType = OPUS ;
+FileType FileWriter::fileType = MP3 ;
 OpusEncoder *FileWriter::encoder ;
 opus_int16 FileWriter::opusIn[960 * 2];
 int FileWriter::opusRead = 0;
 unsigned char FileWriter::opusOut[MAX_PACKET_SIZE];
 FILE * FileWriter::outputFile = NULL;
-OggOpusEnc * FileWriter:: oggOpusEnc ;
-OggOpusComments *FileWriter::comments;
+OggOpusEnc * FileWriter:: oggOpusEnc = NULL;
+OggOpusComments *FileWriter::comments = NULL;
+lame_t FileWriter::lame = NULL ;
 
 static char * extensions [] = {
         ".wav",
-        ".ogg"
+        ".ogg",
+        ".mp3"
 } ;
 
 int FileWriter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size) {
-    IN ;
     if(buffers_to_seconds(writing_size) < min_buffer_time) {
-        LOGD("return 2");
-        OUT
         return 2; // autoincrease_callback is called approx. at every block. So it should not be necessary to return a value higher than 2. Returning a very low number might also theoretically put a lower constant strain on the memory bus, thus theoretically lower the chance of xruns.
     }
 
-    LOGD("return 0");
-    OUT
     return 0 ;
 }
 
@@ -132,6 +129,22 @@ void FileWriter::openFile () {
         }
         err = ope_encoder_ctl(oggOpusEnc, OPUS_SET_BITRATE(bitRate));
 
+    } else if (fileType == MP3) {
+        LOGD("init lame encoder");
+        lame = lame_init();
+        lame_set_in_samplerate(lame, 48000);
+        lame_set_VBR(lame, vbr_default);
+        lame_set_out_samplerate(lame, 48000);
+        lame_set_num_channels(lame, 1);
+        /*
+        lame_set_brate(lame, 64);
+         */
+        lame_set_preset(lame, MEDIUM);
+        int retval = lame_init_params(lame);
+        if (retval < 0) {
+            HERE LOGF("Unable to intialize lame parameters: %d", retval);
+        }
+        outputFile = fopen(filename.c_str(), "wb");
     }
 
     OUT
@@ -139,21 +152,55 @@ void FileWriter::openFile () {
 
 void FileWriter::closeFile () {
     IN
-    if (fileType == OPUS )  {
-        if (outputFile)
-            fclose (outputFile);
-
-        ope_encoder_drain(oggOpusEnc);
-        ope_encoder_destroy(oggOpusEnc);
-        ope_comments_destroy(comments);
+    if (fileType == MP3) {
+        unsigned char       *mp3buf  ;
+        mp3buf = (unsigned char *) malloc (8192*3);
+        lame_encode_flush(lame, mp3buf, 8192*3);
+        fwrite (mp3buf, 8192*3, sizeof (unsigned char), outputFile);
+        free (mp3buf);
+        lame_close(lame) ;
+        fclose(outputFile);
+        outputFile = NULL;
+        lame = NULL ;
     }
 
-    if (soundfile)
+    else if (fileType == WAV && outputFile) {
+        fclose(outputFile);
+        outputFile = NULL;
+    }
+
+    else if (fileType == OPUS )  {
+        if (oggOpusEnc) {
+            ope_encoder_drain(oggOpusEnc);
+            ope_encoder_destroy(oggOpusEnc);
+            ope_comments_destroy(comments);
+            oggOpusEnc = NULL ;
+            comments = NULL ;
+        }
+    }
+
+    if (soundfile) {
         sf_close(soundfile);
+        soundfile = NULL;
+    }
+
     OUT
 }
 
 int FileWriter::disk_write(void *data,size_t frames) {
+    if (fileType == MP3) {
+        void * mp3_buffer =  malloc ((frames * 1.25) + 7200);
+        int write = lame_encode_buffer_ieee_float(lame, (float *)data, NULL, frames, (unsigned char *) mp3_buffer, (frames * 1.25) + 7200);
+        if (write < 0) {
+            LOGF("unable to encode mp3 stream: %d", write);
+        } else {
+            fwrite(mp3_buffer, write, 1, outputFile);
+        }
+
+        free(mp3_buffer);
+        return 0 ;
+    }
+
     if (fileType== OPUS) {
         ope_encoder_write_float(oggOpusEnc, (float *)data, frames);
         return 1;
@@ -249,12 +296,10 @@ void FileWriter::setFileName (std::string name) {
 }
 
 void FileWriter::process_fill_buffer(float *in[], buffer_t *buffer, int i, int end){
-    IN
     float *data=buffer->data;
     int pos=buffer->pos*num_channels;
 
     buffer->pos=pos/num_channels;
-    OUT
 }
 
 bool FileWriter::process_new_current_buffer(int frames_left){
@@ -268,16 +313,12 @@ bool FileWriter::process_new_current_buffer(int frames_left){
 }
 
 void FileWriter::send_buffer_to_disk_thread(buffer_t *buffer){
-    IN
     vringbuffer_return_writing(vringbuffer,buffer);
-    OUT
 }
 
 void FileWriter::process_fill_buffers(void *data, int samples){
-    IN
     if(current_buffer==NULL && process_new_current_buffer(samples)==false) {
         LOGD("no buffer and no samples!") ;
-        OUT
         return;
     }
 
@@ -308,7 +349,6 @@ void FileWriter::process_fill_buffers(void *data, int samples){
         }
 
     }
-    OUT
 }
 
 int FileWriter::process(float nframes, void *arg) {
