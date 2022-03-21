@@ -101,5 +101,20 @@
         <item>White.so</item>
         <item>xfade_1915.so</item>
         <item>zm1_1428.so</item>
+        <item>monocompressor.so</item>
+        <item>monoamp.so</item>
+        <item>impulseresponse.so</item>
+        <item>guitarix-ladspa.so</item>
+        <item>freeverb.so</item>
+        <item>echo.so</item>
+        <item>distortion.so</item>
+        <item>crybaby.so</item>
+        <item>c++_shared.so</item>
+        <item>inv_tube.so</item>
+        <item>inv_common.so</item>
+        <item>inv_input.so</item>
+        <item>inv_filter.so</item>
+        <item>inv_erreverb.so</item>
+        <item>inv_compressor.so</item>
     </string-array>
 </resources>
