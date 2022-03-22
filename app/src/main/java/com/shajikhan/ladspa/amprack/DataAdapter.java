@@ -32,6 +32,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     ArrayList <Integer> plugins = new ArrayList<>();
     ArrayList <ViewHolder> holders = new ArrayList<>();
+    MainActivity mainActivity;
 
     @NonNull
     @Override
@@ -167,6 +168,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     final int _i = finalI;
                     Log.d(TAG, "Changing plugin control " + string + " [" + _position + " : " + _i + "] to " + value) ;
                     AudioEngine.setPluginControl(_position, _i, value);
+                    mainActivity.saveActivePreset();
                 }
 
                 @Override

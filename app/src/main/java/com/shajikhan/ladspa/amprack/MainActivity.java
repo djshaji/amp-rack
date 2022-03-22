@@ -281,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          */
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dataAdapter = new DataAdapter();
+        dataAdapter.mainActivity = this ;
         recyclerView.setAdapter(dataAdapter);
 
         // add sample item to recylcer view here
