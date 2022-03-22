@@ -12,6 +12,11 @@ void PluginControl::setValue (float value) {
     *def = value;
 }
 
+void PluginControl::setPresetValue (float value) {
+//    val = value ;
+    presetValue = value;
+}
+
 
 void PluginControl::setSampleRate (unsigned long rate) {
     sample_rate = rate ;

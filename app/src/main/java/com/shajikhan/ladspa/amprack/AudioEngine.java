@@ -15,6 +15,7 @@ public class AudioEngine {
     // activePlugins
     static native int getPluginControls (int plugin) ;
     static native float [] getPluginControlValues (int plugin, int control) ;
+    static native float getPluginPresetValue (int plugin, int control) ;
     static native String getControlName (int plugin, int control) ;
     static native String getActivePluginName (int plugin);
 
@@ -24,6 +25,7 @@ public class AudioEngine {
     static native boolean deletePlugin (int plugin) ;
 
     static native void setPluginControl (int plugin, int control, float value);
+    static native void setPresetValue (int plugin, int control, float value);
     static native int movePlugin (int plugin, int position) ;
     static native int movePluginUp (int plugin) ;
     static native int movePluginDown (int plugin) ;

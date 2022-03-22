@@ -681,7 +681,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             int ret = AudioEngine.addPluginByName(name);
             Log.d(TAG, "loadPreset: Loaded plugin: " + name);
-            dataAdapter.addItem(ret, ret);
             String [] control = controls.split(";");
 
             DataAdapter.ViewHolder holder = null ;
@@ -698,10 +697,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             for (int i = 0 ; i < control.length ; i ++) {
                 Log.d(TAG, "loadPreset: " + i + ": " + control[i]);
                 //                holder.sliders.get(i).setValue(Integer.parseInt(control [i]));
-                AudioEngine.setPluginControl(plugin, i, Float.parseFloat(control [i]));
+                AudioEngine.setPresetValue(plugin, i, Float.parseFloat(control [i]));
             }
+
+            dataAdapter.addItem(ret, ret);
+            plugin ++ ;
         }
 
-        plugin ++ ;
     }
 }

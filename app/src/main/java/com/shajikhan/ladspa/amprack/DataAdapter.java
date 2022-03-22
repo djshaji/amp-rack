@@ -67,6 +67,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             layout.setOrientation(LinearLayout.HORIZONTAL);
             float [] vals = AudioEngine.getPluginControlValues(position, i) ;
+            float presetValue = AudioEngine.getPluginPresetValue(position, i) ;
             String string = AudioEngine.getControlName(position, i) ;
             TextView textView = new TextView(context);
 //            textView.setRotation(-90f);
@@ -95,16 +96,24 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
              */
 
             Log.d (TAG, String.valueOf(vals [1]) + " " + vals [2]) ;
-
-            if (vals [0] < vals [1]) {
+            if (presetValue != -1) {
+                slider.setValue(presetValue);
+                editText.setText(String.valueOf(presetValue));
+            }
+            else if (vals [0] < vals [1]) {
                 Log.e(TAG, string + ": default value " + vals [0] + " < than min " + vals [1]);
                 slider.setValue (vals [1]);
+                editText.setText(String.valueOf(vals [1]));
+
             } else if (vals [0] > vals [2]) {
                 Log.e(TAG, string + ": default value " + vals [0] + " > than max " + vals [2]);
                 slider.setValue (vals [2]);
-            } else
-                slider.setValue(vals [0]);
-            editText.setText(String.valueOf(vals [0]));
+                editText.setText(String.valueOf(vals [2]));
+            } else {
+                slider.setValue(vals[0]);
+                editText.setText(String.valueOf(vals[0]));
+            }
+
             slider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
             layout.addView(slider);
             holder.sliders.add(slider);

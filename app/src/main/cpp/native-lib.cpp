@@ -383,3 +383,28 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginByName(JNIEnv *env, jclas
     env->ReleaseStringUTFChars(name, nativeString);
     return engine->activePlugins.size();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setPresetValue(JNIEnv *env, jclass clazz, jint plugin,
+                                                             jint control, jfloat value) {
+    // TODO: implement setPresetValue()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return ;
+    }
+
+    LOGD("[%s %d] setting control %s to %f", engine->activePlugins.at(plugin)->descriptor->Name, control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
+    engine->activePlugins.at(plugin)->pluginControls.at(control)->setPresetValue(value);
+}
+extern "C"
+JNIEXPORT jfloat JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginPresetValue(JNIEnv *env, jclass clazz,
+                                                                   jint plugin, jint control) {
+    // TODO: implement getPluginPresetValue()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return -1;
+    }
+
+    return engine->activePlugins.at(plugin)->pluginControls.at(control)->presetValue ;
+}

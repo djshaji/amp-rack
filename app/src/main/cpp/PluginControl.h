@@ -30,6 +30,7 @@ public:
     /* value in the plugin */
     LADSPA_Data val;
     LADSPA_Data *def;
+    LADSPA_Data presetValue = -1;
     Type type ;
 
     LADSPA_Data control_rounding(LADSPA_Data _val);
@@ -54,6 +55,8 @@ public:
     const char *name;
 
     void freeMemory();
+
+    void setPresetValue(float value);
 };
 
 
