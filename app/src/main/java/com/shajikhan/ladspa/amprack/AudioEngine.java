@@ -20,6 +20,7 @@ public class AudioEngine {
 
     // return active plugin *ID*
     static native int addPlugin (int library, int plugin) ;
+    static native int addPluginByName (String name);
     static native boolean deletePlugin (int plugin) ;
 
     static native void setPluginControl (int plugin, int control, float value);

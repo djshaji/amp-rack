@@ -410,3 +410,17 @@ int Engine :: moveActivePluginUp (int _p) {
     OUT
     return _p - 1 ;
 }
+
+int Engine::addPlugintoRackByName (std::string pluginName) {
+    for (int i = 0 ; i < libraries.size() ; i ++) {
+        SharedLibrary *sharedLibrary = libraries.at(i);
+        for (int j = 0 ; j < sharedLibrary->total_plugins; j ++) {
+            if (std::string (sharedLibrary->descriptors [j]->Name) == pluginName) {
+                addPluginToRack(i, j);
+                return 1 ;
+            }
+        }
+    }
+
+    return  0 ;
+}

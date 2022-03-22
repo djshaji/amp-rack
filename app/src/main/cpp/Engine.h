@@ -52,6 +52,8 @@ public:
     int moveActivePluginDown(int _p);
     int moveActivePluginUp(int _p);
     void buildPluginChain();
+    int addPlugintoRackByName(std::string);
+
 private:
     bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;

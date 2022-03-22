@@ -31,6 +31,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     Context context = null ;
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     ArrayList <Integer> plugins = new ArrayList<>();
+    ArrayList <ViewHolder> holders = new ArrayList<>();
 
     @NonNull
     @Override
@@ -43,6 +44,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
+        holders.add(holder);
         LinearLayout linearLayout = holder.getLinearLayout();
         if (linearLayout == null) {
             Log.wtf(TAG, "linear layout for plugin!") ;
@@ -62,7 +64,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         int numControls = AudioEngine.getPluginControls(position);
         for (int i = 0 ; i < numControls ; i ++) {
             LinearLayout layout = new LinearLayout(context);
-            linearLayout.addView(layout);
             layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             layout.setOrientation(LinearLayout.HORIZONTAL);
             float [] vals = AudioEngine.getPluginControlValues(position, i) ;
@@ -77,6 +78,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 //            textView.setHeight(30);
 //            layout.addView(textView);
             linearLayout.addView(textView);
+            linearLayout.addView(layout);
 
             Slider slider = new Slider(context);
             EditText editText = new EditText(context);
@@ -105,6 +107,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             editText.setText(String.valueOf(vals [0]));
             slider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
             layout.addView(slider);
+            holder.sliders.add(slider);
 
             slider.addOnChangeListener(new Slider.OnChangeListener() {
                 @Override
@@ -170,6 +173,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        ArrayList <Slider> sliders ;
         LinearLayout linearLayout ;
         TextView pluginName ;
         SwitchMaterial switchMaterial ;
@@ -177,6 +181,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            sliders = new ArrayList<>();
             linearLayout = (LinearLayout) itemView ;
             linearLayout = (LinearLayout) linearLayout.getChildAt(0);
             linearLayout = (LinearLayout) linearLayout.getChildAt(0);
@@ -210,6 +215,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     void addItem(int pluginID, int index) {
         plugins.add(pluginID);
         notifyItemInserted(index);
+    }
+
+    void deleteAll () {
+        for (int i = 0 ;i  < plugins.size();i++) {
+            deleteItem(i);
+        }
     }
 
     void deleteItem(int index) {

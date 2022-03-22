@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,12 +43,17 @@ import android.widget.ToggleButton;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -312,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
              }
         }
         AudioEngine.setDefaultStreamValues(context);
+        loadActivePreset();
     }
 
     /**
@@ -346,10 +353,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
+//        loadActivePreset();
     }
     @Override
     protected void onPause() {
         stopEffect();
+        saveActivePreset();
         AudioEngine.delete();
         super.onPause();
     }
@@ -576,5 +585,123 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         AudioEngine.loadPlugins();
 
+    }
+
+    String presetToString () throws JSONException {
+        JSONObject preset = new JSONObject();
+        for (int i = 0 ; i < dataAdapter.getItemCount() ; i ++) {
+            DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            if (holder == null) {
+                Log.e(TAG, "presetToString: holder is null for " + i, null);
+                continue ;
+            }
+
+            JSONObject jo = new JSONObject();
+            String vals = "";
+
+            for (int k = 0 ; k < holder.sliders.size() ; k ++) {
+                vals += holder.sliders.get(k).getValue() ;
+                if (k < holder.sliders.size() - 1) {
+                    vals += ";";
+                }
+            }
+
+            try {
+                jo.put("name", holder.pluginName.getText());
+                jo.put("controls", vals);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            preset.put(String.valueOf(i), jo.toString());
+        }
+
+        return preset.toString() ;
+    }
+
+    void saveActivePreset () {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        String preset ;
+        try {
+            preset = presetToString() ;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ;
+        }
+
+        sharedPreferences.edit().putString("activePreset", preset).apply();
+        Log.d(TAG, "saveActivePreset: Saved preset: " + preset);
+    }
+
+    void loadActivePreset () {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        String preset = sharedPreferences.getString("activePreset", null);
+        if (preset != null) {
+            loadPreset(preset);
+        }
+    }
+
+    void loadPreset (String preset) {
+        JSONObject jsonObject ;
+        try {
+            jsonObject = new JSONObject(preset);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "loadPreset: Unable to load preset\n"+preset, e);
+            return ;
+        }
+
+        int items = dataAdapter.totalItems ;
+        if (items > 0) {
+            Log.d(TAG, "loadPreset: already loaded something, deleting ...");
+            dataAdapter.deleteAll();
+        }
+
+        int plugin = 0 ;
+        for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
+            String key = it.next();
+            JSONObject jo ;
+            try {
+                jo = new JSONObject (jsonObject.getString(key)) ;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(TAG, "loadPreset: unable to parse key: " + key, e);
+                continue;
+            }
+
+            String name, controls ;
+            try {
+                name = jo.getString("name");
+                controls = jo.getString("controls");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(TAG, "loadPreset: unable to parse name or controls for key: " + key, e);
+                continue ;
+            }
+
+            int ret = AudioEngine.addPluginByName(name);
+            Log.d(TAG, "loadPreset: Loaded plugin: " + name);
+            dataAdapter.addItem(ret, ret);
+            String [] control = controls.split(";");
+
+            DataAdapter.ViewHolder holder = null ;
+            if (dataAdapter.holders.size() == 0)
+                Log.e(TAG, "loadPreset: data adapter holders is zero", null);
+            else
+                dataAdapter.holders.get(plugin);
+            if (holder == null) {
+                Log.e(TAG, "loadPreset: cannot find holder for " + (ret -1), null);
+            }
+
+
+            Log.d(TAG, "loadPreset: loading "+control.length+ " controls from "+controls);
+            for (int i = 0 ; i < control.length ; i ++) {
+                Log.d(TAG, "loadPreset: " + i + ": " + control[i]);
+                //                holder.sliders.get(i).setValue(Integer.parseInt(control [i]));
+                AudioEngine.setPluginControl(plugin, i, Float.parseFloat(control [i]));
+            }
+        }
+
+        plugin ++ ;
     }
 }

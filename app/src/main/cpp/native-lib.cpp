@@ -177,7 +177,8 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginControlValues(JNIEnv *env
     // [default, min, max, type]
     PluginControl *p = engine ->activePlugins.at(plugin)->pluginControls.at(control) ;
     jfloatArray r = env ->NewFloatArray(4);
-    float res [] = {p->getDefault(), p->getMin(), p->getMax(), static_cast<float>(p->type)};
+    float res [] = {p->getValue(), p->getMin(), p->getMax(), static_cast<float>(p->type)};
+//    float res [] = {p->getDefault(), p->getMin(), p->getMax(), static_cast<float>(p->type)};
     env->SetFloatArrayRegion(r, 0, 4, res);
     return r ;
 }
@@ -370,4 +371,15 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setRecordingActive(JNIEnv *env, jc
     }
 
     engine->mFullDuplexPass.recordingActive = active ;
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginByName(JNIEnv *env, jclass clazz,
+                                                              jstring name) {
+    // TODO: implement addPluginByName()
+    const char *nativeString = env->GetStringUTFChars(name, 0);
+    engine ->addPlugintoRackByName(std::string (nativeString));
+    env->ReleaseStringUTFChars(name, nativeString);
+    return engine->activePlugins.size();
 }
