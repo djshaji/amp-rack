@@ -46,6 +46,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
 import org.json.JSONException;
@@ -77,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int WRITE_STORAGE_REQUEST = 2;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501; // Any value
 
+    // Firebase
+    private FirebaseAuth mAuth;
+    FirebaseUser currentUser ;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+
     // Used to load the 'amprack' library on application startup.
     static {
         System.loadLibrary("amprack");
@@ -90,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+//        AudioEngine.showProgress(null);
         AudioEngine.showProgress(context);
         AudioEngine.create();
         // load included plugins
