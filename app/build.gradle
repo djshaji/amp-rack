@@ -1,6 +1,8 @@
 plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.android.application'
+    id 'com.google.gms.google-services'
+
 }
 
 android {
@@ -54,14 +56,15 @@ android {
 
 dependencies {
     // Import the BoM for the Firebase platform
+    implementation 'com.google.gms:google-services:4.3.10'
     implementation platform('com.google.firebase:firebase-bom:29.2.1')
+    implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-crashlytics-ndk'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
 
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-auth'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
     implementation 'com.google.oboe:oboe:1.6.1'
