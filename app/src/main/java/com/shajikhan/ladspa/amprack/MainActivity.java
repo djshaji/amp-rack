@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
+        LoadFragment(new Rack());
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -123,6 +125,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         getWindow().setStatusBarColor(color);
         color = adjustAlpha(color, .5f);
         primaryColor = color ;
+
+
+    }
+
+    /**
+     * A native method that is implemented by the 'amprack' native library,
+     * which is packaged with this application.
+     */
+    public native String stringFromJNI();
+
+    void setupRack () {
         onOff = findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -166,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
         });
+
 
         int libraries = AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
@@ -327,22 +341,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         File defaultDir = new File (path + "/AmpRack/") ;
         if (!defaultDir.exists()) {
             Log.d(TAG, "making directory " + path + "/AmpRack/");
-             try {
-                 if (!defaultDir.mkdir())
-                     Log.wtf (TAG, "Unable to create directory!");
-             }  catch (Exception e) {
-                 Log.w(TAG, "UNable to create directory: " + e.getMessage());
-             }
+            try {
+                if (!defaultDir.mkdir())
+                    Log.wtf (TAG, "Unable to create directory!");
+            }  catch (Exception e) {
+                Log.w(TAG, "UNable to create directory: " + e.getMessage());
+            }
         }
         AudioEngine.setDefaultStreamValues(context);
         loadActivePreset();
     }
-
-    /**
-     * A native method that is implemented by the 'amprack' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
 
     @Override
     protected void onStart() {
@@ -606,6 +614,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     String presetToString () throws JSONException {
         JSONObject preset = new JSONObject();
+        if (dataAdapter == null)
+            return null ;
+
         for (int i = 0 ; i < dataAdapter.getItemCount() ; i ++) {
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (holder == null) {
@@ -646,6 +657,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return ;
         }
 
+        if (preset == null)
+            return ;
         sharedPreferences.edit().putString("activePreset", preset).apply();
         Log.d(TAG, "saveActivePreset: Saved preset: " + preset);
     }
@@ -722,4 +735,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
     }
+
+    private boolean LoadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -13,73 +13,6 @@
         android:src="@drawable/bg"/>
 
     <LinearLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_gravity="top"
-            android:gravity="top"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:paddingTop="5dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="30dp"
-                android:foregroundGravity="left"
-                android:layout_gravity="left"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gruppo"
-                android:text="@string/app_name"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                android:shadowRadius="5"
-                android:shadowColor="@color/white"
-                android:textColor="@color/white"
-                android:textSize="30dp" />
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:layout_width="wrap_content"
-                android:id="@+id/onoff"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"/>
-            <ToggleButton
-                android:id="@+id/record_button"
-                android:layout_marginLeft="5dp"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:textOff="Rec"
-                android:background="@android:color/transparent"
-                android:textOn="Stop"
-                android:drawableRight="@drawable/ic_baseline_fiber_manual_record_24"/>
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="50dp"
-                android:id="@+id/settings"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_baseline_settings_24"/>
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
@@ -89,7 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <!--        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
@@ -110,11 +43,22 @@
                 android:id="@+id/fab"
                 android:drawableLeft="@drawable/ic_baseline_add_circle_outline_24"
                 android:layout_margin="5dp"/>
-
         </LinearLayout>
+        <FrameLayout
+            android:layout_weight="1"
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="56dp"
+            android:text="Amp Rack"/>
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
+            app:labelVisibilityMode="selected"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            android:layout_gravity="bottom"
+            app:layout_insetEdge="bottom"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom" />
     </LinearLayout>
