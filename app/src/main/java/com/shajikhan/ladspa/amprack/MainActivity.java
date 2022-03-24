@@ -41,6 +41,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private FirebaseAuth mAuth;
     FirebaseUser currentUser ;
     private FirebaseAnalytics mFirebaseAnalytics;
-
+    Rack rack ;
+    Presets presets ;
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -101,7 +103,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
-        LoadFragment(new Rack());
+        rack = new Rack();
+        presets = new Presets();
+
+        LoadFragment(rack);
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -126,7 +131,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         color = adjustAlpha(color, .5f);
         primaryColor = color ;
 
+        BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+                = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment=null;
+                switch (item.getItemId()) {
+                    case R.id.page_rack:
+                        fragment = rack;
+                        break;
+
+                    case R.id.page_preset:
+                        fragment = presets;
+                        break;
+
+                }
+                return LoadFragment(fragment);
+            }
+        };
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     /**

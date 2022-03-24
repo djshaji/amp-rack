@@ -14,36 +14,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_weight="0"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!--        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_gravity="center"-->
-            <!--            android:text="Debug"-->
-            <!--            android:background="@drawable/rounded_corners_transparent"-->
-            <!--            android:foregroundGravity="center"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_margin="5dp"-->
-            <!--            android:drawableLeft="@drawable/ic_baseline_bug_report_24"-->
-            <!--            android:id="@+id/debug"/>-->
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:text="Effect"
-                android:id="@+id/fab"
-                android:drawableLeft="@drawable/ic_baseline_add_circle_outline_24"
-                android:layout_margin="5dp"/>
-        </LinearLayout>
         <FrameLayout
             android:layout_weight="1"
             android:id="@+id/fragment_container"
@@ -58,6 +33,7 @@
             app:labelVisibilityMode="selected"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             android:layout_gravity="bottom"
+            android:background="@drawable/rounded_corners_transparent"
             app:layout_insetEdge="bottom"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom" />
