@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private FirebaseAnalytics mFirebaseAnalytics;
     Rack rack ;
     Presets presets ;
+    PopupMenu optionsMenu ;
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
-        rack = new Rack();
+        rack = new Rack(this);
         presets = new Presets();
 
         LoadFragment(rack);
@@ -360,22 +362,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
-        File dir = Environment.getExternalStorageDirectory();
-        String path = dir.getAbsolutePath();
 
-        AudioEngine.setExternalStoragePath(path);
-        File defaultDir = new File (path + "/AmpRack/") ;
-        if (!defaultDir.exists()) {
-            Log.d(TAG, "making directory " + path + "/AmpRack/");
-            try {
-                if (!defaultDir.mkdir())
-                    Log.wtf (TAG, "Unable to create directory!");
-            }  catch (Exception e) {
-                Log.w(TAG, "UNable to create directory: " + e.getMessage());
-            }
-        }
-        AudioEngine.setDefaultStreamValues(context);
-        loadActivePreset();
     }
 
     @Override
@@ -443,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
-    private boolean isStoragePermissionGranted() {
+    boolean isStoragePermissionGranted() {
         return Environment.isExternalStorageManager() ;
                 /*
                 (ActivityCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
@@ -466,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 READ_STORAGE_REQUEST);
     }
 
-    private void requestWriteStoragePermission(){
+    void requestWriteStoragePermission(){
         /*
         ActivityCompat.requestPermissions(
                 this,

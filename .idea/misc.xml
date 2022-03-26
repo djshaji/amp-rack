@@ -4,7 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/drawable/rounded_corners_transparent.xml" value="0.292" />
-        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/activity_main.xml" value="0.4669603524229075" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/activity_firebase_ui.xml" value="0.22659256092347158" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/activity_main.xml" value="0.18857142857142858" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/activity_presets.xml" value="0.39640987284966345" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/audio_devices_selector.xml" value="0.246875" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/bottom_navigation_menu.xml" value="0.20307823856348867" />
