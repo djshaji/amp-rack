@@ -105,9 +105,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
-        rack = new Rack(this);
+        rack = new Rack();
         presets = new Presets();
 
+//        LoadFragment(presets);
         LoadFragment(rack);
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
@@ -139,17 +140,48 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment=null;
+                Class<Rack> fragmentClass=null;
                 switch (item.getItemId()) {
                     case R.id.page_rack:
-                        fragment = rack;
-                        break;
+                        fragment = rack ;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, Rack.class, null)
+                                .commit();
+                        return true;
+                         /*
+                        getSupportFragmentManager()
+                            .beginTransaction()
+                            .hide (presets)
+                            .show (rack)
+                            .commit();
+                        return true ;
+
+                         */
 
                     case R.id.page_preset:
                         fragment = presets;
-                        break;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, Presets.class, null)
+                                .commit();
+                        return true;
+                        /*
+                        if (presets.loginNotice == null)
+                            return LoadFragment(fragment);
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .hide (rack)
+                                .show (presets)
+                                .commit();
+                        return true ;
+
+                         */
 
                 }
-                return LoadFragment(fragment);
+//                return LoadFragment(fragment);
+                return false;
             }
         };
 

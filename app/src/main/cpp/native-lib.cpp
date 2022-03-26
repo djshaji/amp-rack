@@ -393,8 +393,17 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPresetValue(JNIEnv *env, jclass
         return ;
     }
 
-    LOGD("[%s %d] setting control %s to %f", engine->activePlugins.at(plugin)->descriptor->Name, control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
-    engine->activePlugins.at(plugin)->pluginControls.at(control)->setPresetValue(value);
+    IN
+    if (plugin >= engine -> activePlugins.size()) {
+        LOGE("requested plugin no %d greater than total plugins %d", plugin, engine->activePlugins.size());
+    } else if (control >= engine -> activePlugins.at(plugin)->pluginControls.size()) {
+        LOGE("requested plugin control no %d greater than total plugin controls %d", control, engine->activePlugins.at(plugin)->pluginControls.size());
+    } else {
+        LOGD("[%s %d] setting control %s to %f", engine->activePlugins.at(plugin)->descriptor->Name, control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
+        engine->activePlugins.at(plugin)->pluginControls.at(control)->setPresetValue(value);
+    }
+
+    OUT
 }
 extern "C"
 JNIEXPORT jfloat JNICALL
