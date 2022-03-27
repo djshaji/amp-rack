@@ -60,7 +60,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -691,6 +693,39 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         return preset.toString() ;
     }
+
+    Map presetToMap () throws JSONException {
+        Map <String, JSONObject> preset = new HashMap<>();
+        if (dataAdapter == null)
+            return null ;
+
+        for (int i = 0 ; i < dataAdapter.getItemCount() ; i ++) {
+            DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            if (holder == null) {
+                Log.e(TAG, "presetToString: holder is null for " + i, null);
+                continue ;
+            }
+
+            JSONObject jo = new JSONObject();
+            ArrayList <Float> vals = new ArrayList<>();
+
+            for (int k = 0 ; k < holder.sliders.size() ; k ++) {
+                vals .add(holder.sliders.get(k).getValue()) ;
+            }
+
+            try {
+                jo.put("name", holder.pluginName.getText());
+                jo.put("controls", vals);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            preset.put(String.valueOf(i), jo);
+        }
+
+        return preset ;
+    }
+
 
     void saveActivePreset () {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
