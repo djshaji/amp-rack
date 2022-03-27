@@ -695,7 +695,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     Map presetToMap () throws JSONException {
-        Map <String, JSONObject> preset = new HashMap<>();
+        Map <String, Map> preset = new HashMap<>();
         if (dataAdapter == null)
             return null ;
 
@@ -706,19 +706,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 continue ;
             }
 
-            JSONObject jo = new JSONObject();
-            ArrayList <Float> vals = new ArrayList<>();
+            Map <String, String> jo = new HashMap<>();
+            String vals  = "";
 
             for (int k = 0 ; k < holder.sliders.size() ; k ++) {
-                vals .add(holder.sliders.get(k).getValue()) ;
+                vals += holder.sliders.get(k).getValue() ;
+                if (k < holder.sliders.size() - 1) {
+                    vals += ";";
+                }
             }
 
-            try {
-                jo.put("name", holder.pluginName.getText());
-                jo.put("controls", vals);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            jo.put("name", (String) holder.pluginName.getText());
+            jo.put("controls", vals);
 
             preset.put(String.valueOf(i), jo);
         }
