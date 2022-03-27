@@ -64,7 +64,7 @@ import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
-    Context context;
+    static Context context;
     SwitchMaterial onOff;
     MaterialButton record ;
     PopupMenu addPluginMenu ;
@@ -792,4 +792,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return false;
     }
 
+    public static void toast (String text) {
+        Toast.makeText(context,
+                text,
+                Toast.LENGTH_LONG)
+                .show();
+
+    }
 }

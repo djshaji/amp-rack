@@ -66,6 +66,7 @@ dependencies {
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    implementation 'com.google.firebase:firebase-firestore'
 
     implementation 'com.google.oboe:oboe:1.6.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
