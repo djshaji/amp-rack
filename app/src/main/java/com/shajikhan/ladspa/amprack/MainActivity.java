@@ -750,6 +750,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    void loadPreset (Map map) {
+        JSONObject jsonObject = new JSONObject(map);
+        loadPreset(jsonObject.toString());
+    }
+
     void loadPreset (String preset) {
         JSONObject jsonObject ;
         try {
