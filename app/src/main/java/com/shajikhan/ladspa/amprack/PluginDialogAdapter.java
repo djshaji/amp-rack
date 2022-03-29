@@ -79,4 +79,17 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         mainActivity = _mainActivity ;
         context = _context ;
     }
+
+
+    void reset () {
+        notifyItemRangeRemoved(0, plugins.size());
+        plugins.clear();
+        pluginNames.clear();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return plugins.get(position);
+    }
+
 }

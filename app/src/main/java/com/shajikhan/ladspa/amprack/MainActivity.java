@@ -199,6 +199,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .show(rack)
+                .hide(presets)
+                .commit();
     }
 
     /**
@@ -787,7 +792,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         int items = dataAdapter.totalItems ;
         if (items > 0) {
             Log.d(TAG, "loadPreset: already loaded something, deleting ...");
-            dataAdapter.deleteAll();
+//            dataAdapter.deleteAll();
+            dataAdapter.reset();
         }
 
         int plugin = 0 ;

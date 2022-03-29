@@ -263,4 +263,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         notifyItemMoved(index, index + 1);
     }
+
+    void reset () {
+        notifyItemRangeRemoved(0, holders.size());
+        holders.clear();
+        plugins.clear();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return plugins.get(position);
+    }
 }
