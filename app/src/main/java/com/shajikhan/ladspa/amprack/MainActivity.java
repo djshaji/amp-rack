@@ -109,9 +109,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         rack = new Rack();
         presets = new Presets();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, rack, null)
+                .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, presets, null)
+                .commit();
 
 //        LoadFragment(presets);
-        LoadFragment(rack);
+//        LoadFragment(rack);
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -148,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         fragment = rack ;
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_container, Rack.class, null)
+                                .show(rack)
+                                .hide(presets)
                                 .commit();
                         return true;
                          /*
@@ -165,7 +174,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         fragment = presets;
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_container, Presets.class, null)
+                                .show(presets)
+                                .hide(rack)
                                 .commit();
                         return true;
                         /*
@@ -752,10 +762,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     void loadPreset (Map map) {
         JSONObject jsonObject = new JSONObject(map);
-        loadPreset(jsonObject.toString());
+        String controls ;
+        try {
+            controls = (String) jsonObject.get("controls").toString();
+            loadPreset(controls.toString());
+        } catch (JSONException e) {
+            MainActivity.toast("Cannot load preset: "+e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
     void loadPreset (String preset) {
+        Log.d(TAG, "loadPreset: " + preset);
         JSONObject jsonObject ;
         try {
             jsonObject = new JSONObject(preset);
