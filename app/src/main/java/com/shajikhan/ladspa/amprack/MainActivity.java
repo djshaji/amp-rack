@@ -801,6 +801,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             String key = it.next();
             JSONObject jo ;
             try {
+                Log.d(TAG, "loadPreset: trying preset " + key + ": " + jsonObject.getString(key));
                 jo = new JSONObject (jsonObject.getString(key)) ;
             } catch (JSONException e) {
                 e.printStackTrace();

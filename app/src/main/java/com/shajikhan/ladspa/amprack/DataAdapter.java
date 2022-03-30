@@ -47,6 +47,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
         holders.add(holder);
         LinearLayout linearLayout = holder.getLinearLayout();
+        linearLayout.removeAllViews();
         if (linearLayout == null) {
             Log.wtf(TAG, "linear layout for plugin!") ;
             return ;
@@ -97,20 +98,27 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
              */
 
             Log.d (TAG, String.valueOf(vals [1]) + " " + vals [2]) ;
+            boolean valueSet = false ;
             if (presetValue != -1) {
-                slider.setValue(presetValue);
-                editText.setText(String.valueOf(presetValue));
+                if (presetValue < vals [1] || presetValue > vals [2]) {
+                    Log.e(TAG, string + ": preset value" + presetValue + " < than min " + vals [1] + " or > max " + vals [2]);
+
+                } else {
+                    slider.setValue(presetValue);
+                    editText.setText(String.valueOf(presetValue));
+                    valueSet = true;
+                }
             }
-            else if (vals [0] < vals [1]) {
+            if (vals [0] < vals [1] && ! valueSet) {
                 Log.e(TAG, string + ": default value " + vals [0] + " < than min " + vals [1]);
                 slider.setValue (vals [1]);
                 editText.setText(String.valueOf(vals [1]));
 
-            } else if (vals [0] > vals [2]) {
+            } else if (vals [0] > vals [2] && !valueSet) {
                 Log.e(TAG, string + ": default value " + vals [0] + " > than max " + vals [2]);
                 slider.setValue (vals [2]);
                 editText.setText(String.valueOf(vals [2]));
-            } else {
+            } else if (!valueSet){
                 slider.setValue(vals[0]);
                 editText.setText(String.valueOf(vals[0]));
             }
