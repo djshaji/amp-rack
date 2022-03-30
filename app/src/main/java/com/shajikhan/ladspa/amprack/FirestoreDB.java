@@ -1,5 +1,6 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,7 +52,7 @@ public class FirestoreDB {
     }
 
     @ServerTimestamp
-    public void savePreset (String name, String desc, boolean shared, Map values) {
+    public void savePreset(String name, String desc, boolean shared, Map values, AlertDialog dialog, MyPresets myPresets) {
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
         if (auth == null) {
             Log.e(TAG, "savePreset: uid is null", null);
@@ -73,10 +75,12 @@ public class FirestoreDB {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        dialog.dismiss();
                         Toast.makeText(context,
                                 "Preset saved successfully",
                                 Toast.LENGTH_LONG)
                                 .show();
+                        myPresets.myPresetsAdapter.addPreset(data);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -133,15 +137,15 @@ public class FirestoreDB {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Preset successfully deleted");
                         MainActivity.toast("Preset successfully deleted");
+                        presets.remove(position);
+                        myPresetsAdapter.notifyItemRemoved(position);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error deleting Preset", e);
-                        MainActivity.toast("Preset successfully deleted");
-                        presets.remove(position);
-                        myPresetsAdapter.notifyItemRemoved(position);
+                        MainActivity.toast("Preset could not be deleted. Try again: " + e.getMessage());
                     }
                 });
 

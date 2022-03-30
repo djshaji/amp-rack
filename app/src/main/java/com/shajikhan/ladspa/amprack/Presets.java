@@ -62,7 +62,7 @@ public class Presets extends Fragment {
     ViewPager2 viewPager;
     LinearLayout loginNotice ;
     TabLayout tabLayout ;
-    FragmentStateAdapter fragmentStateAdapter ;
+    PresetAdapter fragmentStateAdapter ;
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
     MainActivity mainActivity;
@@ -168,29 +168,39 @@ public class Presets extends Fragment {
                 LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.save_preset_dialog, null);
                 builder.setView(linearLayout)
                         // Add action buttons
-                        .setPositiveButton("Save Preset", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                EditText name = (EditText) linearLayout.getChildAt(1);
-                                EditText desc = (EditText) linearLayout.getChildAt(2);
-                                LinearLayout layout = (LinearLayout) linearLayout.getChildAt(0);
-                                SwitchMaterial switchMaterial = (SwitchMaterial) layout.getChildAt(1);
+                        .setCancelable(false);
 
-                                if (name.getText() == null) {
-                                    mainActivity.toast("Name of preset is required.");
-                                    return;
-                                }
+                LinearLayout linearLayout1 = (LinearLayout) linearLayout.getChildAt(3);
+                MaterialButton save = (MaterialButton) linearLayout1.getChildAt(1);
+                ProgressBar progressBar = (ProgressBar) linearLayout.getChildAt(4);
+                AlertDialog dialog = builder.create() ;
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditText name = (EditText) linearLayout.getChildAt(1);
+                        EditText desc = (EditText) linearLayout.getChildAt(2);
+                        LinearLayout layout = (LinearLayout) linearLayout.getChildAt(0);
+                        SwitchMaterial switchMaterial = (SwitchMaterial) layout.getChildAt(1);
 
-                                db.savePreset(name.getText().toString(), desc.getText().toString(), switchMaterial.isChecked(), preset);
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                        if (name.getText().toString().length() == 0) {
+                            mainActivity.toast("Name of preset is required.");
+                            return;
+                        }
 
-                            }
-                        });
+                        progressBar.setVisibility(View.VISIBLE);
+                        db.savePreset(name.getText().toString(), desc.getText().toString(), switchMaterial.isChecked(), preset, dialog, fragmentStateAdapter.getMyPresets());
 
-                Dialog dialog = builder.create() ;
+                    }
+                });
+
+                MaterialButton cancel = (MaterialButton) linearLayout1.getChildAt(0);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss ();
+                    }
+                });
+
                 dialog.show();
 
             }
@@ -200,7 +210,12 @@ public class Presets extends Fragment {
 
     public class PresetAdapter extends FragmentStateAdapter {
         private ArrayList<Fragment> arrayList = new ArrayList<>();
-        Fragment myPresets, libraryPresets ;
+        public Fragment libraryPresets ;
+        public MyPresets myPresets;
+
+        public MyPresets getMyPresets() {
+            return myPresets;
+        }
 
         public PresetAdapter(@NonNull Presets fragmentActivity) {
             super(fragmentActivity);

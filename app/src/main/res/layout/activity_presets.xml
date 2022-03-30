@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/presets_pager"
         app:layout_constraintTop_toBottomOf="@id/my_preset_tab_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
 
     </androidx.viewpager2.widget.ViewPager2>

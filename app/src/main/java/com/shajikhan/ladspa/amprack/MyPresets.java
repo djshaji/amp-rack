@@ -18,7 +18,7 @@ public class MyPresets extends Fragment {
     MainActivity mainActivity;
     String TAG = getClass().getSimpleName();
     RecyclerView recyclerView;
-    MyPresetsAdapter myPresetsAdapter ;
+    public MyPresetsAdapter myPresetsAdapter ;
     FirestoreDB db ;
     ProgressBar progressBar ;
 

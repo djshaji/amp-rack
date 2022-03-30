@@ -81,8 +81,6 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
             @Override
             public void onClick(View view) {
                 db.deletePreset(preset, presets, myPresetsAdapter, position);
-                presets.remove(position);
-                notifyItemRemoved(position);
             }
         });
     }
