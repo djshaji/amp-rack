@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <item
+        android:id="@+id/page_rack"
+        android:enabled="true"
+        android:visible="true"
+        android:icon="@drawable/ic_baseline_play_circle_filled_24"
+        android:title="Effects"/>
+    <item
+        android:visible="true"
+        android:id="@+id/page_preset"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_view_list_24"
+        android:title="Presets"/>
+
+</menu>

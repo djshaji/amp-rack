@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:padding="10dp"
+    android:background="@drawable/rounded_corners_transparent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/comfortaa"
+            android:textSize="20dp"
+            android:layout_weight="1"
+            android:text="Save Preset"/>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Public"/>
+    </LinearLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="Name"
+        android:id="@+id/save_preset_name"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:hint="Description"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/save_preset_desc"/>
+</LinearLayout>
