@@ -1,6 +1,8 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +82,23 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         deletePreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.deletePreset(preset, presets, myPresetsAdapter, position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        db.deletePreset(preset, presets, myPresetsAdapter, position);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                builder.setTitle("Delete this preset?");
+                builder.setMessage("Are you sure you want to delete this preset? This action cannot be undone.") ;
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }

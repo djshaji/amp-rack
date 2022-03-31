@@ -16,9 +16,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
@@ -56,6 +58,9 @@ public class FirestoreDB {
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
         if (auth == null) {
             Log.e(TAG, "savePreset: uid is null", null);
+            return ;
+        } else if (auth.getUid() == null) {
+            Log.e(TAG, "loadUserPresets: uid is null", null);
             return ;
         }
 
@@ -95,38 +100,50 @@ public class FirestoreDB {
                 });
     }
 
-    public void loadUserPresets (MyPresetsAdapter presetsAdapter) {
+    public void loadUserPresets (MyPresetsAdapter presetsAdapter, boolean shared) {
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
         if (auth == null) {
-            Log.e(TAG, "savePreset: uid is null", null);
+            Log.e(TAG, "loadUserPresets: uid is null", null);
             return ;
-        }
+        } else if (auth.getUid() == null) {
+            Log.e(TAG, "loadUserPresets: uid is null", null);
+            return ;
+        } else
+            Log.d(TAG, "loadUserPresets: [uid] "+ auth.getUid());
 
         String uid = auth.getUid();
-        db.collection("presets")
-                .whereEqualTo("uid", uid)
-                .get ()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    Map preset = (Map) document.getData();
-                                    preset.put("path", document.getReference().getPath());
-                                    presetsAdapter.addPreset(preset);
-                                }
+        OnCompleteListener onCompleteListener = new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        Map preset = (Map) document.getData();
+                        preset.put("path", document.getReference().getPath());
+                        presetsAdapter.addPreset(preset);
+                    }
 
-                                if (presetsAdapter.progressBar != null) {
-                                    presetsAdapter.progressBar.setVisibility(View.GONE);
-                                }
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                                MainActivity.toast("Error getting presets: " + task.getException().getMessage());
-                            }
-                        }
-                    });
+                    if (presetsAdapter.progressBar != null) {
+                        presetsAdapter.progressBar.setVisibility(View.GONE);
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                    MainActivity.toast("Error getting presets: " + task.getException().getMessage());
+                }
+            }
+        } ;
 
+        if (shared == false) {
+            db.collection("presets")
+                    .whereEqualTo("uid", uid)
+                    .get()
+                    .addOnCompleteListener(onCompleteListener);
+        } else {
+            db.collection("presets")
+                    .whereEqualTo("public", true)
+                    .get()
+                    .addOnCompleteListener(onCompleteListener);
+        }
     }
 
     void deletePreset(Map preset, ArrayList<Map> presets, MyPresetsAdapter myPresetsAdapter, int position) {

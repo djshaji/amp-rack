@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -111,16 +112,33 @@ public class Presets extends Fragment {
 
         fragmentStateAdapter = new PresetAdapter(this);
         ConstraintLayout constraintLayout = (ConstraintLayout) view  ;
-        loginNotice = (LinearLayout) constraintLayout.getChildAt(0);
-        tabLayout = (TabLayout) constraintLayout.getChildAt(1);
-        progressLayout = (LinearLayout) constraintLayout.getChildAt(3);
+        loginNotice = (LinearLayout) constraintLayout.getChildAt(4);
+        tabLayout = (TabLayout) constraintLayout.getChildAt(0);
+        progressLayout = (LinearLayout) constraintLayout.getChildAt(2);
         progressPreset = (ProgressBar) progressLayout.getChildAt(0);
-
         viewPager = view.findViewById(R.id.presets_pager);
+
         viewPager.setSaveEnabled(false);
         fragmentStateAdapter.createFragment(0);
         fragmentStateAdapter.createFragment(1);
         viewPager.setAdapter(fragmentStateAdapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         MaterialButton login = view.findViewById(R.id.login_btn);
         login.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +163,7 @@ public class Presets extends Fragment {
             progressLayout.setVisibility(View.VISIBLE);
         }
 
-        LinearLayout layout = (LinearLayout) constraintLayout.getChildAt(4);
+        LinearLayout layout = (LinearLayout) constraintLayout.getChildAt(3);
         ExtendedFloatingActionButton presetFab = (ExtendedFloatingActionButton) layout.getChildAt(0);
         presetFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +228,7 @@ public class Presets extends Fragment {
 
     public class PresetAdapter extends FragmentStateAdapter {
         private ArrayList<Fragment> arrayList = new ArrayList<>();
-        public Fragment libraryPresets ;
+        public MyPresets libraryPresets ;
         public MyPresets myPresets;
 
         public MyPresets getMyPresets() {
@@ -228,19 +246,21 @@ public class Presets extends Fragment {
                 myPresets = new MyPresets(progressPreset);
                 arrayList.add(myPresets);
                 return myPresets;
-            } else if (position == 1) {
-                libraryPresets = new Fragment();
+            } else {// if (position == 1) {
+                libraryPresets = new MyPresets(true);
                 arrayList.add(libraryPresets);
                 return libraryPresets;
             }
 
-            return null ;
+//            Log.e(TAG, "createFragment: unknown position " + position, null);
+//            return null ;
         }
 
         @Override
         public int getItemCount() {
             return arrayList.size();
         }
+
     }
 
     public static class PresetFragment extends Fragment {

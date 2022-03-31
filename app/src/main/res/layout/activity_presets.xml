@@ -3,24 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
-        android:id="@+id/login_notice"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/login_btn"
-            android:text="Login to save presets"
-            android:textColor="@color/white"
-            android:drawableLeft="@drawable/ic_baseline_login_24"/>
-
-    </LinearLayout>
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:visibility="visible"
@@ -47,8 +29,9 @@
     </com.google.android.material.tabs.TabLayout>
     <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/presets_pager"
+        android:layout_marginTop="50dp"
         app:layout_constraintTop_toBottomOf="@id/my_preset_tab_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
@@ -98,6 +81,24 @@
             android:id="@+id/fab_preset"
             android:drawableLeft="@drawable/ic_baseline_add_circle_outline_24"
             android:layout_margin="5dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/login_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/login_btn"
+            android:text="Login to save presets"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/ic_baseline_login_24"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

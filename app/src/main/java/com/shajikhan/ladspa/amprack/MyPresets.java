@@ -20,10 +20,15 @@ public class MyPresets extends Fragment {
     RecyclerView recyclerView;
     public MyPresetsAdapter myPresetsAdapter ;
     FirestoreDB db ;
-    ProgressBar progressBar ;
+    ProgressBar progressBar = null;
+    boolean shared = false;
 
     MyPresets (ProgressBar _progressBar) {
         progressBar = _progressBar;
+    }
+
+    MyPresets (boolean _shared) {
+        shared = _shared;
     }
 
     @Nullable
@@ -45,7 +50,8 @@ public class MyPresets extends Fragment {
         myPresetsAdapter.setMainActivity(mainActivity);
         recyclerView.setAdapter(myPresetsAdapter);
 
-        myPresetsAdapter.setProgressBar(progressBar);
-        db.loadUserPresets(myPresetsAdapter);
+        if (progressBar != null)
+            myPresetsAdapter.setProgressBar(progressBar);
+        db.loadUserPresets(myPresetsAdapter, shared);
     }
 }
