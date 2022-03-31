@@ -181,7 +181,11 @@ public class Rack extends Fragment {
 
                         GoogleSignIn.getClient(getContext(), gso).signOut();
                         firebaseAuth.signOut();
-                        // User clicked OK button
+
+                        mainActivity.presets.loginNotice.setVisibility(View.VISIBLE);
+                        mainActivity.presets.tabLayout.setVisibility(View.INVISIBLE);
+                        logout.setVisible(false);
+
                         Toast.makeText(mainActivity.getApplicationContext(),
                                 "You have been logged out",
                                 Toast.LENGTH_LONG)

@@ -141,6 +141,7 @@ public class FirestoreDB {
         } else {
             db.collection("presets")
                     .whereEqualTo("public", true)
+                    .whereNotEqualTo("uid", uid)
                     .get()
                     .addOnCompleteListener(onCompleteListener);
         }
