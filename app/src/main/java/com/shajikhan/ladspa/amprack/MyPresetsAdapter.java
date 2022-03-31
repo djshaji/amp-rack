@@ -7,14 +7,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,6 +30,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     FirestoreDB db ;
     ProgressBar progressBar ;
     MyPresetsAdapter myPresetsAdapter ;
+    String uid = null;
 
     void addPreset (Map preset) {
         presets.add(preset);
@@ -52,6 +56,10 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull MyPresetsAdapter.ViewHolder holder, int position) {
+        FirebaseAuth auth = FirebaseAuth.getInstance() ;
+        if (auth != null)
+            uid = auth.getUid();
+
         LinearLayout linearLayout = holder.getLinearLayout();
         myPresetsAdapter = this ;
         if (linearLayout == null) {
@@ -78,7 +86,23 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
             }
         });
 
-        MaterialButton deletePreset = (MaterialButton) linearLayout.getChildAt(1);
+        LinearLayout linearLayout3 = (LinearLayout) linearLayout.getChildAt(1);
+        MaterialButton deletePreset = (MaterialButton) linearLayout3.getChildAt(0);
+        ToggleButton heart = (ToggleButton) linearLayout3.getChildAt(2);
+        heart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
+                    db.addPresetToCollection("collections", preset);
+                    db.likePreset(preset);
+                } else {
+                    compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+                }
+            }
+        });
+        if (!preset.get("uid").equals(uid))
+            deletePreset.setVisibility(View.GONE);
         deletePreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

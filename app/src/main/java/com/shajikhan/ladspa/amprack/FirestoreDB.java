@@ -24,6 +24,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firestore.v1.WriteResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +69,7 @@ public class FirestoreDB {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put ("desc", desc);
+        data.put("likes", 0);
 
         data.put ("public", shared);
         data.put ("controls", values);
@@ -166,6 +169,66 @@ public class FirestoreDB {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error deleting Preset", e);
                         MainActivity.toast("Preset could not be deleted. Try again: " + e.getMessage());
+                    }
+                });
+
+    }
+
+    boolean checkAuth () {
+        FirebaseAuth auth = FirebaseAuth.getInstance() ;
+        if (auth == null) {
+            return false ;
+        } else if (auth.getUid() == null) {
+            return false ;
+        } else
+            return true ;
+    }
+
+    void addPresetToCollection (String collection, Map preset) {
+        if (! checkAuth())
+            return;
+
+        String uid = FirebaseAuth.getInstance().getUid() ;
+        Map<String, Object> data = new HashMap<>();
+        data.put(preset.get ("path").toString(), preset.get("name"));
+
+        data.put ("uid", uid);
+        data.put ("timestamp",  FieldValue.serverTimestamp());
+
+        Log.d(TAG, "addPresetToCollection: writing to " + String.format("%s/%s", collection, uid));
+        db.collection(collection).document(uid)
+                .set(data, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        MainActivity.toast("Preset added to favourites");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                        Toast.makeText(context,
+                                "Could not save preset: " + e.getMessage(),
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+    }
+
+    void likePreset (Map preset) {
+        DocumentReference documentReference = db.document(preset.get("path").toString());
+        documentReference.update("likes", FieldValue.increment(1))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "onSuccess: preset liked!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: failed to like preset", e);
                     }
                 });
 
