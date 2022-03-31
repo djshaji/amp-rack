@@ -119,6 +119,9 @@ public class FirestoreDB {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         Map preset = (Map) document.getData();
+                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
+                        if (preset.get("uid") .equals(uid) && shared == true)
+                            continue;
                         preset.put("path", document.getReference().getPath());
                         presetsAdapter.addPreset(preset);
                     }
@@ -141,7 +144,6 @@ public class FirestoreDB {
         } else {
             db.collection("presets")
                     .whereEqualTo("public", true)
-                    .whereNotEqualTo("uid", uid)
                     .get()
                     .addOnCompleteListener(onCompleteListener);
         }
