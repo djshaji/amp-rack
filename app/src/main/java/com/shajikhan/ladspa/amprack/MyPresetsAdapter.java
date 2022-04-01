@@ -174,7 +174,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
                 presets.add(m);
         } else {
             for (Map m : allPresets) {
-                if (m.get("name").toString().toLowerCase().startsWith(string)) {
+                if (m.get("name").toString().toLowerCase().contains(string)) {
                     presets.add(m);
                 }
             }

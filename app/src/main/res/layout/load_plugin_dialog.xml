@@ -25,13 +25,15 @@
             android:layout_width="200dp"
             android:textColor="@color/white"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_baseline_filter_list_24"
+            android:hint="Search"
             android:layout_height="wrap_content"/>
 
-        <Spinner
-            android:layout_marginLeft="10dp"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"/>
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:textOn=""
+            android:background="@android:color/transparent"
+            android:textOff=""/>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_margin="10dp"

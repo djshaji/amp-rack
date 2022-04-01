@@ -27,6 +27,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +38,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
@@ -639,6 +642,37 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         LayoutInflater inflater = getLayoutInflater();
 
         linearLayoutPluginDialog = (LinearLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
+        EditText editText = (EditText)((LinearLayout) linearLayoutPluginDialog.getChildAt(1)).getChildAt(0);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                pluginDialogAdapter.search(editable.toString());
+            }
+        });
+
+        ToggleButton toggleButton = (ToggleButton) ((LinearLayout) linearLayoutPluginDialog.getChildAt(1)).getChildAt(1);
+        toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                pluginDialogAdapter.showOnlyFavorites(b);
+                if (b)
+                    toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
+                else
+                    toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+            }
+        });
+
         builder.setView(linearLayoutPluginDialog)
                 // Add action buttons
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {

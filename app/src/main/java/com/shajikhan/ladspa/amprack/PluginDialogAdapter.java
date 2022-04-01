@@ -20,6 +20,8 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     Context context = null;
     ArrayList<Integer> plugins = new ArrayList<>();
     ArrayList<String> pluginNames = new ArrayList<>();
+    ArrayList<Integer> pluginsAll = new ArrayList<>();
+    ArrayList<String> pluginNamesAll = new ArrayList<>();
     MainActivity mainActivity ;
 
     @NonNull
@@ -67,6 +69,8 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     void addItem(int pluginID, String pluginName) {
         plugins.add(pluginID);
         pluginNames.add(pluginName);
+        pluginsAll.add(pluginID);
+        pluginNamesAll.add(pluginName);
         notifyItemInserted(plugins.size());
     }
 
@@ -78,6 +82,50 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     void setMainActivity (Context _context, MainActivity _mainActivity) {
         mainActivity = _mainActivity ;
         context = _context ;
+    }
+
+    void search (String searchTerm) {
+        plugins.clear();
+        pluginNames.clear();
+
+        if (searchTerm.length() == 0) {
+            for (int i = 0; i < pluginNamesAll.size(); i++) {
+                plugins.add(pluginsAll.get(i));
+                pluginNames.add(pluginNamesAll.get(i));
+            }
+        } else {
+            for (int i = 0; i < pluginNamesAll.size(); i++) {
+                String s = pluginNamesAll.get(i);
+                Log.d(TAG, "search: " + String.format("<%s> in %s", searchTerm, s));
+                if (s.toLowerCase().contains(searchTerm)) {
+                    plugins.add(pluginsAll.get(i));
+                    pluginNames.add(pluginNamesAll.get(i));
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    void showOnlyFavorites (boolean show) {
+        plugins.clear();
+        pluginNames.clear();
+
+        if (show == false) {
+            for (int i = 0; i < pluginNamesAll.size(); i++) {
+                plugins.add(pluginsAll.get(i));
+                pluginNames.add(pluginNamesAll.get(i));
+            }
+        } else {
+            for (int i = 0; i < pluginNamesAll.size(); i++) {
+                if (false) {
+                    plugins.add(pluginsAll.get(i));
+                    pluginNames.add(pluginNamesAll.get(i));
+                }
+            }
+        }
+
+        notifyDataSetChanged();
     }
 
 
