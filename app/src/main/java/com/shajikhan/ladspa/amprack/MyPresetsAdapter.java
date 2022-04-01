@@ -94,8 +94,9 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
-                    db.addPresetToCollection("collections", preset);
-                    db.likePreset(preset);
+//                    db.addPresetToCollection("collections", preset);
+//                    db.likePreset(preset);
+                    db.addAndLike(preset);
                 } else {
                     compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
                 }

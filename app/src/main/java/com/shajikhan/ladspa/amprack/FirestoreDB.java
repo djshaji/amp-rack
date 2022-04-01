@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firestore.v1.WriteResult;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class FirestoreDB {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                         dialog.dismiss();
                         Toast.makeText(context,
-                                "Preset saved successfully",
+                                "Patch saved successfully",
                                 Toast.LENGTH_LONG)
                                 .show();
                         myPresets.myPresetsAdapter.addPreset(data);
@@ -96,7 +97,7 @@ public class FirestoreDB {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
                         Toast.makeText(context,
-                                "Could not save preset: " + e.getMessage(),
+                                "Could not save patch: " + e.getMessage(),
                                 Toast.LENGTH_LONG)
                                 .show();
                     }
@@ -232,5 +233,36 @@ public class FirestoreDB {
                     }
                 });
 
+    }
+
+    void addAndLike (Map preset) {
+        if (! checkAuth())
+            return;
+
+        String uid = FirebaseAuth.getInstance().getUid() ;
+        Map<String, Object> data = new HashMap<>();
+        data.put(preset.get ("path").toString(), preset.get("name"));
+
+        data.put ("uid", uid);
+        data.put ("timestamp",  FieldValue.serverTimestamp());
+
+        WriteBatch batch = db.batch();
+        DocumentReference favs = db.collection("collections").document(uid) ;
+        batch.set(favs, data, SetOptions.merge());
+        DocumentReference documentReference = db.document(preset.get("path").toString());
+        batch.update(documentReference, "likes", FieldValue.increment(1));
+
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                MainActivity.toast("Patch added to favorites");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                MainActivity.toast("Patch not added to favorites: " + e.getMessage());
+                Log.e(TAG, "onFailure: not saved preset", e);
+            }
+        });
     }
 }
