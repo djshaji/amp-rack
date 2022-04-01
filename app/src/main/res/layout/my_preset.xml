@@ -64,7 +64,7 @@
             android:backgroundTint="@android:color/transparent"
             android:background="@android:color/transparent"
             android:drawable="@drawable/ic_baseline_favorite_border_24"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             android:textOff="Like"
             android:textOn="Unlike"
             android:layout_gravity="end|right"/>

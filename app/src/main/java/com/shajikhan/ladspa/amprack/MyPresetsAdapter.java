@@ -93,6 +93,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         LinearLayout linearLayout3 = (LinearLayout) linearLayout.getChildAt(1);
         MaterialButton deletePreset = (MaterialButton) linearLayout3.getChildAt(0);
         ToggleButton heart = (ToggleButton) linearLayout3.getChildAt(2);
+        heart.setOnCheckedChangeListener(null);
         if (favoritePresets.containsKey(preset.get("path").toString())) {
             heart.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
             heart.setChecked(true);
