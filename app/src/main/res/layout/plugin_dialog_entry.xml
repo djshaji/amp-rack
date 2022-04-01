@@ -14,13 +14,19 @@
         android:fontFamily="@font/comfortaa"
         android:text="Plugin"/>
 
-    <com.google.android.material.button.MaterialButton
+    <ToggleButton
         android:layout_width="40dp"
-        android:paddingRight="8dp"
         android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:textOn=""
+        android:layout_marginTop="7dp"
+        android:textOff=""/>
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="30dp"
+        android:paddingRight="8dp"
+        android:layout_height="30dp"
         android:textSize="1dp"
         android:background="@android:color/transparent"
         android:text=""
-        android:drawableRight="@drawable/ic_baseline_add_box_24"
-        android:layout_marginLeft="10dp"/>
+        android:drawableRight="@drawable/ic_baseline_add_box_24"/>
 </LinearLayout>

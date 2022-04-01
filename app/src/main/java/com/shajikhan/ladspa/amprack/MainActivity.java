@@ -64,8 +64,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView.LayoutManager layoutManager ;
     LinearLayout linearLayoutPluginDialog ;
     PluginDialogAdapter pluginDialogAdapter ;
+
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
     private static final int READ_STORAGE_REQUEST = 1;
@@ -897,5 +900,48 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Toast.LENGTH_LONG)
                 .show();
 
+    }
+
+    public void heartPlugin (String name) {
+        Log.d(TAG, "heartPlugin: " + name);
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
+        if (set == null) {
+            // no hearted presets
+            set = new HashSet<>();
+        }
+
+        set.add(name);
+        sharedPreferences.edit().putStringSet("favoritePresets", set).apply();
+    }
+
+    public void unheartPlugin (String name) {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
+        if (set == null) {
+            // no hearted presets
+            return ;
+        }
+
+        set.remove(name);
+        sharedPreferences.edit().putStringSet("favoritePresets", set).apply();
+    }
+
+    boolean isPluginHearted (String plugin) {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
+        if (set == null) {
+            // no hearted presets
+            return false;
+        }
+
+        return set.contains(plugin);
+    }
+
+    Set getHeartedPlugins () {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
+
+        return set ;
     }
 }

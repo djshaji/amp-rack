@@ -5,8 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +48,28 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
                 mainActivity.addPluginToRack(pluginID);
             }
         });
+
+        holder.toggleButton.setOnCheckedChangeListener(null);
+        if (mainActivity.isPluginHearted(pluginNames.get(position))) {
+            holder.toggleButton.setChecked(true);
+            holder.toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
+        } else {
+            holder.toggleButton.setChecked(false);
+            holder.toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+        }
+
+        holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
+                    mainActivity.heartPlugin(pluginNames.get(position));
+                } else {
+                    compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+                    mainActivity.unheartPlugin(pluginNames.get(position));
+                }
+            }
+        });
     }
 
     @Override
@@ -57,16 +81,21 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         public LinearLayout linearLayout ;
         public TextView pluginName ;
         public MaterialButton button ;
+        public ToggleButton toggleButton ;
          public ViewHolder(@NonNull View itemView) {
             super(itemView);
             linearLayout = (LinearLayout) itemView ;
             pluginName = (TextView) linearLayout.getChildAt(0);
-            button = (MaterialButton) linearLayout.getChildAt(1);
+            button = (MaterialButton) linearLayout.getChildAt(2);
+            toggleButton = (ToggleButton) linearLayout.getChildAt(1);
         }
     }
 
 
     void addItem(int pluginID, String pluginName) {
+        if (pluginNamesAll.contains(pluginName))
+            return;
+
         plugins.add(pluginID);
         pluginNames.add(pluginName);
         pluginsAll.add(pluginID);
@@ -111,6 +140,8 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         plugins.clear();
         pluginNames.clear();
 
+        Log.d(TAG, "showOnlyFavorites: " + mainActivity.getHeartedPlugins());
+
         if (show == false) {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
                 plugins.add(pluginsAll.get(i));
@@ -118,7 +149,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
             }
         } else {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
-                if (false) {
+                if (mainActivity.isPluginHearted(pluginNamesAll.get (i))) {
                     plugins.add(pluginsAll.get(i));
                     pluginNames.add(pluginNamesAll.get(i));
                 }
