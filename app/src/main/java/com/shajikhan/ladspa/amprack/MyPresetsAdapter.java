@@ -33,9 +33,11 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     MyPresetsAdapter myPresetsAdapter ;
     String uid = null;
     Map<String, Object> favoritePresets = null;
+    ArrayList <Map> allPresets = new ArrayList<>() ;
 
     void addPreset (Map preset) {
         presets.add(preset);
+        allPresets.add(preset);
         notifyDataSetChanged();
     }
 
@@ -115,6 +117,9 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         });
         if (!preset.get("uid").equals(uid))
             deletePreset.setVisibility(View.GONE);
+        else
+            heart.setVisibility(View.GONE);
+
         deletePreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,5 +159,48 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         public LinearLayout getLinearLayout() {
             return linearLayout ;
         }
+    }
+
+    public void updateList(String string){
+        Log.d(TAG, "updateList: " +
+            String.format ("<%s> presets: %s\nall presets:%s", string, presets.toString(), allPresets.toString()));
+
+        presets.clear();
+        if(string.length() == 0) {
+            for (Map m: allPresets)
+                presets.add(m);
+        } else {
+            for (Map m : allPresets) {
+                if (m.get("name").toString().toLowerCase().startsWith(string)) {
+                    presets.add(m);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void resetList () {
+        presets = allPresets ;
+        notifyDataSetChanged();
+    }
+
+    public void showOnlyFavorites (boolean show) {
+        Log.d(TAG, "showOnlyFavorites: " + show);
+        presets.clear();
+        if(show == false) {
+            Log.d(TAG, "showOnlyFavorites: adding all presets");
+            for (Map m: allPresets)
+                presets.add(m);
+        } else {
+            for (Map m : allPresets) {
+                if (favoritePresets.containsKey(m.get("path").toString())) {
+                    Log.d(TAG, "showOnlyFavorites: adding preset " + m.get("name"));
+                    presets.add(m);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
     }
 }

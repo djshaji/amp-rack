@@ -1,11 +1,17 @@
 package com.shajikhan.ladspa.amprack;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,12 +49,49 @@ public class MyPresets extends Fragment {
         mainActivity = (MainActivity) getActivity();
         db = new FirestoreDB (mainActivity);
 
-        LinearLayout layout = (LinearLayout) view ;
-        recyclerView = (RecyclerView) ((LinearLayout) view).getChildAt(0);
+        recyclerView = (RecyclerView) ((LinearLayout) view).getChildAt(1);
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         myPresetsAdapter = new MyPresetsAdapter();
         myPresetsAdapter.setMainActivity(mainActivity);
         recyclerView.setAdapter(myPresetsAdapter);
+
+        LinearLayout layout = (LinearLayout) view ;
+        LinearLayout lx = (LinearLayout) ((LinearLayout) view).getChildAt(0);
+        if (! shared) {
+            lx.setVisibility(View.GONE);
+        } else {
+            EditText editText = (EditText) lx.getChildAt(0);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    Log.d(TAG, "afterTextChanged: " + editable.toString());
+                    myPresetsAdapter.updateList(editable.toString());
+                }
+            });
+
+            ToggleButton toggleButton = (ToggleButton) lx.getChildAt(1);
+            toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+            toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    myPresetsAdapter.showOnlyFavorites(b);
+                    if (b)
+                        toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
+                    else
+                        toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+                }
+            });
+        }
 
         if (progressBar != null)
             myPresetsAdapter.setProgressBar(progressBar);
