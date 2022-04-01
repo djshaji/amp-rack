@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -264,5 +266,52 @@ public class FirestoreDB {
                 Log.e(TAG, "onFailure: not saved preset", e);
             }
         });
+    }
+
+    void removeAndUnlike (Map preset) {
+        if (! checkAuth())
+            return;
+
+        String uid = FirebaseAuth.getInstance().getUid() ;
+
+        WriteBatch batch = db.batch();
+        DocumentReference favs = db.collection("collections").document(uid) ;
+        batch.update(favs, FieldPath.of (preset.get("path").toString()), FieldValue.delete());
+        DocumentReference documentReference = db.document(preset.get("path").toString());
+        batch.update(documentReference, "likes", FieldValue.increment(-1));
+
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                MainActivity.toast("Patch removed to favorites");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                MainActivity.toast("Patch not removed from favorites: " + e.getMessage());
+                Log.e(TAG, "onFailure: not saved preset", e);
+            }
+        });
+    }
+
+    void getFavorites (MyPresetsAdapter presetsAdapter, boolean shared) {
+        if (! checkAuth())
+            return;
+
+        DocumentReference documentReference = db.collection("collections").document(FirebaseAuth.getInstance().getUid());
+        documentReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        presetsAdapter.favoritePresets = documentSnapshot.getData();
+                        loadUserPresets(presetsAdapter, shared);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loadUserPresets(presetsAdapter, shared);
+                    }
+                });
     }
 }

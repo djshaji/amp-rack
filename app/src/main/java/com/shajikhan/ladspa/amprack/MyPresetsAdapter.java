@@ -20,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.ViewHolder> {
@@ -31,6 +32,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     ProgressBar progressBar ;
     MyPresetsAdapter myPresetsAdapter ;
     String uid = null;
+    Map<String, Object> favoritePresets = null;
 
     void addPreset (Map preset) {
         presets.add(preset);
@@ -89,6 +91,14 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         LinearLayout linearLayout3 = (LinearLayout) linearLayout.getChildAt(1);
         MaterialButton deletePreset = (MaterialButton) linearLayout3.getChildAt(0);
         ToggleButton heart = (ToggleButton) linearLayout3.getChildAt(2);
+        if (favoritePresets.containsKey(preset.get("path").toString())) {
+            heart.setButtonDrawable(R.drawable.ic_baseline_favorite_24);
+            heart.setChecked(true);
+        } else {
+            heart.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+            heart.setChecked(false);
+        }
+
         heart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -99,6 +109,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
                     db.addAndLike(preset);
                 } else {
                     compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+                    db.removeAndUnlike(preset);
                 }
             }
         });

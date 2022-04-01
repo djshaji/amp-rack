@@ -52,6 +52,6 @@ public class MyPresets extends Fragment {
 
         if (progressBar != null)
             myPresetsAdapter.setProgressBar(progressBar);
-        db.loadUserPresets(myPresetsAdapter, shared);
+        db.getFavorites(myPresetsAdapter, shared);
     }
 }
