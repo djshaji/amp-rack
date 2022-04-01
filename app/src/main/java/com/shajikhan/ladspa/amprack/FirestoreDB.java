@@ -283,7 +283,8 @@ public class FirestoreDB {
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                MainActivity.toast("Patch removed to favorites");
+                Log.d(TAG, "onComplete: patch " + preset.get("name") + " removed from favorites");
+                MainActivity.toast("Patch removed from favorites");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

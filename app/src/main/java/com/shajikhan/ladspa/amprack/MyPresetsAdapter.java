@@ -109,8 +109,10 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
 //                    db.addPresetToCollection("collections", preset);
 //                    db.likePreset(preset);
                     db.addAndLike(preset);
+                    favoritePresets.put(preset.get("path").toString(), preset.get("name"));
                 } else {
                     compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
+                    favoritePresets.remove(preset.get("path"));
                     db.removeAndUnlike(preset);
                 }
             }
