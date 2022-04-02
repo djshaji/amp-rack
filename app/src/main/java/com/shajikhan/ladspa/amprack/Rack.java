@@ -3,6 +3,7 @@ package com.shajikhan.ladspa.amprack;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -161,7 +162,17 @@ public class Rack extends Fragment {
         optionsMenu.getMenuInflater().inflate(R.menu.options_menu, optionsMenu.getMenu());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser() ;
+        MenuItem settings = optionsMenu.getMenu().getItem(0);
         MenuItem logout = optionsMenu.getMenu().getItem(1);
+
+        settings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent = new Intent(getContext(), SettingsActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
 
         logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

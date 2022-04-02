@@ -590,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return Color.argb(alpha, red, green, blue);
     }
 
-    String typeToString(int type){
+    static String typeToString(int type){
         switch (type) {
             case AudioDeviceInfo.TYPE_AUX_LINE:
                 return "auxiliary line-level connectors";
