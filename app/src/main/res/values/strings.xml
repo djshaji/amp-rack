@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AmpRack</string>
+    <string name="app_version">Alpha 1</string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>
@@ -133,4 +134,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="lame_preset_desc">Select Standard for (almost) transparent quality, although medium would suffice as well. Standard preset should generally be transparent to most people on most music and is already quite high in quality.</string>
 </resources>
