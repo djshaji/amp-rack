@@ -133,6 +133,8 @@ public:
     static float buffers_to_seconds(int buffers);
 
     static float blocks_to_seconds(int blocks);
+
+    void setFileType(int fType);
 };
 
 

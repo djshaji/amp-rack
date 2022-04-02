@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView.LayoutManager layoutManager ;
     LinearLayout linearLayoutPluginDialog ;
     PluginDialogAdapter pluginDialogAdapter ;
+    SharedPreferences defaultSharedPreferences = null ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this ;
+        defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         rack = new Rack();
         presets = new Presets();
@@ -460,6 +463,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (isPlaying) {
             stopEffect();
         } else {
+            // apply settings
+            applyPreferencesDevices();
+            applyPreferencesExport();
             startEffect();
         }
     }
@@ -943,5 +949,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
 
         return set ;
+    }
+
+    void applyPreferencesDevices () {
+        // Audio Devices
+        String input = defaultSharedPreferences.getString("input", "Default");
+        String output = defaultSharedPreferences.getString("output", "Default");
+        Log.d(TAG, "applyPreferences: [devices] " + String.format("input: %s, output: %s", input, output));
+
+        AudioEngine.setRecordingDeviceId(new Integer(input));
+        AudioEngine.setPlaybackDeviceId(new Integer(output));
+    }
+
+    void applyPreferencesExport () {
+        String format = defaultSharedPreferences.getString("export_format", "OPUS (Recommended)");
+        AudioEngine.setExportFormat(Integer.parseInt(format));
     }
 }

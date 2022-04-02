@@ -91,7 +91,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setRecordingDeviceId(JNIEnv *env, 
         return;
     }
 
-    engine->setRecordingDeviceId(device_id);
+    if (device_id == -1)
+        engine->setRecordingDeviceId(oboe::kUnspecified);
+    else
+        engine->setRecordingDeviceId(device_id);
 }
 extern "C"
 JNIEXPORT void JNICALL
@@ -104,7 +107,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPlaybackDeviceId(JNIEnv *env, j
         return;
     }
 
-    engine->setPlaybackDeviceId(device_id);
+    if (device_id == -1)
+        engine->setPlaybackDeviceId(oboe::kUnspecified);
+    else
+        engine->setPlaybackDeviceId(device_id);
 }
 extern "C"
 JNIEXPORT void JNICALL
@@ -416,4 +422,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginPresetValue(JNIEnv *env, 
     }
 
     return engine->activePlugins.at(plugin)->pluginControls.at(control)->presetValue ;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setExportFormat(JNIEnv *env, jclass clazz,
+                                                              jint format) {
+    // TODO: implement setExportFormat()
+        if (engine == NULL) {
+        LOGF ("engine is NULL");
+            return;
+    }
+
+    engine->fileWriter->setFileType(format);
 }

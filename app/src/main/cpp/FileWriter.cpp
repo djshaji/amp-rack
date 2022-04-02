@@ -366,3 +366,7 @@ float FileWriter::buffers_to_seconds(int buffers){
 float FileWriter::blocks_to_seconds(int blocks){
     return (float)blocks*(float)block_size/jack_samplerate;
 }
+
+void FileWriter::setFileType (int fType) {
+    fileType = static_cast<FileType>(fType);
+}
