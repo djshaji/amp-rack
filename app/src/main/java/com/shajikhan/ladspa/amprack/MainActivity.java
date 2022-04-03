@@ -833,6 +833,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void loadPreset (String preset) {
+        // forgot to add this. that this was forgotten was very difficult to guess
+        AudioEngine.clearActiveQueue();
+
         Log.d(TAG, "loadPreset: " + preset);
         JSONObject jsonObject ;
         try {

@@ -279,6 +279,11 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginName(JNIEnv *env, j
         LOGF ("engine is NULL");
         return NULL;
     }
+
+    if (engine->activePlugins.size() <= plugin) {
+        HERE LOGE("[%d] plugin requested but only [%d] plugins in queue.", plugin, engine->activePlugins.size());
+        return NULL;
+    }
     return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->Name);
 }
 extern "C"
@@ -434,4 +439,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setExportFormat(JNIEnv *env, jclas
     }
 
     engine->fileWriter->setFileType(format);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_clearActiveQueue(JNIEnv *env, jclass clazz) {
+    // TODO: implement clearActiveQueue()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return;
+    }
+
+    engine->activePlugins.clear();
+    engine-> buildPluginChain();
 }

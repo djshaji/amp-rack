@@ -306,6 +306,9 @@ public class FirestoreDB {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         presetsAdapter.favoritePresets = documentSnapshot.getData();
+                        if (presetsAdapter.favoritePresets == null) {
+                            presetsAdapter.favoritePresets = new HashMap<String, Object>();
+                        }
                         loadUserPresets(presetsAdapter, shared);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
