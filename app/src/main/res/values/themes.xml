@@ -12,5 +12,28 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
+        <item name="windowSplashScreenBackground">@color/colorPrimaryDark</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyApp</item>
     </style>
+    <style name="Theme.MySplash" parent="Theme.SplashScreen">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#256c9a</item>
+        <item name="colorPrimaryVariant">@color/teal</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_red</item>
+        <item name="colorSecondaryVariant">@color/dark_orange</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="windowSplashScreenBackground">@color/colorPrimary</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.AmpRack</item>
+    </style>
+
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+          <!-- Your theme attributes goes here -->
+    </style>
+
 </resources>

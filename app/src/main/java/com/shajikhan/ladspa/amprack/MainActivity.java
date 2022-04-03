@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -113,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
         context = this ;
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -245,6 +248,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.d(TAG, "onCheckedChanged: record pressed");
+                if (onOff.isChecked()) {
+                    Log.d(TAG, "onCheckedChanged: onOff is checked");
+                    toast("Cannot start or stop recording while playing");
+                    record.setChecked(!b);
+                    return;
+                }
+
                 if (b) {
                     if (!isStoragePermissionGranted()) {
 //                        requestReadStoragePermission();

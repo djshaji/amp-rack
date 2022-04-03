@@ -16,7 +16,8 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AmpRack">
+        android:theme="@style/Theme.MySplash">
+
         <activity
             android:name=".SettingsActivity"
             android:exported="false"

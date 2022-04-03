@@ -90,6 +90,12 @@ public class Rack extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    if (onOff.isChecked()) {
+                        MainActivity.toast("Cannot start or stop recording while playing");
+                        record.setChecked(!b);
+                        return;
+                    }
+
                     if (!mainActivity.isStoragePermissionGranted()) {
 //                        requestReadStoragePermission();
                         mainActivity.requestWriteStoragePermission();
