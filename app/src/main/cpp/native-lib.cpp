@@ -222,6 +222,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControl(JNIEnv *env, jcla
         return ;
     }
 
+    if (plugin >= engine->activePlugins.size()) {
+        HERE LOGE("[%d] plugin requested but only %d plugins are active", plugin, engine->activePlugins.size());
+        return;
+    }
+
+    if (control >= engine->activePlugins.at(plugin)->pluginControls.size()) {
+        HERE LOGE ("[%d] control requested but plugin [%s] has only [%d] controls", control, engine->activePlugins.at(plugin)->descriptor->Name, engine->activePlugins.at(plugin)->pluginControls.size());
+        return ;
+    }
+
     LOGD("[%s %d] setting control %s to %f", engine->activePlugins.at(plugin)->descriptor->Name, control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
     engine->activePlugins.at(plugin)->pluginControls.at(control)->setValue(value);
 }

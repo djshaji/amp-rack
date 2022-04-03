@@ -107,6 +107,10 @@ public class FirestoreDB {
     }
 
     public void loadUserPresets (MyPresetsAdapter presetsAdapter, boolean shared) {
+        if (presetsAdapter.progressBar != null) {
+            presetsAdapter.progressBar.setVisibility(View.VISIBLE);
+        }
+
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
         if (auth == null) {
             Log.e(TAG, "loadUserPresets: uid is null", null);

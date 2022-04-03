@@ -895,6 +895,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Log.d(TAG, "loadPreset: " + i + ": " + control[i]);
                 //                holder.sliders.get(i).setValue(Integer.parseInt(control [i]));
                 AudioEngine.setPresetValue(plugin, i, Float.parseFloat(control [i]));
+                // forgot this too
+                AudioEngine.setPluginControl(plugin, i, Float.parseFloat(control [i]));
             }
 
             dataAdapter.addItem(ret, ret);

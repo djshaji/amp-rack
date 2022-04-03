@@ -23,6 +23,7 @@ public class AudioEngine {
     static native int addPlugin (int library, int plugin) ;
     static native int addPluginByName (String name);
     static native boolean deletePlugin (int plugin) ;
+    static native void clearActiveQueue ();
 
     static native void setPluginControl (int plugin, int control, float value);
     static native void setPresetValue (int plugin, int control, float value);
