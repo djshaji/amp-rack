@@ -248,6 +248,7 @@ public class Presets extends Fragment {
                 return myPresets;
             } else {// if (position == 1) {
                 libraryPresets = new MyPresets(true);
+                libraryPresets.progressBar = progressPreset;
                 arrayList.add(libraryPresets);
                 return libraryPresets;
             }
