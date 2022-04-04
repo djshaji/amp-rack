@@ -19,6 +19,8 @@ public class AudioEngine {
     static native String getControlName (int plugin, int control) ;
     static native String getActivePluginName (int plugin);
 
+    static native String getRecordingFileName ();
+
     // return active plugin *ID*
     static native int addPlugin (int library, int plugin) ;
     static native int addPluginByName (String name);

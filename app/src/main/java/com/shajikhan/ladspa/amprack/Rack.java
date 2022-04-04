@@ -85,14 +85,14 @@ public class Rack extends Fragment {
         mainActivity.pluginDialogAdapter.setMainActivity(getContext(), mainActivity);
         recyclerView1.setAdapter(mainActivity.pluginDialogAdapter);
 
-        ToggleButton record = view.findViewById(R.id.record_button);
-        record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mainActivity.record = view.findViewById(R.id.record_button);
+        mainActivity.record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     if (onOff.isChecked()) {
                         MainActivity.toast("Cannot start or stop recording while playing");
-                        record.setChecked(!b);
+                        mainActivity.record.setChecked(!b);
                         return;
                     }
 

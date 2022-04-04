@@ -470,3 +470,9 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_clearActiveQueue(JNIEnv *env, jcla
     engine->activePlugins.clear();
     engine-> buildPluginChain();
 }
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getRecordingFileName(JNIEnv *env, jclass clazz) {
+    // TODO: implement getRecordingFileName()
+    return env ->NewStringUTF(engine->fileWriter->filename.c_str());
+}

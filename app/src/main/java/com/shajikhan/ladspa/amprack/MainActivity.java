@@ -6,6 +6,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -29,8 +30,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,6 +53,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -70,6 +74,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String CHANNEL_ID = "default" ;
     static Context context;
     SwitchMaterial onOff;
-    MaterialButton record ;
+    ToggleButton record ;
     PopupMenu addPluginMenu ;
     RecyclerView recyclerView ;
     DataAdapter dataAdapter ;
@@ -110,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     Rack rack ;
     Presets presets ;
     PopupMenu optionsMenu ;
+    String lastRecordedFileName ;
     NotificationManagerCompat notificationManager ;
 
     // Used to load the 'amprack' library on application startup.
@@ -119,12 +125,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private ActivityMainBinding binding;
+    MediaPlayer mediaPlayer ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );
+
 
         context = this ;
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
@@ -249,10 +265,72 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .setContentText("Effects Processor is running")
                 .setContentIntent(pendingIntent)
                 .setChannelId(CHANNEL_ID)
-                .setPriority(NotificationCompat.PRIORITY_LOW);
+                .setPriority(NotificationCompat.PRIORITY_MIN);
 
 
         notification = builder.build();
+    }
+
+    void showMediaPlayerDialog () {
+        if (lastRecordedFileName == null)
+            return;
+        Log.d(TAG, "showMediaPlayerDialog: " + lastRecordedFileName);
+        Uri uri = Uri.parse(lastRecordedFileName);
+        try {
+            mediaPlayer.setDataSource(getApplicationContext(), uri);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            toast("Cannot load media file: " + e.getMessage());
+            return ;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = getLayoutInflater();
+
+        ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.media_player_dialog, null);
+        ToggleButton toggleButton = constraintLayout.findViewById(R.id.media_play);
+        TextView textView = constraintLayout.findViewById(R.id.media_filename);
+        textView.setText(lastRecordedFileName);
+        toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    toggleButton.setButtonDrawable(R.drawable.ic_baseline_pause_24);
+                    mediaPlayer.start();
+                } else {
+                    mediaPlayer.pause();
+                    toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
+                }
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
+            }
+        });
+
+        builder.setView(constraintLayout)
+                .setPositiveButton("Close", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                mediaPlayer.stop();
+            }
+        });
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                mediaPlayer.stop();
+            }
+        });
+        dialog.show();
+
     }
 
     /**
@@ -281,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ExtendedFloatingActionButton fab = findViewById(R.id.fab);
         addPluginMenu = new PopupMenu(context, fab);
 
-        ToggleButton record = findViewById(R.id.record_button);
+        record = findViewById(R.id.record_button);
         record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -526,6 +604,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void toggleEffect(boolean isPlaying) {
         if (isPlaying) {
+            if (record.isChecked()) {
+                lastRecordedFileName = AudioEngine.getRecordingFileName();
+                showMediaPlayerDialog();
+            }
+
             stopEffect();
             notificationManager.cancelAll();
         } else {
