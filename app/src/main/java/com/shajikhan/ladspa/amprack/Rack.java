@@ -170,6 +170,23 @@ public class Rack extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser() ;
         MenuItem settings = optionsMenu.getMenu().getItem(0);
         MenuItem logout = optionsMenu.getMenu().getItem(1);
+        MenuItem debug = optionsMenu.getMenu().getItem(2);
+        MenuItem exit_item = optionsMenu.getMenu().getItem(3);
+        exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                mainActivity.finish();
+                return true;
+            }
+        });
+
+        debug.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                mainActivity.printDebugLog();
+                return true;
+            }
+        });
 
         settings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

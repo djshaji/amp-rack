@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 //        AudioEngine.showProgress(null);
-        AudioEngine.showProgress(context);
+//        AudioEngine.showProgress(context);
         AudioEngine.create();
         // load included plugins
         loadPlugins();
@@ -443,6 +443,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "lifecycle: resumed");
         AudioEngine.create(); // originally was here
         loadPlugins();
         File dir = Environment.getExternalStorageDirectory();
@@ -462,12 +463,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 //        loadActivePreset();
     }
+
     @Override
     protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "lifecycle: paused");
+        saveActivePreset();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "lifecycle: stopped");
+        saveActivePreset();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "lifecycle: destroyed");
         stopEffect();
         saveActivePreset();
         AudioEngine.delete();
-        super.onPause();
     }
 
     public void toggleEffect(boolean isPlaying) {
@@ -980,5 +997,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     void applyPreferencesExport () {
         String format = defaultSharedPreferences.getString("export_format", "OPUS (Recommended)");
         AudioEngine.setExportFormat(Integer.parseInt(format));
+    }
+
+    void printDebugLog () {
+        AudioEngine.debugInfo();
+
     }
 }
