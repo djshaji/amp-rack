@@ -68,6 +68,10 @@ public class Rack extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        if (mainActivity.pluginDialog != null) {
+            // we did this already
+            return ;
+        }
 
         SwitchMaterial onOff = view.findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

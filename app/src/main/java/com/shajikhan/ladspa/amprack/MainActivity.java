@@ -626,8 +626,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "lifecycle: resumed");
-        AudioEngine.create(); // originally was here
-        loadPlugins();
+//        AudioEngine.create(); // originally was here
+//        loadPlugins();
         File dir = Environment.getExternalStorageDirectory();
         String path = dir.getAbsolutePath();
 
