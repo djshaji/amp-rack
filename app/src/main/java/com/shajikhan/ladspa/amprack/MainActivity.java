@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -34,10 +35,12 @@ import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,10 +51,12 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,8 +84,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -291,7 +299,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.media_player_dialog, null);
         ToggleButton toggleButton = constraintLayout.findViewById(R.id.media_play);
         TextView textView = constraintLayout.findViewById(R.id.media_filename);
-        textView.setText(lastRecordedFileName);
+        File file = new File(lastRecordedFileName);
+        textView.setText(file.getName());
         toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -306,12 +315,68 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        SeekBar seekBar = constraintLayout.findViewById(R.id.media_seekbar);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
+                seekBar.setProgress(0);
             }
         });
+
+        Button share = constraintLayout.findViewById(R.id.share_file);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+                // this is pretty awesome!
+                MediaScannerConnection.scanFile(context,
+                        new String[] { file.toString() }, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.i("ExternalStorage", "Scanned " + path + ":");
+                                Log.i("ExternalStorage", "-> uri=" + uri);
+                                intentShareFile.setType("audio/*");
+                                intentShareFile.putExtra(Intent.EXTRA_STREAM, uri);
+
+                                intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
+                                        "Sharing Audio File...");
+                                intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing Audio File...");
+
+                                intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivity(Intent.createChooser(intentShareFile, "Share Audio File"));
+                            }
+                        });
+            }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar _seekBar) {
+                mediaPlayer.seekTo(mediaPlayer.getDuration() * (_seekBar.getProgress() / 100));
+
+            }
+        });
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (mediaPlayer.isPlaying()) {
+                    seekBar.setProgress(100* mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration());
+                    Log.d(TAG, "run: " + mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration());
+                }
+            }
+        },0,1000);
 
         builder.setView(constraintLayout)
                 .setPositiveButton("Close", null);
@@ -321,12 +386,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 mediaPlayer.stop();
+                timer.cancel();
             }
         });
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 mediaPlayer.stop();
+                timer.cancel();
             }
         });
         dialog.show();
