@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -15,6 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,6 +79,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
+    private static final String CHANNEL_ID = "default" ;
     static Context context;
     SwitchMaterial onOff;
     MaterialButton record ;
@@ -88,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     LinearLayout linearLayoutPluginDialog ;
     PluginDialogAdapter pluginDialogAdapter ;
     SharedPreferences defaultSharedPreferences = null ;
+    Notification notification ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -102,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     Rack rack ;
     Presets presets ;
     PopupMenu optionsMenu ;
+    NotificationManagerCompat notificationManager ;
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -115,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        notificationManager = NotificationManagerCompat.from(this);
 
         context = this ;
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
@@ -216,6 +226,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .show(rack)
                 .hide(presets)
                 .commit();
+
+        // notification
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        NotificationChannel channel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+        }
+        notificationManager.createNotificationChannel(channel);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Effects Processor is running")
+                .setContentIntent(pendingIntent)
+                .setChannelId(CHANNEL_ID)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+
+
+        notification = builder.build();
     }
 
     /**
@@ -490,11 +527,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void toggleEffect(boolean isPlaying) {
         if (isPlaying) {
             stopEffect();
+            notificationManager.cancelAll();
         } else {
             // apply settings
             applyPreferencesDevices();
             applyPreferencesExport();
             startEffect();
+            notificationManager.notify(0, notification);
         }
     }
 
@@ -1002,5 +1041,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     void printDebugLog () {
         AudioEngine.debugInfo();
 
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.app_name);
+            String description = getString(R.string.app_name);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
