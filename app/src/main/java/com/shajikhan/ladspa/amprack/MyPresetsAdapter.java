@@ -31,6 +31,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     FirestoreDB db ;
     ProgressBar progressBar ;
     MyPresetsAdapter myPresetsAdapter ;
+    String sortBy = "timestamp";
     String uid = null;
     Map<String, Object> favoritePresets = null;
     ArrayList <Map> allPresets = new ArrayList<>() ;

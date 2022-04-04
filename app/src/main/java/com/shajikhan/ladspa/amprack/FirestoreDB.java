@@ -149,11 +149,13 @@ public class FirestoreDB {
         if (shared == false) {
             db.collection("presets")
                     .whereEqualTo("uid", uid)
+                    .orderBy(presetsAdapter.sortBy)
                     .get()
                     .addOnCompleteListener(onCompleteListener);
         } else {
             db.collection("presets")
                     .whereEqualTo("public", true)
+                    .orderBy(presetsAdapter.sortBy)
                     .get()
                     .addOnCompleteListener(onCompleteListener);
         }

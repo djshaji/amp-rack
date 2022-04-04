@@ -382,6 +382,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .setPositiveButton("Close", null);
 
         AlertDialog dialog = builder.create();
+
+        Button deleteFile = constraintLayout.findViewById(R.id.delete_file);
+        deleteFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Are you sure you want to delete this file?")
+                        .setTitle("Delete " + lastRecordedFileName)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface _dialog, int id) {
+                                file.delete();
+                                if (file.exists()){
+                                    toast("File could not be deleted");
+                                } else {
+                                    toast ("File deleted");
+                                    dialog.dismiss();
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancel", null);
+                // Create the AlertDialog object and return it
+                builder.create().show();
+            }
+        });
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {

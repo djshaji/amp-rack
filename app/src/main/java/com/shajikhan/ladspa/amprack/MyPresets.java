@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ToggleButton;
 
@@ -27,6 +29,7 @@ public class MyPresets extends Fragment {
     public MyPresetsAdapter myPresetsAdapter ;
     FirestoreDB db ;
     ProgressBar progressBar = null;
+    PopupMenu sortMenu = null;
     boolean shared = false;
 
     MyPresets (ProgressBar _progressBar) {
@@ -92,6 +95,16 @@ public class MyPresets extends Fragment {
                 }
             });
         }
+
+        Button sortByButton = (Button) lx.getChildAt(2);
+        sortMenu = new PopupMenu(mainActivity, sortByButton);
+        sortMenu.getMenuInflater().inflate(R.menu.sort_by, sortMenu.getMenu());
+        sortByButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sortMenu.show();
+            }
+        });
 
         if (progressBar != null)
             myPresetsAdapter.setProgressBar(progressBar);
