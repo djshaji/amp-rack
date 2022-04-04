@@ -22,7 +22,11 @@
             android:name=".SettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.AmpRack"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shajikhan.ladspa.amprack.MainActivity" />
+        </activity>
         <activity
             android:name=".FirebaseUI"
             android:exported="false" />
