@@ -1,10 +1,12 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -99,6 +101,47 @@ public class MyPresets extends Fragment {
         Button sortByButton = (Button) lx.getChildAt(2);
         sortMenu = new PopupMenu(mainActivity, sortByButton);
         sortMenu.getMenuInflater().inflate(R.menu.sort_by, sortMenu.getMenu());
+
+        /*
+        switch (((MainActivity) getActivity()).defaultSharedPreferences.getString("orderBy", "timestamp")) {
+            default:
+            case "timestamp":
+                sortMenu.getMenu().findItem(2).setChecked(true);
+                break ;
+            case "likes":
+                sortMenu.getMenu().findItem(1).setChecked(true);
+                break ;
+        }
+
+         */
+
+        sortMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                SharedPreferences sharedPreferences = ((MainActivity) getActivity()).defaultSharedPreferences;
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    default:
+                    case R.id.sort_by_time:
+                        myPresetsAdapter.sortBy = "timestamp";
+                        sharedPreferences.edit().putString("orderBy", "timestamp").apply();
+                        break ;
+                    case R.id.sort_by_likes:
+                        myPresetsAdapter.sortBy = "likes";
+                        sharedPreferences.edit().putString("orderBy", "likes").apply();
+                        break ;
+                }
+
+                myPresetsAdapter.removeAll();
+                db.loadUserPresets(myPresetsAdapter,shared);
+                return true;
+            }
+        });
+
+        if (!shared) {
+            sortByButton.setVisibility(View.GONE);
+        }
+
         sortByButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

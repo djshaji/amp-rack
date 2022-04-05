@@ -36,6 +36,13 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     Map<String, Object> favoritePresets = null;
     ArrayList <Map> allPresets = new ArrayList<>() ;
 
+    void removeAll () {
+        int num = allPresets.size();
+        allPresets.clear();
+        presets.clear();
+        notifyItemRangeRemoved(0, num);
+    }
+
     void addPreset (Map preset) {
         presets.add(preset);
         allPresets.add(preset);
