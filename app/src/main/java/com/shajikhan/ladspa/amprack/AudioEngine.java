@@ -20,6 +20,8 @@ public class AudioEngine {
     static native String getActivePluginName (int plugin);
 
     static native String getRecordingFileName ();
+    static native void setLowLatency (boolean lowLatency) ;
+    static native void setSampleRate (int sampleRate);
 
     // return active plugin *ID*
     static native int addPlugin (int library, int plugin) ;
@@ -40,6 +42,7 @@ public class AudioEngine {
     static native void debugInfo ();
     static native void setExternalStoragePath (String path) ;
     static native void setRecordingActive (boolean active) ;
+    static native void setOpusBitRate (int bitrate);
 
     static native boolean create () ;
     static native boolean isAAudioRecommended () ;

@@ -476,3 +476,42 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getRecordingFileName(JNIEnv *env, 
     // TODO: implement getRecordingFileName()
     return env ->NewStringUTF(engine->fileWriter->filename.c_str());
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setLowLatency(JNIEnv *env, jclass clazz,
+                                                            jboolean low_latency) {
+    // TODO: implement setLowLatency()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return;
+    }
+    if (low_latency) {
+        engine->lowLatency = 12 ;
+    } else {
+        engine->lowLatency = 10 ;
+    }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setSampleRate(JNIEnv *env, jclass clazz,
+                                                            jint sample_rate) {
+    // TODO: implement setSampleRate()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return;
+    }
+
+    engine->mSampleRate = sample_rate;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setOpusBitRate(JNIEnv *env, jclass clazz,
+                                                             jint bitrate) {
+    // TODO: implement setOpusBitRate()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return;
+    }
+
+    engine->fileWriter->bitRate = bitrate;
+}

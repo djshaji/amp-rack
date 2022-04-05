@@ -1199,17 +1199,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     void applyPreferencesDevices () {
         // Audio Devices
-        String input = defaultSharedPreferences.getString("input", "Default");
-        String output = defaultSharedPreferences.getString("output", "Default");
+        String input = defaultSharedPreferences.getString("input", "-1");
+        String output = defaultSharedPreferences.getString("output", "-1");
         Log.d(TAG, "applyPreferences: [devices] " + String.format("input: %s, output: %s", input, output));
 
         AudioEngine.setRecordingDeviceId(new Integer(input));
         AudioEngine.setPlaybackDeviceId(new Integer(output));
+
+        AudioEngine.setLowLatency(defaultSharedPreferences.getBoolean("latency", true));
+        AudioEngine.setSampleRate(defaultSharedPreferences.getInt("sample_rate", 48000));
     }
 
     void applyPreferencesExport () {
         String format = defaultSharedPreferences.getString("export_format", "OPUS (Recommended)");
         AudioEngine.setExportFormat(Integer.parseInt(format));
+        Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
+        AudioEngine.setOpusBitRate(bitRate * 1000);
     }
 
     void printDebugLog () {
