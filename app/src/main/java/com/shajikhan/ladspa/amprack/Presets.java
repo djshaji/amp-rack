@@ -122,7 +122,6 @@ public class Presets extends Fragment {
         fragmentStateAdapter.createFragment(0);
         fragmentStateAdapter.createFragment(1);
         viewPager.setAdapter(fragmentStateAdapter);
-        viewPager.setOffscreenPageLimit(1);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -260,7 +259,7 @@ public class Presets extends Fragment {
 
         @Override
         public int getItemCount() {
-            return arrayList.size();
+            return 2;
         }
 
     }
