@@ -136,6 +136,7 @@
         <item>ToneStack.so</item>
         <item>VCO.so</item>
         <item>White.so</item>
+        <item>autotalent.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
