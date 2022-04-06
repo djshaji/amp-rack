@@ -203,7 +203,7 @@ oboe::AudioStreamBuilder *Engine::setupCommonStreamParameters(
             ->setFormatConversionAllowed(true)
             ->setSharingMode(oboe::SharingMode::Exclusive)
             ->setInputPreset(oboe::VoicePerformance)
-            ->setPerformanceMode(oboe::PerformanceMode::LowLatency);
+            ->setPerformanceMode(static_cast<oboe::PerformanceMode>(lowLatency));
     return builder;
 }
 

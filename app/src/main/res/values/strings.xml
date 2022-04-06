@@ -110,13 +110,32 @@
         <item>echo.so</item>
         <item>distortion.so</item>
         <item>crybaby.so</item>
-        <item>c++_shared.so</item>
         <item>inv_tube.so</item>
         <item>inv_common.so</item>
         <item>inv_input.so</item>
         <item>inv_filter.so</item>
         <item>inv_erreverb.so</item>
         <item>inv_compressor.so</item>
+        <item>Amp.so</item>
+        <item>Cabinet.so</item>
+        <item>Chorus.so</item>
+        <item>Click.so</item>
+        <item>Clip.so</item>
+        <item>Compress.so</item>
+        <item>Eq.so</item>
+        <item>HRTF.so</item>
+        <item>Lorenz.so</item>
+        <item>Pan.so</item>
+        <item>Phaser.so</item>
+        <item>Reverb.so</item>
+        <item>Roessler.so</item>
+        <item>Scape.so</item>
+        <item>Sin.so</item>
+        <item>SweepVF.so</item>
+        <item>ToneControls.so</item>
+        <item>ToneStack.so</item>
+        <item>VCO.so</item>
+        <item>White.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

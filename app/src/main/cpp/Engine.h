@@ -53,6 +53,7 @@ public:
     int moveActivePluginUp(int _p);
     void buildPluginChain();
     int addPlugintoRackByName(std::string);
+    int lowLatency = 12 ;
 
 private:
     bool              mIsEffectOn = false;

@@ -41,7 +41,7 @@ typedef enum  {
 
 class FileWriter {
     SF_INFO sf_info ;
-    int bitRate = 64000 ;
+    public: int bitRate = 64000 ;
     static OggOpusComments *comments;
     static lame_t lame ;
 
