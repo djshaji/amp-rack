@@ -62,6 +62,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
@@ -139,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private ActivityMainBinding binding;
     MediaPlayer mediaPlayer ;
+    private BillingClient billingClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,11 +156,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                     Log.d(TAG, "onQueryPurchasesResponse: purchased");
                     proVersion = true;
+                } else {
+                    Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
                 }
             }
         };
 
-        query
+        billingClient = BillingClient.newBuilder(context)
+                .enablePendingPurchases()
+                .build();
+
+        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(
