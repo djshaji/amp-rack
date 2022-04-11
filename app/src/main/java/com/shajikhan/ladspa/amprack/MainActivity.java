@@ -62,6 +62,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -109,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PluginDialogAdapter pluginDialogAdapter ;
     SharedPreferences defaultSharedPreferences = null ;
     Notification notification ;
+    PurchasesResponseListener purchasesResponseListener ;
+    boolean proVersion = false ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -140,6 +145,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
+
+        purchasesResponseListener = new PurchasesResponseListener() {
+            @Override
+            public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                Purchase purchase = list.get(0);
+                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                    Log.d(TAG, "onQueryPurchasesResponse: purchased");
+                    proVersion = true;
+                }
+            }
+        };
+
+        query
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(

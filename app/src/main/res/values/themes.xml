@@ -13,6 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="Theme.MySplash" parent="Theme.SplashScreen">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#256c9a</item>
@@ -30,7 +31,7 @@
     </style>
 
     <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-          <!-- Your theme attributes goes here -->
+        <!-- Your theme attributes goes here -->
     </style>
 
 </resources>
