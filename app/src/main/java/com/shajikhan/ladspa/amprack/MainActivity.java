@@ -4,6 +4,7 @@ import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMI
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -62,10 +63,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -115,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     Notification notification ;
     PurchasesResponseListener purchasesResponseListener ;
     boolean proVersion = false ;
+    File dir ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -141,17 +146,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ActivityMainBinding binding;
     MediaPlayer mediaPlayer ;
     private BillingClient billingClient;
-
+    private PurchasesUpdatedListener purchasesUpdatedListener ;
+    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this ;
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
+
+        acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
+            @Override
+            public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
+            }
+        };
 
         purchasesResponseListener = new PurchasesResponseListener() {
             @Override
             public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                if (list.isEmpty()) {
+                    Log.d(TAG, "onQueryPurchasesResponse: no purchases");
+                    return ;
+                }
+
                 Purchase purchase = list.get(0);
                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                     Log.d(TAG, "onQueryPurchasesResponse: purchased");
@@ -162,8 +181,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         };
 
+
+        purchasesUpdatedListener = new PurchasesUpdatedListener() {
+
+            @Override
+            public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<com.android.billingclient.api.Purchase> list) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                        && list != null) {
+                    for (com.android.billingclient.api.Purchase purchase : list) {
+                        handlePurchase(purchase);
+                    }
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                    // Handle an error caused by a user cancelling the purchase flow.
+                } else {
+                    // Handle any other error codes.
+                }
+
+            }
+        };
+
         billingClient = BillingClient.newBuilder(context)
                 .enablePendingPurchases()
+                .setListener(purchasesUpdatedListener)
                 .build();
 
         billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
@@ -177,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         );
 
 
-        context = this ;
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         rack = new Rack();
@@ -304,6 +342,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
         notification = builder.build();
+        dir = context.getExternalFilesDir(
+                Environment.DIRECTORY_MUSIC);
+        if (dir == null || !dir.mkdirs()) {
+            Log.e(TAG, "Directory not created: " + dir.toString());
+        } else {
+            Log.d(TAG, "onResume: default directory set as " + dir.toString());
+        }
+
     }
 
     void showMediaPlayerDialog () {
@@ -679,13 +725,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "lifecycle: resumed");
 //        AudioEngine.create(); // originally was here
 //        loadPlugins();
-        File dir = Environment.getExternalStorageDirectory();
+
+        // our app got rejected because we use MANAGE STORAGE permission.
+        // so we switch to the new API
+//        File dir = Environment.getExternalStorageDirectory();
+        dir = context.getExternalFilesDir(
+                Environment.DIRECTORY_MUSIC);
+        if (dir == null || !dir.mkdirs()) {
+            Log.e(TAG, "Directory not created: " + dir.toString());
+        } else {
+            Log.d(TAG, "onResume: default directory set as " + dir.toString());
+        }
+
         String path = dir.getAbsolutePath();
 
         AudioEngine.setExternalStoragePath(path);
-        File defaultDir = new File (path + "/AmpRack/") ;
+        File defaultDir = dir;
         if (!defaultDir.exists()) {
-            Log.d(TAG, "making directory " + path + "/AmpRack/");
             try {
                 if (!defaultDir.mkdir())
                     Log.wtf (TAG, "Unable to create directory!");
@@ -760,12 +816,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     boolean isStoragePermissionGranted() {
-        return Environment.isExternalStorageManager() ;
-                /*
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) ; &&
+        return
+
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) ;/* &&
                         (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                                PackageManager.PERMISSION_GRANTED) ;*/
+                                PackageManager.PERMISSION_GRANTED) ; */
+
     }
 
     private void requestRecordPermission(){
@@ -783,14 +840,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void requestWriteStoragePermission(){
-        /*
         ActivityCompat.requestPermissions(
                 this,
-                new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 WRITE_STORAGE_REQUEST);
-         */
+
+        /*
         Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + BuildConfig.APPLICATION_ID));
         startActivityForResult(intent, APP_STORAGE_ACCESS_REQUEST_CODE);
+
+         */
 
     }
 
@@ -830,6 +889,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         "Storage permission denied. Recording and playing features won't work",
                         Toast.LENGTH_LONG)
                         .show();
+            } else {
+                if (dir == null || !dir.mkdirs()) {
+                    Log.e(TAG, "Directory not created: " + dir.toString());
+                }
+
             }
         }
 
@@ -1238,7 +1302,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void applyPreferencesExport () {
-        String format = defaultSharedPreferences.getString("export_format", "OPUS (Recommended)");
+        String format = defaultSharedPreferences.getString("export_format", "1");
         AudioEngine.setExportFormat(Integer.parseInt(format));
         Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
         AudioEngine.setOpusBitRate(bitRate * 1000);
@@ -1264,4 +1328,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+    private void handlePurchase(com.android.billingclient.api.Purchase purchase) {
+        if (purchase.getPurchaseState() == com.android.billingclient.api.Purchase.PurchaseState.PURCHASED) {
+            if (!purchase.isAcknowledged()) {
+                AcknowledgePurchaseParams acknowledgePurchaseParams =
+                        AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchase.getPurchaseToken())
+                                .build();
+                billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Thank you for supporting the app!")
+                        .setTitle("Purchase Successful")
+                        .setIcon(R.drawable.logo)
+                        .setPositiveButton("You're Welcome!", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                Log.d(TAG, "handlePurchase: purchase already acknowledged");
+            }
+        }
+
+    }
+
 }
