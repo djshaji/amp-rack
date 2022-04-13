@@ -19,10 +19,12 @@
             android:name=".Purchase"
             android:exported="false"
             android:label="@string/title_activity_purchase"
-            android:theme="@style/Theme.MySplash" />
-        <activity
-            android:name=".ui.Purchase"
-            android:exported="false" />
+            android:theme="@style/Theme.AmpRack">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shajikhan.ladspa.amprack.MainActivity" />
+
+        </activity>
         <activity
             android:name=".SettingsActivity"
             android:exported="false"

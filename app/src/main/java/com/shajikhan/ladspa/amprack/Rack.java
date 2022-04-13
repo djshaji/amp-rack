@@ -175,7 +175,17 @@ public class Rack extends Fragment {
         MenuItem settings = optionsMenu.getMenu().getItem(0);
         MenuItem logout = optionsMenu.getMenu().getItem(1);
         MenuItem debug = optionsMenu.getMenu().getItem(2);
-        MenuItem exit_item = optionsMenu.getMenu().getItem(3);
+        MenuItem getPro = optionsMenu.getMenu().getItem(3);
+        getPro.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent = new Intent(mainActivity, Purchase.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(4);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

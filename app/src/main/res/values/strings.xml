@@ -156,4 +156,12 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="lame_preset_desc">Select Standard for (almost) transparent quality, although medium would suffice as well. Standard preset should generally be transparent to most people on most music and is already quite high in quality.</string>
     <string name="title_activity_purchase">Purchase</string>
+    <string name="pro_features">
+        This is an open source app. You can support its development and unlock all features by purchasing the pro version:\n\n
+        > One time purchase (No subscription)\n
+        > Unlimited effects chain\n
+        > Unlimited recording\n
+        > No Ads\n
+        > Free upgrades forever
+    </string>
 </resources>

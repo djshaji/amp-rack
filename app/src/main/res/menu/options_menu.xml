@@ -7,6 +7,10 @@
         android:title="Log out"/>
     <item android:id="@+id/debug_menu_item"
         android:title="Print Debug Info"/>
+    <item android:id="@+id/get_pro"
+        android:title="Get Full Version"
+        android:icon="@drawable/ic_baseline_cloud_upload_24"/>
+
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>
