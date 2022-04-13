@@ -356,15 +356,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (lastRecordedFileName == null)
             return;
         Log.d(TAG, "showMediaPlayerDialog: " + lastRecordedFileName);
-        Uri uri = Uri.parse(lastRecordedFileName);
-        try {
-            mediaPlayer.setDataSource(getApplicationContext(), uri);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-            toast("Cannot load media file: " + e.getMessage());
-            return ;
-        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = getLayoutInflater();
@@ -379,6 +370,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    Uri uri = Uri.parse(lastRecordedFileName);
+                    try {
+                        mediaPlayer.setDataSource(getApplicationContext(), uri);
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        toast("Cannot load media file: " + e.getMessage());
+                        return ;
+                    }
                     toggleButton.setButtonDrawable(R.drawable.ic_baseline_pause_24);
                     mediaPlayer.start();
                 } else {
@@ -731,6 +731,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        File dir = Environment.getExternalStorageDirectory();
         dir = context.getExternalFilesDir(
                 Environment.DIRECTORY_MUSIC);
+
         if (dir == null || !dir.mkdirs()) {
             Log.e(TAG, "Directory not created: " + dir.toString());
         } else {
@@ -816,7 +817,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     boolean isStoragePermissionGranted() {
-        return
+        return true ; /*
 
                 (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                         PackageManager.PERMISSION_GRANTED) ;/* &&
@@ -1298,13 +1299,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AudioEngine.setPlaybackDeviceId(new Integer(output));
 
         AudioEngine.setLowLatency(defaultSharedPreferences.getBoolean("latency", true));
-        AudioEngine.setSampleRate(defaultSharedPreferences.getInt("sample_rate", 48000));
+        int sampleRate = 48000 ;
+        try {
+            sampleRate = defaultSharedPreferences.getInt("sample_rate", 48000) ;
+        } catch (ClassCastException e) {
+            Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference", e);
+        }
+        AudioEngine.setSampleRate(sampleRate);
     }
 
     void applyPreferencesExport () {
         String format = defaultSharedPreferences.getString("export_format", "1");
         AudioEngine.setExportFormat(Integer.parseInt(format));
         Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
+        Log.d(TAG, "applyPreferencesExport: setting bitrate " + bitRate * 1000);
         AudioEngine.setOpusBitRate(bitRate * 1000);
     }
 
