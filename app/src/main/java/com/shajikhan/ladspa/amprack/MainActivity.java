@@ -70,6 +70,11 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -155,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         context = this ;
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
-
         acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
             @Override
             public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
@@ -245,6 +249,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
+
+
+        if (! proVersion) {
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
+
+            AdView mAdView = findViewById(R.id.adViewBanner);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;

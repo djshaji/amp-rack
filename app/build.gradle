@@ -100,6 +100,9 @@ dependencies {
     def billing_version = "4.1.0"
     implementation "com.android.billingclient:billing:$billing_version"
 
+    // Google Ad Mob
+    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+
     implementation 'com.google.oboe:oboe:1.6.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
