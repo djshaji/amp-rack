@@ -124,6 +124,13 @@ public class Rack extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mainActivity.dataAdapter.plugins.size() > 1 && MainActivity.proVersion == false) {
+                    Log.w(TAG, "onClick: " + String.format("already %d plugins in queue", mainActivity.dataAdapter.plugins.size()));
+                    Intent intent = new Intent(mainActivity, Purchase.class);
+                    startActivity(intent);
+                    return;
+                }
+
                 mainActivity.pluginDialog.show();
             }
         });

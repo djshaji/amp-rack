@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     SharedPreferences defaultSharedPreferences = null ;
     Notification notification ;
     PurchasesResponseListener purchasesResponseListener ;
-    static boolean proVersion = false ;
+    public static boolean proVersion = false ;
     File dir ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
