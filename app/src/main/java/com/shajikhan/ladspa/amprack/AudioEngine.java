@@ -11,6 +11,7 @@ public class AudioEngine {
     static native int getSharedLibraries ();
     static native String getLibraryName (int library) ;
     static native int getPlugins (int library) ;
+    static native int getTotalPlugins ();
     static native String getPluginName (int library, int plugin);
     // activePlugins
     static native int getPluginControls (int plugin) ;

@@ -515,3 +515,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setOpusBitRate(JNIEnv *env, jclass
 
     engine->fileWriter->bitRate = bitrate;
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getTotalPlugins(JNIEnv *env, jclass clazz) {
+    // TODO: implement getTotalPlugins()
+    if (engine == NULL) return 0;
+
+    int plugins = 0 ;
+    for (int i = 0 ; i < engine->libraries.size();i++) {
+        plugins += engine->libraries.at(i)->total_plugins;
+    }
+
+    return plugins;
+}
