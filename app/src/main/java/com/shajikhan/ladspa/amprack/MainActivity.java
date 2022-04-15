@@ -1333,9 +1333,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference", e);
         }
         AudioEngine.setSampleRate(sampleRate);
-        if (proVersion == false) {
-            AudioEngine.setExportFormat(0);
-        }
     }
 
     void applyPreferencesExport () {
@@ -1344,6 +1341,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
         Log.d(TAG, "applyPreferencesExport: setting bitrate " + bitRate * 1000);
         AudioEngine.setOpusBitRate(bitRate * 1000);
+        if (proVersion == false) {
+            AudioEngine.setExportFormat(0);
+        }
     }
 
     void printDebugLog () {
