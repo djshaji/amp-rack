@@ -29,9 +29,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -42,6 +46,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.text.BoringLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -50,11 +56,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
@@ -367,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, "onResume: default directory set as " + dir.toString());
         }
 
+        applyWallpaper(context, getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
     }
 
     void showMediaPlayerDialog () {
@@ -739,6 +748,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
+        applyWallpaper(context, getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
         Log.d(TAG, "lifecycle: resumed");
 //        AudioEngine.create(); // originally was here
 //        loadPlugins();
@@ -1323,6 +1333,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference", e);
         }
         AudioEngine.setSampleRate(sampleRate);
+        if (proVersion == false) {
+            AudioEngine.setExportFormat(0);
+        }
     }
 
     void applyPreferencesExport () {
@@ -1377,4 +1390,72 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 
+    public static Bitmap scaleBackground (Bitmap originalImage, int width, int height) {
+        Bitmap background = Bitmap.createBitmap((int)width, (int)height, Bitmap.Config.ARGB_8888);
+
+        float originalWidth = originalImage.getWidth();
+        float originalHeight = originalImage.getHeight();
+
+        Canvas canvas = new Canvas(background);
+
+//        float scale = width / originalWidth;
+        float scale = height / originalHeight ;
+
+//        float xTranslation = 0.0f;
+//        float yTranslation = (height - originalHeight * scale) / 2.0f;
+        float xTranslation = (width - originalWidth * scale) / 2.0f;
+        float yTranslation = 0.0f ;
+
+        Matrix transformation = new Matrix();
+        transformation.postTranslate(xTranslation, yTranslation);
+        transformation.preScale(scale, scale);
+
+        Paint paint = new Paint();
+        paint.setFilterBitmap(true);
+
+        canvas.drawBitmap(originalImage, transformation, paint);
+        return background;
+
+    }
+    public static void applyWallpaper (Context _context, Resources resources, ImageView imageView, int width, int height) {
+        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "Space");
+        Bitmap bitmap = null ;
+        switch (resIdString) {
+            default:
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(_context.getContentResolver(), Uri.parse(resIdString));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break ;
+                }
+
+                bitmap = scaleBackground(bitmap, width, height);
+                break ;
+            case "Space":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg) ;
+                break ;
+            case "Water":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.water) ;
+                break ;
+            case "Fire":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.fire) ;
+                break ;
+            case "Sky":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.sky) ;
+                break ;
+            case "Earth":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg_earth) ;
+                break ;
+        }
+
+        if (bitmap == null) {
+            Log.e(TAG, "applyWallpaper: No suitable bg from settings", null);
+            return;
+        }
+
+        imageView.setCropToPadding(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        imageView.setImageBitmap(bitmap);
+    }
 }
