@@ -192,7 +192,18 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(4);
+        MenuItem connectGuitar = optionsMenu.getMenu().getItem(4);
+        connectGuitar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent = new Intent(getActivity(), ConnectGuitar.class);
+                startActivity(intent);
+
+                return true;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(5);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

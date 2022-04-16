@@ -56,6 +56,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -276,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
 
         int color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
-        getWindow().setStatusBarColor(color);
+//        getWindow().setStatusBarColor(color);
         color = adjustAlpha(color, .5f);
         primaryColor = color ;
 
@@ -375,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, "onResume: default directory set as " + dir.toString());
         }
 
-        applyWallpaper(context, getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
+        applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
     }
 
     void showMediaPlayerDialog () {
@@ -748,7 +749,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
-        applyWallpaper(context, getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
+        applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
         Log.d(TAG, "lifecycle: resumed");
 //        AudioEngine.create(); // originally was here
 //        loadPlugins();
@@ -1417,7 +1418,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return background;
 
     }
-    public static void applyWallpaper (Context _context, Resources resources, ImageView imageView, int width, int height) {
+    public static void applyWallpaper (Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
         String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "Space");
         Bitmap bitmap = null ;
         switch (resIdString) {
@@ -1457,5 +1458,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
         imageView.setImageBitmap(bitmap);
+
+        int color = getDominantColor(bitmap);
+        window.setStatusBarColor(color);
+
     }
 }

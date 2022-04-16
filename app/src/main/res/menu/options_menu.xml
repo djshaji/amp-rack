@@ -11,6 +11,9 @@
         android:title="Get Full Version"
         android:icon="@drawable/ic_baseline_cloud_upload_24"/>
 
+    <item android:id="@+id/connect_guitar_menu"
+        android:title="Connect Guitar"/>
+
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>
