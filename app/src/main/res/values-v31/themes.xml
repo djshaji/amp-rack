@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.MySplash" parent="Theme.SplashScreen">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#256c9a</item>
+        <item name="colorPrimaryVariant">@color/teal</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_red</item>
+        <item name="colorSecondaryVariant">@color/dark_orange</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/fui_transparent</item>
+        <item name="postSplashScreenTheme">@style/Theme.AmpRack</item>
+    </style>
+</resources>

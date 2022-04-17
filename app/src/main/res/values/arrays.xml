@@ -1,0 +1,59 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+    <string-array name="sample_rates">
+        <item>44100</item>
+        <item>48000</item>
+        <item>96000</item>
+        <item>192000</item>
+    </string-array>
+    <string-array name="audio_formats_oboe">
+        <item>AAUDIO_FORMAT_PCM_I16</item>
+        <item>AAUDIO_FORMAT_PCM_FLOAT</item>
+        <item>AAUDIO_FORMAT_PCM_I24_PACKED</item>
+        <item>AAUDIO_FORMAT_PCM_I32</item>
+    </string-array>
+    <string-array name="channels">
+        <item>Mono</item>
+        <item>Stereo</item>
+    </string-array>
+    <string-array name="export_formats">
+        <item>OPUS (Recommended)</item>
+        <item>MP3</item>
+        <item>WAV Uncompressed (Huge file size)</item>
+    </string-array>
+    <string-array name="export_format_values">
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="lame_presets">
+        <item>Medium</item>
+        <item>Standard (Recommended)</item>
+        <item>Extreme</item>
+        <item>Insane</item>
+        <item>Are you nuts?</item>
+    </string-array>
+    <string-array name="backgrounds">
+        <item>Sky</item>
+        <item>Earth</item>
+        <item>Fire</item>
+        <item>Water</item>
+        <item>Space</item>
+    </string-array>
+    <string-array name="bg_values">
+        <item>2131230964</item>
+        <item>2131230962</item>
+        <item>2131230963</item>
+        <item>2131230965</item>
+        <item>2131230811</item>
+    </string-array>
+</resources>

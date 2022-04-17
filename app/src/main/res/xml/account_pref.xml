@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="Logged in as">
+        <Preference
+            android:title="email@provider.com"
+            android:key="email"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="My Profile">
+
+        <EditTextPreference
+            android:title="Name"
+            android:key="name"/>
+        <EditTextPreference
+            android:title="About Me"
+            android:key="bio"/>
+        <EditTextPreference
+            android:title="My Genre"
+            android:key="genre"/>
+        <EditTextPreference
+            android:title="My Playing Style"
+            android:key="style"/>
+
+        <Preference
+            android:title="Save"
+            android:key="save_profile_button"
+            app:icon="@drawable/ic_baseline_save_alt_24"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

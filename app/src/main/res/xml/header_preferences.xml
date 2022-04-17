@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$MessagesFragment"
+        app:icon="@drawable/ic_baseline_volume_up_24"
+        app:key="messages_header"
+        app:title="Audio Devices" />
+
+    <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$SyncFragment"
+        app:icon="@drawable/ic_baseline_save_alt_24"
+        app:key="sync_header"
+        app:title="Export Settings" />
+
+    <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$ThemeFragment"
+        app:icon="@drawable/ic_baseline_color_lens_24"
+        app:key="theme_header"
+        app:title="Theme" />
+
+    <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$ProfileFragment"
+        app:icon="@drawable/ic_baseline_account_circle_24"
+        app:key="account_header"
+        app:isPreferenceVisible="false"
+        app:title="My Account" />
+
+    <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$VersionFragment"
+        app:icon="@drawable/ic_baseline_info_24"
+        app:key="version_header"
+        app:title="Version Information" />
+
+</PreferenceScreen>

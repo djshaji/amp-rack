@@ -1,0 +1,40 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        app:defaultValue="-1"
+        app:key="input"
+        app:title="Input Device"
+        app:useSimpleSummaryProvider="true" />
+    <ListPreference
+        app:defaultValue="-1"
+        app:key="output"
+        app:title="Output Device"
+        app:useSimpleSummaryProvider="true" />
+
+    <CheckBoxPreference
+        app:defaultValue="true"
+        app:key="latency"
+        app:title="Enable Low Latency Tuning"/>
+
+    <ListPreference
+        app:defaultValue="48000"
+        app:key="sample_rate"
+        app:title="Sample Rate"
+        app:entries="@array/sample_rates"
+        app:entryValues="@array/sample_rates"/>
+
+    <ListPreference
+        app:defaultValue="1"
+        app:key="audio_format"
+        app:title="Audio Format"
+        app:entries="@array/audio_formats_oboe"
+        app:entryValues="@array/audio_formats_oboe"/>
+
+    <ListPreference
+        app:defaultValue="0"
+        app:key="channels"
+        app:title="Audio Channels"
+        app:entries="@array/channels"
+        app:entryValues="@array/channels"/>
+
+</PreferenceScreen>

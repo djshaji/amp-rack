@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:icon="@drawable/logo"
+        android:title="@string/app_name"
+        android:summary="@string/app_version">
+        <Preference
+            android:title="Build Number"
+            android:summary="0001"
+            android:key="build_number"/>
+        <Preference
+            android:title="Release"
+            android:key="build_name"
+            android:summary="Alpha"/>
+        <Preference
+            android:title="Plugins Loaded"
+            android:key="plugins"
+            android:summary="121"/>
+        <Preference
+            android:title="Plugin Formats Supported"
+            android:key="plugins_supported"
+            android:summary="LADSPA"/>
+        <Preference
+            android:title="Audio Encoders Supported"
+            android:key="encoders_supported"
+            android:summary="OPUS\nMP3\nPCM WAV 16 bit"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

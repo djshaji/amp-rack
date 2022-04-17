@@ -1,0 +1,39 @@
+{
+  "1/4 trs to 3.5mm": {
+    "icon": 2131230966,
+    "title": "1/4\" TRS to 3.5mm Converter",
+    "description": "Use this converter to connect your guitar to the phone. You have to use a mic/earphone splitter shown below. You can then use headphones for audio output, or change Settings -> Audio Devices -> Output Device to phone speaker.",
+    "link": "https://www.amazon.in/3-5mm-Stereo-Female-Adapter-Converter/dp/B08L6Q38WN/ref=pd_sbs_sccl_5/257-1659808-0348960?pd_rd_w=NlRZ3&pf_rd_p=f7f53f20-c5e9-46f6-80ca-3dc93baa1685&pf_rd_r=CJ2EJ7XR6QQEJSDN2PEJ&pd_rd_r=f6eb72ae-956b-4c1c-adb5-37c583f041f7&pd_rd_wg=sdkaG&pd_rd_i=B08L6Q38WN&psc=1"
+  },
+
+  "splitter": {
+    "title": "2.5mm mic/earphone splitter",
+    "icon": 2131230960,
+    "description": "Phones have one audio jack for both mic and earphones. Use this splitter to connect your guitar and earphones at the same time.",
+    "link": "https://www.amazon.in/DAHSHA-Splitter-Earphone-Adapter-Smartphone/dp/B07D5VGZVW/ref=sr_1_17?keywords=2.5mm%2Bsplitter&qid=1650108657&sprefix=2.5mm%2Bsplit%2Caps%2C223&sr=8-17&th=1"
+  },
+
+  "cable": {
+    "title": "Guitar USB Cable",
+    "icon": 2131230969,
+    "description": "A Guitar cable is basically a portable sound card with a 1/4\" jack on one end and a USB plug on the other. Use it with an OTG adapter (see below) to connect your guitar directly to your phone."
+  },
+
+  "otg": {
+    "title": "USB OTG Adapter",
+    "icon": 2131230970,
+    "description": "Use this to connect a guitar cable directly to your phone."
+  },
+
+  "AudioInterface": {
+    "title": "Audio Interface",
+    "icon": 2131230968,
+    "description": "An Audio Interface is a portable high quality soundcard connected to the phone using an OTG adapter (see above). You can connect multiple guitars or a guitar and a mic. These usually require more power than other options mentioned here, so are usable with phones that have powerful batteries."
+  },
+
+  "earps": {
+    "title": "Standard Earphones",
+    "icon": 2131230971,
+    "description": "You can also use standard earphones to connect your phone to your guitar. Either:\n\n1. Use earphones for input and phone speaker for output (from settings) or use earphones for output and phone mic for input."
+  }
+}

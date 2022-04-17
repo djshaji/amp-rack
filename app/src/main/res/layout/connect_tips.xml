@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/semi_trans"
+    android:layout_width="wrap_content"
+    android:layout_margin="10dp"
+     android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="100dp"
+            android:padding="10dp"
+            android:layout_height="100dp"
+            android:id="@+id/icon"
+            android:src="@drawable/splitter"/>
+        <TextView
+            android:padding="10dp"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Splitter"
+            android:textStyle="bold"
+            android:fontFamily="@font/comfortaa"
+            android:textSize="24dp"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/desc"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/comfortaa"
+        android:paddingBottom="20dp"
+        android:text="Use this to split mic/earphone jacks"/>
+</LinearLayout>

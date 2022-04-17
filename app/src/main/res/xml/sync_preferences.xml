@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        app:key="export_format"
+        app:title="Audio Export Format"
+        android:entryValues="@array/export_format_values"
+        app:entries="@array/export_formats"
+        app:defaultValue="1"/>
+
+    <PreferenceCategory
+        app:title="OPUS Options">
+        <EditTextPreference
+            app:title="Bit Rate in kbps"
+            app:key="opus_bitrate"
+            android:defaultValue="64"/>
+
+        <SeekBarPreference
+            app:title="Encoder Complexity"
+            app:key="opus_comp"
+            app:min="0"
+            android:max="10"
+            android:summary="Set encoding computational complexity (0–10, default: 10). Zero gives the fastest encodes but lower quality, while 10 gives the highest quality but slower encoding"
+            android:defaultValue="10"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="MP3 Options">
+        <ListPreference
+            app:title="Export Quality Preset"
+            app:key="lame_preset"
+            app:entries="@array/lame_presets"
+            android:defaultValue="1"
+            android:summary="@string/lame_preset_desc"
+            app:entryValues="@array/lame_presets"/>
+
+
+    </PreferenceCategory>
+</PreferenceScreen>
