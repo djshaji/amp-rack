@@ -6,6 +6,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
         return ;
     }
 
+    LOGD("Creating plugin: %s", _descriptor ->Name);
     descriptor = _descriptor ;
     if (_sampleRate > 0)
         sampleRate = _sampleRate ;

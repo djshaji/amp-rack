@@ -1069,10 +1069,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void loadPlugins () {
+        if (AudioEngine.getTotalPlugins() != 0)
+            return;
         String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
         for (String s: tapPlugins) {
             AudioEngine.loadLibrary("lib" + s);
         }
+
+
+
+        /*
+        File dir = new File (getApplicationInfo().nativeLibraryDir) ;
+        File[] soFiles = dir.listFiles();
+        Log.d(TAG, "loadPlugins: found "+ soFiles.length + " plugins in directory "+ getApplicationInfo().nativeLibraryDir);
+
+        for (File s: soFiles) {
+            Log.d(TAG, "loadPlugins: loading " + s.toString());
+            AudioEngine.loadLibrary(s.toString().split(".")[0]);
+        }
+
+         */
 
         AudioEngine.loadPlugins();
 
