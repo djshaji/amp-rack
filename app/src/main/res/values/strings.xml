@@ -23,6 +23,8 @@
         <item>tap_tubewarmth.so</item>
         <item>tap_vibrato.so</item>
         <item>preamp.so</item>
+        <item>vlevel-ladspa.so</item>
+        <item>vocoder.so</item>
         <item>alias_1407.so</item>
         <item>allpass_1895.so</item>
         <item>amp_1181.so</item>
