@@ -1071,9 +1071,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     void loadPlugins () {
         if (AudioEngine.getTotalPlugins() != 0)
             return;
-        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
+//        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
+        String[] tapPlugins = context.getResources().getStringArray(R.array.ladspa_plugins);
         for (String s: tapPlugins) {
-            AudioEngine.loadLibrary("lib" + s);
+            AudioEngine.loadLibrary(/*"lib" + */s);
         }
 
 
