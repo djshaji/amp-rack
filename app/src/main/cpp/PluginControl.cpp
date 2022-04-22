@@ -35,6 +35,8 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
     LADSPA_Data upper_bound = hint -> UpperBound;
     name = descriptor -> PortNames [port] ;
 
+    LOGD("[control] %s", name);
+
     /* control->min, control->max */
     if (LADSPA_IS_HINT_SAMPLE_RATE(ladspaPortRangeHintDescriptor)) {
         lower_bound *= sample_rate;
@@ -61,6 +63,7 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
     }
     /* control->def */
 //        return ;
+    def = (float *) malloc (sizeof (long int));
     if (LADSPA_IS_HINT_HAS_DEFAULT(ladspaPortRangeHintDescriptor)) {
         /// TODO: Free this memory
         /// this causes memory corruption
@@ -75,7 +78,6 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
 //            }
 
 //        def = &default_value ;
-        def = (float *) malloc (sizeof (long int));
         switch (ladspaPortRangeHintDescriptor & LADSPA_HINT_DEFAULT_MASK) {
             case LADSPA_HINT_DEFAULT_MINIMUM:
                 *def = lower_bound;
