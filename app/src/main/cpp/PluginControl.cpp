@@ -105,12 +105,13 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
                 *def = 440.0;
                 break;
             default:
-                free(def), def = NULL;
+//                free(def), def = NULL;
+                *def = -678 ;
                 LOGV("[plugin] %s has no defaults", name);
         }
     }
     else
-        def = NULL;
+        *def = -678;
 
     /* Check the default */
     if (def) {
@@ -154,8 +155,11 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
         sel = min;
     val = sel;
 
-    if (! def)
-        LOGD("[plugin] %s: found control %s <%f - %f> no default value", descriptor ->Name, name, lower_bound, upper_bound);
+    if (*def == -678) {
+        LOGD("[plugin] %s: found control %s <%f - %f> no default value", descriptor->Name, name,
+             lower_bound, upper_bound);
+        *def = 0 ; /// aaaargh
+    }
     else
         LOGD("[plugin] %s: found control %s <%f - %f> default value %f", descriptor ->Name, name, lower_bound, upper_bound, *def);
     OUT ;

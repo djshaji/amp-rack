@@ -78,6 +78,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setEffectOn(JNIEnv *env, jclass cl
         return JNI_FALSE;
     }
 
+    for (int x = 0 ; x < engine->activePlugins.size();x++) {
+        engine->activePlugins.at(x)->print();
+    }
+
     return engine->setEffectOn(is_effect_on) ? JNI_TRUE : JNI_FALSE;
 }
 extern "C"
