@@ -125,8 +125,12 @@ public class SettingsActivity extends AppCompatActivity implements
 
             for (int i = 0 ; i < audioDevicesInput.length ; i ++) {
                 String name = MainActivity.typeToString(audioDevicesInput[i].getType());
+                int deviceID = audioDevicesInput[i].getId();
+//                name = (String) audioDevicesInput[i].getProductName();
                 entries.add(name);
-                entryValues.add(String.valueOf(audioDevicesInput[i]));
+//                entryValues.add(String.valueOf(audioDevicesInput[i]));
+                entryValues.add(String.valueOf(deviceID));
+                Log.d(TITLE_TAG, "onCreatePreferences: " + String.format ("%s: %s", deviceID, name));
             }
 
             listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
@@ -148,8 +152,11 @@ public class SettingsActivity extends AppCompatActivity implements
 
             for (int i = 0 ; i < audioDevicesOutput.length ; i ++) {
                 String name = MainActivity.typeToString(audioDevicesOutput[i].getType());
+                int deviceID = audioDevicesOutput[i].getId();
+//                name = (String) audioDevicesOutput[i].getProductName();
                 entries.add(name);
-                entryValues.add(audioDevicesOutput [i].toString());
+                entryValues.add(String.valueOf(deviceID));
+                Log.d(TITLE_TAG, "onCreatePreferences: " + String.format ("%s: %s", deviceID, name));
             }
 
             listPreferenceOutput.setEntries(entries.toArray(new CharSequence[entries.size()]));

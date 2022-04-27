@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String CHANNEL_ID = "default" ;
     static Context context;
     SwitchMaterial onOff;
+    long totalMemory = 0;
+    static boolean lowMemoryMode = false;
     ToggleButton record ;
     PopupMenu addPluginMenu ;
     RecyclerView recyclerView ;
@@ -276,7 +279,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
         audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
 
-        int color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
+        ActivityManager actManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
+        actManager.getMemoryInfo(memInfo);
+        totalMemory = memInfo.totalMem;
+        Log.d(TAG, "onCreate: total memory available: " + totalMemory);
+
+        int color = 0 ;
+        if (totalMemory > 2587765248l) {
+            color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
+        }
+        else {
+            lowMemoryMode = true ;
+            color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg1));
+        }
 //        getWindow().setStatusBarColor(color);
         color = adjustAlpha(color, .5f);
         primaryColor = color ;
@@ -1340,6 +1356,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         String output = defaultSharedPreferences.getString("output", "-1");
         Log.d(TAG, "applyPreferences: [devices] " + String.format("input: %s, output: %s", input, output));
 
+        Log.d(TAG, "applyPreferencesDevices: " + String.format (
+                "[preferences] playback device: %s, recording device: %s",
+                output, input
+        ));
         AudioEngine.setRecordingDeviceId(new Integer(input));
         AudioEngine.setPlaybackDeviceId(new Integer(output));
 
@@ -1348,7 +1368,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         try {
             sampleRate = defaultSharedPreferences.getInt("sample_rate", 48000) ;
         } catch (ClassCastException e) {
-            Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference", e);
+            Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference: " + defaultSharedPreferences.getString("sample_rate", null), e);
         }
         AudioEngine.setSampleRate(sampleRate);
     }
@@ -1450,7 +1470,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 bitmap = scaleBackground(bitmap, width, height);
                 break ;
             case "Space":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg) ;
+                if (lowMemoryMode)
+                    bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg1) ;
+                else
+                    bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg) ;
                 break ;
             case "Water":
                 bitmap = BitmapFactory.decodeResource(resources, R.drawable.water) ;
