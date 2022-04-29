@@ -201,10 +201,13 @@ oboe::AudioStreamBuilder *Engine::setupCommonStreamParameters(
     // mode.
     builder->setAudioApi(mAudioApi)
             ->setFormat(mFormat)
+            ->setChannelConversionAllowed(true)
+            ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Fastest)
             ->setFormatConversionAllowed(true)
             ->setSharingMode(oboe::SharingMode::Exclusive)
-            ->setInputPreset(oboe::VoicePerformance)
-            ->setPerformanceMode(static_cast<oboe::PerformanceMode>(lowLatency));
+//            ->setInputPreset(oboe::VoicePerformance)
+//            ->setPerformanceMode(static_cast<oboe::PerformanceMode>(lowLatency));
+            ->setPerformanceMode(oboe::PerformanceMode::LowLatency);
     return builder;
 }
 

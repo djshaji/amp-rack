@@ -103,6 +103,12 @@ oboe::Result FullDuplexStream::start() {
         return result;
     }
 
+    if (mInputStream->usesAAudio()) {
+        LOGD("---| using AAudio |----") ;
+    }
+
+    LOGD("API: %d\t\tinput device ID: %d\t\toutput device ID: %d", mInputStream->getAudioApi(), mInputStream->getDeviceId(), mOutputStream->getDeviceId());
+
     OUT ;
     return mOutputStream->requestStart();
 }

@@ -127,7 +127,7 @@ public class SettingsActivity extends AppCompatActivity implements
                 String name = MainActivity.typeToString(audioDevicesInput[i].getType());
                 int deviceID = audioDevicesInput[i].getId();
 //                name = (String) audioDevicesInput[i].getProductName();
-                entries.add(name);
+                entries.add(name + " (" + (String) audioDevicesInput[i].getProductName() + ")");
 //                entryValues.add(String.valueOf(audioDevicesInput[i]));
                 entryValues.add(String.valueOf(deviceID));
                 Log.d(TITLE_TAG, "onCreatePreferences: " + String.format ("%s: %s", deviceID, name));
@@ -154,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity implements
                 String name = MainActivity.typeToString(audioDevicesOutput[i].getType());
                 int deviceID = audioDevicesOutput[i].getId();
 //                name = (String) audioDevicesOutput[i].getProductName();
-                entries.add(name);
+                entries.add(name + " (" + (String) audioDevicesOutput[i].getProductName() + ")");
                 entryValues.add(String.valueOf(deviceID));
                 Log.d(TITLE_TAG, "onCreatePreferences: " + String.format ("%s: %s", deviceID, name));
             }
