@@ -13,9 +13,6 @@ class PluginControl {
     /* values selected in the interface */
     LADSPA_Data sel;
     /* value range */
-    LADSPA_Data min;
-    LADSPA_Data max;
-    LADSPA_Data default_value = 1; // 1 == no change in signal
     struct { LADSPA_Data fine; LADSPA_Data coarse; } inc;
     unsigned long sample_rate = 48000;
 
@@ -26,6 +23,9 @@ class PluginControl {
     };
 
 public:
+    LADSPA_Data min;
+    LADSPA_Data max;
+    LADSPA_Data default_value = 1; // 1 == no change in signal
 
     /* value in the plugin */
     LADSPA_Data val;

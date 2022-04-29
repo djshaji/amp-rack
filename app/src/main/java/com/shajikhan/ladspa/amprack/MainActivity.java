@@ -1277,9 +1277,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             for (int i = 0 ; i < control.length ; i ++) {
                 Log.d(TAG, "loadPreset: " + i + ": " + control[i]);
                 //                holder.sliders.get(i).setValue(Integer.parseInt(control [i]));
-                AudioEngine.setPresetValue(plugin, i, Float.parseFloat(control [i]));
+                float savedValue = -6906 ;// aaaaargh
+                try {
+                    savedValue = Float.parseFloat(control [i]) ;
+                } catch (Exception e) {
+                    Log.e(TAG, "loadPreset: cannot load saved float value for " + control [i], e);
+                    continue;
+                }
+
+                AudioEngine.setPresetValue(plugin, i, savedValue);
                 // forgot this too
-                AudioEngine.setPluginControl(plugin, i, Float.parseFloat(control [i]));
+                AudioEngine.setPluginControl(plugin, i, savedValue);
             }
 
             dataAdapter.addItem(ret, ret);

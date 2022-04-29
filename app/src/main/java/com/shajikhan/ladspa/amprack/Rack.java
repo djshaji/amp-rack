@@ -215,7 +215,9 @@ public class Rack extends Fragment {
         debug.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                mainActivity.printDebugLog();
+//                mainActivity.printDebugLog();
+                AudioEngine.clearActiveQueue();
+                mainActivity.dataAdapter.reset();
                 return true;
             }
         });
