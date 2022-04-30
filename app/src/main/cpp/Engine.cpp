@@ -201,11 +201,11 @@ oboe::AudioStreamBuilder *Engine::setupCommonStreamParameters(
     // mode.
     builder->setAudioApi(mAudioApi)
             ->setFormat(mFormat)
-            ->setChannelConversionAllowed(true)
-            ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Fastest)
+//            ->setChannelConversionAllowed(true)
+//            ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Fastest)
             ->setFormatConversionAllowed(true)
             ->setSharingMode(oboe::SharingMode::Exclusive)
-//            ->setInputPreset(oboe::VoicePerformance)
+            ->setInputPreset(oboe::VoicePerformance)
 //            ->setPerformanceMode(static_cast<oboe::PerformanceMode>(lowLatency));
             ->setPerformanceMode(oboe::PerformanceMode::LowLatency);
     return builder;
@@ -247,6 +247,12 @@ void Engine::warnIfNotLowLatency(std::shared_ptr<oboe::AudioStream> &stream) {
         LOGW(
                 "Stream is NOT low latency."
                 "Check your requested format, sample rate and channel count");
+        LOGW("Running in mode: %d\tchannels: %d\tsharing mode: %d\tsample rate: %d\tformat: %d",
+             stream->getPerformanceMode(),
+             stream->getChannelCount(),
+             stream->getSharingMode(),
+             stream->getSampleRate(),
+             stream->getFormat());
     }
 }
 

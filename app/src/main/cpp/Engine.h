@@ -59,7 +59,7 @@ private:
     bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
-    const oboe::AudioFormat mFormat = oboe::AudioFormat::Float; // for easier processing
+    const oboe::AudioFormat mFormat = oboe::AudioFormat::Unspecified; // for easier processing
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;
     const int32_t     mInputChannelCount = oboe::ChannelCount::Mono;
     const int32_t     mOutputChannelCount = oboe::ChannelCount::Mono;
