@@ -253,6 +253,16 @@ void Engine::warnIfNotLowLatency(std::shared_ptr<oboe::AudioStream> &stream) {
              stream->getSharingMode(),
              stream->getSampleRate(),
              stream->getFormat());
+        lowLatencyMode = false ;
+    } else {
+        lowLatencyMode = true ;
+        LOGD ("Congratulations, you have achieved Low Latency!");
+        LOGD("Running in Low Latency mode: %d\tchannels: %d\tsharing mode: %d\tsample rate: %d\tformat: %d",
+             stream->getPerformanceMode(),
+             stream->getChannelCount(),
+             stream->getSharingMode(),
+             stream->getSampleRate(),
+             stream->getFormat());
     }
 }
 

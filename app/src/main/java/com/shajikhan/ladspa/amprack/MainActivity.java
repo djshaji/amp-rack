@@ -853,6 +853,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void stopEffect() {
         Log.d(TAG, "Playing, attempting to stop");
         AudioEngine.setEffectOn(false);
+        if (! AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
+            toast(getResources().getString(R.string.lowLatencyWarning));
+        }
     }
     private boolean isRecordPermissionGranted() {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==

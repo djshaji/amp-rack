@@ -46,6 +46,7 @@ public class AudioEngine {
     static native void setOpusBitRate (int bitrate);
 
     static native boolean create () ;
+    static native boolean wasLowLatency ();
     static native boolean isAAudioRecommended () ;
     static native boolean setAPI(int apiType);
     static native boolean setEffectOn(boolean isEffectOn);
@@ -78,5 +79,9 @@ public class AudioEngine {
 
     static void hideProgress () {
         progress.hide();
+    }
+
+    static void warnLowLatency (Context context) {
+        MainActivity.toast(context.getResources().getString(R.string.lowLatencyWarning));
     }
 }

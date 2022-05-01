@@ -532,3 +532,13 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getTotalPlugins(JNIEnv *env, jclas
 
     return plugins;
 }
+
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_wasLowLatency(JNIEnv *env, jclass clazz) {
+    // TODO: implement wasLowLatency()
+    if (engine == NULL) return false;
+
+    return engine->lowLatencyMode;
+}

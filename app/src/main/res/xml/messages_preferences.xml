@@ -37,4 +37,8 @@
         app:entries="@array/channels"
         app:entryValues="@array/channels"/>
 
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="warnLowLatency"
+        app:title="Warn if cannot get Low Latency Mode"/>
 </PreferenceScreen>

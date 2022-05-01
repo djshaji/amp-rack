@@ -40,6 +40,7 @@ public:
 
     FullDuplexPass    mFullDuplexPass;
     bool bootComplete = false ;
+    bool lowLatencyMode = false ;
 
     FileWriter * fileWriter ;
     std::string externalStoragePath ;

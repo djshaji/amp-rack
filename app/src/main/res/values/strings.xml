@@ -321,4 +321,9 @@
         > Free upgrades forever
     </string>
     <string name="title_activity_connect_guitar">ConnectGuitar</string>
+    <string name="lowLatencyWarning">
+        Unable to activate Low Latency mode. Either your phone does not support it, or
+        some other app is running in the background and using audio (e.g Google Assistant).
+        Try disabling \"Hey Google\" on your phone.
+    </string>
 </resources>
