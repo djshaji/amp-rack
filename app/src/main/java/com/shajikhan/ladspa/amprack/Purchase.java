@@ -164,6 +164,7 @@ public class Purchase extends AppCompatActivity {
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("pro", true);
             } else {
                 Log.d(TAG, "handlePurchase: purchase already acknowledged");
             }

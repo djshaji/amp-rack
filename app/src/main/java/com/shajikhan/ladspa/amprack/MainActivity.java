@@ -195,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     proVersion = true;
                     AdView mAdView = findViewById(R.id.adViewBanner);
                     mAdView.setVisibility(View.GONE);
+                    defaultSharedPreferences.edit().putBoolean("pro", true).apply();
                 } else {
                     Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
                     MobileAds.initialize(context, new OnInitializationCompleteListener() {
@@ -204,8 +205,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     });
 
                     AdView mAdView = findViewById(R.id.adViewBanner);
+                    mAdView.setVisibility(View.VISIBLE);
                     AdRequest adRequest = new AdRequest.Builder().build();
                     mAdView.loadAd(adRequest);
+                    defaultSharedPreferences.edit().putBoolean("pro", false).apply();
                 }
             }
         };
@@ -235,20 +238,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .enablePendingPurchases()
                 .setListener(purchasesUpdatedListener)
                 .build();
-
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingServiceDisconnected() {
-
-            }
-
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.d(TAG, "onBillingSetupFinished: " + billingResult.getDebugMessage());
-                billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
-
-            }
-        });;
 
 
         mediaPlayer = new MediaPlayer();
@@ -423,6 +412,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingServiceDisconnected() {
+
+            }
+
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                Log.d(TAG, "onBillingSetupFinished: " + billingResult.getDebugMessage());
+                billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
+
+            }
+        });;
     }
 
     void showMediaPlayerDialog () {

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -24,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -183,8 +185,10 @@ public class Rack extends Fragment {
         MenuItem logout = optionsMenu.getMenu().getItem(1);
         MenuItem debug = optionsMenu.getMenu().getItem(2);
         MenuItem getPro = optionsMenu.getMenu().getItem(3);
-        if (MainActivity.proVersion) {
+        if (mainActivity.defaultSharedPreferences.getBoolean("pro", false)) {
             getPro.setVisible(false);
+            TextView textView = view.findViewById(R.id.app_main_title);
+            textView.setText("Amp Pro");
         }
 
         getPro.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
