@@ -437,6 +437,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.media_player_dialog, null);
         ToggleButton toggleButton = constraintLayout.findViewById(R.id.media_play);
+        Button openFolder = constraintLayout.findViewById(R.id.open_folder);
+        openFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse(dir.toString());
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setDataAndType(uri, "*/*");
+                startActivity(intent);
+
+            }
+        });
         TextView textView = constraintLayout.findViewById(R.id.media_filename);
         File file = new File(lastRecordedFileName);
         textView.setText(file.getName());
@@ -447,6 +458,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (b) {
                     Uri uri = Uri.parse(lastRecordedFileName);
                     try {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
                         mediaPlayer.setDataSource(getApplicationContext(), uri);
                         mediaPlayer.prepare();
                     } catch (IOException e) {

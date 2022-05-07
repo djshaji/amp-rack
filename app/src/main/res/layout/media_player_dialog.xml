@@ -68,5 +68,12 @@
                 android:background="@color/fui_transparent"
                 android:drawableRight="@drawable/ic_baseline_delete_forever_24"/>
         </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open Folder"
+            android:background="@color/fui_transparent"
+            android:textColor="@color/white"
+            android:id="@+id/open_folder"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@
 
 SNDFILE * FileWriter::soundfile = NULL;
 buffer_t *FileWriter::current_buffer;
-int FileWriter::num_channels = 2 ;
+int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
 float FileWriter::min_buffer_time = -1.0f,
         FileWriter::max_buffer_time = 40.0f ;
@@ -123,7 +123,7 @@ void FileWriter::openFile () {
         comments = ope_comments_create() ;
         ope_comments_add(comments, "TITLE", "AmpRack Demo");
 
-        oggOpusEnc = ope_encoder_create_file(filename.c_str(), comments, 48000, 1, 0, &error) ;
+        oggOpusEnc = ope_encoder_create_file(filename.c_str(), comments, jack_samplerate, 1, 0, &error) ;
         if (!error) {
             HERE LOGF("cannot create encoder: %s", ope_strerror(error));
         }
@@ -132,9 +132,9 @@ void FileWriter::openFile () {
     } else if (fileType == MP3) {
         LOGD("init lame encoder");
         lame = lame_init();
-        lame_set_in_samplerate(lame, 48000);
+        lame_set_in_samplerate(lame, jack_samplerate);
         lame_set_VBR(lame, vbr_default);
-        lame_set_out_samplerate(lame, 48000);
+        lame_set_out_samplerate(lame, jack_samplerate);
         lame_set_num_channels(lame, 1);
         /*
         lame_set_brate(lame, 64);
