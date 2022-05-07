@@ -40,6 +40,8 @@ public class Purchase extends AppCompatActivity {
     private PurchasesUpdatedListener purchasesUpdatedListener ;
     private BillingClient billingClient;
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener ;
+//    String PRODUCT_ID = "amprack_pro";
+    public static String PRODUCT_ID = "amp_rack_pro";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class Purchase extends AppCompatActivity {
                     // The BillingClient is ready. You can query purchases here.
                     Log.d(TAG, "onBillingSetupFinished: billing client ready");
                     List<String> skuList = new ArrayList<>();
-                    skuList.add("amprack_pro");
+                    skuList.add(PRODUCT_ID);
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                     params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
 

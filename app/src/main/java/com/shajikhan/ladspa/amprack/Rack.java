@@ -183,6 +183,10 @@ public class Rack extends Fragment {
         MenuItem logout = optionsMenu.getMenu().getItem(1);
         MenuItem debug = optionsMenu.getMenu().getItem(2);
         MenuItem getPro = optionsMenu.getMenu().getItem(3);
+        if (MainActivity.proVersion) {
+            getPro.setVisible(false);
+        }
+
         getPro.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

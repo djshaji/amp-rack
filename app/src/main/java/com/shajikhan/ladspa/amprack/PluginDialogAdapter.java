@@ -1,6 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,13 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mainActivity.dataAdapter.plugins.size() > 1 && MainActivity.proVersion == false) {
+                    Log.w(TAG, "onClick: " + String.format("already %d plugins in queue", mainActivity.dataAdapter.plugins.size()));
+                    Intent intent = new Intent(mainActivity, Purchase.class);
+                    context.startActivity(intent);
+                    return;
+                }
+
                 final int pluginID = plugins.get(position);
                 Log.d(TAG, "Adding plugin ID: " + pluginID) ;
                 mainActivity.addPluginToRack(pluginID);

@@ -228,6 +228,7 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.version_info, rootKey);
+            findPreference("name_info").setTitle("AmpRack Pro Version");
             findPreference("build_number").setSummary(R.string.build_id);
             findPreference("build_name").setSummary(R.string.app_version);
             int plugins = AudioEngine.getTotalPlugins() ;

@@ -76,6 +76,7 @@ import android.widget.ToggleButton;
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         purchasesResponseListener = new PurchasesResponseListener() {
             @Override
             public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                Log.d(TAG, "onQueryPurchasesResponse: " + billingResult.getDebugMessage());
                 if (list.isEmpty()) {
                     Log.d(TAG, "onQueryPurchasesResponse: no purchases");
                     return ;
@@ -191,8 +193,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                     Log.d(TAG, "onQueryPurchasesResponse: purchased");
                     proVersion = true;
+                    AdView mAdView = findViewById(R.id.adViewBanner);
+                    mAdView.setVisibility(View.GONE);
                 } else {
                     Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
+                    MobileAds.initialize(context, new OnInitializationCompleteListener() {
+                        @Override
+                        public void onInitializationComplete(InitializationStatus initializationStatus) {
+                        }
+                    });
+
+                    AdView mAdView = findViewById(R.id.adViewBanner);
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    mAdView.loadAd(adRequest);
                 }
             }
         };
@@ -209,8 +222,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
                     // Handle an error caused by a user cancelling the purchase flow.
+                    Log.d(TAG, "onPurchasesUpdated: user cancelled purchase");
                 } else {
                     // Handle any other error codes.
+                    Log.d(TAG, "onPurchasesUpdated: got purchase response " + billingResult.getDebugMessage());
                 }
 
             }
@@ -221,7 +236,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .setListener(purchasesUpdatedListener)
                 .build();
 
-        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingServiceDisconnected() {
+
+            }
+
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                Log.d(TAG, "onBillingSetupFinished: " + billingResult.getDebugMessage());
+                billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
+
+            }
+        });;
+
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(
@@ -262,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
 
-
+        /* we do this async after getting billing client result
         if (! proVersion) {
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override
@@ -274,6 +302,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
+
+         */
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
@@ -1433,8 +1463,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 AlertDialog dialog = builder.create();
                 dialog.show();
             } else {
-                Log.d(TAG, "handlePurchase: purchase already acknowledged");
+                Log.d(TAG, "handlePurchase: purchase already acknowledged. Turning on pro features");
+                proVersion = true;
             }
+        } else {
+            Log.d(TAG, "handlePurchase: not purchased (" + purchase.getPurchaseState() + ')');
         }
 
     }

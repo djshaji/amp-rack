@@ -4,6 +4,7 @@
     <PreferenceCategory
         android:icon="@drawable/logo"
         android:title="@string/app_name"
+        android:key="name_info"
         android:summary="@string/app_version">
         <Preference
             android:title="Build Number"
