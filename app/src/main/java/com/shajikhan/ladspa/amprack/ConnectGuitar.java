@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class ConnectGuitar extends AppCompatActivity {
                     Log.d(TAG, "onCreate: key " + key);
                     JSONObject object = jsonObject.getJSONObject(key);
                     // do something with jsonObject here
-                    int icon = object.getInt("icon");
+                    String icon = object.getString("icon");
                     String desc = object.getString("description");
                     String title = object.getString("title");
 
@@ -61,7 +62,8 @@ public class ConnectGuitar extends AppCompatActivity {
                     layout.addView(layout1);
 
                     ImageView logo = (ImageView)layout1.findViewById(R.id.icon) ;
-                    logo.setImageDrawable(getResources().getDrawable(icon));
+                    logo.setImageDrawable(getIcon(icon));
+//                    logo.setImageDrawable(getResources().getDrawable(icon));
 
                     ((TextView) layout1.findViewById(R.id.name)).setText(title);
                     ((TextView) layout1.findViewById(R.id.desc)).setText(desc);
@@ -104,4 +106,22 @@ public class ConnectGuitar extends AppCompatActivity {
         return jsonObject;
     }
 
+    Drawable getIcon (String filename) {
+        switch (filename) {
+            default:
+            case "splitter":
+                return getResources().getDrawable(R.drawable.splitter);
+            case "otg":
+                return getResources().getDrawable(R.drawable.otg);
+            case "earphones":
+                return getResources().getDrawable(R.drawable.earphones);
+            case "interface":
+                return getResources().getDrawable(R.drawable.audio_interface);
+            case "trs":
+                return getResources().getDrawable(R.drawable.trs);
+            case "cable":
+                return getResources().getDrawable(R.drawable.guitar_cable);
+
+        }
+    }
 }

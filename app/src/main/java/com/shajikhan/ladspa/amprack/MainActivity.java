@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -208,6 +209,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     mAdView.setVisibility(View.VISIBLE);
                     AdRequest adRequest = new AdRequest.Builder().build();
                     mAdView.loadAd(adRequest);
+                    boolean isDebuggable =  ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+                    if (!isDebuggable) {
+                        mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
+                    }
+
                     defaultSharedPreferences.edit().putBoolean("pro", false).apply();
                 }
             }
