@@ -16,12 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapter.ViewHolder> {
     String TAG = this.getClass().getSimpleName();
     Context context = null;
     ArrayList<Integer> plugins = new ArrayList<>();
+    ArrayList<Integer> pluginsIDs = new ArrayList<>();
     ArrayList<String> pluginNames = new ArrayList<>();
     ArrayList<Integer> pluginsAll = new ArrayList<>();
     ArrayList<String> pluginNamesAll = new ArrayList<>();
@@ -111,6 +115,18 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         notifyItemInserted(plugins.size());
     }
 
+    void addItem(int pluginID, String pluginName, int uniqueID) {
+        if (pluginNamesAll.contains(pluginName))
+            return;
+
+        plugins.add(pluginID);
+        pluginNames.add(pluginName);
+        pluginsAll.add(pluginID);
+        pluginsIDs.add(uniqueID);
+        pluginNamesAll.add(pluginName);
+        notifyItemInserted(plugins.size());
+    }
+
     void deleteItem(int index) {
         plugins.remove(index);
         notifyItemInserted(plugins.size());
@@ -160,6 +176,46 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
                 if (mainActivity.isPluginHearted(pluginNamesAll.get (i))) {
                     plugins.add(pluginsAll.get(i));
                     pluginNames.add(pluginNamesAll.get(i));
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+
+    void filterByCategory (String category) {
+        plugins.clear();
+        pluginNames.clear();
+
+        JSONArray IDs = null;
+        try {
+            IDs = (JSONArray) MainActivity.pluginCategories.get(category);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        if (IDs.length() == 0) {
+            for (int i = 0; i < pluginNamesAll.size(); i++) {
+                plugins.add(pluginsAll.get(i));
+                pluginNames.add(pluginNamesAll.get(i));
+            }
+        } else {
+            for (int i = 0; i < pluginsIDs.size(); i++) {
+                int pluginID = pluginsIDs.get(i);
+                for (int j = 0 ; j < IDs.length();j++) {
+                    try {
+                        int UID  = IDs.getInt(j);
+                        if (UID == pluginID) {
+                            plugins.add(pluginsAll.get(i));
+                            pluginNames.add(pluginNamesAll.get(i));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+
                 }
             }
         }

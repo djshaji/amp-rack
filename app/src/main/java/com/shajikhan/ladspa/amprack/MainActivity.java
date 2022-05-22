@@ -105,6 +105,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -128,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     DataAdapter dataAdapter ;
     AlertDialog pluginDialog ;
     AudioManager audioManager ;
+    static public JSONObject pluginCategories ;
+    public Spinner pluginDialogCategorySpinner ;
     AudioDeviceInfo [] audioDevicesInput, audioDevicesOutput ;
     int defaultInputDevice = 0 ;
     int defaultOutputDevice = 0 ;
@@ -172,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this ;
+
+        pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
+
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
         acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
@@ -1113,6 +1119,36 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        Iterator<String> keys = MainActivity.pluginCategories.keys();
+        List<String> categories = new ArrayList<String>();
+
+        while(keys.hasNext()) {
+            String key = keys.next();
+            Log.d(TAG, "pluginCategory: key " + key);
+            categories.add(key);
+        }
+
+        ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        categoriesDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pluginDialogCategorySpinner = (Spinner) ((LinearLayout) linearLayoutPluginDialog.getChildAt(3)).getChildAt(1);
+        // attaching data adapter to spinner
+        pluginDialogCategorySpinner.setAdapter(categoriesDataAdapter);
+        pluginDialogCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String category = ((TextView)view).getText().toString();
+                Log.d(TAG, "onItemSelected: selected category " + category);
+                pluginDialogAdapter.filterByCategory(category);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         builder.setView(linearLayoutPluginDialog)
                 // Add action buttons
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -1568,4 +1604,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         window.setStatusBarColor(color);
 
     }
+
+    static public JSONObject loadJSONFromAsset(String filename) {
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open(filename);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Log.e(TAG, "loadJSONFromAsset: unable to parse json", ex);
+            return null;
+        }
+
+        JSONObject jsonObject = null ;
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "loadJSONFromAsset: cannot parse json", e);
+        }
+
+        return jsonObject;
+    }
+
 }

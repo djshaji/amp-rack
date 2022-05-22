@@ -12,10 +12,13 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,8 +42,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Rack extends Fragment {
@@ -169,9 +176,10 @@ public class Rack extends Fragment {
             for (int i = 0; i < libraries; i++) {
                 for (int plugin = 0; plugin < AudioEngine.getPlugins(i); plugin++) {
                     String name = AudioEngine.getPluginName(i, plugin);
+                    int uniqueID = AudioEngine.getPluginUniqueID(i, plugin);
                     int finalI = i;
                     int finalPlugin = plugin;
-                    mainActivity.pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name);
+                    mainActivity.pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name, uniqueID);
                 }
             }
         }

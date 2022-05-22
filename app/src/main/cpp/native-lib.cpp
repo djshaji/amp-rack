@@ -542,3 +542,14 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_wasLowLatency(JNIEnv *env, jclass 
 
     return engine->lowLatencyMode;
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginUniqueID(JNIEnv *env, jclass clazz,
+                                                                jint library, jint plugin) {
+    // TODO: implement getPluginUniqueID()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return NULL;
+    }
+    return engine->libraries.at(library)->descriptors.at(plugin)->UniqueID;
+}
