@@ -230,6 +230,14 @@ public class SettingsActivity extends AppCompatActivity implements
             setPreferencesFromResource(R.xml.version_info, rootKey);
             findPreference("name_info").setTitle("AmpRack Pro Version");
             findPreference("build_number").setSummary(R.string.build_id);
+            findPreference("build_number").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    HashCommands commands = new HashCommands(getContext());
+                    commands.show();
+                    return false;
+                }
+            });
             findPreference("build_name").setSummary(R.string.app_version);
             int plugins = AudioEngine.getTotalPlugins() ;
             findPreference("plugins").setSummary(String.valueOf(plugins));

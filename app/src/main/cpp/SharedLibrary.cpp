@@ -29,7 +29,7 @@ char * SharedLibrary::load (void) {
         for (total_plugins = 0;; total_plugins++) {
             const LADSPA_Descriptor *d = descriptorFunction(total_plugins);
             if (d == NULL) break;
-            LOGD("plugin found [%s:%d] %s", so_file.c_str(),total_plugins, d->Name);
+            LOGD("plugin found [%s:%d] %s (%s %d)", so_file.c_str(),total_plugins, d->Name, d->Label, d->UniqueID);
             descriptors.push_back(d);
         }
 
