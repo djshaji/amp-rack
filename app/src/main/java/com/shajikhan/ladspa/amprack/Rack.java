@@ -13,6 +13,8 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,17 +37,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -219,7 +227,37 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(5);
+        MenuItem bug_item = optionsMenu.getMenu().getItem(5);
+        bug_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                LayoutInflater inflater = getLayoutInflater();
+
+                ConstraintLayout linearLayout = (ConstraintLayout) inflater.inflate(R.layout.bug_report, null) ;
+                builder.setView(linearLayout) ;
+
+                EditText title = linearLayout.findViewById(R.id.bug_title);
+                EditText desc = linearLayout.findViewById(R.id.bug_description);
+                EditText email = linearLayout.findViewById(R.id.bug_email);
+                CheckBox notify = linearLayout.findViewById(R.id.bug_notify);
+
+                AlertDialog alertDialog = builder.create();
+                Button submit = linearLayout.findViewById(R.id.bug_submit);
+                submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveBugReport(alertDialog, title.getText().toString(), desc.getText().toString(),
+                                email.getText().toString(), notify.isChecked());
+                    }
+                });
+
+                alertDialog.show();
+                return true;
+            }
+        }) ;
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(6);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -300,5 +338,35 @@ public class Rack extends Fragment {
             }
         });
 
+    }
+
+    public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("title", title);
+        data.put ("desc", description);
+        data.put ("email", email) ;
+        data.put ("notify", notify);
+        data.put ("timestamp",  FieldValue.serverTimestamp());
+        db.collection("bug_reports")
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        dialog.dismiss();
+                        Toast.makeText(mainActivity,
+                                        "Bug report sent successfully",
+                                        Toast.LENGTH_LONG)
+                                .show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        MainActivity.toast(e.getMessage());
+                        Log.e(TAG, "onFailure: cannot save bug report", e);
+                    }
+                });
     }
 }

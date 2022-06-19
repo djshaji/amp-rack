@@ -14,6 +14,9 @@
     <item android:id="@+id/connect_guitar_menu"
         android:title="Connect Guitar"/>
 
+    <item android:id="@+id/bug_menu"
+        android:title="Report a bug"/>
+
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>
