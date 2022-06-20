@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySplash">
         <activity
+            android:name=".Files"
+            android:exported="false"
+            android:label="@string/title_activity_files"
+            android:theme="@style/Theme.MySplash.NoActionBar" />
+        <activity
             android:name=".ConnectGuitar"
             android:exported="false"
             android:label="@string/title_activity_connect_guitar"
