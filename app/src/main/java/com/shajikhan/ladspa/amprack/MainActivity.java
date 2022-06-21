@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     FirebaseUser currentUser ;
     private FirebaseAnalytics mFirebaseAnalytics;
     Rack rack ;
+    Tracks tracks;
     Presets presets ;
     PopupMenu optionsMenu ;
     String lastRecordedFileName ;
@@ -264,6 +265,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         rack = new Rack();
+        Log.d(TAG, "onCreate: creating tracks UI");
+        tracks = new Tracks();
         presets = new Presets();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -272,6 +275,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, presets, null)
+                .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, tracks, null)
                 .commit();
 
 //        LoadFragment(presets);
@@ -342,6 +349,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .beginTransaction()
                                 .show(rack)
                                 .hide(presets)
+                                .hide (tracks)
                                 .commit();
                         return true;
                          /*
@@ -360,6 +368,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .beginTransaction()
                                 .show(presets)
                                 .hide(rack)
+                                .hide(tracks)
+                                .commit();
+                        return true;
+
+                    case R.id.page_tracks:
+                        fragment = tracks;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .show(tracks)
+                                .hide(rack)
+                                .hide(presets)
                                 .commit();
                         return true;
                         /*
@@ -387,6 +406,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .beginTransaction()
                 .show(rack)
                 .hide(presets)
+                .hide(tracks)
                 .commit();
 
         // notification
@@ -398,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Channel human readable title",
+                    getResources().getString(R.string.app_name),
                     NotificationManager.IMPORTANCE_HIGH);
         }
         notificationManager.createNotificationChannel(channel);
@@ -437,6 +457,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             }
         });;
+
+//        tracks.load(dir);
     }
 
     void showMediaPlayerDialog () {

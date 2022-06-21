@@ -14,5 +14,11 @@
         android:enabled="true"
         android:icon="@drawable/ic_baseline_view_list_24"
         android:title="Presets"/>
+    <item
+        android:visible="true"
+        android:id="@+id/page_tracks"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_audio_file_24"
+        android:title="Tracks"/>
 
 </menu>
