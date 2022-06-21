@@ -51,7 +51,7 @@ bool Engine::setEffectOn(bool isOn) {
                 strftime (buffer,80,"%d-%m-%y__%I.%M%p",timeinfo);
 
 //                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/") + std::string (buffer)) ;
-                fileWriter->setFileName(externalStoragePath +  std::string (buffer)) ;
+                fileWriter->setFileName(externalStoragePath + "/" + std::string (buffer)) ;
                 fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
                 if (mFullDuplexPass.recordingActive) {
                     fileWriter->startRecording();
