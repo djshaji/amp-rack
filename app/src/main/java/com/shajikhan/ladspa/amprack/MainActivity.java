@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     FirebaseUser currentUser ;
     private FirebaseAnalytics mFirebaseAnalytics;
     Rack rack ;
-    Tracks tracks;
+    Tracks tracks, drums;
     Presets presets ;
     PopupMenu optionsMenu ;
     String lastRecordedFileName ;
@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         rack = new Rack();
         Log.d(TAG, "onCreate: creating tracks UI");
         tracks = new Tracks();
+        drums = new Tracks();
         presets = new Presets();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -279,6 +280,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, tracks, null)
+                .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, drums, null)
                 .commit();
 
 //        LoadFragment(presets);
@@ -350,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .show(rack)
                                 .hide(presets)
                                 .hide (tracks)
+                                .hide (drums)
                                 .commit();
                         return true;
                          /*
@@ -369,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .show(presets)
                                 .hide(rack)
                                 .hide(tracks)
+                                .hide(drums)
                                 .commit();
                         return true;
 
@@ -379,6 +386,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .show(tracks)
                                 .hide(rack)
                                 .hide(presets)
+                                .hide(drums)
+                                .commit();
+                        return true;
+                    case R.id.page_drums:
+                        fragment = drums;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .show(drums)
+                                .hide(rack)
+                                .hide(presets)
+                                .hide(tracks)
                                 .commit();
                         return true;
                         /*
@@ -407,6 +425,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .show(rack)
                 .hide(presets)
                 .hide(tracks)
+                .hide(drums)
                 .commit();
 
         // notification
@@ -443,6 +462,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, "onResume: default directory set as " + dir.toString());
         }
 
+        tracks.load(dir);
+        try {
+            drums.load(getAssets().list("drums"));
+        } catch (IOException e) {
+            MainActivity.toast("Cannot load drum loops: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -457,8 +484,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             }
         });;
-
-//        tracks.load(dir);
     }
 
     void showMediaPlayerDialog () {

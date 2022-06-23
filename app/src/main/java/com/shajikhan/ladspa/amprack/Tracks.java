@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.audio.AuxEffectInfo;
 import com.google.android.material.slider.Slider;
@@ -35,6 +37,10 @@ public class Tracks extends Fragment {
     String TAG = getClass().getSimpleName();
     ExoPlayer player ;
 
+    Tracks () {
+        tracksAdapter = new TracksAdapter();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,9 +54,8 @@ public class Tracks extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.tracks_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
-        tracksAdapter = new TracksAdapter();
         recyclerView.setAdapter(tracksAdapter);
-        load (mainActivity.dir);
+//        load (mainActivity.dir);
 
         player = new ExoPlayer.Builder(context).build();
         tracksAdapter.player = player;
@@ -92,6 +97,27 @@ public class Tracks extends Fragment {
                 if (fromUser) {
                     player.setVolume(value);
                 }
+            }
+        });
+
+        Slider bpm = view.findViewById(R.id.tracks_bpm);
+        bpm.setValueFrom(0.1f);
+        bpm.setValueTo(2.0f);
+        bpm.setValue(1.0f);
+        bpm.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                Log.d(TAG, "onValueChange: " + value);
+                PlaybackParameters param = new PlaybackParameters(value);
+                player.setPlaybackParameters(param);
+            }
+        });
+
+        Button resetBPM = view.findViewById(R.id.tracks_reset_bpm);
+        resetBPM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bpm.setValue(1.0f);
             }
         });
 
@@ -144,6 +170,14 @@ public class Tracks extends Fragment {
 
             DynamicsProcessing dynamicsProcessing = new DynamicsProcessing(0, player.getAudioSessionId(), config);
             player.setAuxEffectInfo(new AuxEffectInfo(dynamicsProcessing.getId(),1));
+        }
+    }
+
+    public void load (String [] files) {
+        for (int i = 0 ; i < files.length; i ++) {
+            File file = new File(files [i]);
+            Log.d(TAG, "load: adding drum loop " + file.getAbsolutePath());
+            tracksAdapter.add(file.getAbsolutePath());
         }
     }
 

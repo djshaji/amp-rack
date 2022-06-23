@@ -20,5 +20,11 @@
         android:enabled="true"
         android:icon="@drawable/ic_baseline_audio_file_24"
         android:title="Recordings"/>
+    <item
+        android:visible="true"
+        android:id="@+id/page_drums"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_speaker_24"
+        android:title="Drums"/>
 
 </menu>
