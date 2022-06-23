@@ -3,6 +3,7 @@ package com.shajikhan.ladspa.amprack;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,31 +50,36 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 MediaItem mediaItem = MediaItem.fromUri(filenames.get(position));
+                Log.d(TAG, "onClick: playing " + name);
                 player.setMediaItem(mediaItem);
                 player.prepare();
                 tracks.playPause.setChecked(true);
             }
         });
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage("Are you sure you want to delete this file? This action cannot be undone.")
-                        .setPositiveButton("Delete file", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                File file = new File(name);
-                                if (file.delete())
-                                    delete(position);
-                                else
-                                    MainActivity.toast("Unable to delete file");
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .setTitle("Delete " + basename + " ?");
-                builder.create().show();
-            }
-        });
+        if (name.startsWith("asset://")) {
+            holder.deleteButton.setVisibility(View.GONE);
+        } else {
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage("Are you sure you want to delete this file? This action cannot be undone.")
+                            .setPositiveButton("Delete file", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    File file = new File(name);
+                                    if (file.delete())
+                                        delete(position);
+                                    else
+                                        MainActivity.toast("Unable to delete file");
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .setTitle("Delete " + basename + " ?");
+                    builder.create().show();
+                }
+            });
+        }
     }
 
     @Override

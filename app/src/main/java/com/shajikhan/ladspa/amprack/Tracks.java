@@ -101,8 +101,8 @@ public class Tracks extends Fragment {
         });
 
         Slider bpm = view.findViewById(R.id.tracks_bpm);
-        bpm.setValueFrom(0.1f);
-        bpm.setValueTo(2.0f);
+        bpm.setValueFrom(0.5f);
+        bpm.setValueTo(1.5f);
         bpm.setValue(1.0f);
         bpm.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
@@ -175,9 +175,8 @@ public class Tracks extends Fragment {
 
     public void load (String [] files) {
         for (int i = 0 ; i < files.length; i ++) {
-            File file = new File(files [i]);
-            Log.d(TAG, "load: adding drum loop " + file.getAbsolutePath());
-            tracksAdapter.add(file.getAbsolutePath());
+//            File file = new File("assets:///drums/" + files [i]);
+            tracksAdapter.add("asset:///drums/" + files [i]);
         }
     }
 
