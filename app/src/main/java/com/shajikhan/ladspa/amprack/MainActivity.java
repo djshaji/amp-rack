@@ -484,6 +484,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
         TextView textView = constraintLayout.findViewById(R.id.media_filename);
         File file = new File(lastRecordedFileName);
+        tracks.tracksAdapter.add(lastRecordedFileName);
         textView.setText(file.getName());
         toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -248,6 +248,14 @@ public class SettingsActivity extends AppCompatActivity implements
         }
     }
 
+    public static class TracksFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.tracks_settings, rootKey);
+        }
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 

@@ -19,6 +19,6 @@
         android:id="@+id/page_tracks"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_audio_file_24"
-        android:title="Tracks"/>
+        android:title="Recordings"/>
 
 </menu>

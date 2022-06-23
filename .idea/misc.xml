@@ -33,8 +33,10 @@
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/presets_library.xml" value="0.22659256092347158" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/rack.xml" value="1.0" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/save_preset_dialog.xml" value="0.18857142857142858" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/settings_activity.xml" value="0.3103890551517743" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/track_file.xml" value="0.31295425395468146" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/tracks.xml" value="0.31295425395468146" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/layout/tracks_settings.xml" value="0.3103890551517743" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/menu/bottom.xml" value="0.22659256092347158" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/menu/options_menu.xml" value="0.22659256092347158" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/menu/sort_by.xml" value="0.22659256092347158" />
@@ -44,6 +46,7 @@
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/xml/messages_preferences.xml" value="0.22659256092347158" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/xml/sync_preferences.xml" value="0.42857142857142855" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/xml/theme_settings.xml" value="0.22659256092347158" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/xml/tracks_settings.xml" value="0.31295425395468146" />
         <entry key="../../../../../mnt/data/djshaji/Projects/AmpRack/app/src/main/res/xml/version_info.xml" value="0.22659256092347158" />
         <entry key="../../../Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.23001282599401454" />
       </map>

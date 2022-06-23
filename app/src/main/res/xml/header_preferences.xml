@@ -7,6 +7,12 @@
         app:title="Audio Devices" />
 
     <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$TracksFragment"
+        app:icon="@drawable/ic_baseline_audio_file_24"
+        app:key="tracks_settings"
+        app:title="Audio Playback" />
+
+    <Preference
         app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$SyncFragment"
         app:icon="@drawable/ic_baseline_save_alt_24"
         app:key="sync_header"
