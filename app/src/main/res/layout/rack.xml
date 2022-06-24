@@ -32,6 +32,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="0dp"
+                android:id="@+id/logo_img"
                 android:foregroundGravity="left"
                 android:paddingTop="5dp"
                 android:paddingBottom="0dp"

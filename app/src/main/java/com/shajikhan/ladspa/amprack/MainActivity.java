@@ -463,6 +463,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         tracks.load(dir);
+
         try {
             drums.load(getAssets().list("drums"));
         } catch (IOException e) {
@@ -1451,6 +1452,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Toast.LENGTH_LONG)
                 .show();
 
+    }
+
+    public static void alert (String title, String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(text)
+                .setTitle(title);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void heartPlugin (String name) {

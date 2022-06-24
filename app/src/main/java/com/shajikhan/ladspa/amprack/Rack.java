@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
@@ -338,6 +339,17 @@ public class Rack extends Fragment {
             }
         });
 
+        ImageView logoBtn = view.findViewById(R.id.logo_img);
+        logoBtn.setLongClickable(true);
+        logoBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                HashCommands commands = new HashCommands(mainActivity.context);
+                commands.mainActivity = mainActivity;
+                commands.show();
+                return true;
+            }
+        });
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

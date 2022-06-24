@@ -56,4 +56,10 @@
         <item>2131230965</item>
         <item>2131230811</item>
     </string-array>
+    <string-array name="hash_commands">
+        <item>version</item>
+        <item>logout</item>
+        <item>last recorded audio</item>
+        <item>alert: Test Message</item>
+    </string-array>
 </resources>
