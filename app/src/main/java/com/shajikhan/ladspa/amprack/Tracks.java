@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -56,6 +57,18 @@ public class Tracks extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setAdapter(tracksAdapter);
 //        load (mainActivity.dir);
+
+        LinearLayout shareTip = view.findViewById(R.id.share_tip);
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 1) {
+                    shareTip.setVisibility(View.GONE);
+                    recyclerView.setOnScrollListener(null);
+                }
+            }
+        });
 
         player = new ExoPlayer.Builder(context).build();
         tracksAdapter.player = player;

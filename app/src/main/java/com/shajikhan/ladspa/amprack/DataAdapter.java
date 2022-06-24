@@ -243,6 +243,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     void deleteItem(int index) {
+        if (index > plugins.size()) {
+            Log.w(TAG, "deleteItem: index > plugins size", null);
+            return ;
+        }
+
         plugins.remove(index);
         notifyItemRemoved(index);
 //        notifyItemRangeChanged(0, getItemCount());

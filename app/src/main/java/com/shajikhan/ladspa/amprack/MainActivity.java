@@ -553,18 +553,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentShareFile = new Intent(Intent.ACTION_SEND);
-                Uri contentUri = FileProvider.getUriForFile(context, "com.shajikhan.ladspa.amprack.fileprovider", file);
-                intentShareFile.setType("audio/*");
-                intentShareFile.putExtra(Intent.EXTRA_STREAM, contentUri);
-
-                intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
-                        "Sharing Audio File...");
-                intentShareFile.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.app_name) + " recorded audio ...");
-
-                intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(intentShareFile, "Share Audio File"));
-
+                shareFile(file);
                 // this is pretty awesome!
                 // update 24-6-2022 doesnt work :(
                 /*
@@ -1707,4 +1696,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return jsonObject;
     }
 
+    public static void shareFile (File file) {
+        Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+        Uri contentUri = FileProvider.getUriForFile(context, "com.shajikhan.ladspa.amprack.fileprovider", file);
+        intentShareFile.setType("audio/*");
+        intentShareFile.putExtra(Intent.EXTRA_STREAM, contentUri);
+
+        intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
+                "Sharing Audio File...");
+        intentShareFile.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.app_name) + " recorded audio ...");
+
+        intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(Intent.createChooser(intentShareFile, "Share Audio File"));
+
+    }
 }

@@ -49,7 +49,7 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
         holder.fileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MediaItem mediaItem = MediaItem.fromUri(filenames.get(position));
+                MediaItem mediaItem = MediaItem.fromUri(filenames.get(holder.getAdapterPosition()));
                 Log.d(TAG, "onClick: playing " + name);
                 player.setMediaItem(mediaItem);
                 player.prepare();
@@ -60,6 +60,15 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
         if (name.startsWith("asset://")) {
             holder.deleteButton.setVisibility(View.GONE);
         } else {
+            holder.fileButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    // brilliant
+                    MainActivity.shareFile(new File (name));
+                    return true;
+                }
+            });
+
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -69,7 +78,7 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
                                 public void onClick(DialogInterface dialog, int id) {
                                     File file = new File(name);
                                     if (file.delete())
-                                        delete(position);
+                                        delete(holder.getAdapterPosition());
                                     else
                                         MainActivity.toast("Unable to delete file");
                                 }
@@ -105,6 +114,11 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
     }
 
     void delete(int index) {
+        if (index > filenames.size()) {
+            Log.w(TAG, "delete: index greater than items in list!", null);
+            return ;
+        }
+
         filenames.remove(index);
         notifyItemRemoved(index);
     }
