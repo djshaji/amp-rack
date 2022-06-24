@@ -2,6 +2,8 @@ package com.shajikhan.ladspa.amprack;
 
 import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
 
+import static java.security.AccessController.getContext;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -551,7 +554,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onClick(View view) {
                 Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+                Uri contentUri = FileProvider.getUriForFile(context, "com.shajikhan.ladspa.amprack.fileprovider", file);
+                intentShareFile.setType("audio/*");
+                intentShareFile.putExtra(Intent.EXTRA_STREAM, contentUri);
+
+                intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
+                        "Sharing Audio File...");
+                intentShareFile.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.app_name) + " recorded audio ...");
+
+                intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(intentShareFile, "Share Audio File"));
+
                 // this is pretty awesome!
+                // update 24-6-2022 doesnt work :(
+                /*
                 MediaScannerConnection.scanFile(context,
                         new String[] { file.toString() }, null,
                         new MediaScannerConnection.OnScanCompletedListener() {
@@ -569,6 +585,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 startActivity(Intent.createChooser(intentShareFile, "Share Audio File"));
                             }
                         });
+
+                 */
             }
         });
 
