@@ -55,19 +55,19 @@ public:
     void buildPluginChain();
     int addPlugintoRackByName(std::string);
     int lowLatency = 12 ;
+    const int32_t     mInputChannelCount = oboe::ChannelCount::Mono;
+    const int32_t     mOutputChannelCount = oboe::ChannelCount::Mono;
+    const oboe::AudioFormat mFormat = oboe::AudioFormat::Float; // for easier processing
+
+    std::shared_ptr<oboe::AudioStream> mRecordingStream;
+    std::shared_ptr<oboe::AudioStream> mPlayStream;
+
 
 private:
     bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
-    const oboe::AudioFormat mFormat = oboe::AudioFormat::Unspecified; // for easier processing
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;
-    const int32_t     mInputChannelCount = oboe::ChannelCount::Mono;
-    const int32_t     mOutputChannelCount = oboe::ChannelCount::Mono;
-
-    std::shared_ptr<oboe::AudioStream> mRecordingStream;
-    std::shared_ptr<oboe::AudioStream> mPlayStream;
-
     oboe::Result openStreams();
 
     void closeStreams();

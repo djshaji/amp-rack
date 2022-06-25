@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HashCommands extends AlertDialog {
     public MainActivity mainActivity ;
     AutoCompleteTextView autoCompleteTextView;
+    String TAG = getClass().getSimpleName();
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -69,10 +71,9 @@ public class HashCommands extends AlertDialog {
             default:
                 break ;
             case "gopro":
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                sharedPreferences.edit().putBoolean("pro", true).apply();
+                mainActivity.defaultSharedPreferences.edit().putBoolean("pro", true).apply();
                 MainActivity.proVersion = true ;
-                MainActivity.toast("You have been upgraded to the full version. Enjoy!");
+                MainActivity.alert("Pro Version Activated", "You have been upgraded to the full version. Enjoy!");
                 break;
             case "ver":
             case "version":
@@ -95,6 +96,17 @@ public class HashCommands extends AlertDialog {
             case "alert":
                 MainActivity.alert("Alert", args);
                 break;
+            case "set":
+                String [] s = args.split(";");
+                String what = s [0].replaceAll(" ", "");
+                String to = s [1].replaceAll(" ", "");
+                if (to != "false" && to != "true")
+                    mainActivity.defaultSharedPreferences.edit().putString(what, to).apply();
+                else
+                    mainActivity.defaultSharedPreferences.edit().putBoolean(what, Boolean.parseBoolean(s[1])).apply();
+                Log.d(TAG, String.format ("run: set %s to %s", what, to));
+                MainActivity.alert("Preference Updated", String.format ("run: set %s to %s", what, to));
+                break ;
         }
     }
 }

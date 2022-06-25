@@ -52,7 +52,9 @@ bool Engine::setEffectOn(bool isOn) {
 
 //                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/") + std::string (buffer)) ;
                 fileWriter->setFileName(externalStoragePath + "/" + std::string (buffer)) ;
-                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
+//                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
+                fileWriter->setBufferSize (mRecordingStream->getBufferSizeInFrames());
+                fileWriter->setChannels(mOutputChannelCount);
                 if (mFullDuplexPass.recordingActive) {
                     fileWriter->startRecording();
                 }
@@ -201,7 +203,7 @@ oboe::AudioStreamBuilder *Engine::setupCommonStreamParameters(
     // mode.
     builder->setAudioApi(mAudioApi)
             ->setFormat(mFormat)
-//            ->setChannelConversionAllowed(true)
+            ->setChannelConversionAllowed(true)
 //            ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Fastest)
             ->setFormatConversionAllowed(true)
             ->setSharingMode(oboe::SharingMode::Exclusive)
@@ -257,12 +259,13 @@ void Engine::warnIfNotLowLatency(std::shared_ptr<oboe::AudioStream> &stream) {
     } else {
         lowLatencyMode = true ;
         LOGD ("Congratulations, you have achieved Low Latency!");
-        LOGD("Running in Low Latency mode: %d\tchannels: %d\tsharing mode: %d\tsample rate: %d\tformat: %d",
+        LOGD("Running in Low Latency mode: %d\tchannels: %d\tsharing mode: %d\tsample rate: %d\tformat: %d\tbuffer size: %d",
              stream->getPerformanceMode(),
              stream->getChannelCount(),
              stream->getSharingMode(),
              stream->getSampleRate(),
-             stream->getFormat());
+             stream->getFormat(),
+             stream->getBufferSizeInFrames());
     }
 }
 

@@ -135,6 +135,8 @@ public:
     static float blocks_to_seconds(int blocks);
 
     void setFileType(int fType);
+
+    void setChannels(int channels);
 };
 
 

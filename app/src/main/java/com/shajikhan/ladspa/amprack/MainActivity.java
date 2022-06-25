@@ -88,6 +88,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -110,6 +111,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -180,81 +182,119 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         context = this ;
 
+        Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
+
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
+        defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
-        acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-            @Override
-            public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
-            }
-        };
+        try {
+            proVersion = defaultSharedPreferences.getBoolean("pro", false);
+        } catch (ClassCastException e) {
+            Log.e(TAG, "onCreate: incorrect preference found!", e);
+            proVersion = false;
+            defaultSharedPreferences.edit().putBoolean("pro", false).apply();
+        }
+        Log.d(TAG, "onCreate: purchased proVersion: " + proVersion);
 
-        purchasesResponseListener = new PurchasesResponseListener() {
-            @Override
-            public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
-                Log.d(TAG, "onQueryPurchasesResponse: " + billingResult.getDebugMessage());
-                if (list.isEmpty()) {
-                    Log.d(TAG, "onQueryPurchasesResponse: no purchases");
-                    return ;
+        boolean forceAds = defaultSharedPreferences.getString("forceads", "off") != "off";
+//        Log.d(TAG, "onCreate: forceads is " + defaultSharedPreferences.getString("forceads", "off"));
+        if (!proVersion) {
+            acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
+                @Override
+                public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                    Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
                 }
+            };
 
-                Purchase purchase = list.get(0);
-                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                    Log.d(TAG, "onQueryPurchasesResponse: purchased");
-                    proVersion = true;
-                    AdView mAdView = findViewById(R.id.adViewBanner);
-                    mAdView.setVisibility(View.GONE);
-                    defaultSharedPreferences.edit().putBoolean("pro", true).apply();
-                } else {
-                    Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
-                    MobileAds.initialize(context, new OnInitializationCompleteListener() {
-                        @Override
-                        public void onInitializationComplete(InitializationStatus initializationStatus) {
+            purchasesResponseListener = new PurchasesResponseListener() {
+                @Override
+                public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                    Log.d(TAG, "onQueryPurchasesResponse: " + billingResult.getDebugMessage());
+                    if (list.isEmpty()) {
+                        Log.d(TAG, "onQueryPurchasesResponse: no purchases");
+                        Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
+                        MobileAds.initialize(context, new OnInitializationCompleteListener() {
+                            @Override
+                            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                                AdView mAdView = findViewById(R.id.adViewBanner);
+                                mAdView.setVisibility(View.VISIBLE);
+                            /*
+                            RequestConfiguration.Builder requestConfigurationBuilder = new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("BFB9B3B3E530352EEB4F664CA9D5E692"));
+                            RequestConfiguration requestConfiguration = requestConfigurationBuilder.build() ;
+
+                             */
+
+                                AdRequest adRequest = new AdRequest.Builder().build();
+                                boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+                                if (!isDebuggable) {
+                                    Log.d(TAG, "onQueryPurchasesResponse: is not debuggable");
+                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
+                                }
+
+                                mAdView.loadAd(adRequest);
+                            }
+                        });
+
+                        defaultSharedPreferences.edit().putBoolean("pro", false).apply();
+                        return;
+                    }
+
+                    Purchase purchase = list.get(0);
+                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !forceAds) {
+                        Log.d(TAG, "onQueryPurchasesResponse: purchased");
+                        proVersion = true;
+                        AdView mAdView = findViewById(R.id.adViewBanner);
+                        mAdView.setVisibility(View.GONE);
+                        defaultSharedPreferences.edit().putBoolean("pro", true).apply();
+                    } else {
+                        Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
+                        MobileAds.initialize(context, new OnInitializationCompleteListener() {
+                            @Override
+                            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                                AdView mAdView = findViewById(R.id.adViewBanner);
+                                mAdView.setVisibility(View.VISIBLE);
+                                AdRequest adRequest = new AdRequest.Builder().build();
+                                boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+                                if (!isDebuggable) {
+                                    Log.d(TAG, "onQueryPurchasesResponse: is not debuggable");
+                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
+                                }
+                                mAdView.loadAd(adRequest);
+                            }
+                        });
+
+                        defaultSharedPreferences.edit().putBoolean("pro", false).apply();
+                    }
+                }
+            };
+
+            purchasesUpdatedListener = new PurchasesUpdatedListener() {
+
+                @Override
+                public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<com.android.billingclient.api.Purchase> list) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                            && list != null) {
+                        for (com.android.billingclient.api.Purchase purchase : list) {
+                            handlePurchase(purchase);
                         }
-                    });
-
-                    AdView mAdView = findViewById(R.id.adViewBanner);
-                    mAdView.setVisibility(View.VISIBLE);
-                    AdRequest adRequest = new AdRequest.Builder().build();
-                    mAdView.loadAd(adRequest);
-                    boolean isDebuggable =  ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
-                    if (!isDebuggable) {
-                        mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
+                    } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                        // Handle an error caused by a user cancelling the purchase flow.
+                        Log.d(TAG, "onPurchasesUpdated: user cancelled purchase");
+                    } else {
+                        // Handle any other error codes.
+                        Log.d(TAG, "onPurchasesUpdated: got purchase response " + billingResult.getDebugMessage());
                     }
 
-                    defaultSharedPreferences.edit().putBoolean("pro", false).apply();
                 }
-            }
-        };
+            };
 
-
-        purchasesUpdatedListener = new PurchasesUpdatedListener() {
-
-            @Override
-            public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<com.android.billingclient.api.Purchase> list) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
-                        && list != null) {
-                    for (com.android.billingclient.api.Purchase purchase : list) {
-                        handlePurchase(purchase);
-                    }
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                    // Handle an error caused by a user cancelling the purchase flow.
-                    Log.d(TAG, "onPurchasesUpdated: user cancelled purchase");
-                } else {
-                    // Handle any other error codes.
-                    Log.d(TAG, "onPurchasesUpdated: got purchase response " + billingResult.getDebugMessage());
-                }
-
-            }
-        };
-
-        billingClient = BillingClient.newBuilder(context)
-                .enablePendingPurchases()
-                .setListener(purchasesUpdatedListener)
-                .build();
-
+            billingClient = BillingClient.newBuilder(context)
+                    .enablePendingPurchases()
+                    .setListener(purchasesUpdatedListener)
+                    .build();
+        }
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(
@@ -263,9 +303,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         );
-
-
-        defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         rack = new Rack();
         Log.d(TAG, "onCreate: creating tracks UI");
@@ -475,19 +512,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingServiceDisconnected() {
+        if (!proVersion) {
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingServiceDisconnected() {
 
-            }
+                }
 
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.d(TAG, "onBillingSetupFinished: " + billingResult.getDebugMessage());
-                billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
+                @Override
+                public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                    Log.d(TAG, "onBillingSetupFinished: " + billingResult.getDebugMessage());
+                    billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
 
-            }
-        });;
+                }
+            });
+            ;
+        }
     }
 
     void showMediaPlayerDialog () {
@@ -1464,7 +1504,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static void alert (String title, String text) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(text)
-                .setTitle(title);
+                .setTitle(title)
+                .setPositiveButton("OK", null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -1529,7 +1570,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AudioEngine.setLowLatency(defaultSharedPreferences.getBoolean("latency", true));
         int sampleRate = 48000 ;
         try {
-            sampleRate = defaultSharedPreferences.getInt("sample_rate", 48000) ;
+            sampleRate = Integer.valueOf(defaultSharedPreferences.getString("sample_rate", "48000")) ;
         } catch (ClassCastException e) {
             Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference: " + defaultSharedPreferences.getString("sample_rate", null), e);
         }

@@ -77,12 +77,15 @@ FileWriter::FileWriter () {
 
 void FileWriter::openFile () {
     IN
+    LOGD("using sample rate: %d\tchannels: %d", jack_samplerate, num_channels);
     memset(&sf_info,0,sizeof(SF_INFO));
     memset (&opusIn, 0, 960*2);
     memset (&opusOut, 0, 3*1276);
 
-    sf_info.channels = 1 ;
-    sf_info.samplerate = jack_samplerate * num_channels ;
+    sf_info.channels = num_channels ;
+    // why the below?
+//    sf_info.samplerate = jack_samplerate * num_channels ;
+    sf_info.samplerate = jack_samplerate ;
     sf_info.format = SF_FORMAT_WAV ;
     sf_info.format |= SF_FORMAT_FLOAT ;
 
@@ -106,7 +109,7 @@ void FileWriter::openFile () {
 
     else if (fileType == OPUS) {
         int err;
-        encoder = opus_encoder_create(48000, 2, OPUS_APPLICATION_AUDIO, &err);
+        encoder = opus_encoder_create(jack_samplerate, num_channels, OPUS_APPLICATION_AUDIO, &err);
         if (err<0) {
             HERE LOGF("failed to create an encoder: %s\n", opus_strerror(err));
         }
@@ -123,7 +126,7 @@ void FileWriter::openFile () {
         comments = ope_comments_create() ;
         ope_comments_add(comments, "TITLE", "AmpRack Demo");
 
-        oggOpusEnc = ope_encoder_create_file(filename.c_str(), comments, jack_samplerate, 1, 0, &error) ;
+        oggOpusEnc = ope_encoder_create_file(filename.c_str(), comments, jack_samplerate, num_channels, 0, &error) ;
         if (!error) {
             HERE LOGF("cannot create encoder: %s", ope_strerror(error));
         }
@@ -135,7 +138,7 @@ void FileWriter::openFile () {
         lame_set_in_samplerate(lame, jack_samplerate);
         lame_set_VBR(lame, vbr_default);
         lame_set_out_samplerate(lame, jack_samplerate);
-        lame_set_num_channels(lame, 1);
+        lame_set_num_channels(lame, num_channels);
         /*
         lame_set_brate(lame, 64);
          */
@@ -148,6 +151,10 @@ void FileWriter::openFile () {
     }
 
     OUT
+}
+
+void FileWriter::setChannels (int channels) {
+    num_channels = channels ;
 }
 
 void FileWriter::closeFile () {
@@ -262,6 +269,8 @@ void FileWriter::setBufferSize (int bufferSize) {
     block_size = bufferSize ;
     buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ));
 
+    LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
+
     vringbuffer = vringbuffer_create(JC_MAX(4,seconds_to_buffers(min_buffer_time)),
                                      JC_MAX(4,seconds_to_buffers(max_buffer_time)),
                                      (size_t) buffer_size_in_bytes);
@@ -355,6 +364,8 @@ int FileWriter::process(float nframes, void *arg) {
     if (!ready)
         return 0 ;
     process_fill_buffers(arg, nframes);
+
+    /// does the following do ANYTHING?
     vringbuffer_trigger_autoincrease_callback(vringbuffer);
     return 0 ;
 }
