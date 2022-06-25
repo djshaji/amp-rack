@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+### Amp Rack Audio Effects Processor / LADSPA Host for Android
+<a href='https://play.google.com/store/apps/details?id=com.shajikhan.ladspa.amprack&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width=150 alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-You can use the [editor on GitHub](https://github.com/djshaji/amp-rack/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an Open Source LADSPA Plugins Host for Android. More than 150 high quality audio plugins are available which can be added in any order to the audio effect chain to create distinct high quality tones for your guitar!
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+***
 
-### Markdown
+### Features
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+* High Quality Audio Plugins such as different Distortion, Overdrive, Cabinet Emulation, Delay, Echo, Reverb, Compressors, Limiters, Sustain, Vocoders, Tube Emulators, and even Autotune (and many more!
 
-```markdown
-Syntax highlighted code block
+* Easy to use UI with customizable background!
 
-# Header 1
-## Header 2
-### Header 3
+* One click operation: add a new effect to the chain, or use presets created by professional guitarists for beautiful instant ready made tones for your tracks!
 
-- Bulleted
-- List
+* Add Unlimited effects in any order to the effect chain
 
-1. Numbered
-2. List
+* Customize effect parameters as per your sound preference
 
-**Bold** and _Italic_ and `Code` text
+* Save presets and share with the world!
 
-[Link](url) and ![Image](src)
-```
+* Supports Mic / Mic in jack / USB Interfaces. No need for expensive accessories. Just buy any generic 1/4" TRS to 3.5mm adapter for less than  and rock on!
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+* High performance Low Latency Native Audio Processing: No latency on even the most basic devices
 
-### Jekyll Themes
+* Completely Open Source App: Download the code from https://acoustixaudio.org
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/djshaji/amp-rack/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Screenshots
+<img src="https://user-images.githubusercontent.com/17184025/174635116-2f118157-6bed-4a5e-8b7c-39abf3d9c764.jpg" width=200/>
+<img src="https://user-images.githubusercontent.com/17184025/174636481-ffd4c51a-5f88-4d69-9078-1510dafb976c.jpg" width=200/>
+<img src="https://user-images.githubusercontent.com/17184025/174636495-7928ed76-4d53-4ef1-b1c2-5aa99c93c21c.jpg" width=200/>
+<img src="https://user-images.githubusercontent.com/17184025/174636503-c3b2cf00-66e2-42c0-9bb5-7e4eb2a2049b.jpg" width=200/>
