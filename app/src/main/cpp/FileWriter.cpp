@@ -1,7 +1,10 @@
 #include <cstdlib>
 #include <cstring>
+#include <chrono>
 #include "FileWriter.h"
 
+int FileWriter::unreported_overruns = 0 ;
+int FileWriter::total_overruns = 0;
 SNDFILE * FileWriter::soundfile = NULL;
 buffer_t *FileWriter::current_buffer;
 int FileWriter::num_channels = 1 ;
@@ -194,10 +197,17 @@ void FileWriter::closeFile () {
     OUT
 }
 
-int FileWriter::disk_write(void *data,size_t frames) {
+int FileWriter::disk_write(float *data,size_t frames) {
+    /*
+    LOGD("----------| %d  |-----------", std::chrono::system_clock::now()) ;
+    for (int i = 0 ; i < frames ; i ++) {
+        LOGD("%f\t", data [i]) ;
+    }
+    */
+
     if (fileType == MP3) {
         void * mp3_buffer =  malloc ((frames * 1.25) + 7200);
-        int write = lame_encode_buffer_ieee_float(lame, (float *)data, NULL, frames, (unsigned char *) mp3_buffer, (frames * 1.25) + 7200);
+        int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (frames * 1.25) + 7200);
         if (write < 0) {
             LOGF("unable to encode mp3 stream: %d", write);
         } else {
@@ -209,7 +219,7 @@ int FileWriter::disk_write(void *data,size_t frames) {
     }
 
     if (fileType== OPUS) {
-        ope_encoder_write_float(oggOpusEnc, (float *)data, frames);
+        ope_encoder_write_float(oggOpusEnc, data, frames);
         return 1;
     }
 
@@ -239,7 +249,7 @@ int FileWriter::disk_write(void *data,size_t frames) {
         }
     }
 
-    if((size_t)sf_writef_float(FileWriter::soundfile, (float *)data,frames) != frames){
+    if((size_t)sf_writef_float(FileWriter::soundfile, data,frames) != frames){
         LOGF("Error. Can not write sndfile (%s)\n",
                       sf_strerror(FileWriter::soundfile)
         );
@@ -261,6 +271,7 @@ void FileWriter::stopRecording () {
     IN
     vringbuffer_stop_callbacks(vringbuffer);
     closeFile();
+    LOGD("recording stopped: %d buffer underruns", total_overruns);
     OUT
 }
 
@@ -314,6 +325,8 @@ void FileWriter::process_fill_buffer(float *in[], buffer_t *buffer, int i, int e
 bool FileWriter::process_new_current_buffer(int frames_left){
     current_buffer=(buffer_t*)vringbuffer_get_writing(vringbuffer);
     if(current_buffer==NULL){
+        total_overruns++;
+        unreported_overruns += frames_left;
         return false;
     }
 
@@ -322,7 +335,9 @@ bool FileWriter::process_new_current_buffer(int frames_left){
 }
 
 void FileWriter::send_buffer_to_disk_thread(buffer_t *buffer){
+    buffer->overruns = unreported_overruns;
     vringbuffer_return_writing(vringbuffer,buffer);
+    unreported_overruns = 0;
 }
 
 void FileWriter::process_fill_buffers(void *data, int samples){
@@ -331,6 +346,7 @@ void FileWriter::process_fill_buffers(void *data, int samples){
         return;
     }
 
+    // fixme: why do I always take void* as argument type and cast it to float?
     current_buffer->data = (float*) data ;
     current_buffer->pos = samples ;
     send_buffer_to_disk_thread(current_buffer);
@@ -360,10 +376,18 @@ void FileWriter::process_fill_buffers(void *data, int samples){
     }
 }
 
-int FileWriter::process(float nframes, void *arg) {
+int FileWriter::process(int nframes, const float *arg) {
     if (!ready)
         return 0 ;
-    process_fill_buffers(arg, nframes);
+//    process_fill_buffers(arg, nframes);
+//  simplified the following 26-06-22
+//  don't know the consequences yet
+//    if ((buffer_t*)vringbuffer_get_writing(vringbuffer) == NULL)
+//        return 0;
+
+    current_buffer ->data = (float *) arg ;
+    current_buffer-> pos = nframes ;
+    vringbuffer_return_writing(vringbuffer,current_buffer);
 
     /// does the following do ANYTHING?
     vringbuffer_trigger_autoincrease_callback(vringbuffer);

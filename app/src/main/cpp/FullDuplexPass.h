@@ -117,7 +117,7 @@ public:
 
 
         if (recordingActive) {
-            FileWriter::process(samplesToProcess, (void *) data);
+            FileWriter::process(samplesToProcess, data);
         }
 
     }

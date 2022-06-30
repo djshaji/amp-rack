@@ -26,7 +26,7 @@ extern "C" {
 
 typedef struct buffer_t{
     int overruns;
-    int pos;
+    float pos;
 //    float data[];
     float *data;
 } buffer_t;
@@ -40,6 +40,11 @@ typedef enum  {
 #define MAX_PACKET_SIZE (3*1276)
 
 class FileWriter {
+    // for removing pops and clicks
+    static int total_overruns;
+    int total_xruns = 0;
+    static int unreported_overruns;
+
     SF_INFO sf_info ;
     public: int bitRate = 64000 ;
     static OggOpusComments *comments;
@@ -84,7 +89,7 @@ class FileWriter {
 public:
     FileWriter ();
     ~FileWriter ();
-    static int disk_write(void *data, size_t frames);
+    static int disk_write(float *data, size_t frames);
 
     std::string filename ;
     void setBufferSize(int bufferSize);
@@ -119,7 +124,7 @@ public:
 
     static SNDFILE *soundfile;
 
-    static int process(float nframes, void *arg);
+    static int process(int nframes, const float *arg);
 
     static void process_fill_buffers(void *data, int samples);
 
