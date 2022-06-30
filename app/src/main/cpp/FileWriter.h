@@ -31,6 +31,13 @@ typedef struct buffer_t{
     float *data;
 } buffer_t;
 
+typedef struct staticBuffer_t{
+    int overruns;
+    float pos;
+    float data[192];
+//    float *data;
+} staticBuffer_t;
+
 typedef enum  {
     WAV = 0,
     OPUS = 1,
@@ -105,14 +112,22 @@ public:
     void startRecording();
 
     static enum vringbuffer_receiver_callback_return_t disk_callback(vringbuffer_t *vrb,bool first_time,void *element){
-        static bool printed_receive_message=false;
+        staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;
         buffer_t *buffer=(buffer_t*)element;
 
         if (first_time==true) {
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
-        disk_write(buffer->data,buffer->pos);
+        if (!useStaticBuffer)
+            disk_write(buffer->data,buffer->pos);
+        else {
+            for (int i = 0 ; i < bufferUsed; i ++) {
+                disk_write(sbuffer [i] .data,sbuffer [i].pos);
+            }
+
+            bufferUsed = 0 ;
+        }
         return VRB_CALLBACK_USED_BUFFER;
     }
 
@@ -130,7 +145,11 @@ public:
 
     static bool process_new_current_buffer(int frames_left);
 
+    static bool useStaticBuffer  ;
     static buffer_t *current_buffer;
+    static int MAX_STATIC_BUFFER  ;
+    static staticBuffer_t buffers [1024] ;
+    static int bufferUsed ;
     static void send_buffer_to_disk_thread(buffer_t *buffer);
 
     static void process_fill_buffer(float **in, buffer_t *buffer, int i, int end);

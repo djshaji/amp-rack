@@ -3,6 +3,10 @@
 #include <chrono>
 #include "FileWriter.h"
 
+bool FileWriter:: useStaticBuffer = true ;
+staticBuffer_t FileWriter::buffers [1024];
+int FileWriter::MAX_STATIC_BUFFER  = 1024;
+int FileWriter::bufferUsed = 0;
 int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
 SNDFILE * FileWriter::soundfile = NULL;
@@ -269,6 +273,10 @@ void FileWriter::startRecording () {
 
 void FileWriter::stopRecording () {
     IN
+    // because we use a large buffer, there can be samples in the buffer which have not been written yet
+    if (useStaticBuffer)
+        vringbuffer_return_writing(vringbuffer,buffers);
+
     vringbuffer_stop_callbacks(vringbuffer);
     closeFile();
     LOGD("recording stopped: %d buffer underruns", total_overruns);
@@ -385,9 +393,26 @@ int FileWriter::process(int nframes, const float *arg) {
 //    if ((buffer_t*)vringbuffer_get_writing(vringbuffer) == NULL)
 //        return 0;
 
-    current_buffer ->data = (float *) arg ;
-    current_buffer-> pos = nframes ;
-    vringbuffer_return_writing(vringbuffer,current_buffer);
+    if (useStaticBuffer) {
+        if (bufferUsed < MAX_STATIC_BUFFER) {
+            for (int i = 0; i < nframes; i++) {
+                buffers[bufferUsed].data [i] = arg[i];
+            }
+
+            buffers[bufferUsed].pos = nframes;
+            bufferUsed++;
+            return 0;
+
+        } else {
+            vringbuffer_return_writing(vringbuffer,buffers);
+//            bufferUsed = 0;
+        }
+    } else {
+        current_buffer->data = (float *) arg;
+        current_buffer->pos = nframes;
+        vringbuffer_return_writing(vringbuffer,current_buffer);
+    }
+
 
     /// does the following do ANYTHING?
     vringbuffer_trigger_autoincrease_callback(vringbuffer);
