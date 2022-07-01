@@ -5,6 +5,17 @@ Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an
 
 ***
 
+### Introducing Amp Rack Version 2! 
+This is the biggest update of Amp Rack till date, and contains tons of new features and under the hood bug fixes.
+
+### An overview:
+1. All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
+2. All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
+3. Improved Presets Loading 
+4. Improved recorded audio sharing support
+
+***
+
 ### Features
 
 * High Quality Audio Plugins such as different Distortion, Overdrive, Cabinet Emulation, Delay, Echo, Reverb, Compressors, Limiters, Sustain, Vocoders, Tube Emulators, and even Autotune (and many more!
@@ -23,7 +34,15 @@ Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an
 
 * High performance Low Latency Native Audio Processing: No latency on even the most basic devices
 
-* Completely Open Source App: Download the code from https://acoustixaudio.org
+*All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
+
+* All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
+
+* High performance realtime low latency code
+
+* High quality floating point precision audio processing
+
+* Completely Open Source App: Download the code from https://amprack.acoustixaudio.org
 
 ### Screenshots
 <img src="https://user-images.githubusercontent.com/17184025/174635116-2f118157-6bed-4a5e-8b7c-39abf3d9c764.jpg" width=200/>
