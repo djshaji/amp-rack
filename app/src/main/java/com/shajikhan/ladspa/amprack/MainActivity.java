@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add(this,"saveActivePreset");
+        hashCommands.add (this, "proDialog");
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
@@ -1188,11 +1189,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    public void proDialog () {
+        Intent intent = new Intent(this, com.shajikhan.ladspa.amprack.Purchase.class);
+        startActivity(intent);
+    }
+
     AlertDialog createPluginDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = getLayoutInflater();
 
         linearLayoutPluginDialog = (LinearLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
+
         EditText editText = (EditText)((LinearLayout) linearLayoutPluginDialog.getChildAt(1)).getChildAt(0);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
