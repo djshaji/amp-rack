@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HashCommands extends AlertDialog {
-    public MainActivity mainActivity ;
+    public static MainActivity mainActivity ;
     AutoCompleteTextView autoCompleteTextView;
     String TAG = getClass().getSimpleName();
 //    public String[] hashCommands ;

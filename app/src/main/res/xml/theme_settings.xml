@@ -6,8 +6,8 @@
         android:title="Background"
         android:key="background"
         android:defaultValue="Space"
-        app:entryValues="@array/backgrounds"
-        app:entries="@array/backgrounds"/>
+        app:entryValues="@array/bg_m3"
+        app:entries="@array/bg_m3_names"/>
     <Preference
         android:title="Select a custom background"
         android:key="background_custom"/>

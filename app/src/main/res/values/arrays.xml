@@ -49,6 +49,20 @@
         <item>Water</item>
         <item>Space</item>
     </string-array>
+    <string-array name="bg_m3">
+        <item>a1</item>
+        <item>a2</item>
+        <item>a3</item>
+        <item>a4</item>
+        <item>a5</item>
+    </string-array>
+    <string-array name="bg_m3_names">
+        <item>Passion</item>
+        <item>Desire</item>
+        <item>Hope</item>
+        <item>Wander</item>
+        <item>Ascend</item>
+    </string-array>
     <string-array name="bg_values">
         <item>2131230964</item>
         <item>2131230962</item>

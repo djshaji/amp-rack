@@ -41,6 +41,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -1667,7 +1672,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
     public static void applyWallpaper (Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
-        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "Space");
+        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "a1");
         Bitmap bitmap = null ;
         switch (resIdString) {
             default:
@@ -1679,6 +1684,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
 
                 bitmap = scaleBackground(bitmap, width, height);
+                context.setTheme(R.style.Theme_Bright);
                 break ;
             case "Space":
                 if (lowMemoryMode)
@@ -1698,6 +1704,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             case "Earth":
                 bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg_earth) ;
                 break ;
+            case "a1":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a1) ;
+                context.setTheme(R.style.Theme_1);
+                break ;
+            case "a5":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a5) ;
+                context.setTheme(R.style.Theme_AmpRack);
+                break ;
+            case "a2":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a2) ;
+                context.setTheme(R.style.Theme_2);
+                break ;
+            case "a3":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a3) ;
+                context.setTheme(R.style.Theme_3);
+                break ;
+            case "a4":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a4) ;
+                context.setTheme(R.style.Theme_4);
+                break ;
         }
 
         if (bitmap == null) {
@@ -1709,10 +1735,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
         imageView.setImageBitmap(bitmap);
+        Paint paint = new Paint();
+        PorterDuffColorFilter filter = new PorterDuffColorFilter(0xffaaaaaa, PorterDuff.Mode.MULTIPLY );
+        imageView.getDrawable().setColorFilter(filter);
+        paint.setColorFilter(filter);
+        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 0, 10, 10);
 
-        int color = getDominantColor(bitmap);
+        Canvas canvas = new Canvas(croppedBitmap);
+        canvas.drawBitmap(croppedBitmap, 0, 0, paint);
+        int color = (int) (getDominantColor(croppedBitmap));
+
+        Log.d(TAG, "applyWallpaper: dominant color " + color + ": " + Color.parseColor("#6c6f6e"));
         window.setStatusBarColor(color);
-
     }
 
     static public JSONObject loadJSONFromAsset(String filename) {

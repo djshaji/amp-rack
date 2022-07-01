@@ -2,16 +2,43 @@
     <!-- Base application theme. -->
     <style name="Theme.AmpRack" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#256c9a</item>
+        <item name="colorPrimary">#6c6f6e</item>
         <item name="colorPrimaryVariant">@color/teal</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/orange_red</item>
-        <item name="colorSecondaryVariant">@color/dark_orange</item>
+        <item name="colorSecondary">@color/dodger_blue</item>
+        <item name="colorSecondaryVariant">@color/medium_sea_green</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.1" parent="Theme.AmpRack">
+        <item name="colorPrimary">#e0b5aa</item>
+        <item name="colorPrimaryVariant">#c1988d</item>
+        <item name="colorSecondary">#7d5557</item>
+        <item name="colorSecondaryVariant">#b3797d</item>
+    </style>
+
+    <style name="Theme.2" parent="Theme.AmpRack">
+        <item name="colorPrimary">#e5f2ee</item>
+        <item name="colorSecondary">#3f655b</item>
+    </style>
+
+    <style name="Theme.3" parent="Theme.AmpRack">
+        <item name="colorPrimary">#fcecd7</item>
+        <item name="colorSecondary">#0059bd</item>
+    </style>
+
+    <style name="Theme.4" parent="Theme.AmpRack">
+        <item name="colorPrimary">#e8c9c3</item>
+        <item name="colorSecondary">#0059bd</item>
+    </style>
+
+    <style name="Theme.Bright" parent="Theme.AmpRack">
+        <item name="colorPrimary">@color/indian_red</item>
+        <item name="colorSecondary">@color/dodger_blue</item>
     </style>
 
     <style name="Theme.MySplash" parent="Theme.SplashScreen">
