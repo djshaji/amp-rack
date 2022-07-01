@@ -929,6 +929,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onResume() {
         super.onResume();
         applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
+//        recreate();
         Log.d(TAG, "lifecycle: resumed");
 //        AudioEngine.create(); // originally was here
 //        loadPlugins();
