@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PurchasesResponseListener purchasesResponseListener ;
     public static boolean proVersion = false ;
     File dir ;
+    HashCommands hashCommands ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -183,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         context = this ;
 
         Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
+        hashCommands = new HashCommands(this);
+        hashCommands.setMainActivity(this);
+        hashCommands.add(this,"saveActivePreset");
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
@@ -1364,7 +1368,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
-    void saveActivePreset () {
+    public void saveActivePreset () {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset ;
         try {
@@ -1750,5 +1754,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         context.startActivity(Intent.createChooser(intentShareFile, "Share Audio File"));
 
+    }
+
+    public void runCommand (String command) {
+        switch (command) {
+            case "saveactivepreset":
+                saveActivePreset();
+                break ;
+            default:
+                alert(this.getClass().getSimpleName(), "Command not supported: " + command);
+                break ;
+        }
     }
 }

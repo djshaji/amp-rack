@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,14 +15,20 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class HashCommands extends AlertDialog {
     public MainActivity mainActivity ;
     AutoCompleteTextView autoCompleteTextView;
     String TAG = getClass().getSimpleName();
+    public static HashMap <String, Object> hooks = new HashMap();
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -60,6 +67,7 @@ public class HashCommands extends AlertDialog {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     void run (String command) {
         String [] vector = command.split(":", 2);
         String cmd = vector [0] ;
@@ -67,8 +75,28 @@ public class HashCommands extends AlertDialog {
         if (vector.length > 1)
             args = vector [1];
 
-        switch (cmd.toLowerCase().replaceAll(" ", "")) {
+        cmd = cmd.replaceAll(" ", "");
+//        cmd = cmd.toLowerCase().replaceAll(" ", "");
+        switch (cmd) {
             default:
+                Log.d(TAG, "run: have " + hooks.size() + " hooks, which are ...");
+                hooks.forEach((_cmd, object)-> {
+                    Log.d(TAG, "run: " + _cmd);
+                });
+                Log.d(TAG, "run: " + cmd);
+                if (hooks.containsKey(cmd)) {
+                    Log.d(TAG, "run: method found. trying to invoke ...");
+                    try {
+                        Method m = hooks.get(cmd).getClass().getMethod(cmd);
+                        m.invoke(hooks.get(cmd));
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
                 break ;
             case "gopro":
                 mainActivity.defaultSharedPreferences.edit().putBoolean("pro", true).apply();
@@ -108,5 +136,10 @@ public class HashCommands extends AlertDialog {
                 MainActivity.alert("Preference Updated", String.format ("run: set %s to %s", what, to));
                 break ;
         }
+    }
+
+    public void add (Object o, String command) {
+        Log.d(TAG, "add: " + command);
+        hooks.put(command, o);
     }
 }
