@@ -35,7 +35,7 @@ This is the biggest update of Amp Rack till date, and contains tons of new featu
 
 * High performance Low Latency Native Audio Processing: No latency on even the most basic devices
 
-*All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
+* All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
 
 * All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
 
