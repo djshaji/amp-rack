@@ -48,6 +48,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         holders.add(holder);
         LinearLayout linearLayout = holder.getLinearLayout();
         linearLayout.removeAllViews();
+        holder.sliders = new ArrayList<>();
         if (linearLayout == null) {
             Log.wtf(TAG, "linear layout for plugin!") ;
             return ;

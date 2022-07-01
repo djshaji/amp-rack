@@ -22,12 +22,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HashCommands extends AlertDialog {
     public MainActivity mainActivity ;
     AutoCompleteTextView autoCompleteTextView;
     String TAG = getClass().getSimpleName();
+//    public String[] hashCommands ;
+    public static ArrayList <String> hashCommands = new ArrayList<>();
     public static HashMap <String, Object> hooks = new HashMap();
 
     public void setMainActivity(MainActivity mainActivity) {
@@ -41,7 +44,11 @@ public class HashCommands extends AlertDialog {
         setView(iView);
 
         AutoCompleteTextView editText = iView.findViewById(R.id.hash_command_text);
-        String[] hashCommands = context.getResources().getStringArray(R.array.hash_commands);
+        String [] fCommands = context.getResources().getStringArray(R.array.hash_commands);
+        for (int x = 0 ; x < fCommands.length; x ++) {
+            hashCommands.add(fCommands[x]);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,hashCommands);
         editText.setAdapter(adapter);
         editText.setOnTouchListener(new View.OnTouchListener() {
@@ -61,7 +68,12 @@ public class HashCommands extends AlertDialog {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                run (editText.getText().toString());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    run (editText.getText().toString());
+                } else {
+                    MainActivity.alert("Unsupported Android version", "This feature is only supported on N and above");
+                }
+
                 dismiss();
             }
         });
@@ -141,5 +153,6 @@ public class HashCommands extends AlertDialog {
     public void add (Object o, String command) {
         Log.d(TAG, "add: " + command);
         hooks.put(command, o);
+        hashCommands.add(command);
     }
 }

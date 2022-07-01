@@ -61,6 +61,5 @@
         <item>version</item>
         <item>logout</item>
         <item>last recorded audio</item>
-        <item>alert: Test Message</item>
     </string-array>
 </resources>
