@@ -13,6 +13,7 @@ This is the biggest update of Amp Rack till date, and contains tons of new featu
 2. All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
 3. Improved Presets Loading 
 4. Improved recorded audio sharing support
+5. Beautiful new material design 3 themes
 
 ***
 
