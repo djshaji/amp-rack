@@ -149,6 +149,8 @@ public class Rack extends Fragment {
                     return;
                 }
 
+//                linearLayout.setBackground();
+                MainActivity.applyWallpaper(mainActivity, mainActivity.pluginDialog.getWindow(), getResources(), mainActivity.pluginDialogWallpaper, mainActivity.deviceWidth, mainActivity.deviceHeight);
                 mainActivity.pluginDialog.show();
             }
         });

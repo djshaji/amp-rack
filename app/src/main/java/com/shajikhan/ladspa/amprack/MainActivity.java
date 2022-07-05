@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String CHANNEL_ID = "default" ;
     static Context context;
     SwitchMaterial onOff;
+    int deviceWidth ;
+    int deviceHeight ;
     long totalMemory = 0;
     static boolean lowMemoryMode = false;
     ToggleButton record ;
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView recyclerView ;
     DataAdapter dataAdapter ;
     AlertDialog pluginDialog ;
+    ImageView pluginDialogWallpaper ;
     AudioManager audioManager ;
     static public JSONObject pluginCategories ;
     public Spinner pluginDialogCategorySpinner ;
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     int defaultInputDevice = 0 ;
     int defaultOutputDevice = 0 ;
     RecyclerView.LayoutManager layoutManager ;
-    LinearLayout linearLayoutPluginDialog ;
+    ConstraintLayout linearLayoutPluginDialog ;
     PluginDialogAdapter pluginDialogAdapter ;
     SharedPreferences defaultSharedPreferences = null ;
     Notification notification ;
@@ -240,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
                                 if (!isDebuggable) {
                                     Log.d(TAG, "onQueryPurchasesResponse: is not debuggable");
-                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
+//                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
                                 }
 
                                 mAdView.loadAd(adRequest);
@@ -269,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
                                 if (!isDebuggable) {
                                     Log.d(TAG, "onQueryPurchasesResponse: is not debuggable");
-                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
+//                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
                                 }
                                 mAdView.loadAd(adRequest);
                             }
@@ -538,6 +541,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             });
             ;
         }
+
+        deviceWidth = getWindowManager().getDefaultDisplay().getWidth() ;
+        deviceHeight = getWindowManager().getDefaultDisplay().getHeight();
+
     }
 
     void showMediaPlayerDialog () {
@@ -1199,9 +1206,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = getLayoutInflater();
 
-        linearLayoutPluginDialog = (LinearLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
+        linearLayoutPluginDialog = (ConstraintLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
 
-        EditText editText = (EditText)((LinearLayout) linearLayoutPluginDialog.getChildAt(1)).getChildAt(0);
+        EditText editText = (EditText) linearLayoutPluginDialog.findViewById(R.id.pl_search);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -1219,7 +1226,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
-        ToggleButton toggleButton = (ToggleButton) ((LinearLayout) linearLayoutPluginDialog.getChildAt(1)).getChildAt(1);
+        ToggleButton toggleButton = (ToggleButton) linearLayoutPluginDialog.findViewById(R.id.pl_favs);
         toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -1245,7 +1252,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // Drop down layout style - list view with radio button
         categoriesDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        pluginDialogCategorySpinner = (Spinner) ((LinearLayout) linearLayoutPluginDialog.getChildAt(3)).getChildAt(1);
+        pluginDialogCategorySpinner = (Spinner) linearLayoutPluginDialog.findViewById(R.id.plugin_types);
         // attaching data adapter to spinner
         pluginDialogCategorySpinner.setAdapter(categoriesDataAdapter);
         pluginDialogCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1261,6 +1268,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             }
         });
+
+        pluginDialogWallpaper = linearLayoutPluginDialog.findViewById(R.id.pl_wallpaper);
 
         builder.setView(linearLayoutPluginDialog)
                 // Add action buttons

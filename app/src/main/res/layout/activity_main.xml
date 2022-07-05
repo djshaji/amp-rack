@@ -50,7 +50,7 @@
             android:layout_alignParentBottom="true"
             ads:adSize="BANNER"
             android:visibility="gone"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            ads:adUnitId="ca-app-pub-2182672984086800~2348124251">
         </com.google.android.gms.ads.AdView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
