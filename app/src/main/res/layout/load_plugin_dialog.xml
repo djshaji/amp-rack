@@ -55,8 +55,11 @@
         app:layout_constraintTop_toBottomOf="@+id/pl_ll_1"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="match_parent"
+        android:background="@drawable/shadow"
         android:id="@+id/pl_type_ll"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:elevation="20dp"
         android:layout_margin="10dp"
         android:orientation="horizontal">
         <TextView
@@ -69,25 +72,23 @@
         <Spinner
             android:layout_width="wrap_content"
             android:id="@+id/plugin_types"
+            android:padding="10dp"
+            android:background="@drawable/rounded_corners_transparent"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/pl_type_ll"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pl_type_ll"
+        app:layout_constrainedHeight="true"
+        android:id="@+id/plugin_dialog_recycler_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_margin="10dp"
-            android:id="@+id/plugin_dialog_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintHeight_default="wrap"
-            android:layout_weight="1"/>
+        android:layout_marginBottom="20dp"
+        app:layout_constraintHeight_default="wrap"
+        android:layout_weight="1"/>
 
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
