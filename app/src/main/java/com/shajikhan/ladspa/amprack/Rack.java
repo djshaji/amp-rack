@@ -101,7 +101,7 @@ public class Rack extends Fragment {
 
         mainActivity.pluginDialog = mainActivity.createPluginDialog();
 
-        RecyclerView recyclerView1 = (RecyclerView) mainActivity.linearLayoutPluginDialog.getChildAt(2);
+        RecyclerView recyclerView1 = (RecyclerView) mainActivity.linearLayoutPluginDialog.findViewById(R.id.plugin_dialog_recycler_view);
         recyclerView1.setLayoutManager(new LinearLayoutManager(mainActivity));
         mainActivity.pluginDialogAdapter = new PluginDialogAdapter();
         mainActivity.pluginDialogAdapter.setMainActivity(getContext(), mainActivity);

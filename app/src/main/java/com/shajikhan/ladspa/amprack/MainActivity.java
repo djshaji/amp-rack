@@ -1271,15 +1271,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         pluginDialogWallpaper = linearLayoutPluginDialog.findViewById(R.id.pl_wallpaper);
 
-        builder.setView(linearLayoutPluginDialog)
+        builder.setView(linearLayoutPluginDialog);
                 // Add action buttons
+        /*
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // sign in the user ...
                     }
                 }) ;
-
+            */
         return builder.create() ;
     }
 
