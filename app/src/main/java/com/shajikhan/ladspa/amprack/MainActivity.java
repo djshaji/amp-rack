@@ -1272,6 +1272,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         pluginDialogWallpaper = linearLayoutPluginDialog.findViewById(R.id.pl_wallpaper);
 
         builder.setView(linearLayoutPluginDialog);
+        AlertDialog pluginDialog = builder.create();
+        Button closeButton = linearLayoutPluginDialog.findViewById(R.id.pl_close);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pluginDialog.hide();
+            }
+        });
                 // Add action buttons
         /*
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -1281,7 +1289,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 }) ;
             */
-        return builder.create() ;
+        return  pluginDialog;
     }
 
     public void addPluginToRack (int pluginID) {

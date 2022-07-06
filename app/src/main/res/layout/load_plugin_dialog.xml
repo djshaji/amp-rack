@@ -14,18 +14,33 @@
         android:src="@drawable/a5"/>
 
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:fontFamily="@font/comfortaa"
-        android:textSize="20dp"
         android:id="@+id/pl_title"
-        android:layout_margin="10dp"
-        android:text="Add Plugins to Rack"/>
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="@integer/material_motion_duration_long_1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:fontFamily="@font/comfortaa"
+            android:textSize="20dp"
+            android:layout_margin="10dp"
+            android:text="Add Plugins to Rack"/>
 
+
+        <Button
+            android:layout_width="32dp"
+            android:id="@+id/pl_close"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_baseline_close_24"
+            android:background="@color/fui_transparent"/>
+    </LinearLayout>
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@+id/pl_title"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -83,6 +98,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pl_type_ll"
         app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/plugin_dialog_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
