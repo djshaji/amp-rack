@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AmpRack</string>
     <string name="app_version">Version 2</string>
-    <string name="build_id">166</string>
+    <string name="build_id">172</string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>
