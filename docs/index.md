@@ -5,6 +5,18 @@ Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an
 
 ***
 
+### Introducing Amp Rack Version 2! 
+This is the biggest update of Amp Rack till date, and contains tons of new features and under the hood bug fixes.
+
+### An overview:
+1. All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
+2. All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
+3. Improved Presets Loading 
+4. Improved recorded audio sharing support
+5. Beautiful new material design 3 themes
+
+***
+
 ### Features
 
 * High Quality Audio Plugins such as different Distortion, Overdrive, Cabinet Emulation, Delay, Echo, Reverb, Compressors, Limiters, Sustain, Vocoders, Tube Emulators, and even Autotune (and many more!
@@ -23,10 +35,24 @@ Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an
 
 * High performance Low Latency Native Audio Processing: No latency on even the most basic devices
 
-* Completely Open Source App: Download the code from https://acoustixaudio.org
+* All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
+
+* All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
+
+* High performance realtime low latency code
+
+* High quality floating point precision audio processing
+
+* Completely Open Source App: Download the code from https://amprack.acoustixaudio.org
 
 ### Screenshots
-<img src="https://user-images.githubusercontent.com/17184025/174635116-2f118157-6bed-4a5e-8b7c-39abf3d9c764.jpg" width=200/>
-<img src="https://user-images.githubusercontent.com/17184025/174636481-ffd4c51a-5f88-4d69-9078-1510dafb976c.jpg" width=200/>
-<img src="https://user-images.githubusercontent.com/17184025/174636495-7928ed76-4d53-4ef1-b1c2-5aa99c93c21c.jpg" width=200/>
-<img src="https://user-images.githubusercontent.com/17184025/174636503-c3b2cf00-66e2-42c0-9bb5-7e4eb2a2049b.jpg" width=200/>
+<div class="row">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100470-81215a53-e2f4-4a65-a8e4-7816e4eab740.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100475-493fdaf7-59be-4aee-8b11-c1498a5c34ab.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100479-1910de09-95e7-4864-a051-9795fa1c5dfc.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100480-5f63c493-3460-4ad8-a90a-5779bf658587.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100482-2c64b835-a3a4-4f8c-8458-d0e442266415.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100483-d0e53b89-0ef4-4d73-814a-539c9b93c35f.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100487-7287a02e-ede2-4f5d-82e3-aad0dc61e86d.jpg">
+  <img width=200 src="https://user-images.githubusercontent.com/17184025/178100490-f571d17f-ff7f-4ea2-ab89-225a8572a6cc.jpg">
+</div>
