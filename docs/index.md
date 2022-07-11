@@ -56,3 +56,4 @@ This is the biggest update of Amp Rack till date, and contains tons of new featu
   <img width=200 src="https://user-images.githubusercontent.com/17184025/178100487-7287a02e-ede2-4f5d-82e3-aad0dc61e86d.jpg">
   <img width=200 src="https://user-images.githubusercontent.com/17184025/178100490-f571d17f-ff7f-4ea2-ab89-225a8572a6cc.jpg">
 </div>
+
