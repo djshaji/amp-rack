@@ -45,14 +45,14 @@ Absolutely! Putting a compress before and after a distortion effect has complete
 ### How do I record audio?
 Click on the record button to enable recording before you turn on the effect engine.
 
-:bulb: You cannot turn recording on or off while the effect engine is running.
+💡 You cannot turn recording on or off while the effect engine is running.
 
-:bulb: You can record a backing track with chords or rhythm which can be played on loop. 
+💡 You can record a backing track with chords or rhythm which can be played on loop. 
 
 ![rec](https://user-images.githubusercontent.com/17184025/179393528-8ca73cf4-a0b5-4218-b312-12f857913e27.jpg)
 
 ### How do I change the audio recording format?
-Go to Settings :left_right_arrow: Export Settings :left_right_arrow: Audio Export Format
+Go to Settings → Export Settings → Audio Export Format
 
 ### What are presets?
 Presets are plugin settings which you can save for use later. When you save a preset, the entire effect engine configuration is saved. 
@@ -72,12 +72,12 @@ The following is saved with a preset:
 1. Plugin Parameter Configuration
 2. Plugin Sequence
 
-:bulb: You can share a preset publicly by enabling the public option while saving a preset.
+💡 You can share a preset publicly by enabling the public option while saving a preset.
 
 ### What is the Preset Library?
 The Preset Library contains Presets created by users and the Amp Rack team. You can sort the presets by date or popular rating. Use presets from the library to quickly find great sounds for your guitar.
 
-:bulb: _Like_ your favourite presets to quickly find them later and to increase their rating.
+💡 _Like_ your favourite presets to quickly find them later and to increase their rating.
 
 ### How do I use the Preset Library?
 On the Presets screen, tap the Library tab header to switch to the Library tab.
@@ -120,21 +120,21 @@ From the overflow menu, click on Settings.
 ![settings](https://user-images.githubusercontent.com/17184025/179396279-c639b08d-ad5a-425e-a027-0d09fc4dab61.jpg)
 
 ### How do I change the theme?
-Go to Settings :arrow_right: Theme :arrow_right: Background
+Go to Settings → Theme → Background
 
 ### How do I set a custom wallpaper?
-Go to Settings :arrow_right: Theme :arrow_right: Use a Custom Background
+Go to Settings → Theme → Use a Custom Background
 
 ### How do I change input and output audio devices?
-Go to Settings :arrow_right: Audio Devices :arrow_right: Input / Output Device
+Go to Settings → Audio Devices → Input / Output Device
 
 ### I plugged in a guitar and headphones, but the audio is playing from my phone mic to the phone speaker.
 ### I plugged in a USB Audio device / interface, but audio is playing from the phone speaker.
 When you insert or remove an audio device, close the app completely, and open it again to make the audio system pick up the new device automatically for playing / recording audio. 
 
-:bulb: You can always set an input / output device manually by going to Settings :arrow_right: Theme :arrow_right: Background
+💡 You can always set an input / output device manually by going to Settings → Theme → Background
 
-### :egg: How do I open the _hidden_ command prompt?
+### 🥚 How do I open the _hidden_ command prompt?
 The app has a built in command prompt which I use for debugging. Long press the app logo on the top left of the main screen to open the command prompt dialog. The dialog has autocomplete and will list all available commands. You can use it as a short cut to quickly open some dialog or change a setting.
 
 ![logo](https://user-images.githubusercontent.com/17184025/179396423-3a57514c-ea89-4f6e-93f0-bb6bb0f17aa6.jpg)
