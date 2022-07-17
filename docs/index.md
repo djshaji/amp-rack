@@ -1,4 +1,4 @@
-### Amp Rack Audio Effects Processor / LADSPA Host for Android
+### Amp Rack Audio Effects Processor / LADSPA Host for Android 
 <a href='https://play.google.com/store/apps/details?id=com.shajikhan.ladspa.amprack&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width=150 alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an Open Source LADSPA Plugins Host for Android. More than 150 high quality audio plugins are available which can be added in any order to the audio effect chain to create distinct high quality tones for your guitar!
@@ -56,4 +56,3 @@ This is the biggest update of Amp Rack till date, and contains tons of new featu
   <img width=200 src="https://user-images.githubusercontent.com/17184025/178100487-7287a02e-ede2-4f5d-82e3-aad0dc61e86d.jpg">
   <img width=200 src="https://user-images.githubusercontent.com/17184025/178100490-f571d17f-ff7f-4ea2-ab89-225a8572a6cc.jpg">
 </div> 
-
