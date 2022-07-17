@@ -1,3 +1,5 @@
+# Frequently Asked Questions
+
 ### What is Amp Rack?
 Amp Rack is a Guitar Effects Processor for Android. You can use it to put some effects on your Guitar, voice, or any other instrument.
 
