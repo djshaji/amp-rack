@@ -167,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private FirebaseAuth mAuth;
     FirebaseUser currentUser ;
     private FirebaseAnalytics mFirebaseAnalytics;
-    Rack rack ;
-    Tracks tracks, drums;
-    Presets presets ;
+    public Rack rack ;
+    public Tracks tracks, drums;
+    public Presets presets ;
     PopupMenu optionsMenu ;
     String lastRecordedFileName ;
     NotificationManagerCompat notificationManager ;
