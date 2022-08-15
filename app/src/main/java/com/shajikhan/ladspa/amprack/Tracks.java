@@ -86,7 +86,7 @@ public class Tracks extends Fragment {
                     player.play();
                 }
 
-                player.setSkipSilenceEnabled(b);
+//                player.setSkipSilenceEnabled(b);
             }
         });
 

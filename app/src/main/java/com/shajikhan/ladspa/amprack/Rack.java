@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -260,7 +261,20 @@ public class Rack extends Fragment {
             }
         }) ;
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(6);
+        MenuItem howToUse = optionsMenu.getMenu().getItem(6);
+        howToUse.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String url = "https://amprack.acoustixaudio.org";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+
+                return false;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(7);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
