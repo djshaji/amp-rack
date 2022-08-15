@@ -1389,6 +1389,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return preset.toString();
     }
 
+    Map presetToMap () {
+        int totalPresets = AudioEngine.getActivePlugins();
+        Map <String, Map> preset = new HashMap<>();
+
+        for (int i = 0; i < totalPresets; i++) {
+            Map <String, String> jo = new HashMap<>();
+            String vals = "";
+
+            float [] values = AudioEngine.getActivePluginValues(i);
+            for (int k = 0; k < values.length; k++) {
+                vals += values [k];
+                if (k < values.length - 1) {
+                    vals += ";";
+                }
+            }
+
+            jo.put("name", AudioEngine.getActivePluginName(i));
+            jo.put("controls", vals);
+
+            preset.put(String.valueOf(i), jo);
+        }
+
+        return preset;
+    }
+
 
     /*  The problem with this is that we can only get viewholders which are visible on screen.
         See #19 https://github.com/djshaji/amp-rack/issues/19
@@ -1428,7 +1453,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return preset.toString() ;
     }
 
-    Map presetToMap () throws JSONException {
+    Map _presetToMap () throws JSONException {
         Map <String, Map> preset = new HashMap<>();
         if (dataAdapter == null)
             return null ;
@@ -1548,6 +1573,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             int ret = AudioEngine.addPluginByName(name);
             Log.d(TAG, "loadPreset: Loaded plugin: " + name);
             String [] control = controls.split(";");
+
 
             DataAdapter.ViewHolder holder = null ;
             if (dataAdapter.holders.size() == 0)

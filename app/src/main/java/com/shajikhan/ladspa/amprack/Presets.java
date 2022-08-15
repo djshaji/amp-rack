@@ -170,12 +170,7 @@ public class Presets extends Fragment {
             public void onClick(View view) {
                 Log.d(TAG, "onClick: showing preset");
                 Map preset ;
-                try {
-                    preset = mainActivity.presetToMap();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return ;
-                }
+                preset = mainActivity.presetToMap();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 // Get the layout inflater
