@@ -3,6 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <item
+        android:id="@+id/page_quick"
+        android:enabled="true"
+        android:visible="true"
+        android:icon="@drawable/ic_baseline_offline_bolt_24"
+        android:title="Quick"/>
+    <item
         android:id="@+id/page_rack"
         android:enabled="true"
         android:visible="true"

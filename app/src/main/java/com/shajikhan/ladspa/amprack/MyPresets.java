@@ -33,6 +33,7 @@ public class MyPresets extends Fragment {
     ProgressBar progressBar = null;
     PopupMenu sortMenu = null;
     boolean shared = false;
+    boolean quick = false ;
 
     MyPresets (ProgressBar _progressBar) {
         progressBar = _progressBar;
@@ -40,6 +41,10 @@ public class MyPresets extends Fragment {
 
     MyPresets (boolean _shared) {
         shared = _shared;
+    }
+    MyPresets (boolean _shared, boolean _quick) {
+        shared = _shared;
+        quick = _quick;
     }
 
     @Nullable
@@ -133,7 +138,7 @@ public class MyPresets extends Fragment {
                 }
 
                 myPresetsAdapter.removeAll();
-                db.loadUserPresets(myPresetsAdapter,shared);
+                db.loadUserPresets(myPresetsAdapter,shared, quick);
                 return true;
             }
         });
@@ -151,6 +156,6 @@ public class MyPresets extends Fragment {
 
         if (progressBar != null)
             myPresetsAdapter.setProgressBar(progressBar);
-        db.getFavorites(myPresetsAdapter, shared);
+        db.getFavorites(myPresetsAdapter, shared, quick);
     }
 }

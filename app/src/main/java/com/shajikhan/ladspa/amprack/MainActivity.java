@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public Rack rack ;
     public Tracks tracks, drums;
     public Presets presets ;
+    public MyPresets quickPatch ;
     PopupMenu optionsMenu ;
     String lastRecordedFileName ;
     NotificationManagerCompat notificationManager ;
@@ -323,6 +324,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         tracks = new Tracks();
         drums = new Tracks();
         presets = new Presets();
+        quickPatch = new MyPresets(false, true);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, quickPatch, null)
+                .commit();
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, rack, null)
@@ -402,11 +408,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Fragment fragment=null;
                 Class<Rack> fragmentClass=null;
                 switch (item.getItemId()) {
+                    case R.id.page_quick:
+                        fragment = rack ;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .show(quickPatch)
+                                .hide(rack)
+                                .hide(presets)
+                                .hide (tracks)
+                                .hide (drums)
+                                .commit();
+                        return true;
                     case R.id.page_rack:
                         fragment = rack ;
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .show(rack)
+                                .hide(quickPatch)
                                 .hide(presets)
                                 .hide (tracks)
                                 .hide (drums)
@@ -429,6 +447,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .show(presets)
                                 .hide(rack)
                                 .hide(tracks)
+                                .hide(quickPatch)
                                 .hide(drums)
                                 .commit();
                         return true;
@@ -439,6 +458,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .beginTransaction()
                                 .show(tracks)
                                 .hide(rack)
+                                .hide(quickPatch)
                                 .hide(presets)
                                 .hide(drums)
                                 .commit();
@@ -449,6 +469,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .beginTransaction()
                                 .show(drums)
                                 .hide(rack)
+                                .hide(quickPatch)
                                 .hide(presets)
                                 .hide(tracks)
                                 .commit();
@@ -481,6 +502,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .hide(tracks)
                 .hide(drums)
                 .commit();
+
+        bottomNavigationView.setSelectedItemId(R.id.page_rack);
 
         // notification
         Intent intent = new Intent(this, MainActivity.class);

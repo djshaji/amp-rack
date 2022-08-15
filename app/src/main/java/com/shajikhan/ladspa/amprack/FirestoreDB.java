@@ -106,16 +106,16 @@ public class FirestoreDB {
                 });
     }
 
-    public void loadUserPresets (MyPresetsAdapter presetsAdapter, boolean shared) {
+    public void loadUserPresets (MyPresetsAdapter presetsAdapter, boolean shared, boolean quick) {
         if (presetsAdapter.progressBar != null) {
             presetsAdapter.progressBar.setVisibility(View.VISIBLE);
         }
 
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
-        if (auth == null) {
+        if (auth == null && !quick) {
             Log.e(TAG, "loadUserPresets: uid is null", null);
             return ;
-        } else if (auth.getUid() == null) {
+        } else if (auth.getUid() == null && !quick) {
             Log.e(TAG, "loadUserPresets: uid is null", null);
             return ;
         } else
@@ -146,15 +146,24 @@ public class FirestoreDB {
             }
         } ;
 
-        if (shared == false) {
+        if (shared == false && quick == false) {
+            Log.d(TAG, "loadUserPresets: user presets");
             db.collection("presets")
                     .whereEqualTo("uid", uid)
                     .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(onCompleteListener);
-        } else {
+        } else if (shared){
+            Log.d(TAG, "loadUserPresets: shared presets");
             db.collection("presets")
                     .whereEqualTo("public", true)
+                    .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(onCompleteListener);
+        } else if (quick){
+            Log.d(TAG, "loadUserPresets: quick patches");
+            db.collection("presets")
+                    .whereEqualTo("uid", "lWDjT6ENhgV9Hs6JHIjFAcacpAo1")
                     .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(onCompleteListener);
@@ -301,11 +310,14 @@ public class FirestoreDB {
         });
     }
 
-    void getFavorites (MyPresetsAdapter presetsAdapter, boolean shared) {
-        if (! checkAuth())
+    void getFavorites (MyPresetsAdapter presetsAdapter, boolean shared, boolean quick) {
+        if (! checkAuth() && !quick)
             return;
 
-        DocumentReference documentReference = db.collection("collections").document(FirebaseAuth.getInstance().getUid());
+        String uid = FirebaseAuth.getInstance().getUid() ;
+        if (uid == null)
+                uid = "lWDjT6ENhgV9Hs6JHIjFAcacpAo1";
+        DocumentReference documentReference = db.collection("collections").document(uid);
         documentReference
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -315,12 +327,12 @@ public class FirestoreDB {
                         if (presetsAdapter.favoritePresets == null) {
                             presetsAdapter.favoritePresets = new HashMap<String, Object>();
                         }
-                        loadUserPresets(presetsAdapter, shared);
+                        loadUserPresets(presetsAdapter, shared, quick);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        loadUserPresets(presetsAdapter, shared);
+                        loadUserPresets(presetsAdapter, shared, quick);
                     }
                 });
     }
