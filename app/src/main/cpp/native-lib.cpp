@@ -553,3 +553,35 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginUniqueID(JNIEnv *env, jcl
     }
     return engine->libraries.at(library)->descriptors.at(plugin)->UniqueID;
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePlugins(JNIEnv *env, jclass clazz) {
+    // TODO: implement getActivePlugins()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
+    return  engine->activePlugins.size();
+}
+extern "C"
+JNIEXPORT jfloatArray JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginValues(JNIEnv *env, jclass clazz,
+                                                                    jint plugin) {
+    // TODO: implement getActivePluginValues()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 0;
+    }
+    // [default, min, max, type]
+    Plugin *p = engine ->activePlugins.at(plugin);
+    std::vector<float> controls ;
+    for (int i = 0 ; i < p->pluginControls.size(); i ++) {
+        controls.push_back(*p->pluginControls.at(i)->def);
+    }
+
+    jfloatArray r = env ->NewFloatArray(p->pluginControls.size());
+//    float res [] = *controls.data()[0];
+//    float res [] = {p->getDefault(), p->getMin(), p->getMax(), static_cast<float>(p->type)};
+    env->SetFloatArrayRegion(r, 0, p->pluginControls.size(), controls.data());
+    return r ;
+}

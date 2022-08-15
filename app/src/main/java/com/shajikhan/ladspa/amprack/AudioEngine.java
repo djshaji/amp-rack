@@ -15,6 +15,8 @@ public class AudioEngine {
     static native String getPluginName (int library, int plugin);
     static native int getPluginUniqueID (int library, int plugin);
     // activePlugins
+    static native int getActivePlugins ();
+    static native float [] getActivePluginValues (int plugin);
     static native int getPluginControls (int plugin) ;
     static native float [] getPluginControlValues (int plugin, int control) ;
     static native float getPluginPresetValue (int plugin, int control) ;

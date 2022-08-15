@@ -195,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add(this,"saveActivePreset");
+        hashCommands.add(this,"printActivePreset");
         hashCommands.add (this, "proDialog");
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
@@ -1332,7 +1333,44 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 
-    String presetToString () throws JSONException {
+    String presetToString () {
+        int totalPresets = AudioEngine.getActivePlugins();
+        JSONObject preset = new JSONObject();
+
+        for (int i = 0; i < totalPresets; i++) {
+            JSONObject jo = new JSONObject();
+            String vals = "";
+
+            float [] values = AudioEngine.getActivePluginValues(i);
+            for (int k = 0; k < values.length; k++) {
+                vals += values [k];
+                if (k < values.length - 1) {
+                    vals += ";";
+                }
+            }
+
+            try {
+                jo.put("name", AudioEngine.getActivePluginName(i));
+                jo.put("controls", vals);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                preset.put(String.valueOf(i), jo.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return preset.toString();
+    }
+
+
+    /*  The problem with this is that we can only get viewholders which are visible on screen.
+        See #19 https://github.com/djshaji/amp-rack/issues/19
+     */
+    String _presetToString () throws JSONException {
         JSONObject preset = new JSONObject();
         if (dataAdapter == null)
             return null ;
@@ -1340,7 +1378,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         for (int i = 0 ; i < dataAdapter.getItemCount() ; i ++) {
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (holder == null) {
-                Log.e(TAG, "presetToString: holder is null for " + i, null);
+                Log.e(TAG, "presetToString: holder is null for " + i + " of " + dataAdapter.getItemCount(), null);
                 continue ;
             }
 
@@ -1399,16 +1437,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
+    public void printActivePreset () {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        String preset;
+        preset = presetToString();
+
+        if (preset == null)
+            return;
+        Log.d(TAG, "printActivePreset: " + preset.toString());
+    }
+
     public void saveActivePreset () {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset ;
-        try {
-            preset = presetToString() ;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return ;
-        }
-
+        preset = presetToString() ;
         if (preset == null)
             return ;
         sharedPreferences.edit().putString("activePreset", preset).apply();
