@@ -1,7 +1,7 @@
 # Amp Rack Audio Effects Processor / LADSPA Host for Android 
 <a href='https://play.google.com/store/apps/details?id=com.shajikhan.ladspa.amprack&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width=150 alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an Open Source LADSPA Plugins Host for Android. More than 150 high quality audio plugins are available which can be added in any order to the audio effect chain to create distinct high quality tones for your guitar!
+Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an Open Source LADSPA Plugins Host for Android. More than 150 high quality audio plugins are available which can be added in any order to the audio effect chain to create distinct high quality tones for your guitar with just one tap!
 
 ***
 
@@ -9,11 +9,12 @@ Amp Rack is a Guitar / Voice Audio Effects Processor for Android. Amp Rack is an
 This is the biggest update of Amp Rack till date, and contains tons of new features and under the hood bug fixes.
 
 ### An overview:
-1. All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
-2. All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
-3. Improved Presets Loading 
-4. Improved recorded audio sharing support
-5. Beautiful new material design 3 themes
+1. **Quick Patch:** One tap to change factory patches for finding sounds quickly
+2. All new **Backing Track** player. Simply record some chords and use it on loop as a backing track! You can change BPM and Volume of the backing track. Perfect to practice solos or master scales
+3. All new **Drum Machine**. Transform yourself into a one man band, or just practice rocking out. Choose from a variety of exciting tracks. **Change BPM** according to your genre and preference.
+4. Improved Presets Loading 
+5. Improved recorded audio sharing support
+6. Beautiful new material design 3 themes
 
 ***
 
