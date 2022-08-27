@@ -309,6 +309,15 @@ void Engine::onErrorAfterClose(oboe::AudioStream *oboeStream,
          oboe::convertToText(error));
 }
 
+void Engine::addPluginToRackLazy(char* library, int pluginIndex) {
+    SharedLibrary * sharedLibrary = new SharedLibrary (library);
+    sharedLibrary->load();
+    Plugin * plugin = new Plugin (sharedLibrary->descriptors.at(pluginIndex), (long) mSampleRate);
+    plugin->sharedLibrary = sharedLibrary;
+    activePlugins .push_back(plugin);
+    buildPluginChain();
+}
+
 void Engine::loadPlugin(char * filename) {
     IN
     LOGS("Loading plugin %s", filename);
@@ -381,6 +390,11 @@ int Engine::deletePluginFromRack (int pIndex) {
     Plugin * p = activePlugins.at(pIndex);
     for (PluginControl * control: p->pluginControls) {
         control->freeMemory();
+    }
+
+    if (lazyLoad) {
+        p->free();
+        p->sharedLibrary->unload();
     }
 
     delete p ;

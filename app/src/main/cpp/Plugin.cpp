@@ -1,5 +1,9 @@
 #include "Plugin.h"
 
+void Plugin::free () {
+    descriptor->cleanup (handle);
+}
+
 Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate) {
     if (_descriptor == NULL) {
         LOGF ("[%s:%s] null descriptor passed", __FILE__, __PRETTY_FUNCTION__ );

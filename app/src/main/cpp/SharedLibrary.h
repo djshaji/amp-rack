@@ -23,6 +23,8 @@ public:
     char *load(void);
 
     bool plugin_is_valid(const LADSPA_Descriptor *descriptor);
+
+    void unload();
 };
 
 #endif // SHARED_LIBRARY_H

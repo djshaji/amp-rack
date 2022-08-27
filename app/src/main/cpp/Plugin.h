@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "PluginControl.h"
+#include "SharedLibrary.h"
 
 class Plugin {
     LADSPA_Data ** portControls ;
@@ -15,6 +16,7 @@ public:
     LADSPA_Data run_adding_gain = 1 ;
     std::vector <PluginControl *> pluginControls ;
     const LADSPA_Descriptor * descriptor ;
+    SharedLibrary * sharedLibrary;
     int inputPort = -1;
     int inputPort2 = -1;
     int outputPort = -1;
@@ -24,6 +26,8 @@ public:
     Plugin(const LADSPA_Descriptor * descriptor, unsigned long _sampleRate);
 
     void print();
+
+    void free();
 };
 
 #endif // __PLUGIN_H

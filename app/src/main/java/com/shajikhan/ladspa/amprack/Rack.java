@@ -54,6 +54,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,6 +67,7 @@ public class Rack extends Fragment {
     MainActivity mainActivity ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
+    JSONObject jsonObject = new JSONObject();
 
     /*
     Rack () {
@@ -75,6 +79,32 @@ public class Rack extends Fragment {
     }
 
      */
+
+    public void printPlugins () {
+        Log.d(TAG, "printPlugins: " + jsonObject.toString());
+    }
+
+    public void writeJSON () {
+        File file = new File(mainActivity.dir, "plugins.json");
+        FileOutputStream stream = null;
+        try {
+            stream = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            stream.write(jsonObject.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     @Nullable
     @Override
@@ -177,24 +207,62 @@ public class Rack extends Fragment {
             }
         }
         AudioEngine.setDefaultStreamValues(getContext());
-        mainActivity.loadPlugins();
+        if (mainActivity.lazyLoad == false)
+            mainActivity.loadPlugins();
         mainActivity.loadActivePreset();
 
-        int libraries = AudioEngine.getSharedLibraries();
+        int libraries = 0 ;
+        if (mainActivity.lazyLoad == false)
+            AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
 
         // run this only once
-        if (mainActivity.pluginDialogAdapter.plugins.size() == 0) {
+        if (mainActivity.pluginDialogAdapter.plugins.size() == 0 && mainActivity.lazyLoad == false) {
             for (int i = 0; i < libraries; i++) {
+                JSONObject object = new JSONObject();
                 for (int plugin = 0; plugin < AudioEngine.getPlugins(i); plugin++) {
                     String name = AudioEngine.getPluginName(i, plugin);
                     int uniqueID = AudioEngine.getPluginUniqueID(i, plugin);
+
                     int finalI = i;
                     int finalPlugin = plugin;
+
+                    try {
+                        object.put("name", name);
+                        object.put("id", uniqueID);
+                        object.put("plugin", finalPlugin);
+                        object.put("library", mainActivity.sharedLibraries[i]);
+                        jsonObject.put(String.valueOf(finalI * 100 + finalPlugin), object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     mainActivity.pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name, uniqueID);
                 }
             }
+        } else if (mainActivity.pluginDialogAdapter.plugins.size() == 0 && mainActivity.lazyLoad) {
+            JSONObject plugins = mainActivity.availablePlugins ;
+            Iterator<String> keys = plugins.keys();
+
+            while (keys.hasNext()) {
+                String key = keys.next();
+                try {
+                    if (plugins.get(key) instanceof JSONObject) {
+                        Log.d(TAG, "onCreate: key " + key);
+                        JSONObject object = plugins.getJSONObject(key);
+                        // do something with jsonObject here
+                        String name = object.getString("name");
+                        String id = object.getString("id");
+                        mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+        mainActivity.hashCommands.add (this, "printPlugins");
+        mainActivity.hashCommands.add (this, "writeJSON");
 
         MaterialButton optionsBtn = view.findViewById(R.id.menu_button);
         optionsMenu = new PopupMenu(mainActivity, optionsBtn);

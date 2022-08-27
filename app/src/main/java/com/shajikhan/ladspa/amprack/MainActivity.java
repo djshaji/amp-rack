@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     int defaultOutputDevice = 0 ;
     RecyclerView.LayoutManager layoutManager ;
     ConstraintLayout linearLayoutPluginDialog ;
+    boolean lazyLoad = true;
+    String [] sharedLibraries ;
     PluginDialogAdapter pluginDialogAdapter ;
     SharedPreferences defaultSharedPreferences = null ;
     Notification notification ;
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private ActivityMainBinding binding;
     MediaPlayer mediaPlayer ;
+    JSONObject availablePlugins ;
     private BillingClient billingClient;
     private PurchasesUpdatedListener purchasesUpdatedListener ;
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener ;
@@ -200,6 +203,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add (this, "proDialog");
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
+        availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
+
         defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
@@ -356,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        AudioEngine.showProgress(null);
 //        AudioEngine.showProgress(context);
         AudioEngine.create();
+        AudioEngine.setLazyLoad(lazyLoad);
         // load included plugins
         loadPlugins();
 
@@ -1320,7 +1326,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         int library = pluginID / 100 ;
         int plug = pluginID - (library * 100) ;
         Log.d(TAG, "Adding plugin: " + library + ": " + plug);
-        int ret = AudioEngine.addPlugin(library, plug) ;
+        int ret = -1 ;
+        if (lazyLoad == false)
+            AudioEngine.addPlugin(library, plug) ;
+        else {
+            AudioEngine.addPluginLazy(sharedLibraries[library], plug);
+        }
+
         dataAdapter.addItem(pluginID, ret);
 
         Toast.makeText(context, "Added plugin to rack", Toast.LENGTH_LONG).show();
@@ -1333,11 +1345,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (AudioEngine.getTotalPlugins() != 0)
             return;
 //        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
-        String[] tapPlugins = context.getResources().getStringArray(R.array.ladspa_plugins);
-        for (String s: tapPlugins) {
-            AudioEngine.loadLibrary(/*"lib" + */s);
+        sharedLibraries = context.getResources().getStringArray(R.array.ladspa_plugins);
+        if (lazyLoad == false) {
+            for (String s : sharedLibraries) {
+                AudioEngine.loadLibrary(/*"lib" + */s);
+            }
         }
-
 
 
         /*
@@ -1570,7 +1583,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 continue ;
             }
 
-            int ret = AudioEngine.addPluginByName(name);
+            int ret = -1 ;
+            if (!lazyLoad)
+                AudioEngine.addPluginByName(name);
+            else
+                addPluginByName(name);
             Log.d(TAG, "loadPreset: Loaded plugin: " + name);
             String [] control = controls.split(";");
 
@@ -1915,6 +1932,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             default:
                 alert(this.getClass().getSimpleName(), "Command not supported: " + command);
                 break ;
+        }
+    }
+
+    public void addPluginByName (String pluginName) {
+        JSONObject plugins = availablePlugins;
+        Iterator<String> keys = plugins.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            try {
+                if (plugins.get(key) instanceof JSONObject) {
+                    Log.d(TAG, "onCreate: key " + key);
+                    JSONObject object = plugins.getJSONObject(key);
+                    // do something with jsonObject here
+                    String name = object.getString("name");
+                    String id = object.getString("id");
+                    int plugin = object.getInt("plugin");
+                    String lib = object.getString("library");
+
+                    if (pluginName == name) {
+                        AudioEngine.addPluginLazy(lib, plugin);
+                        break ;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -585,3 +585,23 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginValues(JNIEnv *env,
     env->SetFloatArrayRegion(r, 0, p->pluginControls.size(), controls.data());
     return r ;
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setLazyLoad(JNIEnv *env, jclass clazz,
+                                                          jboolean lazy_load) {
+    // TODO: implement setLazyLoad()
+    // so finally i learnt this!
+    engine == NULL ? NULL : engine -> lazyLoad = lazy_load;
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginLazy(JNIEnv *env, jclass clazz,
+                                                            jstring library, jint plugin) {
+    // TODO: implement addPluginLazy()
+    if (engine == NULL) return -1 ;
+    char *nativeString = const_cast<char *>(env->GetStringUTFChars(library, 0));
+    LOGD("Loading lazy plugin [%s : %d]", nativeString, plugin);
+    engine ->addPluginToRackLazy(nativeString, plugin);
+    env->ReleaseStringUTFChars(library, nativeString);
+
+}

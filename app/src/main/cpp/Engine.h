@@ -41,6 +41,7 @@ public:
     FullDuplexPass    mFullDuplexPass;
     bool bootComplete = false ;
     bool lowLatencyMode = false ;
+    bool lazyLoad = false ;
 
     FileWriter * fileWriter ;
     std::string externalStoragePath ;
@@ -53,6 +54,7 @@ public:
     int moveActivePluginDown(int _p);
     int moveActivePluginUp(int _p);
     void buildPluginChain();
+    void addPluginToRackLazy(char * library, int pluginIndex);
     int addPlugintoRackByName(std::string);
     int lowLatency = 12 ;
     const int32_t     mInputChannelCount = oboe::ChannelCount::Mono;

@@ -9,6 +9,7 @@ public class AudioEngine {
     static native void loadLibrary (String filename);
     static native void loadPlugins ();
     static native int getSharedLibraries ();
+    static native void setLazyLoad (boolean lazyLoad);
     static native String getLibraryName (int library) ;
     static native int getPlugins (int library) ;
     static native int getTotalPlugins ();
@@ -29,6 +30,7 @@ public class AudioEngine {
 
     // return active plugin *ID*
     static native int addPlugin (int library, int plugin) ;
+    static native int addPluginLazy (String library, int plugin);
     static native int addPluginByName (String name);
     static native boolean deletePlugin (int plugin) ;
     static native void clearActiveQueue ();

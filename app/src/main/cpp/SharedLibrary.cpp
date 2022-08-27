@@ -8,6 +8,10 @@ SharedLibrary::SharedLibrary (char * plugin_file) {
     so_file = std::string (plugin_file) ;
 }
 
+void SharedLibrary::unload () {
+    dlclose (dl_handle);
+}
+
 //> Returns NULL if ok, error otherwise
 char * SharedLibrary::load (void) {
     IN ;

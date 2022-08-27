@@ -28,7 +28,7 @@ import io.grpc.internal.JsonParser;
 
 public class ConnectGuitar extends AppCompatActivity {
     Context context ;
-    String TAG = getClass().getSimpleName();
+    static String TAG = "Connect Guitar";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +95,14 @@ public class ConnectGuitar extends AppCompatActivity {
         ));
     }
 
-    public JSONObject loadJSONFromAsset() {
+    public JSONObject loadJSONFromAsset () {
+        return loadJSONFromAssetFile(context, "connect.json");
+    }
+
+    static public JSONObject loadJSONFromAssetFile(Context context, String filename) {
         String json = null;
         try {
-            InputStream is = context.getAssets().open("connect.json");
+            InputStream is = context.getAssets().open(filename);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
