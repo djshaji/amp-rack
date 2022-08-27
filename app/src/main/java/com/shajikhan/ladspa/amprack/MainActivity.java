@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
+        lazyLoad = defaultSharedPreferences.getBoolean("lazyLoad", true);
         try {
             proVersion = defaultSharedPreferences.getBoolean("pro", false);
         } catch (ClassCastException e) {
@@ -1328,9 +1329,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "Adding plugin: " + library + ": " + plug);
         int ret = -1 ;
         if (lazyLoad == false)
-            AudioEngine.addPlugin(library, plug) ;
+            ret = AudioEngine.addPlugin(library, plug) ;
         else {
-            AudioEngine.addPluginLazy(sharedLibraries[library], plug);
+            ret = AudioEngine.addPluginLazy(sharedLibraries[library], plug);
         }
 
         dataAdapter.addItem(pluginID, ret);
@@ -1936,6 +1937,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void addPluginByName (String pluginName) {
+//        Log.d(TAG, "addPluginByName: " + pluginName);
+//        Log.d(TAG, "addPluginByName: " + availablePlugins.toString());
         JSONObject plugins = availablePlugins;
         Iterator<String> keys = plugins.keys();
 
@@ -1943,7 +1946,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             String key = keys.next();
             try {
                 if (plugins.get(key) instanceof JSONObject) {
-                    Log.d(TAG, "onCreate: key " + key);
+//                    Log.d(TAG, "onCreate: key " + key);
                     JSONObject object = plugins.getJSONObject(key);
                     // do something with jsonObject here
                     String name = object.getString("name");
@@ -1951,14 +1954,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     int plugin = object.getInt("plugin");
                     String lib = object.getString("library");
 
-                    if (pluginName == name) {
+//                    Log.d(TAG, String.format ("addPluginByName: comparing %s and %s", pluginName, name));
+
+                    if (pluginName.equals(name)) {
+                        Log.d(TAG, "addPluginByName: found plugin " + name);
                         AudioEngine.addPluginLazy(lib, plugin);
-                        break ;
+                        return;
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        Log.e(TAG, "addPluginByName: unable to find plugin name " + pluginName);
     }
 }

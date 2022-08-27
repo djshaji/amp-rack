@@ -248,7 +248,7 @@ public class Rack extends Fragment {
                 String key = keys.next();
                 try {
                     if (plugins.get(key) instanceof JSONObject) {
-                        Log.d(TAG, "onCreate: key " + key);
+//                        Log.d(TAG, "onCreate: key " + key);
                         JSONObject object = plugins.getJSONObject(key);
                         // do something with jsonObject here
                         String name = object.getString("name");

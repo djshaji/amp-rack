@@ -226,6 +226,11 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControl(JNIEnv *env, jcla
         return ;
     }
 
+    if (engine ->activePlugins.size() == 0) {
+        LOGE("Plugin control set value requested but chain is empty!");
+        return ;
+    }
+
     if (plugin >= engine->activePlugins.size()) {
         HERE LOGE("[%d] plugin requested but only %d plugins are active", plugin, engine->activePlugins.size());
         return;
@@ -599,9 +604,9 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginLazy(JNIEnv *env, jclass 
                                                             jstring library, jint plugin) {
     // TODO: implement addPluginLazy()
     if (engine == NULL) return -1 ;
-    char *nativeString = const_cast<char *>(env->GetStringUTFChars(library, 0));
+    const char *nativeString = env->GetStringUTFChars(library, 0);
     LOGD("Loading lazy plugin [%s : %d]", nativeString, plugin);
-    engine ->addPluginToRackLazy(nativeString, plugin);
+    engine ->addPluginToRackLazy(const_cast<char *>(nativeString), plugin);
     env->ReleaseStringUTFChars(library, nativeString);
-
+    return engine -> activePlugins.size();
 }

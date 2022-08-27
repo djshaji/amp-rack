@@ -41,4 +41,8 @@
         app:defaultValue="true"
         app:key="warnLowLatency"
         app:title="Warn if cannot get Low Latency Mode"/>
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="lazyLoad"
+        app:title="On demand plugin loading (recommended)"/>
 </PreferenceScreen>
