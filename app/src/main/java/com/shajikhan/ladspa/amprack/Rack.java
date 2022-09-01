@@ -213,7 +213,7 @@ public class Rack extends Fragment {
 
         int libraries = 0 ;
         if (mainActivity.lazyLoad == false)
-            AudioEngine.getSharedLibraries();
+            libraries = AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
 
         // run this only once

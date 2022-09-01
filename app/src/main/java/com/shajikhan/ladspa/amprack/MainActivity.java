@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
         lazyLoad = defaultSharedPreferences.getBoolean("lazyLoad", true);
+        Log.d(TAG, "onCreate: lazyLoad set to " + lazyLoad);
         try {
             proVersion = defaultSharedPreferences.getBoolean("pro", false);
         } catch (ClassCastException e) {
@@ -1351,6 +1352,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             for (String s : sharedLibraries) {
                 AudioEngine.loadLibrary(/*"lib" + */s);
             }
+
+            AudioEngine.loadPlugins();
         }
 
 
@@ -1365,9 +1368,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
          */
-
-        AudioEngine.loadPlugins();
-
     }
 
     String presetToString () {
