@@ -98,7 +98,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
              */
 
-            Log.d (TAG, String.valueOf(vals [1]) + " " + vals [2]) ;
+//            Log.d (TAG, String.valueOf(vals [1]) + " " + vals [2]) ;
             boolean valueSet = false ;
             if (presetValue != -1) {
                 if (presetValue < vals [1] || presetValue > vals [2]) {
@@ -279,7 +279,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     void reset () {
-        notifyItemRangeRemoved(0, holders.size());
+        notifyItemRangeRemoved(0, plugins.size());
         holders.clear();
         plugins.clear();
     }

@@ -219,8 +219,8 @@ public class Rack extends Fragment {
         // run this only once
         if (mainActivity.pluginDialogAdapter.plugins.size() == 0 && mainActivity.lazyLoad == false) {
             for (int i = 0; i < libraries; i++) {
-                JSONObject object = new JSONObject();
                 for (int plugin = 0; plugin < AudioEngine.getPlugins(i); plugin++) {
+                    JSONObject object = new JSONObject();
                     String name = AudioEngine.getPluginName(i, plugin);
                     int uniqueID = AudioEngine.getPluginUniqueID(i, plugin);
 
@@ -232,11 +232,12 @@ public class Rack extends Fragment {
                         object.put("id", uniqueID);
                         object.put("plugin", finalPlugin);
                         object.put("library", mainActivity.sharedLibraries[i]);
-                        jsonObject.put(String.valueOf(finalI * 100 + finalPlugin), object);
+                        jsonObject.put(String.valueOf((finalI * 100) + finalPlugin), object);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
+                    Log.d("Plugin: ", finalI * 100 + finalPlugin + ": " + name + "=>" + uniqueID);
                     mainActivity.pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name, uniqueID);
                 }
             }
