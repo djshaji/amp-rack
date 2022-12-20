@@ -49,7 +49,7 @@ public:
     std::vector <SharedLibrary *> libraries ;
     std::vector<Plugin *> activePlugins ;
 
-    void loadPlugin(char *filename, SharedLibrary::PluginType LADSPA);
+    void loadPlugin(char *filename, SharedLibrary::PluginType type = SharedLibrary::LADSPA );
     void loadPlugins();
     int moveActivePluginDown(int _p);
     int moveActivePluginUp(int _p);

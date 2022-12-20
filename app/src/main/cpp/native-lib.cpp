@@ -615,4 +615,5 @@ JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_testLV2(JNIEnv *env, jclass clazz) {
     // TODO: implement testLV2()
     engine ->loadPlugin("rkrlv2.so", SharedLibrary::LV2);
+    engine -> libraries.at(0)->load();
 }

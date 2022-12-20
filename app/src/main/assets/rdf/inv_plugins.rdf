@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE rdf:RDF [
+<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+<!ENTITY dc "http://purl.org/dc/elements/1.1/">
+<!ENTITY ladspa "http://ladspa.org/ontology#">
+]>
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:dc="&dc;" xmlns:ladspa="&ladspa;">
+
+  <ladspa:UtilityPlugin rdf:about="&ladspa;3301">
+    <dc:title>:: Invada :: Input Module</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:UtilityPlugin>
+
+  <ladspa:LowpassPlugin rdf:about="&ladspa;3302">
+    <dc:title>:: Invada :: Filter - Low Pass Mono</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:LowpassPlugin>
+
+  <ladspa:HighpassPlugin rdf:about="&ladspa;3303">
+    <dc:title>:: Invada :: Filter - High Pass Mono</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:HighpassPlugin>
+
+  <ladspa:LowpassPlugin rdf:about="&ladspa;3304">
+    <dc:title>:: Invada :: Filter - Low Pass Stereo</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:LowpassPlugin>
+
+  <ladspa:HighpassPlugin rdf:about="&ladspa;3305">
+    <dc:title>:: Invada :: Filter - High Pass Stereo</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:HighpassPlugin>
+
+  <ladspa:SimulatorPlugin rdf:about="&ladspa;3306">
+    <dc:title>:: Invada :: Tube - Mono</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:SimulatorPlugin>
+
+  <ladspa:SimulatorPlugin rdf:about="&ladspa;3307">
+    <dc:title>:: Invada :: Tube - Stereo</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:SimulatorPlugin>
+
+  <ladspa:CompressorPlugin rdf:about="&ladspa;3308">
+    <dc:title>:: Invada :: Compressor - Mono</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:CompressorPlugin>
+
+  <ladspa:CompressorPlugin rdf:about="&ladspa;3309">
+    <dc:title>:: Invada :: Compressor - Stereo</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:CompressorPlugin>
+
+  <ladspa:ReverbPlugin rdf:about="&ladspa;3311">
+    <dc:title>:: Invada :: ER Reverb - Mono In</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:ReverbPlugin>
+
+  <ladspa:ReverbPlugin rdf:about="&ladspa;3312">
+    <dc:title>:: Invada :: ER Reverb - Sum L+R In</dc:title>
+    <dc:creator>Fraser At Invada Records dot Com</dc:creator>
+    <dc:rights>GNU General Public Licence Version 2 or Later</dc:rights>
+  </ladspa:ReverbPlugin>
+
+</rdf:RDF>

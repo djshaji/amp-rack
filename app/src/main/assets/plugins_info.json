@@ -1,0 +1,57 @@
+{
+	"12900": {
+			"7": {						
+				"0" :"AfterBurn" ,
+				"1" :"AfterBurn (Long)" ,
+				"2" :"Ambience" ,
+				"3" :"Ambience (Thick)" ,
+				"4" :"Ambience (Thick) - HD" ,
+				"5" :"Cathedral" ,
+				"6" :"Cathedral - HD" ,
+				"7" :"Drum Chamber" ,
+				"8" :"Garage" ,
+				"9" :"Garage (Bright)" ,
+				"10" :"Gymnasium" ,
+				"11" :"Gymnasium (Bright)" ,
+				"12" :"Gymnasium (Bright) - HD" ,
+				"13" :"Hall (Small)" ,
+				"14" :"Hall (Medium)" ,
+				"15" :"Hall (Large)" ,
+				"16" :"Hall (Large) - HD" ,
+				"17" :"Plate (Small)" ,
+				"18" :"Plate (Medium)" ,
+				"19" :"Plate (Large)" ,
+				"20" :"Plate (Large) - HD" ,
+				"21" :"Pulse Chamber" ,
+				"22" :"Pulse Chamber (Reverse)" ,
+				"23" :"Resonator (96 ms)" ,
+				"24" :"Resonator (152 ms)" ,
+				"25" :"Resonator (208 ms)" ,
+				"26" :"Room (Small)" ,
+				"27" :"Room (Medium)" ,
+				"28" :"Room (Large)" ,
+				"29" :"Room (Large) - HD" ,
+				"30" :"Slap Chamber" ,
+				"31" :"Slap Chamber - HD" ,
+				"32" :"Slap Chamber (Bright)" ,
+				"33" :"Slap Chamber (Bright) - HD" ,
+				"34" :"Smooth Hall (Small)" ,
+				"35" :"Smooth Hall (Medium)" ,
+				"36" :"Smooth Hall (Large)" ,
+				"37" :"Smooth Hall (Large) - HD" ,
+				"38" :"Vocal Plate" ,
+				"39" :"Vocal Plate - HD" ,
+				"40" :"Warble Chamber" ,
+				"41" :"Warehouse" ,
+				"42" :"Warehouse - HD"
+			}
+	}, "13600": {
+		"1": {
+			"0" :"'59 Bassman" ,"1" :"'69 Twin Reverb" ,"2" :"'64 Princeton" ,"3" :"'59/'81 JCM 800" ,"4" :"'78 Club &amp; Country" ,"5" :"'59/'86 AC-30 of sorts"
+		}
+	},  "400": {
+		"1": {
+			"0" :"'59 Bassman" ,"1" :"'69 Twin Reverb" ,"2" :"'64 Princeton" ,"3" :"'59/'81 JCM 800" ,"4" :"'78 Club &amp; Country" ,"5" :"'59/'86 AC-30 of sorts"
+		}
+	}
+}

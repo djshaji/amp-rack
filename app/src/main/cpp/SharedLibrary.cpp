@@ -4,8 +4,9 @@ void SharedLibrary::setSampleRate (unsigned long _sampleRate) {
     sampleRate = _sampleRate ;
 }
 
-SharedLibrary::SharedLibrary (char * plugin_file) {
+SharedLibrary::SharedLibrary (char * plugin_file, PluginType pluginType) {
     so_file = std::string (plugin_file) ;
+    type = pluginType ;
 }
 
 void SharedLibrary::unload () {
@@ -13,7 +14,7 @@ void SharedLibrary::unload () {
 }
 
 //> Returns NULL if ok, error otherwise
-char * SharedLibrary::load (PluginType pluginType) {
+char * SharedLibrary::load () {
     IN ;
     dl_handle = dlopen (so_file.c_str(), RTLD_LAZY);
     if (dl_handle == NULL) {
@@ -24,7 +25,7 @@ char * SharedLibrary::load (PluginType pluginType) {
     }
 
     LOGD("dlopen [ok]. Looking for descriptor function ...");
-    if (pluginType == LADSPA) {
+    if (type == LADSPA) {
         descriptorFunction = (LADSPA_Descriptor_Function) dlsym(dl_handle, "ladspa_descriptor");
         // count plugins
         if (descriptorFunction == NULL) {
@@ -41,7 +42,7 @@ char * SharedLibrary::load (PluginType pluginType) {
 
             LOGI("\t\t... found %d plugins", total_plugins);
         }
-    } else if (pluginType == LV2 ){
+    } else if (type == LV2 ){
         LOGI("[LV2] Loading plugin library %s", so_file.c_str());
         lv2DescriptorFunction = (LV2_Descriptor_Function) dlsym(dl_handle, "lv2_descriptor");
         if (lv2DescriptorFunction == NULL) {

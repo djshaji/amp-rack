@@ -1990,7 +1990,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return json ;
     }
 
-    static void testLV2 () {
+    public void testLV2 () {
         AudioEngine.testLV2();
     }
 }

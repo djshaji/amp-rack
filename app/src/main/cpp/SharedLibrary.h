@@ -11,12 +11,12 @@
 
 class SharedLibrary {
 public:
-    SharedLibrary(char * plugin_file);
     typedef enum {
         LADSPA,
         LV2
     } PluginType ;
 
+    SharedLibrary(char * plugin_file, PluginType type = LADSPA);
     PluginType type = LADSPA ; // by default
     std::string so_file ;
     std::vector<const LADSPA_Descriptor *> descriptors;
@@ -29,7 +29,7 @@ public:
     LV2_Descriptor_Function lv2DescriptorFunction ;
 
     void setSampleRate(unsigned long _sampleRate);
-    char *load(PluginType pluginType);
+    char *load();
 
     bool plugin_is_valid(const LADSPA_Descriptor *descriptor);
 
