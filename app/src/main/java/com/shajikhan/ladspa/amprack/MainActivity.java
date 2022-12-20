@@ -128,38 +128,39 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
-    private static final String CHANNEL_ID = "default" ;
+    private static final String CHANNEL_ID = "default";
     static Context context;
     SwitchMaterial onOff;
-    int deviceWidth ;
-    int deviceHeight ;
+    int deviceWidth;
+    int deviceHeight;
     long totalMemory = 0;
     static boolean lowMemoryMode = false;
-    ToggleButton record ;
-    PopupMenu addPluginMenu ;
-    RecyclerView recyclerView ;
-    DataAdapter dataAdapter ;
-    AlertDialog pluginDialog ;
-    ImageView pluginDialogWallpaper ;
-    AudioManager audioManager ;
-    static public JSONObject pluginCategories ;
-    public Spinner pluginDialogCategorySpinner ;
-    AudioDeviceInfo [] audioDevicesInput, audioDevicesOutput ;
-    int defaultInputDevice = 0 ;
-    int defaultOutputDevice = 0 ;
-    RecyclerView.LayoutManager layoutManager ;
-    ConstraintLayout linearLayoutPluginDialog ;
+    ToggleButton record;
+    PopupMenu addPluginMenu;
+    RecyclerView recyclerView;
+    DataAdapter dataAdapter;
+    AlertDialog pluginDialog;
+    ImageView pluginDialogWallpaper;
+    AudioManager audioManager;
+    static public JSONObject pluginCategories;
+    public Spinner pluginDialogCategorySpinner;
+    AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput;
+    int defaultInputDevice = 0;
+    int defaultOutputDevice = 0;
+    RecyclerView.LayoutManager layoutManager;
+    ConstraintLayout linearLayoutPluginDialog;
     boolean lazyLoad = true;
-    String [] sharedLibraries ;
-    PluginDialogAdapter pluginDialogAdapter ;
-    SharedPreferences defaultSharedPreferences = null ;
-    Notification notification ;
-    PurchasesResponseListener purchasesResponseListener ;
-    public static boolean proVersion = false ;
-    File dir ;
-    HashCommands hashCommands ;
+    String[] sharedLibraries;
+    PluginDialogAdapter pluginDialogAdapter;
+    SharedPreferences defaultSharedPreferences = null;
+    Notification notification;
+    PurchasesResponseListener purchasesResponseListener;
+    public static boolean proVersion = false;
+    File dir;
+    HashCommands hashCommands;
+    JSONObject rdf ;
 
-    int primaryColor = com.google.android.material.R.color.design_default_color_primary ;
+    int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     private static final int AUDIO_EFFECT_REQUEST = 0;
     private static final int READ_STORAGE_REQUEST = 1;
     private static final int WRITE_STORAGE_REQUEST = 2;
@@ -167,15 +168,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     // Firebase
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser ;
+    FirebaseUser currentUser;
     private FirebaseAnalytics mFirebaseAnalytics;
-    public Rack rack ;
+    public Rack rack;
     public Tracks tracks, drums;
-    public Presets presets ;
-    public MyPresets quickPatch ;
-    PopupMenu optionsMenu ;
-    String lastRecordedFileName ;
-    NotificationManagerCompat notificationManager ;
+    public Presets presets;
+    public MyPresets quickPatch;
+    PopupMenu optionsMenu;
+    String lastRecordedFileName;
+    NotificationManagerCompat notificationManager;
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -184,28 +185,29 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private ActivityMainBinding binding;
-    MediaPlayer mediaPlayer ;
-    JSONObject availablePlugins ;
+    MediaPlayer mediaPlayer;
+    JSONObject availablePlugins;
     private BillingClient billingClient;
-    private PurchasesUpdatedListener purchasesUpdatedListener ;
-    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener ;
+    private PurchasesUpdatedListener purchasesUpdatedListener;
+    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this ;
+        context = this;
 
         Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
-        hashCommands.add(this,"saveActivePreset");
-        hashCommands.add(this,"printActivePreset");
-        hashCommands.add (this, "proDialog");
+        hashCommands.add(this, "saveActivePreset");
+        hashCommands.add(this, "printActivePreset");
+        hashCommands.add(this, "proDialog");
+        hashCommands.add (this, "testLV2");
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
 
-        defaultSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
@@ -387,8 +389,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          */
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
-        audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
+        audioDevicesInput = audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
+        audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
 
         ActivityManager actManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
@@ -396,46 +398,45 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         totalMemory = memInfo.totalMem;
         Log.d(TAG, "onCreate: total memory available: " + totalMemory);
 
-        int color = 0 ;
+        int color = 0;
         if (totalMemory > 2587765248l) {
             color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
-        }
-        else {
-            lowMemoryMode = true ;
+        } else {
+            lowMemoryMode = true;
             color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg1));
         }
 //        getWindow().setStatusBarColor(color);
         color = adjustAlpha(color, .5f);
-        primaryColor = color ;
+        primaryColor = color;
 
         BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
                 = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment=null;
-                Class<Rack> fragmentClass=null;
+                Fragment fragment = null;
+                Class<Rack> fragmentClass = null;
                 switch (item.getItemId()) {
                     case R.id.page_quick:
-                        fragment = rack ;
+                        fragment = rack;
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .show(quickPatch)
                                 .hide(rack)
                                 .hide(presets)
-                                .hide (tracks)
-                                .hide (drums)
+                                .hide(tracks)
+                                .hide(drums)
                                 .commit();
                         return true;
                     case R.id.page_rack:
-                        fragment = rack ;
+                        fragment = rack;
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .show(rack)
                                 .hide(quickPatch)
                                 .hide(presets)
-                                .hide (tracks)
-                                .hide (drums)
+                                .hide(tracks)
+                                .hide(drums)
                                 .commit();
                         return true;
                          /*
@@ -556,7 +557,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             e.printStackTrace();
         }
 
-        applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
+        applyWallpaper(context, getWindow(), getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
         if (!proVersion) {
             billingClient.startConnection(new BillingClientStateListener() {
                 @Override
@@ -574,12 +575,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             ;
         }
 
-        deviceWidth = getWindowManager().getDefaultDisplay().getWidth() ;
+        deviceWidth = getWindowManager().getDefaultDisplay().getWidth();
         deviceHeight = getWindowManager().getDefaultDisplay().getHeight();
 
+        Log.d(TAG, "onCreate: Loading JSON");
+        rdf = loadJSONFromAsset("plugins_info.json");
     }
 
-    void showMediaPlayerDialog () {
+    void showMediaPlayerDialog() {
         if (lastRecordedFileName == null)
             return;
         Log.d(TAG, "showMediaPlayerDialog: " + lastRecordedFileName);
@@ -618,7 +621,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     } catch (IOException e) {
                         e.printStackTrace();
                         toast("Cannot load media file: " + e.getMessage());
-                        return ;
+                        return;
                     }
                     toggleButton.setButtonDrawable(R.drawable.ic_baseline_pause_24);
                     mediaPlayer.start();
@@ -690,11 +693,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void run() {
                 if (mediaPlayer.isPlaying()) {
-                    seekBar.setProgress(100* mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration());
+                    seekBar.setProgress(100 * mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration());
                     Log.d(TAG, "run: " + mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration());
                 }
             }
-        },0,1000);
+        }, 0, 1000);
 
         builder.setView(constraintLayout)
                 .setPositiveButton("Close", null);
@@ -711,10 +714,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface _dialog, int id) {
                                 file.delete();
-                                if (file.exists()){
+                                if (file.exists()) {
                                     toast("File could not be deleted");
                                 } else {
-                                    toast ("File deleted");
+                                    toast("File deleted");
                                     dialog.dismiss();
                                 }
                             }
@@ -748,7 +751,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      */
     public native String stringFromJNI();
 
-    void setupRack () {
+    void setupRack() {
         onOff = findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -804,9 +807,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         int libraries = AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
-        for (int i = 0 ; i < libraries ; i ++) {
+        for (int i = 0; i < libraries; i++) {
             SubMenu subMenu = addPluginMenu.getMenu().addSubMenu(AudioEngine.getLibraryName(i));
-            for (int plugin = 0 ; plugin < AudioEngine.getPlugins(i) ; plugin ++) {
+            for (int plugin = 0; plugin < AudioEngine.getPlugins(i); plugin++) {
                 // library * 100 + plugin i.e. first plugin from first library = 0
                 String name = AudioEngine.getPluginName(i, plugin);
                 MenuItem menuItem = subMenu.add(name);
@@ -816,7 +819,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        int ret = AudioEngine.addPlugin(finalI, finalPlugin) ;
+                        int ret = AudioEngine.addPlugin(finalI, finalPlugin);
                         dataAdapter.addItem(finalI * 100 + finalPlugin, ret);
 //                        pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name);
                         return false;
@@ -843,7 +846,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
-                LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.audio_devices_selector, null) ;
+                LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.audio_devices_selector, null);
                 builder.setView(linearLayout)
                         // Add action buttons
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -858,32 +861,32 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             }
                         });
 
-                int i = 0 ;
+                int i = 0;
 //                HashMap<CharSequence, Integer> inputs = new HashMap<>();
 //                HashMap <CharSequence, Integer> outputs = new HashMap<>();
-                ArrayList <String> input_s = new ArrayList<>();
-                ArrayList <String> output_s = new ArrayList<>();
+                ArrayList<String> input_s = new ArrayList<>();
+                ArrayList<String> output_s = new ArrayList<>();
 
-                for (i = 0 ; i < audioDevicesInput.length ; i ++) {
+                for (i = 0; i < audioDevicesInput.length; i++) {
                     String name = typeToString(audioDevicesInput[i].getType());
 //                    inputs.put(name, audioDevicesInput [i].getId()) ;
                     input_s.add(name);
                 }
 
-                for (i = 0 ; i < audioDevicesOutput.length ; i ++) {
+                for (i = 0; i < audioDevicesOutput.length; i++) {
                     String name = typeToString(audioDevicesOutput[i].getType());
 //                    outputs.put(name, audioDevicesOutput [i].getId()) ;
                     output_s.add(name);
                 }
 
-                ArrayAdapter input_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item,input_s);
+                ArrayAdapter input_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item, input_s);
                 input_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                ArrayAdapter output_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item,output_s);
+                ArrayAdapter output_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item, output_s);
                 output_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                Spinner in = (Spinner) linearLayout.getChildAt(1) ;
-                Spinner out = (Spinner) linearLayout.getChildAt(3) ;
+                Spinner in = (Spinner) linearLayout.getChildAt(1);
+                Spinner out = (Spinner) linearLayout.getChildAt(3);
                 in.setAdapter(input_a);
                 out.setAdapter(output_a);
 
@@ -894,7 +897,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         AudioEngine.setRecordingDeviceId(audioDevicesInput[i].getId());
-                        defaultInputDevice = i ;
+                        defaultInputDevice = i;
                     }
 
                     @Override
@@ -906,7 +909,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         AudioEngine.setPlaybackDeviceId(audioDevicesOutput[i].getId());
-                        defaultInputDevice = i ;
+                        defaultInputDevice = i;
                     }
 
                     @Override
@@ -932,7 +935,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          */
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dataAdapter = new DataAdapter();
-        dataAdapter.mainActivity = this ;
+        dataAdapter.mainActivity = this;
         recyclerView.setAdapter(dataAdapter);
 
         // add sample item to recylcer view here
@@ -967,7 +970,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
-        applyWallpaper(context, getWindow(),getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
+        applyWallpaper(context, getWindow(), getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
 //        recreate();
         Log.d(TAG, "lifecycle: resumed");
 //        AudioEngine.create(); // originally was here
@@ -992,8 +995,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (!defaultDir.exists()) {
             try {
                 if (!defaultDir.mkdir())
-                    Log.wtf (TAG, "Unable to create directory!");
-            }  catch (Exception e) {
+                    Log.wtf(TAG, "Unable to create directory!");
+            } catch (Exception e) {
                 Log.w(TAG, "UNable to create directory: " + e.getMessage());
             }
         }
@@ -1045,7 +1048,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void startEffect() {
         Log.d(TAG, "Attempting to start");
 
-        if (!isRecordPermissionGranted()){
+        if (!isRecordPermissionGranted()) {
             requestRecordPermission();
             return;
         }
@@ -1056,10 +1059,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void stopEffect() {
         Log.d(TAG, "Playing, attempting to stop");
         AudioEngine.setEffectOn(false);
-        if (! AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
+        if (!AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
             toast(getResources().getString(R.string.lowLatencyWarning));
         }
     }
+
     private boolean isRecordPermissionGranted() {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
                 PackageManager.PERMISSION_GRANTED);
@@ -1067,7 +1071,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     boolean isStoragePermissionGranted() {
-        return true ; /*
+        return true; /*
 
                 (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                         PackageManager.PERMISSION_GRANTED) ;/* &&
@@ -1076,21 +1080,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 
-    private void requestRecordPermission(){
+    private void requestRecordPermission() {
         ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
                 AUDIO_EFFECT_REQUEST);
     }
 
-    private void requestReadStoragePermission(){
+    private void requestReadStoragePermission() {
         ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 READ_STORAGE_REQUEST);
     }
 
-    void requestWriteStoragePermission(){
+    void requestWriteStoragePermission() {
         ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -1106,18 +1110,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE)
-        {
-            if (Environment.isExternalStorageManager())
-            {
+        if (resultCode == RESULT_OK && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE) {
+            if (Environment.isExternalStorageManager()) {
                 // Permission granted. Now resume your workflow.
             } else {
                 Toast.makeText(getApplicationContext(),
-                        "Storage permission denied. Recording and playing features won't work",
-                        Toast.LENGTH_LONG)
+                                "Storage permission denied. Recording and playing features won't work",
+                                Toast.LENGTH_LONG)
                         .show();
 
             }
@@ -1128,7 +1129,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (AUDIO_EFFECT_REQUEST != requestCode && requestCode !=READ_STORAGE_REQUEST && requestCode != WRITE_STORAGE_REQUEST) {
+        if (AUDIO_EFFECT_REQUEST != requestCode && requestCode != READ_STORAGE_REQUEST && requestCode != WRITE_STORAGE_REQUEST) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
@@ -1137,8 +1138,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (grantResults.length != 1 ||
                     grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getApplicationContext(),
-                        "Storage permission denied. Recording and playing features won't work",
-                        Toast.LENGTH_LONG)
+                                "Storage permission denied. Recording and playing features won't work",
+                                Toast.LENGTH_LONG)
                         .show();
             } else {
                 if (dir == null || !dir.mkdirs()) {
@@ -1148,15 +1149,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
-        if ( AUDIO_EFFECT_REQUEST == requestCode) {
+        if (AUDIO_EFFECT_REQUEST == requestCode) {
             if (grantResults.length != 1 ||
                     grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 
                 // User denied the permission, without this we cannot record audio
                 // Show a toast and update the status accordingly
                 Toast.makeText(getApplicationContext(),
-                        "Permission denied.",
-                        Toast.LENGTH_LONG)
+                                "Permission denied.",
+                                Toast.LENGTH_LONG)
                         .show();
             } else {
                 // Permission was granted, start live effect
@@ -1167,7 +1168,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static int getDominantColor(Bitmap bitmap) {
         // haha!
-        return bitmap.getPixel(0, 0) ;
+        return bitmap.getPixel(0, 0);
     }
 
     @ColorInt
@@ -1179,7 +1180,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return Color.argb(alpha, red, green, blue);
     }
 
-    static String typeToString(int type){
+    static String typeToString(int type) {
         switch (type) {
             case AudioDeviceInfo.TYPE_AUX_LINE:
                 return "auxiliary line-level connectors";
@@ -1229,16 +1230,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    public void proDialog () {
+    public void proDialog() {
         Intent intent = new Intent(this, com.shajikhan.ladspa.amprack.Purchase.class);
         startActivity(intent);
     }
 
-    AlertDialog createPluginDialog () {
+    AlertDialog createPluginDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = getLayoutInflater();
 
-        linearLayoutPluginDialog = (ConstraintLayout) inflater.inflate(R.layout.load_plugin_dialog, null) ;
+        linearLayoutPluginDialog = (ConstraintLayout) inflater.inflate(R.layout.load_plugin_dialog, null);
 
         EditText editText = (EditText) linearLayoutPluginDialog.findViewById(R.id.pl_search);
         editText.addTextChangedListener(new TextWatcher() {
@@ -1274,7 +1275,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Iterator<String> keys = MainActivity.pluginCategories.keys();
         List<String> categories = new ArrayList<String>();
 
-        while(keys.hasNext()) {
+        while (keys.hasNext()) {
             String key = keys.next();
             Log.d(TAG, "pluginCategory: key " + key);
             categories.add(key);
@@ -1290,7 +1291,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         pluginDialogCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String category = ((TextView)view).getText().toString();
+                String category = ((TextView) view).getText().toString();
                 Log.d(TAG, "onItemSelected: selected category " + category);
                 pluginDialogAdapter.filterByCategory(category);
             }
@@ -1312,7 +1313,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 pluginDialog.hide();
             }
         });
-                // Add action buttons
+        // Add action buttons
         /*
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -1321,16 +1322,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 }) ;
             */
-        return  pluginDialog;
+        return pluginDialog;
     }
 
-    public void addPluginToRack (int pluginID) {
-        int library = pluginID / 100 ;
-        int plug = pluginID - (library * 100) ;
+    public void addPluginToRack(int pluginID) {
+        int library = pluginID / 100;
+        int plug = pluginID - (library * 100);
         Log.d(TAG, "Adding plugin: " + library + ": " + plug);
-        int ret = -1 ;
+        int ret = -1;
         if (lazyLoad == false)
-            ret = AudioEngine.addPlugin(library, plug) ;
+            ret = AudioEngine.addPlugin(library, plug);
         else {
             ret = AudioEngine.addPluginLazy(sharedLibraries[library], plug);
         }
@@ -1343,7 +1344,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //                .show();
     }
 
-    void loadPlugins () {
+    void loadPlugins() {
         if (AudioEngine.getTotalPlugins() != 0)
             return;
 //        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
@@ -1370,7 +1371,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          */
     }
 
-    String presetToString () {
+    String presetToString() {
         int totalPresets = AudioEngine.getActivePlugins();
         JSONObject preset = new JSONObject();
 
@@ -1378,9 +1379,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             JSONObject jo = new JSONObject();
             String vals = "";
 
-            float [] values = AudioEngine.getActivePluginValues(i);
+            float[] values = AudioEngine.getActivePluginValues(i);
             for (int k = 0; k < values.length; k++) {
-                vals += values [k];
+                vals += values[k];
                 if (k < values.length - 1) {
                     vals += ";";
                 }
@@ -1403,17 +1404,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return preset.toString();
     }
 
-    Map presetToMap () {
+    Map presetToMap() {
         int totalPresets = AudioEngine.getActivePlugins();
-        Map <String, Map> preset = new HashMap<>();
+        Map<String, Map> preset = new HashMap<>();
 
         for (int i = 0; i < totalPresets; i++) {
-            Map <String, String> jo = new HashMap<>();
+            Map<String, String> jo = new HashMap<>();
             String vals = "";
 
-            float [] values = AudioEngine.getActivePluginValues(i);
+            float[] values = AudioEngine.getActivePluginValues(i);
             for (int k = 0; k < values.length; k++) {
-                vals += values [k];
+                vals += values[k];
                 if (k < values.length - 1) {
                     vals += ";";
                 }
@@ -1432,23 +1433,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /*  The problem with this is that we can only get viewholders which are visible on screen.
         See #19 https://github.com/djshaji/amp-rack/issues/19
      */
-    String _presetToString () throws JSONException {
+    String _presetToString() throws JSONException {
         JSONObject preset = new JSONObject();
         if (dataAdapter == null)
-            return null ;
+            return null;
 
-        for (int i = 0 ; i < dataAdapter.getItemCount() ; i ++) {
+        for (int i = 0; i < dataAdapter.getItemCount(); i++) {
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (holder == null) {
                 Log.e(TAG, "presetToString: holder is null for " + i + " of " + dataAdapter.getItemCount(), null);
-                continue ;
+                continue;
             }
 
             JSONObject jo = new JSONObject();
             String vals = "";
 
-            for (int k = 0 ; k < holder.sliders.size() ; k ++) {
-                vals += holder.sliders.get(k).getValue() ;
+            for (int k = 0; k < holder.sliders.size(); k++) {
+                vals += holder.sliders.get(k).getValue();
                 if (k < holder.sliders.size() - 1) {
                     vals += ";";
                 }
@@ -1464,26 +1465,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             preset.put(String.valueOf(i), jo.toString());
         }
 
-        return preset.toString() ;
+        return preset.toString();
     }
 
-    Map _presetToMap () throws JSONException {
-        Map <String, Map> preset = new HashMap<>();
+    Map _presetToMap() throws JSONException {
+        Map<String, Map> preset = new HashMap<>();
         if (dataAdapter == null)
-            return null ;
+            return null;
 
-        for (int i = 0 ; i < dataAdapter.getItemCount() ; i ++) {
+        for (int i = 0; i < dataAdapter.getItemCount(); i++) {
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (holder == null) {
                 Log.e(TAG, "presetToString: holder is null for " + i, null);
-                continue ;
+                continue;
             }
 
-            Map <String, String> jo = new HashMap<>();
-            String vals  = "";
+            Map<String, String> jo = new HashMap<>();
+            String vals = "";
 
-            for (int k = 0 ; k < holder.sliders.size() ; k ++) {
-                vals += holder.sliders.get(k).getValue() ;
+            for (int k = 0; k < holder.sliders.size(); k++) {
+                vals += holder.sliders.get(k).getValue();
                 if (k < holder.sliders.size() - 1) {
                     vals += ";";
                 }
@@ -1495,11 +1496,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             preset.put(String.valueOf(i), jo);
         }
 
-        return preset ;
+        return preset;
     }
 
 
-    public void printActivePreset () {
+    public void printActivePreset() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset;
         preset = presetToString();
@@ -1509,17 +1510,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "printActivePreset: " + preset.toString());
     }
 
-    public void saveActivePreset () {
+    public void saveActivePreset() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        String preset ;
-        preset = presetToString() ;
+        String preset;
+        preset = presetToString();
         if (preset == null)
-            return ;
+            return;
         sharedPreferences.edit().putString("activePreset", preset).apply();
         Log.d(TAG, "saveActivePreset: Saved preset: " + preset);
     }
 
-    void loadActivePreset () {
+    void loadActivePreset() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
         if (preset != null) {
@@ -1527,91 +1528,91 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    void loadPreset (Map map) {
+    void loadPreset(Map map) {
         JSONObject jsonObject = new JSONObject(map);
-        String controls ;
+        String controls;
         try {
             controls = (String) jsonObject.get("controls").toString();
             loadPreset(controls.toString());
         } catch (JSONException e) {
-            MainActivity.toast("Cannot load preset: "+e.getMessage());
+            MainActivity.toast("Cannot load preset: " + e.getMessage());
             e.printStackTrace();
         }
 
     }
 
-    void loadPreset (String preset) {
+    void loadPreset(String preset) {
         // forgot to add this. that this was forgotten was very difficult to guess
         AudioEngine.clearActiveQueue();
 
         Log.d(TAG, "loadPreset: " + preset);
-        JSONObject jsonObject ;
+        JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(preset);
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e(TAG, "loadPreset: Unable to load preset\n"+preset, e);
-            return ;
+            Log.e(TAG, "loadPreset: Unable to load preset\n" + preset, e);
+            return;
         }
 
-        int items = dataAdapter.totalItems ;
+        int items = dataAdapter.totalItems;
         if (items > 0) {
             Log.d(TAG, "loadPreset: already loaded something, deleting ...");
 //            dataAdapter.deleteAll();
             dataAdapter.reset();
         }
 
-        int plugin = 0 ;
+        int plugin = 0;
         for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
             String key = it.next();
-            JSONObject jo ;
+            JSONObject jo;
             try {
                 Log.d(TAG, "loadPreset: trying preset " + key + ": " + jsonObject.getString(key));
-                jo = new JSONObject (jsonObject.getString(key)) ;
+                jo = new JSONObject(jsonObject.getString(key));
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e(TAG, "loadPreset: unable to parse key: " + key, e);
                 continue;
             }
 
-            String name, controls ;
+            String name, controls;
             try {
                 name = jo.getString("name");
                 controls = jo.getString("controls");
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e(TAG, "loadPreset: unable to parse name or controls for key: " + key, e);
-                continue ;
+                continue;
             }
 
-            int ret = -1 ;
+            int ret = -1;
             if (!lazyLoad)
                 AudioEngine.addPluginByName(name);
             else
                 addPluginByName(name);
             Log.d(TAG, "loadPreset: Loaded plugin: " + name);
-            String [] control = controls.split(";");
+            String[] control = controls.split(";");
 
 
-            DataAdapter.ViewHolder holder = null ;
+            DataAdapter.ViewHolder holder = null;
             if (dataAdapter.holders.size() == 0)
                 Log.e(TAG, "loadPreset: data adapter holders is zero", null);
             else
                 dataAdapter.holders.get(plugin);
             if (holder == null) {
-                Log.e(TAG, "loadPreset: cannot find holder for " + (ret -1), null);
+                Log.e(TAG, "loadPreset: cannot find holder for " + (ret - 1), null);
             }
 
 
-            Log.d(TAG, "loadPreset: loading "+control.length+ " controls from "+controls);
-            for (int i = 0 ; i < control.length ; i ++) {
+            Log.d(TAG, "loadPreset: loading " + control.length + " controls from " + controls);
+            for (int i = 0; i < control.length; i++) {
                 Log.d(TAG, "loadPreset: " + i + ": " + control[i]);
                 //                holder.sliders.get(i).setValue(Integer.parseInt(control [i]));
-                float savedValue = -6906 ;// aaaaargh
+                float savedValue = -6906;// aaaaargh
                 try {
-                    savedValue = Float.parseFloat(control [i]) ;
+                    savedValue = Float.parseFloat(control[i]);
                 } catch (Exception e) {
-                    Log.e(TAG, "loadPreset: cannot load saved float value for " + control [i], e);
+                    Log.e(TAG, "loadPreset: cannot load saved float value for " + control[i], e);
                     continue;
                 }
 
@@ -1621,7 +1622,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
             dataAdapter.addItem(ret, ret);
-            plugin ++ ;
+            plugin++;
         }
 
     }
@@ -1637,15 +1638,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return false;
     }
 
-    public static void toast (String text) {
+    public static void toast(String text) {
         Toast.makeText(context,
-                text,
-                Toast.LENGTH_LONG)
+                        text,
+                        Toast.LENGTH_LONG)
                 .show();
 
     }
 
-    public static void alert (String title, String text) {
+    public static void alert(String title, String text) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(text)
                 .setTitle(title)
@@ -1655,7 +1656,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         dialog.show();
     }
 
-    public void heartPlugin (String name) {
+    public void heartPlugin(String name) {
         Log.d(TAG, "heartPlugin: " + name);
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
@@ -1668,19 +1669,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         sharedPreferences.edit().putStringSet("favoritePresets", set).apply();
     }
 
-    public void unheartPlugin (String name) {
+    public void unheartPlugin(String name) {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
         if (set == null) {
             // no hearted presets
-            return ;
+            return;
         }
 
         set.remove(name);
         sharedPreferences.edit().putStringSet("favoritePresets", set).apply();
     }
 
-    boolean isPluginHearted (String plugin) {
+    boolean isPluginHearted(String plugin) {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
         if (set == null) {
@@ -1691,20 +1692,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return set.contains(plugin);
     }
 
-    Set getHeartedPlugins () {
+    Set getHeartedPlugins() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Set<String> set = sharedPreferences.getStringSet("favoritePresets", null);
 
-        return set ;
+        return set;
     }
 
-    void applyPreferencesDevices () {
+    void applyPreferencesDevices() {
         // Audio Devices
         String input = defaultSharedPreferences.getString("input", "-1");
         String output = defaultSharedPreferences.getString("output", "-1");
         Log.d(TAG, "applyPreferences: [devices] " + String.format("input: %s, output: %s", input, output));
 
-        Log.d(TAG, "applyPreferencesDevices: " + String.format (
+        Log.d(TAG, "applyPreferencesDevices: " + String.format(
                 "[preferences] playback device: %s, recording device: %s",
                 output, input
         ));
@@ -1712,16 +1713,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AudioEngine.setPlaybackDeviceId(new Integer(output));
 
         AudioEngine.setLowLatency(defaultSharedPreferences.getBoolean("latency", true));
-        int sampleRate = 48000 ;
+        int sampleRate = 48000;
         try {
-            sampleRate = Integer.valueOf(defaultSharedPreferences.getString("sample_rate", "48000")) ;
+            sampleRate = Integer.valueOf(defaultSharedPreferences.getString("sample_rate", "48000"));
         } catch (ClassCastException e) {
             Log.e(TAG, "applyPreferencesDevices: cannot get default sample rate from preference: " + defaultSharedPreferences.getString("sample_rate", null), e);
         }
         AudioEngine.setSampleRate(sampleRate);
     }
 
-    void applyPreferencesExport () {
+    void applyPreferencesExport() {
         String format = defaultSharedPreferences.getString("export_format", "1");
         AudioEngine.setExportFormat(Integer.parseInt(format));
         Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
@@ -1732,7 +1733,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    void printDebugLog () {
+    void printDebugLog() {
         AudioEngine.debugInfo();
 
     }
@@ -1779,8 +1780,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 
-    public static Bitmap scaleBackground (Bitmap originalImage, int width, int height) {
-        Bitmap background = Bitmap.createBitmap((int)width, (int)height, Bitmap.Config.ARGB_8888);
+    public static Bitmap scaleBackground(Bitmap originalImage, int width, int height) {
+        Bitmap background = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
 
         float originalWidth = originalImage.getWidth();
         float originalHeight = originalImage.getHeight();
@@ -1788,12 +1789,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Canvas canvas = new Canvas(background);
 
 //        float scale = width / originalWidth;
-        float scale = height / originalHeight ;
+        float scale = height / originalHeight;
 
 //        float xTranslation = 0.0f;
 //        float yTranslation = (height - originalHeight * scale) / 2.0f;
         float xTranslation = (width - originalWidth * scale) / 2.0f;
-        float yTranslation = 0.0f ;
+        float yTranslation = 0.0f;
 
         Matrix transformation = new Matrix();
         transformation.postTranslate(xTranslation, yTranslation);
@@ -1806,59 +1807,60 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return background;
 
     }
-    public static void applyWallpaper (Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
+
+    public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
         String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "a1");
-        Bitmap bitmap = null ;
+        Bitmap bitmap = null;
         switch (resIdString) {
             default:
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(_context.getContentResolver(), Uri.parse(resIdString));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    break ;
+                    break;
                 }
 
                 bitmap = scaleBackground(bitmap, width, height);
                 context.setTheme(R.style.Theme_Bright);
-                break ;
+                break;
             case "Space":
                 if (lowMemoryMode)
-                    bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg1) ;
+                    bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg1);
                 else
-                    bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg) ;
-                break ;
+                    bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg);
+                break;
             case "Water":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.water) ;
-                break ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.water);
+                break;
             case "Fire":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.fire) ;
-                break ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.fire);
+                break;
             case "Sky":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.sky) ;
-                break ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.sky);
+                break;
             case "Earth":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg_earth) ;
-                break ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg_earth);
+                break;
             case "a1":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a1) ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a1);
                 context.setTheme(R.style.Theme_1);
-                break ;
+                break;
             case "a5":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a5) ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a5);
                 context.setTheme(R.style.Theme_AmpRack);
-                break ;
+                break;
             case "a2":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a2) ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a2);
                 context.setTheme(R.style.Theme_2);
-                break ;
+                break;
             case "a3":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a3) ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a3);
                 context.setTheme(R.style.Theme_3);
-                break ;
+                break;
             case "a4":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a4) ;
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a4);
                 context.setTheme(R.style.Theme_4);
-                break ;
+                break;
         }
 
         if (bitmap == null) {
@@ -1871,7 +1873,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
         imageView.setImageBitmap(bitmap);
         Paint paint = new Paint();
-        PorterDuffColorFilter filter = new PorterDuffColorFilter(0xffaaaaaa, PorterDuff.Mode.MULTIPLY );
+        PorterDuffColorFilter filter = new PorterDuffColorFilter(0xffaaaaaa, PorterDuff.Mode.MULTIPLY);
         imageView.getDrawable().setColorFilter(filter);
         paint.setColorFilter(filter);
         Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 0, 10, 10);
@@ -1899,7 +1901,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return null;
         }
 
-        JSONObject jsonObject = null ;
+        JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
         } catch (JSONException e) {
@@ -1910,7 +1912,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return jsonObject;
     }
 
-    public static void shareFile (File file) {
+    public static void shareFile(File file) {
         Intent intentShareFile = new Intent(Intent.ACTION_SEND);
         Uri contentUri = FileProvider.getUriForFile(context, "com.shajikhan.ladspa.amprack.fileprovider", file);
         intentShareFile.setType("audio/*");
@@ -1925,18 +1927,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 
-    public void runCommand (String command) {
+    public void runCommand(String command) {
         switch (command) {
             case "saveactivepreset":
                 saveActivePreset();
-                break ;
+                break;
             default:
                 alert(this.getClass().getSimpleName(), "Command not supported: " + command);
-                break ;
+                break;
         }
     }
 
-    public void addPluginByName (String pluginName) {
+    public void addPluginByName(String pluginName) {
 //        Log.d(TAG, "addPluginByName: " + pluginName);
 //        Log.d(TAG, "addPluginByName: " + availablePlugins.toString());
         JSONObject plugins = availablePlugins;
@@ -1968,5 +1970,27 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         Log.e(TAG, "addPluginByName: unable to find plugin name " + pluginName);
+    }
+
+    static public String readAssetFile(Context context, String filename) {
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open(filename);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Log.e(TAG, "loadJSONFromAsset: unable to parse json", ex);
+            return null;
+        }
+
+        return json ;
+    }
+
+    static void testLV2 () {
+        AudioEngine.testLV2();
     }
 }

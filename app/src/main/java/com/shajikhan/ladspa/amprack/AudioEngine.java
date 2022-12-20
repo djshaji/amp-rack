@@ -60,6 +60,8 @@ public class AudioEngine {
     static native void delete();
     static native void native_setDefaultStreamValues(int defaultSampleRate, int defaultFramesPerBurst);
 
+    static native void testLV2 ();
+
     static void setDefaultStreamValues(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
             AudioManager myAudioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);

@@ -318,7 +318,7 @@ void Engine::addPluginToRackLazy(char* library, int pluginIndex) {
     buildPluginChain();
 }
 
-void Engine::loadPlugin(char * filename) {
+void Engine::loadPlugin(char * filename, SharedLibrary::PluginType LADPSA) {
     IN
     LOGS("Loading plugin %s", filename);
     SharedLibrary * sharedLibrary = new SharedLibrary (filename);

@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +26,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     int totalItems = 0;
@@ -84,8 +91,65 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             linearLayout.addView(textView);
             linearLayout.addView(layout);
 
-            Slider slider = new Slider(context);
             EditText editText = new EditText(context);
+            Slider slider = new Slider(context);
+            Spinner spinner = new Spinner(context);
+
+            /*
+            if (mainActivity.rdf.has (String.valueOf(plugins.get(position)))) {
+                Log.d(TAG, "onBindViewHolder: loading spinner for " + String.valueOf(plugins.get(position)));
+                List<String> list = new ArrayList<>();
+                JSONObject pluginRDF = null;
+                try {
+                     String pluginRDFString = mainActivity.rdf.getString(String.valueOf(plugins.get(position)));
+                     pluginRDF = new JSONObject(pluginRDFString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for(int x = 0; x<pluginRDF.names().length(); x++){
+                    String name = null ;
+                    try {
+                        name = pluginRDF.names().getString(x);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (name != null)
+                        list.add(name);
+                }
+
+
+                ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list);
+                categoriesDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(categoriesDataAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        editText.setText(String.valueOf(i));
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                if (list.size() > 0)
+                    layout.addView(spinner);
+                else {
+                    layout.addView(slider);
+                    holder.sliders.add(slider);
+                }
+            } else {
+                layout.addView(slider);
+                holder.sliders.add(slider);
+            }
+             */
+
+            layout.addView(slider);
+            holder.sliders.add(slider);
+
             editText.setMaxLines(1);
             editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(4) });
 
@@ -125,8 +189,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             }
 
             slider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
-            layout.addView(slider);
-            holder.sliders.add(slider);
 
             slider.addOnChangeListener(new Slider.OnChangeListener() {
                 @Override

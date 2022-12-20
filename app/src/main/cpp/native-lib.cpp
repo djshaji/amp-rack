@@ -610,3 +610,9 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginLazy(JNIEnv *env, jclass 
     env->ReleaseStringUTFChars(library, nativeString);
     return engine -> activePlugins.size();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_testLV2(JNIEnv *env, jclass clazz) {
+    // TODO: implement testLV2()
+    engine ->loadPlugin("rkrlv2.so", SharedLibrary::LV2);
+}

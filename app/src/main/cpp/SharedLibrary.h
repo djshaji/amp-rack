@@ -7,20 +7,29 @@
 #include <string>
 #include <vector>
 #include "ladspa.h"
+#include "lv2.h"
 
 class SharedLibrary {
 public:
     SharedLibrary(char * plugin_file);
+    typedef enum {
+        LADSPA,
+        LV2
+    } PluginType ;
 
+    PluginType type = LADSPA ; // by default
     std::string so_file ;
     std::vector<const LADSPA_Descriptor *> descriptors;
+    std::vector<const LV2_Descriptor *> lv2_descriptors;
+
     int total_plugins = 0 ;
     void * dl_handle = NULL;
     unsigned long sampleRate ;
     LADSPA_Descriptor_Function descriptorFunction ;
+    LV2_Descriptor_Function lv2DescriptorFunction ;
 
     void setSampleRate(unsigned long _sampleRate);
-    char *load(void);
+    char *load(PluginType pluginType);
 
     bool plugin_is_valid(const LADSPA_Descriptor *descriptor);
 
