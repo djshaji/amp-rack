@@ -8,7 +8,8 @@
 #include "Plugin.h"
 
 class Plugin2: public Plugin {
-
+    LV2_Descriptor * descriptor;
+    LV2_Handle * handle ;
 };
 
 #endif //AMP_RACK_PLUGIN2_H

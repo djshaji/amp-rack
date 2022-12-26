@@ -54,7 +54,7 @@ public:
     int moveActivePluginDown(int _p);
     int moveActivePluginUp(int _p);
     void buildPluginChain();
-    void addPluginToRackLazy(char * library, int pluginIndex);
+    void addPluginToRackLazy(char * library, int pluginIndex, SharedLibrary::PluginType _type = SharedLibrary::LADSPA);
     int addPlugintoRackByName(std::string);
     int lowLatency = 12 ;
     const int32_t     mInputChannelCount = oboe::ChannelCount::Mono;

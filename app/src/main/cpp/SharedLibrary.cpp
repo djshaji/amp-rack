@@ -53,7 +53,8 @@ char * SharedLibrary::load () {
                 const LV2_Descriptor * d = lv2DescriptorFunction (total_plugins);
                 if (d == NULL) break;
                 LOGD("[LV2] plugin found [%s:%d] %s", so_file.c_str(), total_plugins, d->URI);
-                lv2_descriptors.push_back(d);
+//                lv2_descriptors.push_back(d);
+                descriptors.push_back(reinterpret_cast<const _LADSPA_Descriptor *const>(d));
             }
 
             LOGI("\t\t... found %d LV2 plugins", total_plugins);
