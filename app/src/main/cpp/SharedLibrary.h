@@ -35,6 +35,8 @@ public:
     bool plugin_is_valid(const LADSPA_Descriptor *descriptor);
 
     void unload();
+
+    void setLibraryPath(std::string path);
 };
 
 #endif // SHARED_LIBRARY_H

@@ -98,11 +98,9 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
             }
         }
     } else if (type == SharedLibrary::LV2) {
-        lv2Descriptor = (LV2_Descriptor *) _descriptor ;
-        LOGD("Creating plugin: %s", lv2Descriptor->URI);
-        const LV2_Feature *const *features ;
-        handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, sharedLibrary->LIBRARY_PATH.c_str(), features);
-        LOGD("[LV2] Handle instantiated ok! Congratulations");
+        LOGD("[LV2] waiting for shared library pointer ...") ;
+        lv2Descriptor = (LV2_Descriptor *) descriptor ;
+
     }
 }
 
@@ -111,4 +109,13 @@ void Plugin::print () {
     for (int i = 0 ; i < pluginControls.size() ; i ++) {
         pluginControls.at(i)->print();
     }
+}
+
+void Plugin::load () {
+    LOGD("Creating plugin: %s from %s @ %s", lv2Descriptor->URI, sharedLibrary->LIBRARY_PATH.c_str(), sharedLibrary->so_file.c_str());
+    std::string lib_path = sharedLibrary->LIBRARY_PATH + "/" + sharedLibrary -> so_file + ".lv2/" ;
+    LOGD("[LV2] library path: %s", lib_path.c_str());
+    const LV2_Feature * features [5] ;
+    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), features);
+    LOGD("[LV2] Handle instantiated ok! Congratulations");
 }

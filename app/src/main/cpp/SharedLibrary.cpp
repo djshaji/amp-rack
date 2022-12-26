@@ -88,3 +88,7 @@ bool SharedLibrary::plugin_is_valid (const LADSPA_Descriptor * descriptor)
     return true;
 }
 
+void SharedLibrary::setLibraryPath (std::string path) {
+    HERE LOGD("setting library path to %s", path.c_str());
+    LIBRARY_PATH = std::string (path) ;
+}

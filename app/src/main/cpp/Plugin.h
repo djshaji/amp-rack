@@ -29,6 +29,8 @@ public:
     void print();
 
     void free();
+
+    void load();
 };
 
 #endif // __PLUGIN_H

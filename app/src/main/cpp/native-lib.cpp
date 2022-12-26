@@ -617,6 +617,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_testLV2(JNIEnv *env, jclass clazz)
 //    engine ->loadPlugin("rkrlv2.so", SharedLibrary::LV2);
 //    engine -> libraries.at(0)->load();
 //    engine ->addPluginToRack(0,0);
+
     engine->addPluginToRackLazy("rkrlv2.so", 0, SharedLibrary::LV2);
 }
 extern "C"
