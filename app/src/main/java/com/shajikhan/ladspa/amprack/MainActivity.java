@@ -365,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        AudioEngine.showProgress(null);
 //        AudioEngine.showProgress(context);
         AudioEngine.create();
+        AudioEngine.setLibraryPath(getApplicationInfo().nativeLibraryDir);
         AudioEngine.setLazyLoad(lazyLoad);
         // load included plugins
         loadPlugins();

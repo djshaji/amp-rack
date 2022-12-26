@@ -98,7 +98,11 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
             }
         }
     } else if (type == SharedLibrary::LV2) {
-        LOGD("Creating plugin: %s", _descriptor->URI);
+        lv2Descriptor = (LV2_Descriptor *) _descriptor ;
+        LOGD("Creating plugin: %s", lv2Descriptor->URI);
+        const LV2_Feature *const *features ;
+        handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, sharedLibrary->LIBRARY_PATH.c_str(), features);
+        LOGD("[LV2] Handle instantiated ok! Congratulations");
     }
 }
 

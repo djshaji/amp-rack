@@ -11,6 +11,7 @@
 
 class Engine : public oboe::AudioStreamCallback {
 public:
+    std::string LIBRARY_PATH = nullptr;
     Engine() ;
 
     int deletePluginFromRack(int pIndex);

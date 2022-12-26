@@ -60,6 +60,8 @@ public class AudioEngine {
     static native void delete();
     static native void native_setDefaultStreamValues(int defaultSampleRate, int defaultFramesPerBurst);
 
+    static native void setLibraryPath (String path);
+
     static native void testLV2 ();
 
     static void setDefaultStreamValues(Context context) {

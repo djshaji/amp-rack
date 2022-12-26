@@ -16,6 +16,7 @@ public:
         LV2
     } PluginType ;
 
+    std::string LIBRARY_PATH ;
     SharedLibrary(char * plugin_file, PluginType type = LADSPA);
     PluginType type = LADSPA ; // by default
     std::string so_file ;

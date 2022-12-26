@@ -313,7 +313,7 @@ void Engine::addPluginToRackLazy(char* library, int pluginIndex, SharedLibrary::
     SharedLibrary * sharedLibrary = new SharedLibrary (library, _type);
     sharedLibrary->load();
     LOGD("loaded shared library [ok] ... now trying to load plugin");
-    Plugin * plugin = new Plugin (sharedLibrary->descriptors.at(pluginIndex), (long) mSampleRate, type);
+    Plugin * plugin = new Plugin (sharedLibrary->descriptors.at(pluginIndex), (long) mSampleRate, _type);
     plugin->sharedLibrary = sharedLibrary;
     activePlugins .push_back(plugin);
     buildPluginChain();

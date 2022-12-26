@@ -619,3 +619,20 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_testLV2(JNIEnv *env, jclass clazz)
 //    engine ->addPluginToRack(0,0);
     engine->addPluginToRackLazy("rkrlv2.so", 0, SharedLibrary::LV2);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setLibraryPath(JNIEnv *env, jclass clazz,
+                                                             jstring path) {
+    // TODO: implement setLibraryPath()
+    IN
+    if (engine == NULL) {
+        HERE LOGF ("engine is NULL"); OUT
+    }
+
+    const char *nativeString = env->GetStringUTFChars(path, 0);
+
+    // use your string
+    engine -> LIBRARY_PATH = std::string (nativeString) ;
+    env->ReleaseStringUTFChars(path, nativeString);
+    OUT
+}

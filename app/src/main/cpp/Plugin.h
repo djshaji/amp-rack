@@ -17,6 +17,7 @@ public:
     LADSPA_Data run_adding_gain = 1 ;
     std::vector <PluginControl *> pluginControls ;
     const LADSPA_Descriptor * descriptor ;
+    const LV2_Descriptor * lv2Descriptor;
     SharedLibrary * sharedLibrary;
     int inputPort = -1;
     int inputPort2 = -1;
