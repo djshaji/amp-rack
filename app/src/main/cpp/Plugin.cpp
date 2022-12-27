@@ -115,7 +115,7 @@ void Plugin::load () {
     LOGD("Creating plugin: %s from %s @ %s", lv2Descriptor->URI, sharedLibrary->LIBRARY_PATH.c_str(), sharedLibrary->so_file.c_str());
     std::string lib_path = sharedLibrary->LIBRARY_PATH + "/" + sharedLibrary -> so_file + ".lv2/" ;
     LOGD("[LV2] library path: %s", lib_path.c_str());
-    const LV2_Feature * features [5] ;
-    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), features);
+
+    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
     LOGD("[LV2] Handle instantiated ok! Congratulations");
 }

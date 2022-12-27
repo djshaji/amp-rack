@@ -1,6 +1,8 @@
 #ifndef __PLUGIN_H
 #define __PLUGIN_H
 #include <ladspa.h>
+#include <lv2.h>
+
 #include <cstddef>
 #include <logging_macros.h>
 #include <vector>

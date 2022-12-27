@@ -44,6 +44,10 @@ char * SharedLibrary::load () {
         }
     } else if (type == LV2 ){
         LOGI("[LV2] Loading plugin library %s", so_file.c_str());
+        feature_list = (const LV2_Feature**)calloc(1, sizeof(features));
+        LOGD("[LV2] calloc [ok], trying memcpy ...");
+        memcpy(feature_list, &features, sizeof(features));
+
         lv2DescriptorFunction = (LV2_Descriptor_Function) dlsym(dl_handle, "lv2_descriptor");
         if (lv2DescriptorFunction == NULL) {
             LOGE("[LV2]: Failed to find descriptor function");

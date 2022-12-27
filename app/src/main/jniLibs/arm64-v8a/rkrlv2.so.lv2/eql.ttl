@@ -1,0 +1,170 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
+
+# <http://rakarrack.sourceforge.net/effects.html#eql_ui>
+# 	a ui:X11UI ;
+# 	ui:binary <rkrlv2_ui.so> ;
+# 	lv2:extensionData ui:idleInterface;
+# 	.
+
+<http://rakarrack.sourceforge.net/effects.html#eql>
+        a lv2:Plugin, lv2:MultiEQPlugin ;
+        doap:name "rkr EQ" ;
+        doap:description "10 Band Graphical Eq";
+        lv2:project <http://rakarrack.sourceforge.net/effects.html>;
+        lv2:optionalFeature lv2:hardRTCapable ;
+        lv2:minorVersion 0 ;
+        lv2:microVersion 0 ;
+        rdfs:comment "10 band graphical equalizer with resonance control." ;
+#        ui:ui  <http://rakarrack.sourceforge.net/effects.html#eql_ui> ;
+
+        lv2:port [
+                a lv2:InputPort, lv2:AudioPort ;
+                lv2:index 0 ;
+                lv2:symbol "INPUT_L" ;
+                lv2:name "Audio In L" ;
+        ] ;
+        lv2:port [
+                a lv2:InputPort, lv2:AudioPort ;
+                lv2:index 1 ;
+                lv2:symbol "INPUT_R" ;
+                lv2:name "Audio In R" ;
+        ] ;
+        lv2:port [
+                a lv2:OutputPort, lv2:AudioPort ;
+                lv2:index 2 ;
+                lv2:symbol "OUTPUT_L" ;
+                lv2:name "Audio Out L" ;
+        ] ;
+        lv2:port [
+                a lv2:OutputPort, lv2:AudioPort ;
+                lv2:index 3 ;
+                lv2:symbol "OUTPUT_R" ;
+                lv2:name "Audio Out R" ;
+        ] ;
+        lv2:port [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 4 ;
+                lv2:symbol "BYPASS" ;
+                lv2:name "Bypass" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 5 ;
+                lv2:symbol "GAIN" ;
+                lv2:name "Gain" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 6 ;
+                lv2:symbol "Q" ;
+                lv2:name "Q" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 7 ;
+                lv2:symbol "HZ31" ;
+                lv2:name "31 Hz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 8 ;
+                lv2:symbol "HZ63" ;
+                lv2:name "63 Hz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 9 ;
+                lv2:symbol "HZ125" ;
+                lv2:name "125 Hz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 10 ;
+                lv2:symbol "HZ250" ;
+                lv2:name "250 Hz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 11 ;
+                lv2:symbol "HZ500" ;
+                lv2:name "500 Hz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 12 ;
+                lv2:symbol "KHZ1" ;
+                lv2:name "1 kHz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 13 ;
+                lv2:symbol "KHZ2" ;
+                lv2:name "2 kHz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 14 ;
+                lv2:symbol "KHZ4" ;
+                lv2:name "4 kHz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 15 ;
+                lv2:symbol "KHZ8" ;
+                lv2:name "8 kHz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 16 ;
+                lv2:symbol "KHZ16" ;
+                lv2:name "16 kHz" ;
+                lv2:default 0 ;
+                lv2:minimum -64 ;
+                lv2:maximum 63 ;
+                lv2:portProperty lv2:integer ;
+        ] ;
+	.
