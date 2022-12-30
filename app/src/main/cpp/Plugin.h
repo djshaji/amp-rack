@@ -4,11 +4,16 @@
 #include <lv2.h>
 
 #include <cstddef>
+#include <fstream>
 #include <logging_macros.h>
 #include <vector>
 
+#include "android/asset_manager.h"
+#include "android/asset_manager_jni.h"
+
 #include "PluginControl.h"
 #include "SharedLibrary.h"
+#include "json.hpp"
 
 class Plugin {
     LADSPA_Data ** portControls ;
@@ -31,6 +36,7 @@ public:
     void print();
 
     void free();
+    std::string getLV2JSON (std::string pluginName);
 
     void load();
 };

@@ -25,6 +25,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_create(JNIEnv *env, jclass clazz) 
     IN ;
     if (engine == nullptr) {
         engine = new Engine () ;
+        env ->GetJavaVM(&engine -> vm);
     }
 
     OUT ;

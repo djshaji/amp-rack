@@ -1992,6 +1992,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void testLV2 () {
+//        Log.d(TAG, "testLV2: " + getLV2Info("eql"));
         AudioEngine.testLV2();
+    }
+
+    public static String getLV2Info (String pluginName) {
+        JSONObject jsonObject = ConnectGuitar.loadJSONFromAssetFile(context, "lv2/" + pluginName + ".json");
+        return jsonObject.toString();
     }
 }

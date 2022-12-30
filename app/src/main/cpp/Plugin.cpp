@@ -1,4 +1,5 @@
 #include "Plugin.h"
+using namespace nlohmann ;
 
 void Plugin::free () {
     descriptor->cleanup (handle);
@@ -118,4 +119,41 @@ void Plugin::load () {
 
     handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
     LOGD("[LV2] Handle instantiated ok! Congratulations");
+
+    std::string json_ = getLV2JSON("eql");
+    json j = json::parse(json_);
+    LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
+}
+
+std::string Plugin::getLV2JSON (std::string pluginName) {
+    JNIEnv *env;
+    sharedLibrary -> vm-> GetEnv((void**)&env, JNI_VERSION_1_6);
+    if (env == NULL) {
+        LOGF("cannot find env!");
+    }
+
+    jstring jstr1 = env->NewStringUTF(pluginName.c_str());
+
+    jclass clazz = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
+    if (clazz == nullptr) {
+        LOGF("cannot find class!");
+    }
+
+    jmethodID mid = env->GetStaticMethodID(clazz, "getLV2Info", "(Ljava/lang/String;)Ljava/lang/String;");
+    if (mid == nullptr) {
+        LOGF("cannot find method!");
+    }
+
+    jobject obj = env->CallStaticObjectMethod(clazz, mid, jstr1);
+    if (obj == nullptr) {
+        LOGF("cannot find class!");
+    }
+
+    jstring retStr = (jstring)obj;
+    const char *nativeString = env->GetStringUTFChars(retStr, 0);
+    std::string str = std::string (nativeString);
+    env->ReleaseStringUTFChars(retStr, nativeString);
+
+
+    return str;
 }

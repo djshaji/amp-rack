@@ -13,6 +13,7 @@ class Engine : public oboe::AudioStreamCallback {
 public:
     std::string LIBRARY_PATH ;
     Engine() ;
+    JavaVM * vm ;
 
     int deletePluginFromRack(int pIndex);
     void setRecordingDeviceId(int32_t deviceId);

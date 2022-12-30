@@ -15,6 +15,7 @@
 #include <lv2/options/options.h>
 #include <lv2/ui/ui.h>
 #include <lv2/data-access/data-access.h>
+#include <jni.h>
 
 typedef struct {
     LV2_Feature                map_feature;
@@ -43,6 +44,7 @@ public:
     } PluginType ;
 
     std::string LIBRARY_PATH ;
+    JavaVM * vm ;
     SharedLibrary(char * plugin_file, PluginType type = LADSPA);
     PluginType type = LADSPA ; // by default
     std::string so_file ;

@@ -311,8 +311,10 @@ void Engine::onErrorAfterClose(oboe::AudioStream *oboeStream,
 
 void Engine::addPluginToRackLazy(char* library, int pluginIndex, SharedLibrary::PluginType _type) {
     SharedLibrary * sharedLibrary = new SharedLibrary (library, _type);
+    sharedLibrary -> vm = vm ;
     sharedLibrary ->setLibraryPath(LIBRARY_PATH);
     sharedLibrary->load();
+
     LOGD("loaded shared library [ok] ... now trying to load plugin");
     Plugin * plugin = new Plugin (sharedLibrary->descriptors.at(pluginIndex), (long) mSampleRate, _type);
     plugin->sharedLibrary = sharedLibrary;
