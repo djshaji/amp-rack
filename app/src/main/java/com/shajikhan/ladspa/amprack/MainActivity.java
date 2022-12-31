@@ -1996,8 +1996,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AudioEngine.testLV2();
     }
 
-    public static String getLV2Info (String pluginName) {
-        JSONObject jsonObject = ConnectGuitar.loadJSONFromAssetFile(context, "lv2/" + pluginName + ".json");
+    public static String getLV2Info (String libraryName, String plugin) {
+        String pluginName = plugin.split("#")[1];
+        JSONObject jsonObject = ConnectGuitar.loadJSONFromAssetFile(context, "lv2/" + libraryName + "/" + pluginName + ".json");
         return jsonObject.toString();
     }
 }

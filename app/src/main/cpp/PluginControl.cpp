@@ -195,3 +195,43 @@ void PluginControl::print () {
 void PluginControl::freeMemory () {
     free (def);
 }
+
+PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j) {
+    IN ;
+    int _port = j ["index"];
+
+    LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , std::string (j ["name"]).c_str());
+    port = _port ;
+    LADSPA_Data lower_bound = j ["minimum"];
+    LADSPA_Data upper_bound = j ["maximum"];
+    name = std::string (j ["name"]).c_str() ;
+
+    LOGD("[control] %s", name);
+
+    min = lower_bound;
+    max = upper_bound;
+    def = (float *) malloc (sizeof (long int));
+    *def = j ["default"];
+    /* Check the default */
+    if (def) {
+        if (*def < min) {
+            LOGD("[plugin] %s: default smaller than the minimum", name);
+            *def = min;
+        }
+        if (*def > max) {
+            LOGD("[plugin] %s: default greater than the maximum\n", name);
+            *def = max;
+        }
+    }
+
+    /* control->sel, control->val */
+    if (def)
+        sel = *def;
+    else
+        sel = min;
+    val = sel;
+
+    LOGD("[LV2 Plugin] %s: found control %s <%f - %f> default value %f",
+         descriptor ->URI, name, lower_bound, upper_bound, *def);
+    OUT ;
+}

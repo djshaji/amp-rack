@@ -4,9 +4,10 @@
 #include <cstdlib>
 #include <logging_macros.h>
 #include "ladspa.h"
+#include "lv2.h"
+#include "json.hpp"
 
 class PluginControl {
-
     unsigned long port;
     const LADSPA_PortDescriptor *desc;
     const LADSPA_PortRangeHint *hint;
@@ -48,6 +49,7 @@ public:
     LADSPA_Data getValue();
 
     PluginControl(const LADSPA_Descriptor *descriptor, int _port);
+    PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j);
 
     void print();
 

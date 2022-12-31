@@ -120,9 +120,77 @@ void Plugin::load () {
     handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
     LOGD("[LV2] Handle instantiated ok! Congratulations");
 
-    std::string json_ = getLV2JSON("eql");
+    std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
     LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
+
+    recursive_iterate(*this, j, [this, &j](Plugin *plugin, json::const_iterator it){
+//        std::cout << *it << std::endl;
+        LADSPA_PortDescriptor port = j[it]["index"];
+        if (j [it].is_object ("AudioPort")) {
+            if (j [it].is_object ("InputPort")) {
+                LOGD("[%s %d]: found input port",plugin->sharedLibrary->so_file.c_str(), port);
+                if (plugin-> inputPort == -1)
+                    plugin->inputPort = port;
+                else if (plugin->inputPort2 == -1)
+                    plugin->inputPort2 = port;
+                else
+                    LOGE("[%s %d]: %s is third input port", plugin->sharedLibrary->so_file.c_str(), port, j [it]["name"]);
+            } else if (LADSPA_IS_PORT_OUTPUT(port)) {
+                LOGD("[%s %d]: found output port", plugin->sharedLibrary->so_file.c_str(), port);
+                if (plugin->outputPort == -1)
+                    plugin->outputPort = port;
+                else if (plugin ->outputPort2 == -1)
+                    plugin->outputPort2 = port;
+                else
+                    LOGE("[%s %d]: %s is third output port", plugin->sharedLibrary->so_file.c_str(), port,
+                         j[it]["name"]);
+
+            }
+        } else if (/*LADSPA_IS_PORT_OUTPUT(port)*/ false) {
+            LOGE("[%s:%d] %s: ladspa port is output but not audio!", lv2Descriptor->URI, port,
+                 j["name"]);
+            // this, erm, doesn't work
+            /*
+            if (outputPort == -1)
+                outputPort = port ;
+            */
+        } else if (j [it].is_object ("InputPort") && j [it].is_object ("ControlPort")) {
+            LOGD("[%s %d]: found control port", plugin->sharedLibrary->so_file.c_str(), port);
+            PluginControl *pluginControl = new PluginControl(lv2Descriptor, j);
+            lv2Descriptor->connect_port(handle, port, pluginControl->def);
+            pluginControls.push_back(pluginControl);
+        } else if (j [it].is_object ("OutputPort") && j [it].is_object ("ControlPort")) {
+            LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
+            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
+        } else {
+            // special case, aaaargh!
+            if (descriptor->UniqueID == 2606) {
+                if (i == 2)
+                    inputPort = i;
+                if (i == 3)
+                    outputPort = i;
+                if (i == 0 || i == 1) {
+                    PluginControl *pluginControl = new PluginControl(descriptor, i);
+                    descriptor->connect_port(handle, i, pluginControl->def);
+                    pluginControls.push_back(pluginControl);
+
+                    if (i == 0) {
+                        pluginControl->min = 0;
+                        pluginControl->max = 25;
+                    } else if (i == 1) {
+                        pluginControl->min = -24;
+                        pluginControl->max = 24;
+                    }
+                }
+            } else {
+                LOGE("[%s %d]: unknown port %s for %s (%d)", descriptor->Name, i,
+                     descriptor->PortNames[i], descriptor->Label, descriptor->UniqueID);
+                descriptor->connect_port(handle, i, &dummy_output_control_port);
+            }
+        }
+    });
+
 }
 
 std::string Plugin::getLV2JSON (std::string pluginName) {
@@ -133,18 +201,20 @@ std::string Plugin::getLV2JSON (std::string pluginName) {
     }
 
     jstring jstr1 = env->NewStringUTF(pluginName.c_str());
+    jstring libname = env->NewStringUTF(sharedLibrary->so_file.c_str());
 
     jclass clazz = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
     if (clazz == nullptr) {
         LOGF("cannot find class!");
     }
 
-    jmethodID mid = env->GetStaticMethodID(clazz, "getLV2Info", "(Ljava/lang/String;)Ljava/lang/String;");
+    jmethodID mid = env->GetStaticMethodID(clazz, "getLV2Info",
+                                           "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
     if (mid == nullptr) {
         LOGF("cannot find method!");
     }
 
-    jobject obj = env->CallStaticObjectMethod(clazz, mid, jstr1);
+    jobject obj = env->CallStaticObjectMethod(clazz, mid, libname, jstr1);
     if (obj == nullptr) {
         LOGF("cannot find class!");
     }

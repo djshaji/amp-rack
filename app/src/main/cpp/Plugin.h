@@ -41,4 +41,20 @@ public:
     void load();
 };
 
+template<class UnaryFunction>
+void recursive_iterate(const Plugin &plugin, const nlohmann::json& j, UnaryFunction f)
+{
+    for(auto it = j.begin(); it != j.end(); ++it)
+    {
+        if (it->is_structured())
+        {
+            recursive_iterate(*it, f);
+        }
+        else
+        {
+            f(&plugin, it);
+        }
+    }
+}
+
 #endif // __PLUGIN_H
