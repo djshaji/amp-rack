@@ -39,6 +39,8 @@ public:
     std::string getLV2JSON (std::string pluginName);
 
     void load();
+
+    int addPluginControl(const LV2_Descriptor *_descriptor, nlohmann::json _j);
 };
 
 template<class UnaryFunction>
@@ -48,11 +50,11 @@ void recursive_iterate(const Plugin &plugin, const nlohmann::json& j, UnaryFunct
     {
         if (it->is_structured())
         {
-            recursive_iterate(*it, f);
+            recursive_iterate(plugin, *it, f);
         }
         else
         {
-            f(&plugin, it);
+            f(plugin, it);
         }
     }
 }

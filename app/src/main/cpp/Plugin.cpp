@@ -123,73 +123,51 @@ void Plugin::load () {
     std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
     LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
+    for (auto& el : j.items())
+    {
+        LOGD("[LV2] %s", el.key().c_str());
+        LOGD("[LV2] %s -> %s", el.key().c_str(), el.value().dump().c_str());
+//        std::cout << "key: " << el.key() << ", value:" << el.value() << '\n';
+    }
 
-    recursive_iterate(*this, j, [this, &j](Plugin *plugin, json::const_iterator it){
-//        std::cout << *it << std::endl;
-        LADSPA_PortDescriptor port = j[it]["index"];
-        if (j [it].is_object ("AudioPort")) {
-            if (j [it].is_object ("InputPort")) {
-                LOGD("[%s %d]: found input port",plugin->sharedLibrary->so_file.c_str(), port);
-                if (plugin-> inputPort == -1)
+    /*
+    recursive_iterate(*this, j, [*this, &j](Plugin *plugin, json::const_iterator it){
+        json jsonPort = (json) it.value() ;
+        const char * portName = std::string (jsonPort ["name"]).c_str ();
+        const char * pluginName = plugin->sharedLibrary->so_file.c_str() ;
+
+        LADSPA_PortDescriptor port = jsonPort ["index"];
+        if (jsonPort.find ("AudioPort") != jsonPort.end ()) {
+            if (jsonPort.find ("InputPort")  != jsonPort.end ()) {
+                LOGD("[%s %d]: found input port", portName, port);
+                if (plugin->inputPort == -1)
                     plugin->inputPort = port;
                 else if (plugin->inputPort2 == -1)
                     plugin->inputPort2 = port;
                 else
-                    LOGE("[%s %d]: %s is third input port", plugin->sharedLibrary->so_file.c_str(), port, j [it]["name"]);
-            } else if (LADSPA_IS_PORT_OUTPUT(port)) {
-                LOGD("[%s %d]: found output port", plugin->sharedLibrary->so_file.c_str(), port);
+                    LOGE("[%s %d]: %s is third input port", pluginName, port, portName);
+            } else if (jsonPort.find ("OutputPort")  != jsonPort.end ()) {
+                LOGD("[%s %d]: found output port", pluginName, port);
                 if (plugin->outputPort == -1)
                     plugin->outputPort = port;
                 else if (plugin ->outputPort2 == -1)
                     plugin->outputPort2 = port;
                 else
-                    LOGE("[%s %d]: %s is third output port", plugin->sharedLibrary->so_file.c_str(), port,
-                         j[it]["name"]);
-
+                    LOGE("[%s %d]: %s is third output port",
+                         pluginName, port, portName);
             }
-        } else if (/*LADSPA_IS_PORT_OUTPUT(port)*/ false) {
-            LOGE("[%s:%d] %s: ladspa port is output but not audio!", lv2Descriptor->URI, port,
-                 j["name"]);
-            // this, erm, doesn't work
-            /*
-            if (outputPort == -1)
-                outputPort = port ;
-            */
-        } else if (j [it].is_object ("InputPort") && j [it].is_object ("ControlPort")) {
-            LOGD("[%s %d]: found control port", plugin->sharedLibrary->so_file.c_str(), port);
-            PluginControl *pluginControl = new PluginControl(lv2Descriptor, j);
-            lv2Descriptor->connect_port(handle, port, pluginControl->def);
-            pluginControls.push_back(pluginControl);
-        } else if (j [it].is_object ("OutputPort") && j [it].is_object ("ControlPort")) {
+        } else if (jsonPort.find ("InputPort") != jsonPort.end() && jsonPort.find ("ControlPort") != jsonPort.end()) {
+            LOGD("[%s %d]: found control port", pluginName, port);
+            int pluginIndex = plugin -> addPluginControl(plugin->lv2Descriptor, j);
+            lv2Descriptor->connect_port(handle, port, plugin -> pluginControls.at (pluginIndex) ->def);
+        } else if (jsonPort.find ("OutputPort") != jsonPort.end() && jsonPort.find("ControlPort") != jsonPort.end()) {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
-            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
+//            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
         } else {
-            // special case, aaaargh!
-            if (descriptor->UniqueID == 2606) {
-                if (i == 2)
-                    inputPort = i;
-                if (i == 3)
-                    outputPort = i;
-                if (i == 0 || i == 1) {
-                    PluginControl *pluginControl = new PluginControl(descriptor, i);
-                    descriptor->connect_port(handle, i, pluginControl->def);
-                    pluginControls.push_back(pluginControl);
-
-                    if (i == 0) {
-                        pluginControl->min = 0;
-                        pluginControl->max = 25;
-                    } else if (i == 1) {
-                        pluginControl->min = -24;
-                        pluginControl->max = 24;
-                    }
-                }
-            } else {
-                LOGE("[%s %d]: unknown port %s for %s (%d)", descriptor->Name, i,
-                     descriptor->PortNames[i], descriptor->Label, descriptor->UniqueID);
-                descriptor->connect_port(handle, i, &dummy_output_control_port);
-            }
+            LOGD("[LV2] Cannot understand port %d of %s: %s", port, pluginName, portName);
         }
     });
+     */
 
 }
 
@@ -226,4 +204,11 @@ std::string Plugin::getLV2JSON (std::string pluginName) {
 
 
     return str;
+}
+
+
+int Plugin::addPluginControl (const LV2_Descriptor * _descriptor, nlohmann::json _j) {
+    PluginControl * pluginControl = new PluginControl(_descriptor, _j);
+    pluginControls.push_back(pluginControl);
+    return pluginControls.size();
 }
