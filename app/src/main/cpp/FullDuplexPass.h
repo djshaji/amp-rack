@@ -92,16 +92,20 @@ public:
 //        float dummySecondChannel [200];// arbitrary!
 
         for (int i = 0 ; i < activePlugins ; i ++) {
+            // shouldnt we connect ports in build_plugin_chain ?
             if (inputPorts [i] != -1)
                 connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) data);
             if (outputPorts [i] != -1)
                 connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) data);
 
+//            LOGD("I/O Ports %d %d", inputPorts [i], outputPorts [i]);
 
             if (inputPorts2 [i] != -1)
                 connect_port [i] (handle [i], inputPorts2 [i], (LADSPA_Data *) data);
             if (outputPorts2 [i] != -1)
                 connect_port [i] (handle [i], outputPorts2 [i], (LADSPA_Data *) data);
+
+//            LOGD("I/O 2 Ports %d %d", inputPorts2 [i], outputPorts2 [i]);
 
             if (run [i] == NULL)
                 LOGF ("run %d is null", i);

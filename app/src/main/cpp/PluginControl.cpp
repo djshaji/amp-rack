@@ -198,20 +198,20 @@ void PluginControl::freeMemory () {
 
 PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j) {
     IN ;
-    int _port = j ["index"];
-
-    LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , std::string (j ["name"]).c_str());
+    int _port = j .find("index").value();
+    name = j.find("name").value().dump().c_str();
     port = _port ;
-    LADSPA_Data lower_bound = j ["minimum"];
-    LADSPA_Data upper_bound = j ["maximum"];
-    name = std::string (j ["name"]).c_str() ;
+
+    LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);
+    LADSPA_Data lower_bound = j .find("minimum").value();
+    LADSPA_Data upper_bound = j .find ("maximum").value ();
 
     LOGD("[control] %s", name);
 
     min = lower_bound;
     max = upper_bound;
     def = (float *) malloc (sizeof (long int));
-    *def = j ["default"];
+    *def = j .find("default").value();
     /* Check the default */
     if (def) {
         if (*def < min) {

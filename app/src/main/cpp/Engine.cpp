@@ -358,6 +358,7 @@ void Engine::discoverPlugins () {
 
 void Engine::buildPluginChain () {
     IN
+    LOGD("building chain for %d plugins", activePlugins.size());
     mFullDuplexPass.activePlugins = 0;
     for (Plugin *p: activePlugins) {
         if (!p->active)
@@ -366,13 +367,22 @@ void Engine::buildPluginChain () {
         mFullDuplexPass.outputPorts [mFullDuplexPass.activePlugins] = p->outputPort ;
         mFullDuplexPass.inputPorts2 [mFullDuplexPass.activePlugins] = p->inputPort2 ;
         mFullDuplexPass.outputPorts2 [mFullDuplexPass.activePlugins] = p->outputPort2 ;
-        mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = p->descriptor->connect_port ;
-        mFullDuplexPass.run [mFullDuplexPass.activePlugins] = p->descriptor->run ;
-        mFullDuplexPass.run_adding [mFullDuplexPass.activePlugins] = p->descriptor->run_adding ;
-        mFullDuplexPass.set_run_adding_gain [mFullDuplexPass.activePlugins] = p->descriptor->set_run_adding_gain ;
+        if (p->type == SharedLibrary::LADSPA) {
+            mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = p->descriptor->connect_port ;
+            mFullDuplexPass.run [mFullDuplexPass.activePlugins] = p->descriptor->run ;
+            mFullDuplexPass.run_adding [mFullDuplexPass.activePlugins] = p->descriptor->run_adding ;
+            mFullDuplexPass.set_run_adding_gain [mFullDuplexPass.activePlugins] = p->descriptor->set_run_adding_gain ;
+            mFullDuplexPass.descriptor [mFullDuplexPass.activePlugins] = p->descriptor;
+        } else if (p->type == SharedLibrary::LV2) {
+            mFullDuplexPass.connect_port [mFullDuplexPass.activePlugins] = reinterpret_cast<void (*)(
+                    LADSPA_Handle, unsigned long, LADSPA_Data *)>(p->lv2Descriptor->connect_port);
+            mFullDuplexPass.run [mFullDuplexPass.activePlugins] = reinterpret_cast<void (*)(
+                    LADSPA_Handle, unsigned long)>(p->lv2Descriptor->run);
+            mFullDuplexPass.descriptor [mFullDuplexPass.activePlugins] = reinterpret_cast<const LADSPA_Descriptor *>(p->lv2Descriptor);
+        }
+
         mFullDuplexPass.run_adding_gain [mFullDuplexPass.activePlugins] = p->run_adding_gain ;
         mFullDuplexPass.handle [mFullDuplexPass.activePlugins] = p->handle ;
-        mFullDuplexPass.descriptor [mFullDuplexPass.activePlugins] = p->descriptor;
         mFullDuplexPass.activePlugins ++ ;
     }
     OUT

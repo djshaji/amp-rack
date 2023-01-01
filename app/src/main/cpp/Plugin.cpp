@@ -122,16 +122,21 @@ void Plugin::load () {
 
     std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
+
     LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
     for (auto& el : j.items())
     {
-//        LOGD("[LV2] %s", el.key().c_str());
+        LOGD("[LV2] %s", el.key().c_str());
         LOGD("[LV2] %s -> %s", el.key().c_str(), el.value().dump().c_str());
+        if (el.key () == "-1") {
+            continue ;
+        }
+
         json jsonPort = json::parse (el.value ().dump ());
         const char * portName = std::string (jsonPort ["name"]).c_str ();
         const char * pluginName = sharedLibrary->so_file.c_str() ;
 
-        LADSPA_PortDescriptor port = jsonPort ["index"];
+        LADSPA_PortDescriptor port = jsonPort .find ("index").value();
         if (jsonPort.find ("AudioPort") != jsonPort.end ()) {
             if (jsonPort.find ("InputPort")  != jsonPort.end ()) {
                 LOGD("[%s %d]: found input port", portName, port);
@@ -153,7 +158,7 @@ void Plugin::load () {
             }
         } else if (jsonPort.find ("InputPort") != jsonPort.end() && jsonPort.find ("ControlPort") != jsonPort.end()) {
             LOGD("[%s %d]: found control port", pluginName, port);
-            int pluginIndex = addPluginControl(lv2Descriptor, j);
+            int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
             lv2Descriptor->connect_port(handle, port, pluginControls.at (pluginIndex) ->def);
         } else if (jsonPort.find ("OutputPort") != jsonPort.end() && jsonPort.find("ControlPort") != jsonPort.end()) {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
@@ -243,7 +248,9 @@ std::string Plugin::getLV2JSON (std::string pluginName) {
 
 
 int Plugin::addPluginControl (const LV2_Descriptor * _descriptor, nlohmann::json _j) {
+    IN ;
     PluginControl * pluginControl = new PluginControl(_descriptor, _j);
     pluginControls.push_back(pluginControl);
+    OUT ;
     return pluginControls.size();
 }
