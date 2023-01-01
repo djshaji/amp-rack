@@ -125,8 +125,43 @@ void Plugin::load () {
     LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
     for (auto& el : j.items())
     {
-        LOGD("[LV2] %s", el.key().c_str());
+//        LOGD("[LV2] %s", el.key().c_str());
         LOGD("[LV2] %s -> %s", el.key().c_str(), el.value().dump().c_str());
+        json jsonPort = json::parse (el.value ().dump ());
+        const char * portName = std::string (jsonPort ["name"]).c_str ();
+        const char * pluginName = sharedLibrary->so_file.c_str() ;
+
+        LADSPA_PortDescriptor port = jsonPort ["index"];
+        if (jsonPort.find ("AudioPort") != jsonPort.end ()) {
+            if (jsonPort.find ("InputPort")  != jsonPort.end ()) {
+                LOGD("[%s %d]: found input port", portName, port);
+                if (inputPort == -1)
+                    inputPort = port;
+                else if (inputPort2 == -1)
+                    inputPort2 = port;
+                else
+                    LOGE("[%s %d]: %s is third input port", pluginName, port, portName);
+            } else if (jsonPort.find ("OutputPort")  != jsonPort.end ()) {
+                LOGD("[%s %d]: found output port", pluginName, port);
+                if (outputPort == -1)
+                    outputPort = port;
+                else if (outputPort2 == -1)
+                    outputPort2 = port;
+                else
+                    LOGE("[%s %d]: %s is third output port",
+                         pluginName, port, portName);
+            }
+        } else if (jsonPort.find ("InputPort") != jsonPort.end() && jsonPort.find ("ControlPort") != jsonPort.end()) {
+            LOGD("[%s %d]: found control port", pluginName, port);
+            int pluginIndex = addPluginControl(lv2Descriptor, j);
+            lv2Descriptor->connect_port(handle, port, pluginControls.at (pluginIndex) ->def);
+        } else if (jsonPort.find ("OutputPort") != jsonPort.end() && jsonPort.find("ControlPort") != jsonPort.end()) {
+            LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
+//            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
+        } else {
+            LOGD("[LV2] Cannot understand port %d of %s: %s", port, pluginName, portName);
+        }
+
 //        std::cout << "key: " << el.key() << ", value:" << el.value() << '\n';
     }
 
