@@ -122,6 +122,7 @@ void Plugin::load () {
 
     std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
+    lv2_name = j ["-1"]["pluginName"];
 
     LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
     for (auto& el : j.items())

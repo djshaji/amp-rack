@@ -304,7 +304,11 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginName(JNIEnv *env, j
         HERE LOGE("[%d] plugin requested but only [%d] plugins in queue.", plugin, engine->activePlugins.size());
         return NULL;
     }
-    return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->Name);
+
+    if (engine->activePlugins.at(plugin)->type == SharedLibrary::LADSPA)
+        return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->Name);
+    else
+        return env ->NewStringUTF(engine->activePlugins.at(plugin)->lv2_name.c_str());
 }
 extern "C"
 JNIEXPORT jstring JNICALL

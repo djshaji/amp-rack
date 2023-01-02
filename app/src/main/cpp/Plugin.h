@@ -21,6 +21,7 @@ class Plugin {
 public:
     bool active = true ;
     SharedLibrary::PluginType type ;
+    std::string lv2_name ;
     LADSPA_Data run_adding_gain = 1 ;
     std::vector <PluginControl *> pluginControls ;
     const LADSPA_Descriptor * descriptor ;

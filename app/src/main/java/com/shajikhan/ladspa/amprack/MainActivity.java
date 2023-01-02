@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
         availablePluginsLV2 = ConnectGuitar.loadJSONFromAssetFile(this, "lv2_plugins.json");
+        Log.d(TAG, "onCreate: [LV2 plugins]: " + availablePluginsLV2.toString());
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
