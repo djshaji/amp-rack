@@ -315,7 +315,11 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlName(JNIEnv *env, jclass
         LOGF ("engine is NULL");
         return NULL;
     }
-    return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->PortNames [control]);
+    if (engine->activePlugins.at(plugin)->type == SharedLibrary::LADSPA)
+        return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->PortNames [control]);
+    else if (engine->activePlugins.at(plugin)->type == SharedLibrary::LV2) {
+        return env ->NewStringUTF(engine->activePlugins.at(plugin)->pluginControls [control]->lv2_name.c_str());
+    }
 }
 extern "C"
 JNIEXPORT void JNICALL
@@ -637,4 +641,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setLibraryPath(JNIEnv *env, jclass
     engine -> LIBRARY_PATH = std::string (nativeString) ;
     env->ReleaseStringUTFChars(path, nativeString);
     OUT
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginLazyLV2(JNIEnv *env, jclass clazz,
+                                                               jstring library, jint plugin) {
+    // TODO: implement addPluginLazyLV2()
+    if (engine == NULL) return -1 ;
+    const char *nativeString = env->GetStringUTFChars(library, 0);
+    LOGD("Loading lazy plugin [%s : %d]", nativeString, plugin);
+    engine ->addPluginToRackLazy(const_cast<char *>(nativeString), plugin, SharedLibrary::LV2);
+    env->ReleaseStringUTFChars(library, nativeString);
+    return engine -> activePlugins.size();
 }

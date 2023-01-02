@@ -294,6 +294,9 @@
         <item>libxfade_1915.so</item>
         <item>libzm1_1428.so</item>
     </string-array>
+    <string-array name="lv2_plugins">
+        <item>rkrlv2.so</item>
+    </string-array>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->

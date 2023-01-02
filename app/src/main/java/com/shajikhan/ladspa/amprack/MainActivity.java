@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView.LayoutManager layoutManager;
     ConstraintLayout linearLayoutPluginDialog;
     boolean lazyLoad = true;
-    String[] sharedLibraries;
+    String[] sharedLibraries ;
+    static String [] sharedLibrariesLV2;
     PluginDialogAdapter pluginDialogAdapter;
     SharedPreferences defaultSharedPreferences = null;
     Notification notification;
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private ActivityMainBinding binding;
     MediaPlayer mediaPlayer;
-    JSONObject availablePlugins;
+    JSONObject availablePlugins, availablePluginsLV2;
     private BillingClient billingClient;
     private PurchasesUpdatedListener purchasesUpdatedListener;
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
+        availablePluginsLV2 = ConnectGuitar.loadJSONFromAssetFile(this, "lv2_plugins.json");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -1334,7 +1336,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (lazyLoad == false)
             ret = AudioEngine.addPlugin(library, plug);
         else {
-            ret = AudioEngine.addPluginLazy(sharedLibraries[library], plug);
+            if (library > 149 /* because we have 149 lADSPA libraries */) {
+                ret = AudioEngine.addPluginLazyLV2(sharedLibrariesLV2[library - sharedLibraries.length], plug);
+            }
+            else
+                ret = AudioEngine.addPluginLazy(sharedLibraries[library], plug);
         }
 
         dataAdapter.addItem(pluginID, ret);
@@ -1350,6 +1356,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
 //        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
         sharedLibraries = context.getResources().getStringArray(R.array.ladspa_plugins);
+        sharedLibrariesLV2 = context.getResources().getStringArray(R.array.lv2_plugins);
+
+//        sharedLibraries.add (sharedLibrariesLV2);
+
         if (lazyLoad == false) {
             for (String s : sharedLibraries) {
                 AudioEngine.loadLibrary(/*"lib" + */s);
@@ -2000,5 +2010,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         String pluginName = plugin.split("#")[1];
         JSONObject jsonObject = ConnectGuitar.loadJSONFromAssetFile(context, "lv2/" + libraryName + "/" + pluginName + ".json");
         return jsonObject.toString();
+    }
+
+    public static boolean isLibraryLV2 (String libraryName) {
+        return Arrays.asList(sharedLibrariesLV2).contains(libraryName) ;
     }
 }

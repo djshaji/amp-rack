@@ -200,6 +200,7 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
     IN ;
     int _port = j .find("index").value();
     name = j.find("name").value().dump().c_str();
+    lv2_name = j.find("name").value();
     port = _port ;
 
     LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);

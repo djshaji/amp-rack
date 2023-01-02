@@ -260,6 +260,26 @@ public class Rack extends Fragment {
                     e.printStackTrace();
                 }
             }
+
+            plugins = mainActivity.availablePluginsLV2 ;
+            keys = plugins.keys();
+
+            while (keys.hasNext()) {
+                String key = keys.next();
+                try {
+                    if (plugins.get(key) instanceof JSONObject) {
+//                        Log.d(TAG, "onCreate: key " + key);
+                        JSONObject object = plugins.getJSONObject(key);
+                        // do something with jsonObject here
+                        String name = object.getString("name");
+                        String id = object.getString("id");
+                        Log.d(TAG, "[LV2 plugin]: " + name + ": " + id);
+                        mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         mainActivity.hashCommands.add (this, "printPlugins");

@@ -92,7 +92,6 @@ public:
 //        float dummySecondChannel [200];// arbitrary!
 
         for (int i = 0 ; i < activePlugins ; i ++) {
-            // shouldnt we connect ports in build_plugin_chain ?
             if (inputPorts [i] != -1)
                 connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) data);
             if (outputPorts [i] != -1)
