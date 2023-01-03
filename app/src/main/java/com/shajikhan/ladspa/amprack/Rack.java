@@ -242,7 +242,7 @@ public class Rack extends Fragment {
                 }
             }
         } else if (mainActivity.pluginDialogAdapter.plugins.size() == 0 && mainActivity.lazyLoad) {
-            JSONObject plugins = mainActivity.availablePlugins ;
+            JSONObject plugins = mainActivity.availablePluginsLV2 ;
             Iterator<String> keys = plugins.keys();
 
             while (keys.hasNext()) {
@@ -261,7 +261,7 @@ public class Rack extends Fragment {
                 }
             }
 
-            plugins = mainActivity.availablePluginsLV2 ;
+            plugins = mainActivity.availablePlugins ;
             keys = plugins.keys();
 
             while (keys.hasNext()) {

@@ -34,7 +34,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "create view");
+//        Log.d(TAG, "create view");
         if (context == null) context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.plugin_dialog_entry, parent, false);
         return new ViewHolder(view);
@@ -42,9 +42,13 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
 
     @Override
     public void onBindViewHolder(@NonNull PluginDialogAdapter.ViewHolder holder, int position) {
-        Log.d(TAG, "bid view");
+//        Log.d(TAG, "bid view");
         LinearLayout layout = holder.linearLayout ;
-        holder.pluginName.setText(pluginNames.get(position));
+        String pluginName = pluginNames.get(position) ;
+        if (mainActivity.isPluginLV2(pluginName))
+            holder.pluginName.setText("[LV2] " + pluginName);
+        else
+            holder.pluginName.setText(pluginName);
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

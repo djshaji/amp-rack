@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ActivityMainBinding binding;
     MediaPlayer mediaPlayer;
     JSONObject availablePlugins, availablePluginsLV2;
+    ArrayList<String> lv2Plugins = new ArrayList<String>();
     private BillingClient billingClient;
     private PurchasesUpdatedListener purchasesUpdatedListener;
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
@@ -208,6 +209,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
         availablePluginsLV2 = ConnectGuitar.loadJSONFromAssetFile(this, "lv2_plugins.json");
+
+        Iterator<String> keys = availablePluginsLV2.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Log.d(TAG, "onCreate: [LV2] " + key);
+            try {
+                lv2Plugins.add(availablePluginsLV2.getJSONObject(key).getString("name"));
+            } catch (JSONException e) {
+                Log.e(TAG, "onCreate: no name in plugin " + key, e);
+            }
+        }
+
         Log.d(TAG, "onCreate: [LV2 plugins]: " + availablePluginsLV2.toString());
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -2050,5 +2064,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static boolean isLibraryLV2 (String libraryName) {
         return Arrays.asList(sharedLibrariesLV2).contains(libraryName) ;
+    }
+
+    public boolean isPluginLV2 (String pluginName) {
+//        Log.d(TAG, "isPluginLV2: " + pluginName + " in " + lv2Plugins.toString() + " = " + lv2Plugins.contains(pluginName));
+        return lv2Plugins.contains(pluginName);
     }
 }
