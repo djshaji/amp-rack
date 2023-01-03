@@ -1981,6 +1981,41 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
+        Log.e(TAG, "addPluginByName: unable to find plugin name " + pluginName + " ... trying LV2 plugins ...");
+        addPluginByNameLV2(pluginName);
+    }
+
+    public void addPluginByNameLV2(String pluginName) {
+//        Log.d(TAG, "addPluginByName: " + pluginName);
+//        Log.d(TAG, "addPluginByName: " + availablePlugins.toString());
+        JSONObject plugins = availablePluginsLV2;
+        Iterator<String> keys = plugins.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            try {
+                if (plugins.get(key) instanceof JSONObject) {
+//                    Log.d(TAG, "onCreate: key " + key);
+                    JSONObject object = plugins.getJSONObject(key);
+                    // do something with jsonObject here
+                    String name = object.getString("name");
+                    String id = object.getString("id");
+                    int plugin = object.getInt("index");
+                    String lib = object.getString("library");
+
+//                    Log.d(TAG, String.format ("addPluginByName: comparing %s and %s", pluginName, name));
+
+                    if (pluginName.equals(name)) {
+                        Log.d(TAG, "addPluginByName: found plugin " + name);
+                        AudioEngine.addPluginLazyLV2(lib, plugin);
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         Log.e(TAG, "addPluginByName: unable to find plugin name " + pluginName);
     }
 
