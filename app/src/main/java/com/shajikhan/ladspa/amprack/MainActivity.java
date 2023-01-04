@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     int deviceHeight;
     long totalMemory = 0;
     static boolean lowMemoryMode = false;
+    boolean safeMode = false;
     ToggleButton record;
     PopupMenu addPluginMenu;
     RecyclerView recyclerView;
@@ -225,6 +226,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onCreate: [LV2 plugins]: " + availablePluginsLV2.toString());
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d(TAG, "onCreate: bootstart: " + defaultSharedPreferences.getLong("bootStartz", 1L) + " bootFinish: " + defaultSharedPreferences.getLong("bootFinish", 1L));
+        if (defaultSharedPreferences.getLong("bootFinish", 1L) < defaultSharedPreferences.getLong("bootStart", 0L))
+            safeMode = true ;
+
+        defaultSharedPreferences.edit().putLong("bootStart", System.currentTimeMillis()).commit();
 
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         notificationManager = NotificationManagerCompat.from(this);
@@ -598,6 +604,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Log.d(TAG, "onCreate: Loading JSON");
         rdf = loadJSONFromAsset("plugins_info.json");
+
+        defaultSharedPreferences.edit().putLong("bootFinish", System.currentTimeMillis()).commit();
+        if (safeMode) {
+            toast("Safe mode was enabled because the app did not load successfully. Some features may be disabled.");
+        }
     }
 
     void showMediaPlayerDialog() {
@@ -1547,6 +1558,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void loadActivePreset() {
+        if (safeMode)
+            return ;
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
         if (preset != null) {

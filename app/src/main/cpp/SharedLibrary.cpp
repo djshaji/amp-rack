@@ -45,8 +45,23 @@ char * SharedLibrary::load () {
     } else if (type == LV2 ){
         LOGI("[LV2] Loading plugin library %s", so_file.c_str());
         feature_list = (const LV2_Feature**)calloc(1, sizeof(features));
-        LOGD("[LV2] calloc [ok], trying memcpy ...");
+        LOGD("[LV2] %s calloc [ok], trying memcpy ...", so_file.c_str());
         memcpy(feature_list, &features, sizeof(features));
+        LOGD("[LV2] memcpy ok ...") ;
+        LOGD("[LV2] %s", features.log_feature.URI);
+        for (const LV2_Feature* const* f = feature_list; *f; ++f) {
+            LOGD("[LV2] discovered feature %s", (*f)->URI);
+        }
+
+//        if (feature_list == NULL) {
+//            LOGF("[LV2] Fatal error: feature list for %s is NULL, we will probably crash ...!", so_file.c_str());
+//        }
+
+//        LV2_Feature *lv2Feature = (LV2_Feature *) feature_list;
+//        while (lv2Feature != NULL) {
+//            LOGD("[LV2] discovered feature %s", lv2Feature ->URI);
+//            lv2Feature ++;
+//        }
 
         lv2DescriptorFunction = (LV2_Descriptor_Function) dlsym(dl_handle, "lv2_descriptor");
         if (lv2DescriptorFunction == NULL) {

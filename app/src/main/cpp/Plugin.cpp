@@ -113,12 +113,22 @@ void Plugin::print () {
 }
 
 void Plugin::load () {
+    IN
     LOGD("Creating plugin: %s from %s @ %s", lv2Descriptor->URI, sharedLibrary->LIBRARY_PATH.c_str(), sharedLibrary->so_file.c_str());
     std::string lib_path = sharedLibrary->LIBRARY_PATH + "/" + sharedLibrary -> so_file + ".lv2/" ;
     LOGD("[LV2] library path: %s", lib_path.c_str());
 
+    if (lv2Descriptor == NULL) {
+        HERE LOGF("[LV2] lv2Descriptor is NULL, we will probably crash ...!\nplugin: %s", sharedLibrary->so_file.c_str());
+    } else
+        LOGD ("[LV2] descriptor is ok, instantiating handle ...");
+
     handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
-    LOGD("[LV2] Handle instantiated ok! Congratulations");
+    if (handle == NULL)
+        LOGF("[LV2] plugin handle is NULL, we will probably crash ...!") ;
+    else
+        LOGD("[LV2] Handle instantiated ok! Congratulations");
+
 
     std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
@@ -210,6 +220,7 @@ void Plugin::load () {
     });
      */
 
+    OUT
 }
 
 std::string Plugin::getLV2JSON (std::string pluginName) {

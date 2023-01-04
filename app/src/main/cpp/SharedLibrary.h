@@ -5,6 +5,7 @@
 #include <logging_macros.h>
 #include <cstring>
 #include <string>
+#include "string.h"
 #include <vector>
 #include "ladspa.h"
 #include "lv2.h"
