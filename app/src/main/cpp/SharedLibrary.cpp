@@ -48,10 +48,13 @@ char * SharedLibrary::load () {
         LOGD("[LV2] %s calloc [ok], trying memcpy ...", so_file.c_str());
         memcpy(feature_list, &features, sizeof(features));
         LOGD("[LV2] memcpy ok ...") ;
-        LOGD("[LV2] %s", features.log_feature.URI);
+//        LOGD("[LV2] %s", features.log_feature.URI);
+
+        /* the following does not work.... _for some reason_
         for (const LV2_Feature* const* f = feature_list; *f; ++f) {
             LOGD("[LV2] discovered feature %s", (*f)->URI);
         }
+         */
 
 //        if (feature_list == NULL) {
 //            LOGF("[LV2] Fatal error: feature list for %s is NULL, we will probably crash ...!", so_file.c_str());

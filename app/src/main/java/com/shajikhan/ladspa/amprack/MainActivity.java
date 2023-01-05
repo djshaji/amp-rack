@@ -351,6 +351,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         .build()
         );
 
+//        AudioEngine.showProgress(null);
+//        AudioEngine.showProgress(context);
+        AudioEngine.create();
+        AudioEngine.setLibraryPath(getApplicationInfo().nativeLibraryDir);
+        AudioEngine.setLazyLoad(lazyLoad);
+        // load included plugins
+        loadPlugins();
+
         rack = new Rack();
         Log.d(TAG, "onCreate: creating tracks UI");
         tracks = new Tracks();
@@ -384,14 +392,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-//        AudioEngine.showProgress(null);
-//        AudioEngine.showProgress(context);
-        AudioEngine.create();
-        AudioEngine.setLibraryPath(getApplicationInfo().nativeLibraryDir);
-        AudioEngine.setLazyLoad(lazyLoad);
-        // load included plugins
-        loadPlugins();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -609,6 +609,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (safeMode) {
             toast("Safe mode was enabled because the app did not load successfully. Some features may be disabled.");
         }
+
+        Log.d(TAG, "onCreate: boot complete, we are now live.");
     }
 
     void showMediaPlayerDialog() {
