@@ -48,6 +48,24 @@ char * SharedLibrary::load () {
         LOGD("[LV2] %s calloc [ok], trying memcpy ...", so_file.c_str());
         memcpy(feature_list, &features, sizeof(features));
         LOGD("[LV2] memcpy ok ...") ;
+
+        // *new* LV2 feature stuff
+        m_supportedFeatureURIs.insert(LV2_URID__map);
+        m_supportedFeatureURIs.insert(LV2_URID__unmap);
+        m_supportedFeatureURIs.insert(LV2_OPTIONS__options);
+        for(std::pair<const char* const, void*>& pr : m_featureByUri)
+        {
+            m_features.push_back(LV2_Feature { pr.first, pr.second });
+        }
+
+        m_featurePointers.reserve(m_features.size() + 1);
+        for (const auto& feature : m_features)
+        {
+            m_featurePointers.push_back(&feature);
+        }
+
+        m_featurePointers.push_back(nullptr);
+
 //        LOGD("[LV2] %s", features.log_feature.URI);
 
         /* the following does not work.... _for some reason_

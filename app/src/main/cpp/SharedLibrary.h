@@ -5,6 +5,7 @@
 #include <logging_macros.h>
 #include <cstring>
 #include <string>
+#include <set>
 #include "string.h"
 #include <vector>
 #include "ladspa.h"
@@ -17,6 +18,7 @@
 #include <lv2/ui/ui.h>
 #include <lv2/data-access/data-access.h>
 #include <jni.h>
+#include <map>
 
 typedef struct {
     LV2_Feature                map_feature;
@@ -37,12 +39,34 @@ typedef struct {
     LV2_Extension_Data_Feature ext_data;
 } LV2Features;
 
+struct CmpStr
+{
+    bool operator()(const char *a, const char *b) const
+    {
+        return std::strcmp(a, b) < 0;
+    }
+};
+
+
 class SharedLibrary {
 public:
     typedef enum {
         LADSPA,
         LV2
     } PluginType ;
+
+    //! feature storage
+    std::vector<LV2_Feature> m_features;
+    //! pointers to m_features, required for lilv_plugin_instantiate
+    std::vector<const LV2_Feature*> m_featurePointers;
+    //! features + data, ordered by URI
+    std::map<const char*, void*, CmpStr> m_featureByUri;
+    std::set<const char*, CmpStr> m_supportedFeatureURIs;
+
+    const LV2_Feature* const* featurePointers() const
+    {
+        return m_featurePointers.data();
+    }
 
     std::string LIBRARY_PATH ;
     JavaVM * vm ;

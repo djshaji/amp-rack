@@ -123,7 +123,8 @@ void Plugin::load () {
     } else
         LOGD ("[LV2] descriptor is ok, instantiating handle ...");
 
-    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
+    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->featurePointers());
+//    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
     if (handle == NULL)
         LOGF("[LV2] plugin handle is NULL, we will probably crash ...!") ;
     else
