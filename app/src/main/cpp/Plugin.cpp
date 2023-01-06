@@ -2,7 +2,12 @@
 using namespace nlohmann ;
 
 void Plugin::free () {
-    descriptor->cleanup (handle);
+    IN
+    if (type == SharedLibrary::LADSPA)
+        descriptor->cleanup (handle);
+    else
+        lv2Descriptor->cleanup (handle);
+    OUT
 }
 
 Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate, SharedLibrary::PluginType _type) {
