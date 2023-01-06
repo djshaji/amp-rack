@@ -215,9 +215,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         while (keys.hasNext()) {
             String key = keys.next();
-            Log.d(TAG, "onCreate: [LV2] " + key);
             try {
-                lv2Plugins.add(availablePluginsLV2.getJSONObject(key).getString("name"));
+                String _p = availablePluginsLV2.getJSONObject(key).getString("name") ;
+                Log.d(TAG, "onCreate: found LV2 plugin " + key + ": " + _p);
+                lv2Plugins.add(_p);
             } catch (JSONException e) {
                 Log.e(TAG, "onCreate: no name in plugin " + key, e);
             }
