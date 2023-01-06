@@ -1,0 +1,111 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mda:Degrade
+	a lv2:Plugin ,
+		lv2:DistortionPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "Degrade" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA Degrade" ;
+	doap:shortdesc "Sample quality reduction" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Headroom" ;
+		lv2:symbol "headroom" ;
+		lv2:default 0.8 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Peak clipping threshold"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Quant" ;
+		lv2:symbol "quant" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment """Bit depth (typically 8 or below for "telephone" quality)"""
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Rate" ;
+		lv2:symbol "rate" ;
+		lv2:default 0.65 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Sample Rate (turn control to left or right for different sound characters)"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "Post Filter" ;
+		lv2:symbol "post_filt" ;
+		lv2:default 0.9 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Low-pass filter to muffle the distortion produced by the previous two controls"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "Non-Lin" ;
+		lv2:symbol "non_lin" ;
+		lv2:default 0.58 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment """Additional harmonic distortion "thickening" (turn control to left or right for different sound characters)"""
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "Output" ;
+		lv2:symbol "output" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 6 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 7 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 8 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 9 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

@@ -204,15 +204,17 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
     port = _port ;
 
     LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);
-    LADSPA_Data lower_bound = j .find("minimum").value();
-    LADSPA_Data upper_bound = j .find ("maximum").value ();
+    std::string _min = j .find("minimum").value();
+    std::string _max = j .find("maximum").value();
+    LADSPA_Data lower_bound = std::stof (_min);
+    LADSPA_Data upper_bound = std::stof (_max);
 
     LOGD("[control] %s", name);
 
     min = lower_bound;
     max = upper_bound;
     def = (float *) malloc (sizeof (long int));
-    *def = j .find("default").value();
+    *def = std::stof (std::string (j .find("default").value()));
     /* Check the default */
     if (def) {
         if (*def < min) {

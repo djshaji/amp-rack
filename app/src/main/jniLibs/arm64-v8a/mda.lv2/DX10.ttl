@@ -1,0 +1,203 @@
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/DX10/env>
+	a param:EnvelopeControls ,
+		pg:InputGroup ;
+	rdfs:label "Envelope" ;
+	lv2:symbol "env" .
+
+mda:DX10
+	a lv2:Plugin ,
+		lv2:InstrumentPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "DX10" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA DX10" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#map> ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	rdfs:comment "Sounds similar to the later Yamaha DX synths including the heavy bass but with a warmer, cleaner tone.  This plug-in is 8-voice polyphonic." ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Attack" ;
+		lv2:symbol "attack" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:attack ;
+		pg:group <http://drobilla.net/plugins/mda/DX10/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Decay" ;
+		lv2:symbol "decay" ;
+		lv2:default 0.65 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:decay ;
+		pg:group <http://drobilla.net/plugins/mda/DX10/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Release" ;
+		lv2:symbol "release" ;
+		lv2:default 0.441 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:release ;
+		pg:group <http://drobilla.net/plugins/mda/DX10/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "Coarse" ;
+		lv2:symbol "coarse" ;
+		lv2:default 0.842 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "Fine" ;
+		lv2:symbol "fine" ;
+		lv2:default 0.329 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "Mod Init" ;
+		lv2:symbol "mod_init" ;
+		lv2:default 0.23 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:name "Mod Dec" ;
+		lv2:symbol "mod_dec" ;
+		lv2:default 0.8 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:name "Mod Sus" ;
+		lv2:symbol "mod_sus" ;
+		lv2:default 0.05 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 8 ;
+		lv2:name "Mod Rel" ;
+		lv2:symbol "mod_rel" ;
+		lv2:default 0.8 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 9 ;
+		lv2:name "Mod Vel" ;
+		lv2:symbol "mod_vel" ;
+		lv2:default 0.9 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 10 ;
+		lv2:name "Vibrato" ;
+		lv2:symbol "vibrato" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 11 ;
+		lv2:name "Octave" ;
+		lv2:symbol "octave" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 12 ;
+		lv2:name "FineTune" ;
+		lv2:symbol "finetune" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 13 ;
+		lv2:name "Waveform" ;
+		lv2:symbol "waveform" ;
+		lv2:default 0.447 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 14 ;
+		lv2:name "Mod Thru" ;
+		lv2:symbol "mod_thru" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 15 ;
+		lv2:name "LFO Rate" ;
+		lv2:symbol "lfo_rate" ;
+		lv2:default 0.414 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 16 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 17 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:InputPort ,
+			atom:AtomPort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+		lv2:index 18 ;
+		lv2:symbol "event_in" ;
+		lv2:name "Event In"
+	] .

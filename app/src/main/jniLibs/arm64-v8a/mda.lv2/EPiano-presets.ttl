@@ -1,0 +1,213 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#EPiano-default>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/EPiano> ;
+	rdfs:label "Default" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "treble_boost" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "modulation" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "vel_sense" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphonic" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_tuning" ;
+		pset:value 0.146
+	] , [
+		lv2:symbol "overdrive" ;
+		pset:value 0.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#EPiano-bright>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/EPiano> ;
+	rdfs:label "Bright" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "treble_boost" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "modulation" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "vel_sense" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphonic" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_tuning" ;
+		pset:value 0.146
+	] , [
+		lv2:symbol "overdrive" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#EPiano-mellow>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/EPiano> ;
+	rdfs:label "Mellow" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "treble_boost" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "modulation" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "vel_sense" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphonic" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_tuning" ;
+		pset:value 0.246
+	] , [
+		lv2:symbol "overdrive" ;
+		pset:value 0.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#EPiano-autopan>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/EPiano> ;
+	rdfs:label "Autopan" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "treble_boost" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "modulation" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "vel_sense" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphonic" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_tuning" ;
+		pset:value 0.246
+	] , [
+		lv2:symbol "overdrive" ;
+		pset:value 0.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#EPiano-tremolo>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/EPiano> ;
+	rdfs:label "Tremolo" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "treble_boost" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "modulation" ;
+		pset:value 0.75
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "vel_sense" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphonic" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_tuning" ;
+		pset:value 0.246
+	] , [
+		lv2:symbol "overdrive" ;
+		pset:value 0.0
+	] .

@@ -1,0 +1,147 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mda:Combo
+	a lv2:Plugin ,
+		lv2:SimulatorPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "Combo" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA Combo" ;
+	doap:shortdesc "Amp & speaker simulator" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	rdfs:comment "This plug-in can sound quite subtle but comes alive when used on guitar with the drive turned up!  Remember that distortion may not sound good on time-based effects such as delay and reverb, so put those effects after this plug, or after a separate distortion plug with Combo acting only as a speaker simulator." ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Model" ;
+		lv2:symbol "model" ;
+		lv2:default 1.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:portProperty lv2:enumeration ;
+		lv2:scalePoint [
+			rdfs:label "D.I. (flat frequency response)" ;
+			rdf:value 0.0
+		] , [
+			rdfs:label "Tradtional speaker simulator" ;
+			rdf:value 0.16666666
+		] , [
+			rdfs:label "Small radio speaker" ;
+			rdf:value 0.33333333
+		] , [
+			rdfs:label "Small combo (close mic)" ;
+			rdf:value 0.5
+		] , [
+			rdfs:label "Small combo (far mic)" ;
+			rdf:value 0.66666666
+		] , [
+			rdfs:label "Large stack (front mic)" ;
+			rdf:value 0.833333333
+		] , [
+			rdfs:label "Large stack (side mic, scooped mids)" ;
+			rdf:value 1.0
+		]
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Drive" ;
+		lv2:symbol "drive" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Amount of clipping"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Bias" ;
+		lv2:symbol "bias" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment """Clip one side of the waveform more than the other for rougher or "gated" effects (use an oscilloscope plug-in to see what's happening)"""
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "Output" ;
+		lv2:symbol "output" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Level trim"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "Stereo" ;
+		lv2:symbol "stereo" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:portProperty lv2:toggled ;
+		rdfs:comment "Process in stereo.  Defaults to Mono to reduce processor usage."
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "HPF Freq" ;
+		lv2:symbol "hpf_freq" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "High-Pass Filter Cutoff Frequency"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:name "HPF Reso" ;
+		lv2:symbol "hpf_reso" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "High-Pass Filter Resonance"
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 7 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 8 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 9 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 10 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

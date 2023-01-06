@@ -1,0 +1,209 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/MultiBand/env>
+	a param:EnvelopeControls ,
+		pg:InputGroup ;
+	rdfs:label "Envelope" ;
+	lv2:symbol "env" .
+
+mda:MultiBand
+	a lv2:Plugin ,
+		lv2:MultiEQPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "MultiBand" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA MultiBand" ;
+	doap:shortdesc "Multi-band compressor with M-S processing modes" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	rdfs:comment """As well as just "squashing everything" this plug-in can be used to "overcook" the mid-frequencies while leaving the low end unprocessed, enhancing playback over small speakers without affecting the overall sound too much.
+
+To give more control when mastering (and to offer something different from other dynamics processors) in Mono mode this plug does not compress any stereo information, but in Stereo mode only the stereo component is processed giving control over ambience and space with a similar sound to strereo "shufflers" - but be careful with the levels!  The stereo width control works as a "mono depth" control in Stereo mode.""" ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Listen" ;
+		lv2:symbol "listen" ;
+		lv2:default 1.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:portProperty lv2:enumeration ;
+		lv2:scalePoint [
+			rdfs:label "Low" ;
+			rdf:value 0.0
+		] , [
+			rdfs:label "Mid" ;
+			rdf:value 0.33333333
+		] , [
+			rdfs:label "High" ;
+			rdf:value 0.66666666
+		] , [
+			rdfs:label "Output" ;
+			rdf:value 1.0
+		] ;
+		rdfs:comment "Audition the low, mid and high bands individually"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "L <> M" ;
+		lv2:symbol "l_m" ;
+		lv2:default 0.103 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Low / mid crossover frequency"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "M <> H" ;
+		lv2:symbol "m_h" ;
+		lv2:default 0.878 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Mid / high crossover frequency"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "L Comp" ;
+		lv2:symbol "l_comp" ;
+		lv2:default 0.54 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Low compression amount"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "M Comp" ;
+		lv2:symbol "m_comp" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Mid compression amount"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "H Comp" ;
+		lv2:symbol "h_comp" ;
+		lv2:default 0.6 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "High compression amount"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:name "L Out" ;
+		lv2:symbol "l_out" ;
+		lv2:default 0.45 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Low output level trim"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:name "M Out" ;
+		lv2:symbol "m_out" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Mid output level trim"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 8 ;
+		lv2:name "H Out" ;
+		lv2:symbol "h_out" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "High output level trim"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 9 ;
+		lv2:name "Attack" ;
+		lv2:symbol "attack" ;
+		lv2:default 0.22 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:attack ;
+		pg:group <http://drobilla.net/plugins/mda/MultiBand/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 10 ;
+		lv2:name "Release" ;
+		lv2:symbol "release" ;
+		lv2:default 0.602 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:release ;
+		pg:group <http://drobilla.net/plugins/mda/MultiBand/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 11 ;
+		lv2:name "Stereo" ;
+		lv2:symbol "stereo" ;
+		lv2:default 0.55 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Used to restore stereo width when heavy processing is applied to Mono component"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 12 ;
+		lv2:name "Process" ;
+		lv2:symbol "process" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:portProperty lv2:toggled
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 13 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 14 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 15 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 16 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

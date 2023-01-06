@@ -1,0 +1,145 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mda:Dynamics
+	a lv2:Plugin ,
+		lv2:DynamicsPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "Dynamics" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA Dynamics" ;
+	doap:shortdesc "Compressor / Limiter / Gate" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Thresh" ;
+		lv2:symbol "thresh" ;
+		lv2:default 0.6 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Ratio" ;
+		lv2:symbol "ratio" ;
+		lv2:default 0.4 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment """Very wide range allows "overcompression" where output gets quieter as input gets louder"""
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Output" ;
+		lv2:symbol "output" ;
+		lv2:default 0.1 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Level trim"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "Attack" ;
+		lv2:symbol "attack" ;
+		lv2:default 0.18 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "Release" ;
+		lv2:symbol "release" ;
+		lv2:default 0.55 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "Limiter" ;
+		lv2:symbol "limiter" ;
+		lv2:default 1.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Limiter threshold - the limiter has zero attack time but uses the same release time as the compressor"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:name "Gate Thr" ;
+		lv2:symbol "gate_thr" ;
+		lv2:default 0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:name "Gate Att" ;
+		lv2:symbol "gate_att" ;
+		lv2:default 0.1 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 8 ;
+		lv2:name "Gate Rel" ;
+		lv2:symbol "gate_rel" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 9 ;
+		lv2:name "Mix" ;
+		lv2:symbol "mix" ;
+		lv2:default 1.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 10 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 11 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 12 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 13 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

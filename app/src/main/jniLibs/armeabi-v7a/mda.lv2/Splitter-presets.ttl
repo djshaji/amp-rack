@@ -1,0 +1,84 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#Splitter-frequency-level-splitter>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Splitter> ;
+	rdfs:label "Frequency/Level Splitter" ;
+	lv2:port [
+		lv2:symbol "mode" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "freq" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "freq_sw" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "level" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "level_sw" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Splitter-pass-peaks-only>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Splitter> ;
+	rdfs:label "Pass Peaks Only" ;
+	lv2:port [
+		lv2:symbol "mode" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "freq" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "freq_sw" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "level" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "level_sw" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Splitter-stereo-crossover>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Splitter> ;
+	rdfs:label "Stereo Crossover" ;
+	lv2:port [
+		lv2:symbol "mode" ;
+		pset:value 0.666667
+	] , [
+		lv2:symbol "freq" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "freq_sw" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "level" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "level_sw" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] .

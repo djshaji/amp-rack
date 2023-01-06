@@ -225,6 +225,8 @@ void Plugin::load () {
 }
 
 std::string Plugin::getLV2JSON (std::string pluginName) {
+    IN
+    LOGD("[LV2] getting JSON for %s/%s", sharedLibrary->so_file.c_str(), pluginName.c_str());
     JNIEnv *env;
     sharedLibrary -> vm-> GetEnv((void**)&env, JNI_VERSION_1_6);
     if (env == NULL) {
@@ -236,7 +238,7 @@ std::string Plugin::getLV2JSON (std::string pluginName) {
 
     jclass clazz = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
     if (clazz == nullptr) {
-        LOGF("cannot find class!");
+        HERE LOGF("cannot find class!");
     }
 
     jmethodID mid = env->GetStaticMethodID(clazz, "getLV2Info",
@@ -255,7 +257,7 @@ std::string Plugin::getLV2JSON (std::string pluginName) {
     std::string str = std::string (nativeString);
     env->ReleaseStringUTFChars(retStr, nativeString);
 
-
+    OUT
     return str;
 }
 

@@ -296,6 +296,42 @@
     </string-array>
     <string-array name="lv2_plugins">
         <item>rkrlv2.so</item>
+        <item>mda-Ambience.so</item>
+        <item>mda-Bandisto.so</item>
+        <item>mda-BeatBox.so</item>
+        <item>mda-Combo.so</item>
+        <item>mda-DeEss.so</item>
+        <item>mda-Degrade.so</item>
+        <item>mda-Delay.so</item>
+        <item>mda-Detune.so</item>
+        <item>mda-Dither.so</item>
+        <item>mda-DubDelay.so</item>
+        <item>mda-DX10.so</item>
+        <item>mda-Dynamics.so</item>
+        <item>mda-EPiano.so</item>
+        <item>mda-Image.so</item>
+        <item>mda-JX10.so</item>
+        <item>mda-Leslie.so</item>
+        <item>mda-Limiter.so</item>
+        <item>mda-Loudness.so</item>
+        <item>mda-MultiBand.so</item>
+        <item>mda-Overdrive.so</item>
+        <item>mda-Piano.so</item>
+        <item>mda-RePsycho.so</item>
+        <item>mda-RezFilter.so</item>
+        <item>mda-RingMod.so</item>
+        <item>mda-RoundPan.so</item>
+        <item>mda-Shepard.so</item>
+        <item>mda-Splitter.so</item>
+        <item>mda-Stereo.so</item>
+        <item>mda-SubSynth.so</item>
+        <item>mda-TalkBox.so</item>
+        <item>mda-TestTone.so</item>
+        <item>mda-ThruZero.so</item>
+        <item>mda-Tracker.so</item>
+        <item>mda-Transient.so</item>
+        <item>mda-VocInput.so</item>
+        <item>mda-Vocoder.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

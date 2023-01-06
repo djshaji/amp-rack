@@ -1,0 +1,87 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#ThruZero-thru-zero-flanger>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/ThruZero> ;
+	rdfs:label "Thru-Zero Flanger" ;
+	lv2:port [
+		lv2:symbol "rate" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "depth" ;
+		pset:value 0.43
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.47
+	] , [
+		lv2:symbol "feedback" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "depth_mod" ;
+		pset:value 1.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#ThruZero-phase-canceller>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/ThruZero> ;
+	rdfs:label "Phase Canceller" ;
+	lv2:port [
+		lv2:symbol "rate" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "depth" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.47
+	] , [
+		lv2:symbol "feedback" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "depth_mod" ;
+		pset:value 1.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#ThruZero-chorus-doubler>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/ThruZero> ;
+	rdfs:label "Chorus Doubler" ;
+	lv2:port [
+		lv2:symbol "rate" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "depth" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.35
+	] , [
+		lv2:symbol "feedback" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "depth_mod" ;
+		pset:value 0.7
+	] .
+
+<http://drobilla.net/plugins/mda/presets#ThruZero-mad-modulator>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/ThruZero> ;
+	rdfs:label "Mad Modulator" ;
+	lv2:port [
+		lv2:symbol "rate" ;
+		pset:value 0.75
+	] , [
+		lv2:symbol "depth" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "feedback" ;
+		pset:value 0.75
+	] , [
+		lv2:symbol "depth_mod" ;
+		pset:value 1.0
+	] .

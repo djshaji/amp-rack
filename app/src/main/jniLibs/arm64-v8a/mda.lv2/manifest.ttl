@@ -1,0 +1,795 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix mdapset: <http://drobilla.net/plugins/mda/presets#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+mda:
+	a doap:Project ;
+	lv2:symbol "mda" ;
+	doap:name "MDA LV2" ;
+	doap:shortdesc "An LV2 port of the MDA plugins." ;
+	doap:homepage <http://drobilla.net/software/mda-lv2> ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer [
+		a foaf:Person ;
+		foaf:name "Paul Kellett" ;
+		foaf:mbox <paul@mda-vst.com>
+	] .
+
+mda:mainIn
+	a pg:StereoGroup ,
+		pg:InputGroup ;
+	rdfs:label "Input" ;
+	lv2:symbol "in" .
+
+mda:mainOut
+	a pg:StereoGroup ,
+		pg:OutputGroup ;
+	pg:source mda:mainIn ;
+	rdfs:label "Output" ;
+	lv2:symbol "out" .
+
+mda:Ambience
+	a lv2:Plugin ;
+	rdfs:seeAlso <Ambience.ttl> ;
+	lv2:binary <Ambience.so> .
+
+mda:Bandisto
+	a lv2:Plugin ;
+	rdfs:seeAlso <Bandisto.ttl> ;
+	lv2:binary <Bandisto.so> .
+
+mda:BeatBox
+	a lv2:Plugin ;
+	rdfs:seeAlso <BeatBox.ttl> ;
+	lv2:binary <BeatBox.so> .
+
+mda:Combo
+	a lv2:Plugin ;
+	rdfs:seeAlso <Combo.ttl> ;
+	lv2:binary <Combo.so> .
+
+mda:DX10
+	a lv2:Plugin ;
+	rdfs:seeAlso <DX10.ttl> ;
+	lv2:binary <DX10.so> .
+
+mda:DeEss
+	a lv2:Plugin ;
+	rdfs:seeAlso <DeEss.ttl> ;
+	lv2:binary <DeEss.so> .
+
+mda:Degrade
+	a lv2:Plugin ;
+	rdfs:seeAlso <Degrade.ttl> ;
+	lv2:binary <Degrade.so> .
+
+mda:Delay
+	a lv2:Plugin ;
+	rdfs:seeAlso <Delay.ttl> ;
+	lv2:binary <Delay.so> .
+
+mda:Detune
+	a lv2:Plugin ;
+	rdfs:seeAlso <Detune.ttl> ;
+	lv2:binary <Detune.so> .
+
+mda:Dither
+	a lv2:Plugin ;
+	rdfs:seeAlso <Dither.ttl> ;
+	lv2:binary <Dither.so> .
+
+mda:DubDelay
+	a lv2:Plugin ;
+	rdfs:seeAlso <DubDelay.ttl> ;
+	lv2:binary <DubDelay.so> .
+
+mda:Dynamics
+	a lv2:Plugin ;
+	rdfs:seeAlso <Dynamics.ttl> ;
+	lv2:binary <Dynamics.so> .
+
+mda:EPiano
+	a lv2:Plugin ;
+	rdfs:seeAlso <EPiano.ttl> ;
+	lv2:binary <EPiano.so> .
+
+mda:Image
+	a lv2:Plugin ;
+	rdfs:seeAlso <Image.ttl> ;
+	lv2:binary <Image.so> .
+
+mda:JX10
+	a lv2:Plugin ;
+	rdfs:seeAlso <JX10.ttl> ;
+	lv2:binary <JX10.so> .
+
+mda:Leslie
+	a lv2:Plugin ;
+	rdfs:seeAlso <Leslie.ttl> ;
+	lv2:binary <Leslie.so> .
+
+mda:Limiter
+	a lv2:Plugin ;
+	rdfs:seeAlso <Limiter.ttl> ;
+	lv2:binary <Limiter.so> .
+
+mda:Loudness
+	a lv2:Plugin ;
+	rdfs:seeAlso <Loudness.ttl> ;
+	lv2:binary <Loudness.so> .
+
+mda:MultiBand
+	a lv2:Plugin ;
+	rdfs:seeAlso <MultiBand.ttl> ;
+	lv2:binary <MultiBand.so> .
+
+mda:Overdrive
+	a lv2:Plugin ;
+	rdfs:seeAlso <Overdrive.ttl> ;
+	lv2:binary <Overdrive.so> .
+
+mda:Piano
+	a lv2:Plugin ;
+	rdfs:seeAlso <Piano.ttl> ;
+	lv2:binary <Piano.so> .
+
+mda:RePsycho
+	a lv2:Plugin ;
+	rdfs:seeAlso <RePsycho.ttl> ;
+	lv2:binary <RePsycho.so> .
+
+mda:RezFilter
+	a lv2:Plugin ;
+	rdfs:seeAlso <RezFilter.ttl> ;
+	lv2:binary <RezFilter.so> .
+
+mda:RingMod
+	a lv2:Plugin ;
+	rdfs:seeAlso <RingMod.ttl> ;
+	lv2:binary <RingMod.so> .
+
+mda:RoundPan
+	a lv2:Plugin ;
+	rdfs:seeAlso <RoundPan.ttl> ;
+	lv2:binary <RoundPan.so> .
+
+mda:Shepard
+	a lv2:Plugin ;
+	rdfs:seeAlso <Shepard.ttl> ;
+	lv2:binary <Shepard.so> .
+
+mda:Splitter
+	a lv2:Plugin ;
+	rdfs:seeAlso <Splitter.ttl> ;
+	lv2:binary <Splitter.so> .
+
+mda:Stereo
+	a lv2:Plugin ;
+	rdfs:seeAlso <Stereo.ttl> ;
+	lv2:binary <Stereo.so> .
+
+mda:SubSynth
+	a lv2:Plugin ;
+	rdfs:seeAlso <SubSynth.ttl> ;
+	lv2:binary <SubSynth.so> .
+
+mda:TalkBox
+	a lv2:Plugin ;
+	rdfs:seeAlso <TalkBox.ttl> ;
+	lv2:binary <TalkBox.so> .
+
+mda:TestTone
+	a lv2:Plugin ;
+	rdfs:seeAlso <TestTone.ttl> ;
+	lv2:binary <TestTone.so> .
+
+mda:ThruZero
+	a lv2:Plugin ;
+	rdfs:seeAlso <ThruZero.ttl> ;
+	lv2:binary <ThruZero.so> .
+
+mda:Tracker
+	a lv2:Plugin ;
+	rdfs:seeAlso <Tracker.ttl> ;
+	lv2:binary <Tracker.so> .
+
+mda:Transient
+	a lv2:Plugin ;
+	rdfs:seeAlso <Transient.ttl> ;
+	lv2:binary <Transient.so> .
+
+mda:VocInput
+	a lv2:Plugin ;
+	rdfs:seeAlso <VocInput.ttl> ;
+	lv2:binary <VocInput.so> .
+
+mda:Vocoder
+	a lv2:Plugin ;
+	rdfs:seeAlso <Vocoder.ttl> ;
+	lv2:binary <Vocoder.so> .
+
+mdapset:Detune-stereo-detune
+	a pset:Preset ;
+	lv2:appliesTo mda:Detune ;
+	rdfs:seeAlso <Detune-presets.ttl> .
+
+mdapset:Detune-symphonic
+	a pset:Preset ;
+	lv2:appliesTo mda:Detune ;
+	rdfs:seeAlso <Detune-presets.ttl> .
+
+mdapset:Detune-out-of-tune
+	a pset:Preset ;
+	lv2:appliesTo mda:Detune ;
+	rdfs:seeAlso <Detune-presets.ttl> .
+
+mdapset:DX10-bright-e-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-jazz-e-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-e-piano-pad
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-fuzzy-e-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-soft-chimes
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-harpsichord
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-funk-clav
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-sitar
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-chiff-organ
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-tinkle
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-space-pad
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-koto
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-harp
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-jazz-guitar
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-steel-drum
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-log-drum
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-trumpet
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-horn
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-reed-1
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-reed-2
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-violin
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-chunky-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-e-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-clunk-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-thick-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-sine-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-square-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-upright-bass-1
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-upright-bass-2
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-harmonics
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-scratch
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:DX10-syn-tom
+	a pset:Preset ;
+	lv2:appliesTo mda:DX10 ;
+	rdfs:seeAlso <DX10-presets.ttl> .
+
+mdapset:EPiano-default
+	a pset:Preset ;
+	lv2:appliesTo mda:EPiano ;
+	rdfs:seeAlso <EPiano-presets.ttl> .
+
+mdapset:EPiano-bright
+	a pset:Preset ;
+	lv2:appliesTo mda:EPiano ;
+	rdfs:seeAlso <EPiano-presets.ttl> .
+
+mdapset:EPiano-mellow
+	a pset:Preset ;
+	lv2:appliesTo mda:EPiano ;
+	rdfs:seeAlso <EPiano-presets.ttl> .
+
+mdapset:EPiano-autopan
+	a pset:Preset ;
+	lv2:appliesTo mda:EPiano ;
+	rdfs:seeAlso <EPiano-presets.ttl> .
+
+mdapset:EPiano-tremolo
+	a pset:Preset ;
+	lv2:appliesTo mda:EPiano ;
+	rdfs:seeAlso <EPiano-presets.ttl> .
+
+mdapset:JX10-5th-sweep-pad
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-echo-pad
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-space-chimes
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-solid-backing
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-velocity-backing
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-rubber-backing-zf-
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-808-state-lead
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-mono-glide
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-detuned-techno-lead
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-hard-lead
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-bubble
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-monosynth
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-moogcury-lite
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-gangsta-whine
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-higher-synth-zf-
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-303-saw-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-303-square-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-analog-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-analog-bass-2
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-low-pulses
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-sine-infra-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-wobble-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-squelch-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-rubber-bass-zf-
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-soft-pick-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-fretless-bass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-whistler
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-very-soft-pad
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-pizzicato
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-synth-strings
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-synth-strings-2
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-leslie-organ
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-click-organ
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-hard-organ
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-bass-clarinet
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-trumpet
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-soft-horn
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-brass-section
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-synth-brass
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-detuned-syn-brass-zf-
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-power-pwm
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-water-velocity
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-ghost
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-soft-e-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-thumb-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-steel-drums-zf-
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-car-horn
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-helicopter
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-arctic-wind
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-thip
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-synth-tom
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:JX10-squelchy-frog
+	a pset:Preset ;
+	lv2:appliesTo mda:JX10 ;
+	rdfs:seeAlso <JX10-presets.ttl> .
+
+mdapset:Leslie-leslie-simulator
+	a pset:Preset ;
+	lv2:appliesTo mda:Leslie ;
+	rdfs:seeAlso <Leslie-presets.ttl> .
+
+mdapset:Leslie-slow
+	a pset:Preset ;
+	lv2:appliesTo mda:Leslie ;
+	rdfs:seeAlso <Leslie-presets.ttl> .
+
+mdapset:Leslie-fast
+	a pset:Preset ;
+	lv2:appliesTo mda:Leslie ;
+	rdfs:seeAlso <Leslie-presets.ttl> .
+
+mdapset:Piano-mda-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-plain-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-compressed-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-dance-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-concert-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-dark-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-school-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Piano-broken-piano
+	a pset:Preset ;
+	lv2:appliesTo mda:Piano ;
+	rdfs:seeAlso <Piano-presets.ttl> .
+
+mdapset:Splitter-frequency-level-splitter
+	a pset:Preset ;
+	lv2:appliesTo mda:Splitter ;
+	rdfs:seeAlso <Splitter-presets.ttl> .
+
+mdapset:Splitter-pass-peaks-only
+	a pset:Preset ;
+	lv2:appliesTo mda:Splitter ;
+	rdfs:seeAlso <Splitter-presets.ttl> .
+
+mdapset:Splitter-stereo-crossover
+	a pset:Preset ;
+	lv2:appliesTo mda:Splitter ;
+	rdfs:seeAlso <Splitter-presets.ttl> .
+
+mdapset:ThruZero-thru-zero-flanger
+	a pset:Preset ;
+	lv2:appliesTo mda:ThruZero ;
+	rdfs:seeAlso <ThruZero-presets.ttl> .
+
+mdapset:ThruZero-phase-canceller
+	a pset:Preset ;
+	lv2:appliesTo mda:ThruZero ;
+	rdfs:seeAlso <ThruZero-presets.ttl> .
+
+mdapset:ThruZero-chorus-doubler
+	a pset:Preset ;
+	lv2:appliesTo mda:ThruZero ;
+	rdfs:seeAlso <ThruZero-presets.ttl> .
+
+mdapset:ThruZero-mad-modulator
+	a pset:Preset ;
+	lv2:appliesTo mda:ThruZero ;
+	rdfs:seeAlso <ThruZero-presets.ttl> .
+
+mdapset:Vocoder-default
+	a pset:Preset ;
+	lv2:appliesTo mda:Vocoder ;
+	rdfs:seeAlso <Vocoder-presets.ttl> .
+
+mdapset:Vocoder-16-band-vocoder
+	a pset:Preset ;
+	lv2:appliesTo mda:Vocoder ;
+	rdfs:seeAlso <Vocoder-presets.ttl> .
+
+mdapset:Vocoder-old-vocoder
+	a pset:Preset ;
+	lv2:appliesTo mda:Vocoder ;
+	rdfs:seeAlso <Vocoder-presets.ttl> .
+
+mdapset:Vocoder-choral-vocoder
+	a pset:Preset ;
+	lv2:appliesTo mda:Vocoder ;
+	rdfs:seeAlso <Vocoder-presets.ttl> .
+
+mdapset:Vocoder-pad-vocoder
+	a pset:Preset ;
+	lv2:appliesTo mda:Vocoder ;
+	rdfs:seeAlso <Vocoder-presets.ttl> .

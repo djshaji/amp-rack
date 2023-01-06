@@ -1359,6 +1359,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void addPluginToRack(int pluginID) {
         int library = pluginID / 100;
         int plug = pluginID - (library * 100);
+        Log.d(TAG, "addPluginToRack: loading from " + sharedLibraries.length + " LADSPA and " + sharedLibrariesLV2.length + " LV2 plugins");
         Log.d(TAG, "Adding plugin: " + library + ": " + plug);
         int ret = -1;
         if (lazyLoad == false)
@@ -2068,11 +2069,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void testLV2 () {
 //        Log.d(TAG, "testLV2: " + getLV2Info("eql"));
-        AudioEngine.testLV2();
+//        AudioEngine.testLV2();
+        Log.d(TAG, "testLV2: " + getLV2Info("mda-Limiter.so", "http://drobilla.net/plugins/mda/Limiter"));
     }
 
     public static String getLV2Info (String libraryName, String plugin) {
-        String pluginName = plugin.split("#")[1];
+        String pluginName ;
+        if (plugin.indexOf("#") != -1)
+            pluginName = plugin.split("#")[1];
+        else {
+            String [] p = plugin.split("/");
+            pluginName = p [p.length -1];
+        }
+
+        Log.d(TAG, "getLV2Info: lv2/" + libraryName + "/" + pluginName + ".json");
         JSONObject jsonObject = ConnectGuitar.loadJSONFromAssetFile(context, "lv2/" + libraryName + "/" + pluginName + ".json");
         return jsonObject.toString();
     }

@@ -1,0 +1,57 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#Detune-stereo-detune>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Detune> ;
+	rdfs:label "Stereo Detune" ;
+	lv2:port [
+		lv2:symbol "detune" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "latency" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Detune-symphonic>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Detune> ;
+	rdfs:label "Symphonic" ;
+	lv2:port [
+		lv2:symbol "detune" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "latency" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Detune-out-of-tune>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Detune> ;
+	rdfs:label "Out Of Tune" ;
+	lv2:port [
+		lv2:symbol "detune" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mix" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "latency" ;
+		pset:value 0.5
+	] .

@@ -1,0 +1,135 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mda:SubSynth
+	a lv2:Plugin ,
+		lv2:DistortionPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "SubSynth" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA SubSynth" ;
+	doap:shortdesc "Several low frequency enhancement methods" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+    rdfs:comment """More bass than you could ever need!
+
+Be aware that you may be adding low frequency content outside the range of your monitor speakers.  To avoid clipping, follow with a limiter plug-in (this can also give some giant hip-hop drum sounds!).""" ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Type" ;
+		lv2:symbol "type" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:portProperty lv2:enumeration ;
+		lv2:scalePoint [
+			rdf:value 0.0 ;
+			rdfs:label "Distort" ;
+			rdfs:comment "Takes the existing low frequencies, clips them to produce harmonics at a constant level, then filters out the higher harmonics. Has a similar effect to compressing the low frequencies."
+		] , [
+			rdf:value 0.25 ;
+			rdfs:label "Divide" ;
+			rdfs:comment "As above, but works at an octave below the input frequency, like an octave divider guitar pedal."
+		] , [
+			rdf:value 0.5 ;
+			rdfs:label "Invert" ;
+			rdfs:comment "Flips the phase of the low frequency signal once per cycle to add a smooth sub-octave. A simplified version of the classic Sub-Harmonic Synthesizer."
+		] , [
+			rdf:value 0.75 ;
+			rdfs:label "Key Osc." ;
+			rdfs:comment """Adds a decaying "boom" - usually made with an oscillator before a noise gate keyed with the kick drum signal."""
+		]
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Level" ;
+		lv2:symbol "level" ;
+		lv2:default 0.3 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Amount of synthesized low frequency signal to be added"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Tune" ;
+		lv2:symbol "tune" ;
+		lv2:default 0.6 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Maximum frequency - keep as low as possible to reduce distortion. In Key Osc mode sets the oscillator frequency"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "Dry Mix" ;
+		lv2:symbol "dry_mix" ;
+		lv2:default 1.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Reduces the level of the original signal"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "Thresh" ;
+		lv2:symbol "thresh" ;
+		lv2:default 0.6 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment """Increase to "gate" the low frequency effect and stop unwanted background rumbling"""
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "Release" ;
+		lv2:symbol "release" ;
+		lv2:default 0.65 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:release ;
+		rdfs:comment "Decay time in Key Osc mode"
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 6 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 7 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 8 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 9 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

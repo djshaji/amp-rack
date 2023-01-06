@@ -1,0 +1,153 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#Vocoder-default>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Vocoder> ;
+	rdfs:label "Default" ;
+	lv2:port [
+		lv2:symbol "mod_in" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hi_thru" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "hi_band" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "filter_q" ;
+		pset:value 0.55
+	] , [
+		lv2:symbol "mid_freq" ;
+		pset:value 0.6667
+	] , [
+		lv2:symbol "quality" ;
+		pset:value 0.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Vocoder-16-band-vocoder>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Vocoder> ;
+	rdfs:label "16 Band Vocoder" ;
+	lv2:port [
+		lv2:symbol "mod_in" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hi_thru" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "hi_band" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "filter_q" ;
+		pset:value 0.55
+	] , [
+		lv2:symbol "mid_freq" ;
+		pset:value 0.6667
+	] , [
+		lv2:symbol "quality" ;
+		pset:value 1.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Vocoder-old-vocoder>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Vocoder> ;
+	rdfs:label "Old Vocoder" ;
+	lv2:port [
+		lv2:symbol "mod_in" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hi_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "hi_band" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "filter_q" ;
+		pset:value 0.55
+	] , [
+		lv2:symbol "mid_freq" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "quality" ;
+		pset:value 0.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Vocoder-choral-vocoder>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Vocoder> ;
+	rdfs:label "Choral Vocoder" ;
+	lv2:port [
+		lv2:symbol "mod_in" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hi_thru" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "hi_band" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "filter_q" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "mid_freq" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "quality" ;
+		pset:value 0.0
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Vocoder-pad-vocoder>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Vocoder> ;
+	rdfs:label "Pad Vocoder" ;
+	lv2:port [
+		lv2:symbol "mod_in" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hi_thru" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "hi_band" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "envelope" ;
+		pset:value 0.78
+	] , [
+		lv2:symbol "filter_q" ;
+		pset:value 0.55
+	] , [
+		lv2:symbol "mid_freq" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "quality" ;
+		pset:value 0.0
+	] .

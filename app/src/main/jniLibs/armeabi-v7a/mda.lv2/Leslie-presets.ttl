@@ -1,0 +1,102 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#Leslie-leslie-simulator>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Leslie> ;
+	rdfs:label "Default" ;
+	lv2:port [
+		lv2:symbol "mode" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lo_throb" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "hi_width" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "hi_depth" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "hi_throb" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "x_over" ;
+		pset:value 0.48
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "speed" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Leslie-slow>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Leslie> ;
+	rdfs:label "Slow" ;
+	lv2:port [
+		lv2:symbol "mode" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lo_throb" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "hi_width" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "hi_depth" ;
+		pset:value 0.75
+	] , [
+		lv2:symbol "hi_throb" ;
+		pset:value 0.57
+	] , [
+		lv2:symbol "x_over" ;
+		pset:value 0.48
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "speed" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Leslie-fast>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Leslie> ;
+	rdfs:label "Fast" ;
+	lv2:port [
+		lv2:symbol "mode" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "lo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "lo_throb" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "hi_width" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "hi_depth" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "hi_throb" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "x_over" ;
+		pset:value 0.48
+	] , [
+		lv2:symbol "output" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "speed" ;
+		pset:value 0.5
+	] .

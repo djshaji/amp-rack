@@ -1,0 +1,169 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/RezFilter/env>
+	a param:EnvelopeControls ,
+		pg:InputGroup ;
+	rdfs:label "Envelope" ;
+	lv2:symbol "env" .
+
+<http://drobilla.net/plugins/mda/RezFilter/filt>
+	a param:FilterControls ,
+		pg:InputGroup ;
+	rdfs:label "Filter" ;
+	lv2:symbol "filt" .
+
+mda:RezFilter
+	a lv2:Plugin ,
+		lv2:FilterPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "RezFilter" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA RezFilter" ;
+	doap:shortdesc "Resonant filter with LFO and envelope follower" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Freq" ;
+		lv2:symbol "freq" ;
+		lv2:default 0.33 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:cutoffFrequency ;
+		pg:group <http://drobilla.net/plugins/mda/RezFilter/filt>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Res" ;
+		lv2:symbol "res" ;
+		lv2:default 0.7 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:resonance ;
+		pg:group <http://drobilla.net/plugins/mda/RezFilter/filt>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Output" ;
+		lv2:symbol "output" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Level trim"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "Env->VCF" ;
+		lv2:symbol "env_vcf" ;
+		lv2:default 0.85 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Positive or negative (squelchy!) envelope modulation of cut-off frequency"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "Attack" ;
+		lv2:symbol "attack" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:attack ;
+		pg:group <http://drobilla.net/plugins/mda/RezFilter/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "Release" ;
+		lv2:symbol "release" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:designation param:release ;
+		pg:group <http://drobilla.net/plugins/mda/RezFilter/env>
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:name "LFO->VCF" ;
+		lv2:symbol "lfo_vcf" ;
+		lv2:default 0.7 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "LFO modulation of cut-off frequency (turn to left for sample & hold LFO, right for sine)"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:name "LFO Rate" ;
+		lv2:symbol "lfo_rate" ;
+		lv2:default 0.4 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "LFO modulation speed"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 8 ;
+		lv2:name "Trigger" ;
+		lv2:symbol "trigger" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Envelope trigger level (normally set to minimum to acts as a free-running envelope follower)"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 9 ;
+		lv2:name "Max Freq" ;
+		lv2:symbol "max_freq" ;
+		lv2:default 0.75 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment """Limit maximum cut-off frequency for a mellower sound (the filter can sound "screechy" at high frequencies)"""
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 10 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 11 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 12 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 13 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

@@ -1,0 +1,1731 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#DX10-bright-e-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Bright E.Piano" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.441
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.842
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.329
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.05
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.447
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.414
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-jazz-e-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Jazz E.Piano" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.671
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.441
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.336
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.243
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.178
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-e-piano-pad>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "E.Piano Pad" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.184
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.27
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.474
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.224
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.974
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.428
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.836
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-fuzzy-e-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Fuzzy E.Piano" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.32
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.217
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.599
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.67
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.309
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.263
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.507
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.276
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.638
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.526
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-soft-chimes>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Soft Chimes" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.76
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.39
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.362
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.401
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.296
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.493
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-harpsichord>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Harpsichord" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.342
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.88
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.408
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.74
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.842
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.651
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-funk-clav>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Funk Clav" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.36
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.875
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.592
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.303
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.868
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-sitar>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Sitar" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.704
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.151
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.75
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.493
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.77
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.421
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.632
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-chiff-organ>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Chiff Organ" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.99
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.32
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.283
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.57
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.05
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.24
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.138
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.283
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.822
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-tinkle>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Tinkle" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.65
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.368
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.651
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.395
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.55
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.257
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.414
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-space-pad>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Space Pad" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.52
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.197
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.52
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.72
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.73
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.336
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.428
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-koto>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Koto" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.24
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.39
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.88
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.74
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.526
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.48
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-harp>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Harp" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.16
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.158
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.349
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.618
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.401
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-jazz-guitar>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Jazz Guitar" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.39
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.49
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.263
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.145
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-steel-drum>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Steel Drum" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.507
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.48
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.73
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.303
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.73
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.579
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-log-drum>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Log Drum" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.32
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.467
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.079
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.158
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.151
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.02
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-trumpet>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Trumpet" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.99
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.45
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.112
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.711
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.401
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-horn>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Horn" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.99
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.18
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.217
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.48
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-reed-1>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Reed 1" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.22
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.99
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.17
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.24
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.31
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.257
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.757
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.697
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.803
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-reed-2>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Reed 2" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.22
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.99
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.45
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.07
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.24
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.31
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.36
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.211
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.184
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.414
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-violin>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Violin" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.697
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.99
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.421
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.138
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.75
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.39
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.513
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.8
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.316
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.467
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.678
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.743
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.757
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.487
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-chunky-bass>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Chunky Bass" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.125
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.474
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.579
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.592
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-e-bass>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "E.Bass" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.395
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.388
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.092
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.25
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.15
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.178
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.822
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-clunk-bass>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Clunk Bass" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.23
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.45
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.32
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.05
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.52
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.105
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-thick-bass>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Thick Bass" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.17
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.145
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.29
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.35
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.441
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.309
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-sine-bass>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Sine Bass" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.49
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.17
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.151
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.099
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.9
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.118
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.013
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-square-bass>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Square Bass" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.32
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.35
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.67
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.1
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.15
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.303
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.73
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-upright-bass-1>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Upright Bass 1" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.18
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.54
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.296
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.033
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-upright-bass-2>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Upright Bass 2" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.3
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.36
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.461
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.07
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.07
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.4
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.546
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.467
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-harmonics>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Harmonics" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.28
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.7
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.151
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.079
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-scratch>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Scratch" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.24
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.58
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.63
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.6
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 0.816
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.243
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#DX10-syn-tom>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/DX10> ;
+	rdfs:label "Syn Tom" ;
+	lv2:port [
+		lv2:symbol "attack" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "decay" ;
+		pset:value 0.355
+	] , [
+		lv2:symbol "release" ;
+		pset:value 0.35
+	] , [
+		lv2:symbol "coarse" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "fine" ;
+		pset:value 0.105
+	] , [
+		lv2:symbol "mod_init" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_dec" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "mod_sus" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "mod_rel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "mod_vel" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vibrato" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "octave" ;
+		pset:value 0.645
+	] , [
+		lv2:symbol "finetune" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "waveform" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "mod_thru" ;
+		pset:value 0.296
+	] , [
+		lv2:symbol "lfo_rate" ;
+		pset:value 0.5
+	] .

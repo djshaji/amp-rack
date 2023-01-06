@@ -1,0 +1,339 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/plugins/mda/presets#Piano-mda-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "MDA Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.803
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.251
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.376
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.246
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-plain-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "Plain Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.751
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.452
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-compressed-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "Compressed Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.902
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.399
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.623
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.331
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.299
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.499
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-dance-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "Dance Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.399
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.251
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.672
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.124
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.127
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.249
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.283
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.667
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-concert-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "Concert Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.648
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.298
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.602
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.55
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.85
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.356
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.339
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.66
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-dark-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "Dark Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.602
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.304
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.2
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.336
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.651
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.317
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.5
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-school-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "School Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.45
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.598
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.626
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.603
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.174
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.331
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.421
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.801
+	] .
+
+<http://drobilla.net/plugins/mda/presets#Piano-broken-piano>
+	a pset:Preset ;
+	lv2:appliesTo <http://drobilla.net/plugins/mda/Piano> ;
+	rdfs:label "Broken Piano" ;
+	lv2:port [
+		lv2:symbol "env_decay" ;
+		pset:value 0.05
+	] , [
+		lv2:symbol "env_release" ;
+		pset:value 0.957
+	] , [
+		lv2:symbol "hardness_offset" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "vel_to_hardness" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "muffling_filter" ;
+		pset:value 0.299
+	] , [
+		lv2:symbol "vel_to_muffling" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "vel_sensitivity" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "stereo_width" ;
+		pset:value 0.5
+	] , [
+		lv2:symbol "polyphony" ;
+		pset:value 0.33
+	] , [
+		lv2:symbol "fine_tuning" ;
+		pset:value 0.45
+	] , [
+		lv2:symbol "random_detuning" ;
+		pset:value 0.718
+	] , [
+		lv2:symbol "stretch_tuning" ;
+		pset:value 0.0
+	] .

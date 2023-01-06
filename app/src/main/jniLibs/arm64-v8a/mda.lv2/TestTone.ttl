@@ -1,0 +1,166 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix mda: <http://drobilla.net/plugins/mda/> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mda:TestTone
+	a lv2:Plugin ,
+		lv2:GeneratorPlugin ;
+	lv2:project mda: ;
+	lv2:symbol "TestTone" ;
+	lv2:microVersion 0 ;
+	lv2:minorVersion 2 ;
+	doap:name "MDA TestTone" ;
+	doap:shortdesc "Signal generator with pink and white noise, impulses and sweeps" ;
+	doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	pg:mainInput mda:mainIn ;
+	pg:mainOutput mda:mainOut ;
+	lv2:port [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:name "Mode" ;
+		lv2:symbol "mode" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:portProperty lv2:enumeration ;
+		lv2:scalePoint [
+			rdf:value 0.0 ;
+			rdfs:label "MIDI #" ;
+			rdfs:comment "Sine waves at musical pitches (A3 = 69 = 440 Hz)"
+		] , [
+			rdf:value 0.14 ;
+			rdfs:label "Impulse" ;
+			rdfs:comment "Single-sample impulse"
+		] , [
+			rdf:value 0.28 ;
+			rdfs:label "White" ;
+			rdfs:comment "White noise"
+		] , [
+			rdf:value 0.42 ;
+			rdfs:label "Pink" ;
+			rdfs:comment "Pink noise"
+		] , [
+			rdf:value 0.57 ;
+			rdfs:label "Sine" ;
+			rdfs:comment "ISO 1/3-octave frequencies"
+		] , [
+			rdf:value 0.71 ;
+			rdfs:label "Log Sweep" ;
+			rdfs:comment "Logarithmic frequency sweep"
+		] , [
+			rdf:value 0.85 ;
+			rdfs:label "Log Step" ;
+			rdfs:comment "1/3 octave steps"
+		] , [
+			rdf:value 1.0 ;
+			rdfs:label "Lin Sweep" ;
+			rdfs:comment "Linear frequency sweep"
+		]
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 1 ;
+		lv2:name "Level" ;
+		lv2:symbol "level" ;
+		lv2:default 0.71 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Peak output level"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 2 ;
+		lv2:name "Channel" ;
+		lv2:symbol "channel" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Generate signals on left or right channel only"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:name "F1" ;
+		lv2:symbol "f1" ;
+		lv2:default 0.57 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Base frequency (not applicable to pink and white noise or impulses)"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:name "F2" ;
+		lv2:symbol "f2" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Fine frequency control, or end frequency for sweep modes"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:name "Sweep" ;
+		lv2:symbol "sweep" ;
+		lv2:default 0.3 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Sweep duration for sweep modes (2 seconds silence is also added between sweeps).  Sets repetition rate in inpulse mode"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:name "Thru" ;
+		lv2:symbol "thru" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Allow the input signal to pass through the plug-in"
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:name "Zero dB" ;
+		lv2:symbol "zero_db" ;
+		lv2:default 1.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		rdfs:comment "Calibrate output so indicated level is relative to, for example -0.01 dB FS or -18 dB FS"
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 8 ;
+		lv2:symbol "left_in" ;
+		lv2:name "Left In" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:InputPort ,
+			lv2:AudioPort ;
+		lv2:index 9 ;
+		lv2:symbol "right_in" ;
+		lv2:name "Right In" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainIn
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 10 ;
+		lv2:symbol "left_out" ;
+		lv2:name "Left Out" ;
+		lv2:designation pg:left ;
+		pg:group mda:mainOut
+	] , [
+		a lv2:OutputPort ,
+			lv2:AudioPort ;
+		lv2:index 11 ;
+		lv2:symbol "right_out" ;
+		lv2:name "Right Out" ;
+		lv2:designation pg:right ;
+		pg:group mda:mainOut
+	] .

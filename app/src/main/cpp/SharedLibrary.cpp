@@ -19,7 +19,7 @@ char * SharedLibrary::load () {
     dl_handle = dlopen (so_file.c_str(), RTLD_LAZY);
     if (dl_handle == NULL) {
         char * err = dlerror () ;
-        LOGE ("Failed to load library: %s\n", err);
+        LOGE ("Failed to load library %s: %s\n", so_file.c_str(), err);
         OUT ;
         return err ;
     }
