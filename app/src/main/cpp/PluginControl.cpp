@@ -225,12 +225,13 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
     min = lower_bound;
     max = upper_bound;
     def = (float *) malloc (sizeof (long int));
+    std::string _def ;
+    if (j.find("default")->is_string()) {
+        LOGD("plugin default is string ..");
+        *def = std::stof(std::string(j.find("default").value()));
+    } else
+        *def = j.find ("default").value();
 
-    if (j.find("minimum")->is_string()) {
-        *def = std::stof(std::string(j.find("minimum").value()));
-    } else {
-        *def = j.find("minimum").value();
-    }
     /* Check the default */
     if (def) {
         if (*def < min) {
