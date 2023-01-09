@@ -34,5 +34,265 @@
 "18300": {"name": "MDA Tracker", "id": 5001, "index": 0, "library": "mda-Tracker.so"},
 "18400": {"name": "MDA Transient", "id": 5001, "index": 0, "library": "mda-Transient.so"},
 "18500": {"name": "MDA VocInput", "id": 5001, "index": 0, "library": "mda-VocInput.so"},
-"18600": {"name": "MDA Vocoder", "id": 5001, "index": 0, "library": "mda-Vocoder.so"}
+"18600": {"name": "MDA Vocoder", "id": 5001, "index": 0, "library": "mda-Vocoder.so"},
+
+    "18700": {
+        "name": "Gx_AxisFace_",
+        "id": 5001,
+        "index": 0,
+        "library": "libGxAxisFace.lv2.so"
+    },
+    "18800": {
+        "name": "Gx_bajatubedriver_",
+        "id": 5002,
+        "index": 0,
+        "library": "libGxBaJaTubeDriver.lv2.so"
+    },
+    "18900": {
+        "name": "Gx_blueamp_",
+        "id": 5003,
+        "index": 0,
+        "library": "libGxBlueAmp.lv2.so"
+    },
+    "19000": {
+        "name": "GxBoobTube",
+        "id": 5004,
+        "index": 0,
+        "library": "libGxBoobTube.lv2.so"
+    },
+    "19100": {
+        "name": "Gx_bottlerocket_",
+        "id": 5005,
+        "index": 0,
+        "library": "libGxBottleRocket.lv2.so"
+    },
+    "19200": {
+        "name": "GxClubDrive",
+        "id": 5006,
+        "index": 0,
+        "library": "libGxClubDrive.lv2.so"
+    },
+    "19300": {
+        "name": "GxCreamMachine",
+        "id": 5007,
+        "index": 0,
+        "library": "libGxCreamMachine.lv2.so"
+    },
+    "19400": {
+        "name": "GxDOP250",
+        "id": 5008,
+        "index": 0,
+        "library": "libGxDOP250.lv2.so"
+    },
+    "19500": {
+        "name": "Gx_epic_",
+        "id": 5009,
+        "index": 0,
+        "library": "libGxEpic.lv2.so"
+    },
+    "19600": {
+        "name": "GxEternity",
+        "id": 5010,
+        "index": 0,
+        "library": "libGxEternity.lv2.so"
+    },
+    "19700": {
+        "name": "Gx_maestro_fz1b_",
+        "id": 5011,
+        "index": 0,
+        "library": "libGxFz1b.lv2.so"
+    },
+    "19800": {
+        "name": "Gx_maestro_fz1s_",
+        "id": 5012,
+        "index": 0,
+        "library": "libGxFz1s.lv2.so"
+    },
+    "19900": {
+        "name": "Gx_guvnor_",
+        "id": 5013,
+        "index": 0,
+        "library": "libGxGuvnor.lv2.so"
+    },
+    "20000": {
+        "name": "Gx_Heathkit_",
+        "id": 5014,
+        "index": 0,
+        "library": "libGxHeathkit.lv2.so"
+    },
+    "20100": {
+        "name": "GxHotBox",
+        "id": 5015,
+        "index": 0,
+        "library": "libGxHotBox.lv2.so"
+    },
+    "20200": {
+        "name": "GxHyperion",
+        "id": 5016,
+        "index": 0,
+        "library": "libGxHyperion.lv2.so"
+    },
+    "20300": {
+        "name": "Gx_KnightFuzz_",
+        "id": 5017,
+        "index": 0,
+        "library": "libGxKnightFuzz.lv2.so"
+    },
+    "20400": {
+        "name": "GxLiquidDrive",
+        "id": 5018,
+        "index": 0,
+        "library": "libGxLiquidDrive.lv2.so"
+    },
+    "20500": {
+        "name": "GxLuna",
+        "id": 5019,
+        "index": 0,
+        "library": "libGxLuna.lv2.so"
+    },
+    "20600": {
+        "name": "Gx_MicroAmp_",
+        "id": 5020,
+        "index": 0,
+        "library": "libGxMicroAmp.lv2.so"
+    },
+    "20700": {
+        "name": "GxPlexi",
+        "id": 5021,
+        "index": 0,
+        "library": "libGxPlexi.lv2.so"
+    },
+    "20800": {
+        "name": "GxQuack",
+        "id": 5022,
+        "index": 0,
+        "library": "libGxQuack.lv2.so"
+    },
+    "20900": {
+        "name": "GxSaturator",
+        "id": 5023,
+        "index": 0,
+        "library": "libGxSaturator.lv2.so"
+    },
+    "21000": {
+        "name": "Gx_sd1sim_",
+        "id": 5024,
+        "index": 0,
+        "library": "libGxSD1.lv2.so"
+    },
+    "21100": {
+        "name": "GxSD2Lead",
+        "id": 5025,
+        "index": 0,
+        "library": "libGxSD2Lead.lv2.so"
+    },
+    "21200": {
+        "name": "GxShakaTube",
+        "id": 5026,
+        "index": 0,
+        "library": "libGxShakaTube.lv2.so"
+    },
+    "21300": {
+        "name": "Gx_sloopyblue_",
+        "id": 5027,
+        "index": 0,
+        "library": "libGxSloopyBlue.lv2.so"
+    },
+    "21400": {
+        "name": "GxSlowGear",
+        "id": 5028,
+        "index": 0,
+        "library": "libGxSlowGear.lv2.so"
+    },
+    "21500": {
+        "name": "Gx_SunFace_",
+        "id": 5029,
+        "index": 0,
+        "library": "libGxSunFace.lv2.so"
+    },
+    "21600": {
+        "name": "GxSuperFuzz",
+        "id": 5030,
+        "index": 0,
+        "library": "libGxSuperFuzz.lv2.so"
+    },
+    "21700": {
+        "name": "Gx_supersonic_",
+        "id": 5031,
+        "index": 0,
+        "library": "libGxSupersonic.lv2.so"
+    },
+    "21800": {
+        "name": "Gx_Suppa Tone Bender_",
+        "id": 5032,
+        "index": 0,
+        "library": "libGxSuppaToneBender.lv2.so"
+    },
+    "21900": {
+        "name": "Gx_ampegsvt_",
+        "id": 5033,
+        "index": 0,
+        "library": "libGxSVT.lv2.so"
+    },
+    "22000": {
+        "name": "Gx_timray_",
+        "id": 5034,
+        "index": 0,
+        "library": "libGxTimRay.lv2.so"
+    },
+    "22100": {
+        "name": "GxToneMachine",
+        "id": 5035,
+        "index": 0,
+        "library": "libGxToneMachine.lv2.so"
+    },
+    "22200": {
+        "name": "Gx_TubeDistortion_",
+        "id": 5036,
+        "index": 0,
+        "library": "libGxTubeDistortion.lv2.so"
+    },
+    "22300": {
+        "name": "GxUltraCab",
+        "id": 5037,
+        "index": 0,
+        "library": "libGxUltraCab.lv2.so"
+    },
+    "22400": {
+        "name": "GxUVox720k",
+        "id": 5038,
+        "index": 0,
+        "library": "libGxUVox720k.lv2.so"
+    },
+    "22500": {
+        "name": "Gx_valvecaster_",
+        "id": 5039,
+        "index": 0,
+        "library": "libGxValveCaster.lv2.so"
+    },
+    "22600": {
+        "name": "Gx_voxbass_",
+        "id": 5040,
+        "index": 0,
+        "library": "libGxVBassPreAmp.lv2.so"
+    },
+    "22700": {
+        "name": "Gx_vintage_fuzz_master_",
+        "id": 5041,
+        "index": 0,
+        "library": "libGxVintageFuzzMaster.lv2.so"
+    },
+    "22800": {
+        "name": "Gx_vmk2d_",
+        "id": 5042,
+        "index": 0,
+        "library": "libGxVmk2.lv2.so"
+    },
+    "22900": {
+        "name": "GxVoodooFuzz",
+        "id": 5043,
+        "index": 0,
+        "library": "libGxVoodoFuzz.lv2.so"
     }
+}
+

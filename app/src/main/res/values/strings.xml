@@ -332,6 +332,49 @@
         <item>mda-Transient.so</item>
         <item>mda-VocInput.so</item>
         <item>mda-Vocoder.so</item>
+        <item>libGxAxisFace.lv2.so</item>
+        <item>libGxBaJaTubeDriver.lv2.so</item>
+        <item>libGxBlueAmp.lv2.so</item>
+        <item>libGxBoobTube.lv2.so</item>
+        <item>libGxBottleRocket.lv2.so</item>
+        <item>libGxClubDrive.lv2.so</item>
+        <item>libGxCreamMachine.lv2.so</item>
+        <item>libGxDOP250.lv2.so</item>
+        <item>libGxEpic.lv2.so</item>
+        <item>libGxEternity.lv2.so</item>
+        <item>libGxFz1b.lv2.so</item>
+        <item>libGxFz1s.lv2.so</item>
+        <item>libGxGuvnor.lv2.so</item>
+        <item>libGxHeathkit.lv2.so</item>
+        <item>libGxHotBox.lv2.so</item>
+        <item>libGxHyperion.lv2.so</item>
+        <item>libGxKnightFuzz.lv2.so</item>
+        <item>libGxLiquidDrive.lv2.so</item>
+        <item>libGxLuna.lv2.so</item>
+        <item>libGxMicroAmp.lv2.so</item>
+        <item>libGxPlexi.lv2.so</item>
+        <item>libGxQuack.lv2.so</item>
+        <item>libGxSaturator.lv2.so</item>
+        <item>libGxSD1.lv2.so</item>
+        <item>libGxSD2Lead.lv2.so</item>
+        <item>libGxShakaTube.lv2.so</item>
+        <item>libGxSloopyBlue.lv2.so</item>
+        <item>libGxSlowGear.lv2.so</item>
+        <item>libGxSunFace.lv2.so</item>
+        <item>libGxSuperFuzz.lv2.so</item>
+        <item>libGxSupersonic.lv2.so</item>
+        <item>libGxSuppaToneBender.lv2.so</item>
+        <item>libGxSVT.lv2.so</item>
+        <item>libGxTimRay.lv2.so</item>
+        <item>libGxToneMachine.lv2.so</item>
+        <item>libGxTubeDistortion.lv2.so</item>
+        <item>libGxUltraCab.lv2.so</item>
+        <item>libGxUVox720k.lv2.so</item>
+        <item>libGxValveCaster.lv2.so</item>
+        <item>libGxVBassPreAmp.lv2.so</item>
+        <item>libGxVintageFuzzMaster.lv2.so</item>
+        <item>libGxVmk2.lv2.so</item>
+        <item>libGxVoodoFuzz.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
