@@ -282,6 +282,7 @@ public class Rack extends Fragment {
             }
         }
 
+        MainActivity.totalPlugins = mainActivity.pluginDialogAdapter.plugins.size();
         mainActivity.hashCommands.add (this, "printPlugins");
         mainActivity.hashCommands.add (this, "writeJSON");
 

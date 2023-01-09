@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     File dir;
     HashCommands hashCommands;
     JSONObject rdf ;
+    static int totalPlugins = 0 ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -2047,7 +2048,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
-        Log.e(TAG, "addPluginByName: unable to find plugin name " + pluginName);
+        Log.e(TAG, "[LV2] addPluginByName: unable to find plugin name " + pluginName);
     }
 
     static public String readAssetFile(Context context, String filename) {

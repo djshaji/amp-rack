@@ -209,15 +209,19 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
     LADSPA_Data lower_bound  ;
     LADSPA_Data upper_bound ;
 
-    if (j.find("minimum")->is_string()) {
-        _min = j.find("minimum").value();
+    if (j.find("maximum")->is_string()) {
         _max = j.find("maximum").value();
-        LOGD("minimum: %s is string", _min.c_str());
-        lower_bound = std::stof (_min);
         upper_bound = std::stof (_max);
     } else {
-        lower_bound = j.find("minimum").value();
         upper_bound = j.find("maximum").value();
+    }
+
+    if (j.find("minimum")->is_string()) {
+        _min = j.find("minimum").value();
+        LOGD("minimum: %s is string", _min.c_str());
+        lower_bound = std::stof (_min);
+    } else {
+        lower_bound = j.find("minimum").value();
     }
 
     LOGD("[control] %s", name);

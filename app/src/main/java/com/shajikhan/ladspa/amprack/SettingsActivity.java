@@ -239,7 +239,8 @@ public class SettingsActivity extends AppCompatActivity implements
                 }
             });
             findPreference("build_name").setSummary(R.string.app_version);
-            int plugins = AudioEngine.getTotalPlugins() ;
+//            int plugins = AudioEngine.getTotalPlugins() ;
+            int plugins = MainActivity.totalPlugins;
             findPreference("plugins").setSummary(String.valueOf(plugins));
 
             if (MainActivity.proVersion == false) {

@@ -21,7 +21,7 @@
         <Preference
             android:title="Plugin Formats Supported"
             android:key="plugins_supported"
-            android:summary="LADSPA"/>
+            android:summary="LADSPA, LV2"/>
         <Preference
             android:title="Audio Encoders Supported"
             android:key="encoders_supported"
