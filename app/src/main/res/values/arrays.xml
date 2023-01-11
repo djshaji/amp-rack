@@ -50,6 +50,7 @@
         <item>Space</item>
     </string-array>
     <string-array name="bg_m3">
+        <item>2.9 Beta</item>
         <item>a1</item>
         <item>a2</item>
         <item>a3</item>
@@ -57,6 +58,7 @@
         <item>a5</item>
     </string-array>
     <string-array name="bg_m3_names">
+        <item>2.9 Beta</item>
         <item>Passion</item>
         <item>Desire</item>
         <item>Hope</item>

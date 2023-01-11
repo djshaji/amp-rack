@@ -1853,7 +1853,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
-        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "a1");
+        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "2.9 Beta");
+//        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "a1");
         Bitmap bitmap = null;
         switch (resIdString) {
             default:
@@ -1904,6 +1905,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             case "a4":
                 bitmap = BitmapFactory.decodeResource(resources, R.drawable.a4);
                 context.setTheme(R.style.Theme_4);
+                break;
+            case "2.9 Beta":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.giancarlo);
+                context.setTheme(R.style.Theme_29beta);
                 break;
         }
 

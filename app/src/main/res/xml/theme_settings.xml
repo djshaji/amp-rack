@@ -5,7 +5,7 @@
     <ListPreference
         android:title="Background"
         android:key="background"
-        android:defaultValue="Space"
+        android:defaultValue=">2.9 Beta"
         app:entryValues="@array/bg_m3"
         app:entries="@array/bg_m3_names"/>
     <Preference

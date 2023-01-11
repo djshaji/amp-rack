@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:icon="@drawable/logo"
@@ -26,6 +27,10 @@
             android:title="Audio Encoders Supported"
             android:key="encoders_supported"
             android:summary="OPUS\nMP3\nPCM WAV 16 bit"/>
+        <Preference
+            android:title="Credits"
+            app:key="credits"
+            android:summary="@string/credits"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

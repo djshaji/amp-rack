@@ -1,295 +1,295 @@
 {"15009": {"name": "rkr AlienWah", "id": 5001, "index": 9, "library": "rkrlv2.so"}, "15005": {"name": "rkr Analog Phaser", "id": 5002, "index": 5, "library": "rkrlv2.so"}, "15020": {"name": "rkr Arpie", "id": 5003, "index": 20, "library": "rkrlv2.so"}, "15012": {"name": "rkr Cabinet", "id": 5004, "index": 12, "library": "rkrlv2.so"}, "15004": {"name": "rkr Flanger/Chorus", "id": 5005, "index": 4, "library": "rkrlv2.so"}, "15027": {"name": "rkr Coil Crafter", "id": 5006, "index": 27, "library": "rkrlv2.so"}, "15038": {"name": "rkr CompBand", "id": 5007, "index": 38, "library": "rkrlv2.so"}, "15001": {"name": "rkr Compressor", "id": 5008, "index": 1, "library": "rkrlv2.so"}, "15015": {"name": "rkr Derelict", "id": 5009, "index": 15, "library": "rkrlv2.so"}, "15019": {"name": "rkr DistBand", "id": 5010, "index": 19, "library": "rkrlv2.so"}, "15002": {"name": "rkr Distorsion", "id": 5011, "index": 2, "library": "rkrlv2.so"}, "15017": {"name": "rkr Dual Flange", "id": 5012, "index": 17, "library": "rkrlv2.so"}, "15003": {"name": "rkr Echo", "id": 5013, "index": 3, "library": "rkrlv2.so"}, "15036": {"name": "rkr Echotron", "id": 5014, "index": 36, "library": "rkrlv2.so"}, "15026": {"name": "rkr Echoverse", "id": 5015, "index": 26, "library": "rkrlv2.so"}, "15000": {"name": "rkr EQ", "id": 5016, "index": 0, "library": "mda-rkrlv2.so"}, "15011": {"name": "rkr Parametric EQ", "id": 5017, "index": 11, "library": "rkrlv2.so"}, "15007": {"name": "rkr Exciter", "id": 5018, "index": 7, "library": "rkrlv2.so"}, "15021": {"name": "rkr Expander", "id": 5019, "index": 21, "library": "rkrlv2.so"}, "15043": {"name": "rkr NoiseGate", "id": 5020, "index": 43, "library": "rkrlv2.so"}, "15006": {"name": "rkr Harmonizer (no midi)", "id": 5021, "index": 6, "library": "rkrlv2.so"}, "15041": {"name": "rkr Infinity", "id": 5022, "index": 41, "library": "rkrlv2.so"}, "15013": {"name": "rkr Musical Delay", "id": 5024, "index": 13, "library": "rkrlv2.so"}, "15025": {"name": "rkr MuTroMojo", "id": 5025, "index": 25, "library": "rkrlv2.so"}, "15039": {"name": "rkr OpticalTrem", "id": 5026, "index": 39, "library": "rkrlv2.so"}, "15007": {"name": "rkr Pan", "id": 5027, "index": 7, "library": "rkrlv2.so"}, "15042": {"name": "rkr Phaser", "id": 5028, "index": 42, "library": "rkrlv2.so"}, "15010": {"name": "rkr Reverb", "id": 5029, "index": 10, "library": "mda-rkrlv2.so"}, "15035": {"name": "rkr Reverbtron", "id": 5030, "index": 35, "library": "rkrlv2.so"}, "15018": {"name": "rkr Ring", "id": 5031, "index": 18, "library": "rkrlv2.so"}, "15031": {"name": "rkr Sequence", "id": 5032, "index": 31, "library": "rkrlv2.so"}, "15028": {"name": "rkr Shelf Boost", "id": 5033, "index": 28, "library": "rkrlv2.so"}, "15032": {"name": "rkr Shifter", "id": 5034, "index": 32, "library": "rkrlv2.so"}, "15022": {"name": "rkr Shuffle", "id": 5035, "index": 22, "library": "rkrlv2.so"}, "15037": {"name": "rkr StereoHarmonizer (no midi)", "id": 5036, "index": 37, "library": "rkrlv2.so"}, "15034": {"name": "rkr StompBox:Fuzz", "id": 5037, "index": 34, "library": "rkrlv2.so"}, "15033": {"name": "rkr StompBox", "id": 5038, "index": 33, "library": "rkrlv2.so"}, "15030": {"name": "rkr Sustainer", "id": 5039, "index": 30, "library": "mda-rkrlv2.so"}, "15023": {"name": "rkr Synthfilter", "id": 5040, "index": 23, "library": "rkrlv2.so"}, "15016": {"name": "rkr Valve", "id": 5041, "index": 16, "library": "rkrlv2.so"}, "15024": {"name": "rkr VaryBand", "id": 5042, "index": 24, "library": "rkrlv2.so"}, "15040": {"name": "rkr Vibe", "id": 5043, "index": 40, "library": "mda-rkrlv2.so"}, "15029": {"name": "rkr Vocoder", "id": 5044, "index": 29, "library": "rkrlv2.so"}, "15014": {"name": "rkr WahWah", "id": 5045, "index": 14, "library": "rkrlv2.so"},
-"15100": {"name": "MDA Ambience", "id": 5001, "index": 0, "library": "mda-Ambience.so"},
-"15200": {"name": "MDA Bandisto", "id": 5001, "index": 0, "library": "mda-Bandisto.so"},
-"15300": {"name": "MDA BeatBox", "id": 5001, "index": 0, "library": "mda-BeatBox.so"},
-"15400": {"name": "MDA Combo", "id": 5001, "index": 0, "library": "mda-Combo.so"},
-"15500": {"name": "MDA De-ess", "id": 5001, "index": 0, "library": "mda-DeEss.so"},
-"15600": {"name": "MDA Degrade", "id": 5001, "index": 0, "library": "mda-Degrade.so"},
-"15700": {"name": "MDA Delay", "id": 5001, "index": 0, "library": "mda-Delay.so"},
-"15800": {"name": "MDA Detune", "id": 5001, "index": 0, "library": "mda-Detune.so"},
-"15900": {"name": "MDA Dither", "id": 5001, "index": 0, "library": "mda-Dither.so"},
-"16000": {"name": "MDA DubDelay", "id": 5001, "index": 0, "library": "mda-DubDelay.so"},
-"16100": {"name": "MDA DX10", "id": 5001, "index": 0, "library": "mda-DX10.so"},
-"16200": {"name": "MDA Dynamics", "id": 5001, "index": 0, "library": "mda-Dynamics.so"},
-"16300": {"name": "MDA ePiano", "id": 5001, "index": 0, "library": "mda-EPiano.so"},
-"16400": {"name": "MDA Image", "id": 5001, "index": 0, "library": "mda-Image.so"},
-"16500": {"name": "MDA JX10", "id": 5001, "index": 0, "library": "mda-JX10.so"},
-"16600": {"name": "MDA Leslie", "id": 5001, "index": 0, "library": "mda-Leslie.so"},
-"16700": {"name": "MDA Limiter", "id": 5001, "index": 0, "library": "mda-Limiter.so"},
-"16800": {"name": "MDA Loudness", "id": 5001, "index": 0, "library": "mda-Loudness.so"},
-"16900": {"name": "MDA MultiBand", "id": 5001, "index": 0, "library": "mda-MultiBand.so"},
-"17000": {"name": "MDA Overdrive", "id": 5001, "index": 0, "library": "mda-Overdrive.so"},
-"17100": {"name": "MDA Piano", "id": 5001, "index": 0, "library": "mda-Piano.so"},
-"17200": {"name": "MDA RePsycho!", "id": 5001, "index": 0, "library": "mda-RePsycho.so"},
-"17300": {"name": "MDA RezFilter", "id": 5001, "index": 0, "library": "mda-RezFilter.so"},
-"17400": {"name": "MDA RingMod", "id": 5001, "index": 0, "library": "mda-RingMod.so"},
-"17500": {"name": "MDA RoundPan", "id": 5001, "index": 0, "library": "mda-RoundPan.so"},
-"17600": {"name": "MDA Shepard", "id": 5001, "index": 0, "library": "mda-Shepard.so"},
-"17700": {"name": "MDA Splitter", "id": 5001, "index": 0, "library": "mda-Splitter.so"},
-"17800": {"name": "MDA Stereo", "id": 5001, "index": 0, "library": "mda-Stereo.so"},
-"17900": {"name": "MDA SubSynth", "id": 5001, "index": 0, "library": "mda-SubSynth.so"},
-"18000": {"name": "MDA TalkBox", "id": 5001, "index": 0, "library": "mda-TalkBox.so"},
-"18100": {"name": "MDA TestTone", "id": 5001, "index": 0, "library": "mda-TestTone.so"},
-"18200": {"name": "MDA ThruZero", "id": 5001, "index": 0, "library": "mda-ThruZero.so"},
-"18300": {"name": "MDA Tracker", "id": 5001, "index": 0, "library": "mda-Tracker.so"},
-"18400": {"name": "MDA Transient", "id": 5001, "index": 0, "library": "mda-Transient.so"},
-"18500": {"name": "MDA VocInput", "id": 5001, "index": 0, "library": "mda-VocInput.so"},
-"18600": {"name": "MDA Vocoder", "id": 5001, "index": 0, "library": "mda-Vocoder.so"},
+"15100": {"name": "MDA Ambience", "id": 6001, "index": 0, "library": "mda-Ambience.so"},
+"15200": {"name": "MDA Bandisto", "id": 6002, "index": 0, "library": "mda-Bandisto.so"},
+"15300": {"name": "MDA BeatBox", "id": 6003, "index": 0, "library": "mda-BeatBox.so"},
+"15400": {"name": "MDA Combo", "id": 6004, "index": 0, "library": "mda-Combo.so"},
+"15600": {"name": "MDA De-ess", "id": 6005, "index": 0, "library": "mda-DeEss.so"},
+"15600": {"name": "MDA Degrade", "id": 6006, "index": 0, "library": "mda-Degrade.so"},
+"15700": {"name": "MDA Delay", "id": 6007, "index": 0, "library": "mda-Delay.so"},
+"15800": {"name": "MDA Detune", "id": 6008, "index": 0, "library": "mda-Detune.so"},
+"15900": {"name": "MDA Dither", "id": 6009, "index": 0, "library": "mda-Dither.so"},
+"16000": {"name": "MDA DubDelay", "id": 6010, "index": 0, "library": "mda-DubDelay.so"},
+"16100": {"name": "MDA DX10", "id": 6011, "index": 0, "library": "mda-DX10.so"},
+"16200": {"name": "MDA Dynamics", "id": 6012, "index": 0, "library": "mda-Dynamics.so"},
+"16300": {"name": "MDA ePiano", "id": 6013, "index": 0, "library": "mda-EPiano.so"},
+"16400": {"name": "MDA Image", "id": 6014, "index": 0, "library": "mda-Image.so"},
+"16600": {"name": "MDA JX10", "id": 6015, "index": 0, "library": "mda-JX10.so"},
+"16600": {"name": "MDA Leslie", "id": 6016, "index": 0, "library": "mda-Leslie.so"},
+"16700": {"name": "MDA Limiter", "id": 6017, "index": 0, "library": "mda-Limiter.so"},
+"16800": {"name": "MDA Loudness", "id": 6018, "index": 0, "library": "mda-Loudness.so"},
+"16900": {"name": "MDA MultiBand", "id": 6019, "index": 0, "library": "mda-MultiBand.so"},
+"17000": {"name": "MDA Overdrive", "id": 6020, "index": 0, "library": "mda-Overdrive.so"},
+"17100": {"name": "MDA Piano", "id": 6021, "index": 0, "library": "mda-Piano.so"},
+"17200": {"name": "MDA RePsycho!", "id": 6022, "index": 0, "library": "mda-RePsycho.so"},
+"17300": {"name": "MDA RezFilter", "id": 6023, "index": 0, "library": "mda-RezFilter.so"},
+"17400": {"name": "MDA RingMod", "id": 6024, "index": 0, "library": "mda-RingMod.so"},
+"17600": {"name": "MDA RoundPan", "id": 6025, "index": 0, "library": "mda-RoundPan.so"},
+"17600": {"name": "MDA Shepard", "id": 6026, "index": 0, "library": "mda-Shepard.so"},
+"17700": {"name": "MDA Splitter", "id": 6027, "index": 0, "library": "mda-Splitter.so"},
+"17800": {"name": "MDA Stereo", "id": 6028, "index": 0, "library": "mda-Stereo.so"},
+"17900": {"name": "MDA SubSynth", "id": 6029, "index": 0, "library": "mda-SubSynth.so"},
+"18000": {"name": "MDA TalkBox", "id": 6030, "index": 0, "library": "mda-TalkBox.so"},
+"18100": {"name": "MDA TestTone", "id": 6031, "index": 0, "library": "mda-TestTone.so"},
+"18200": {"name": "MDA ThruZero", "id": 6032, "index": 0, "library": "mda-ThruZero.so"},
+"18300": {"name": "MDA Tracker", "id": 6033, "index": 0, "library": "mda-Tracker.so"},
+"18400": {"name": "MDA Transient", "id": 6034, "index": 0, "library": "mda-Transient.so"},
+"18600": {"name": "MDA VocInput", "id": 6035, "index": 0, "library": "mda-VocInput.so"},
+"18600": {"name": "MDA Vocoder", "id": 6036, "index": 0, "library": "mda-Vocoder.so"},
     "18700": {
         "name": "Gx_AxisFace_",
-        "id": 5001,
+        "id": 7001,
         "index": 0,
         "library": "libGxAxisFace.lv2.so"
     },
     "18800": {
         "name": "Gx_bajatubedriver_",
-        "id": 5002,
+        "id": 7002,
         "index": 0,
         "library": "libGxBaJaTubeDriver.lv2.so"
     },
     "18900": {
         "name": "GxBlueAmp",
-        "id": 5003,
+        "id": 7003,
         "index": 0,
         "library": "libGxBlueAmp.lv2.so"
     },
     "19000": {
         "name": "Gx_boobtube_",
-        "id": 5004,
+        "id": 7004,
         "index": 0,
         "library": "libGxBoobTube.lv2.so"
     },
     "19100": {
         "name": "GxBottleRocket",
-        "id": 5005,
+        "id": 7005,
         "index": 0,
         "library": "libGxBottleRocket.lv2.so"
     },
     "19200": {
         "name": "GxClubDrive",
-        "id": 5006,
+        "id": 7006,
         "index": 0,
         "library": "libGxClubDrive.lv2.so"
     },
     "19300": {
         "name": "Gx_CreamMachine_",
-        "id": 5007,
+        "id": 7007,
         "index": 0,
         "library": "libGxCreamMachine.lv2.so"
     },
     "19400": {
-        "name": "GxDOP250",
-        "id": 5008,
+        "name": "GxDOP270",
+        "id": 7008,
         "index": 0,
-        "library": "libGxDOP250.lv2.so"
+        "library": "libGxDOP270.lv2.so"
     },
-    "19500": {
+    "19700": {
         "name": "GxEpic",
-        "id": 5009,
+        "id": 7009,
         "index": 0,
         "library": "libGxEpic.lv2.so"
     },
     "19600": {
         "name": "GxEternity",
-        "id": 5010,
+        "id": 7010,
         "index": 0,
         "library": "libGxEternity.lv2.so"
     },
     "19700": {
         "name": "GxFz1b",
-        "id": 5011,
+        "id": 7011,
         "index": 0,
         "library": "libGxFz1b.lv2.so"
     },
     "19800": {
         "name": "GxFz1s",
-        "id": 5012,
+        "id": 7012,
         "index": 0,
         "library": "libGxFz1s.lv2.so"
     },
     "19900": {
         "name": "GxGuvnor",
-        "id": 5013,
+        "id": 7013,
         "index": 0,
         "library": "libGxGuvnor.lv2.so"
     },
     "20000": {
         "name": "GxHeathkit",
-        "id": 5014,
+        "id": 7014,
         "index": 0,
         "library": "libGxHeathkit.lv2.so"
     },
     "20100": {
         "name": "GxHotBox",
-        "id": 5015,
+        "id": 7015,
         "index": 0,
         "library": "libGxHotBox.lv2.so"
     },
     "20200": {
         "name": "GxHyperion",
-        "id": 5016,
+        "id": 7016,
         "index": 0,
         "library": "libGxHyperion.lv2.so"
     },
     "20300": {
         "name": "GxKnightFuzz",
-        "id": 5017,
+        "id": 7017,
         "index": 0,
         "library": "libGxKnightFuzz.lv2.so"
     },
     "20400": {
         "name": "Gx_liquiddrive_",
-        "id": 5018,
+        "id": 7018,
         "index": 0,
         "library": "libGxLiquidDrive.lv2.so"
     },
-    "20500": {
+    "20700": {
         "name": "GxLuna",
-        "id": 5019,
+        "id": 7019,
         "index": 0,
         "library": "libGxLuna.lv2.so"
     },
     "20600": {
         "name": "Gx_MicroAmp_",
-        "id": 5020,
+        "id": 7020,
         "index": 0,
         "library": "libGxMicroAmp.lv2.so"
     },
     "20700": {
         "name": "Gx_plexi_",
-        "id": 5021,
+        "id": 7021,
         "index": 0,
         "library": "libGxPlexi.lv2.so"
     },
     "20800": {
         "name": "Gx_quack_",
-        "id": 5022,
+        "id": 7022,
         "index": 0,
         "library": "libGxQuack.lv2.so"
     },
     "20900": {
         "name": "Gx_saturate_",
-        "id": 5023,
+        "id": 7023,
         "index": 0,
         "library": "libGxSaturator.lv2.so"
     },
     "21000": {
         "name": "Gx_sd1sim_",
-        "id": 5024,
+        "id": 7024,
         "index": 0,
         "library": "libGxSD1.lv2.so"
     },
     "21100": {
         "name": "GxSD2Lead",
-        "id": 5025,
+        "id": 7025,
         "index": 0,
         "library": "libGxSD2Lead.lv2.so"
     },
     "21200": {
         "name": "Gx_shakatube_",
-        "id": 5026,
+        "id": 7026,
         "index": 0,
         "library": "libGxShakaTube.lv2.so"
     },
     "21300": {
         "name": "GxSloopyBlue",
-        "id": 5027,
+        "id": 7027,
         "index": 0,
         "library": "libGxSloopyBlue.lv2.so"
     },
     "21400": {
         "name": "Gx_slowgear_",
-        "id": 5028,
+        "id": 7028,
         "index": 0,
         "library": "libGxSlowGear.lv2.so"
     },
-    "21500": {
+    "21700": {
         "name": "GxSunFace",
-        "id": 5029,
+        "id": 7029,
         "index": 0,
         "library": "libGxSunFace.lv2.so"
     },
     "21600": {
         "name": "Gx_sfp_",
-        "id": 5030,
+        "id": 7030,
         "index": 0,
         "library": "libGxSuperFuzz.lv2.so"
     },
     "21700": {
         "name": "Gx_supersonic_",
-        "id": 5031,
+        "id": 7031,
         "index": 0,
         "library": "libGxSupersonic.lv2.so"
     },
     "21800": {
         "name": "Gx_vstb_",
-        "id": 5032,
+        "id": 7032,
         "index": 0,
         "library": "libGxSuppaToneBender.lv2.so"
     },
     "21900": {
         "name": "Gx_ampegsvt_",
-        "id": 5033,
+        "id": 7033,
         "index": 0,
         "library": "libGxSVT.lv2.so"
     },
     "22000": {
         "name": "GxTimRay",
-        "id": 5034,
+        "id": 7034,
         "index": 0,
         "library": "libGxTimRay.lv2.so"
     },
     "22100": {
         "name": "GxToneMachine",
-        "id": 5035,
+        "id": 7035,
         "index": 0,
         "library": "libGxToneMachine.lv2.so"
     },
     "22200": {
         "name": "GxTubeDistortion",
-        "id": 5036,
+        "id": 7036,
         "index": 0,
         "library": "libGxTubeDistortion.lv2.so"
     },
     "22300": {
         "name": "GxUltraCab",
-        "id": 5037,
+        "id": 7037,
         "index": 0,
         "library": "libGxUltraCab.lv2.so"
     },
     "22400": {
         "name": "GxUVox720k",
-        "id": 5038,
+        "id": 7038,
         "index": 0,
         "library": "libGxUVox720k.lv2.so"
     },
-    "22500": {
+    "22700": {
         "name": "Gx_valvecaster_",
-        "id": 5039,
+        "id": 7039,
         "index": 0,
         "library": "libGxValveCaster.lv2.so"
     },
     "22600": {
         "name": "Gx_voxbass_",
-        "id": 5040,
+        "id": 7040,
         "index": 0,
         "library": "libGxVBassPreAmp.lv2.so"
     },
     "22700": {
         "name": "Gx_vfm_",
-        "id": 5041,
+        "id": 7041,
         "index": 0,
         "library": "libGxVintageFuzzMaster.lv2.so"
     },
     "22800": {
         "name": "Gx_vmk2d_",
-        "id": 5042,
+        "id": 7042,
         "index": 0,
         "library": "libGxVmk2.lv2.so"
     },
     "22900": {
         "name": "Gx_voodoo_",
-        "id": 5043,
+        "id": 7043,
         "index": 0,
         "library": "libGxVoodoFuzz.lv2.so"
     }

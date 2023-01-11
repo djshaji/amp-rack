@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AmpRack</string>
-    <string name="app_version">Version 2</string>
-    <string name="build_id">242</string>
+    <string name="app_version">Version 3 Preview</string>
+    <string name="build_id">244</string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>
@@ -417,4 +417,8 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="credits">
+        Default background photo by Giancarlo Duarte
+        https://unsplash.com/photos/cTj8vbZeX44
+    </string>
 </resources>

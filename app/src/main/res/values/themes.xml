@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+<!--    <style name="Theme.AmpRack" parent="Theme.Material3.DynamicColors.Dark">-->
     <style name="Theme.AmpRack" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#6c6f6e</item>
@@ -7,6 +8,10 @@
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/dodger_blue</item>
+
+<!--        <item name="colorPrimary">#f9c357</item>-->
+<!--        <item name="colorSecondary">#996420</item>-->
+
         <item name="colorSecondaryVariant">@color/medium_sea_green</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
@@ -34,6 +39,12 @@
     <style name="Theme.4" parent="Theme.AmpRack">
         <item name="colorPrimary">#e8c9c3</item>
         <item name="colorSecondary">#0059bd</item>
+    </style>
+
+    <style name="Theme.29beta" parent="Theme.AmpRack">
+        <item name="colorPrimary">#DCC43E</item>
+        <item name="colorSecondary">#996420</item>
+        <item name="android:statusBarColor" tools:targetApi="l">#615042</item>
     </style>
 
     <style name="Theme.Bright" parent="Theme.AmpRack">
