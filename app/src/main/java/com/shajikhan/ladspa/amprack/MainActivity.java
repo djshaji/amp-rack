@@ -2024,7 +2024,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void addPluginByNameLV2(String pluginName) {
 //        Log.d(TAG, "addPluginByName: " + pluginName);
-//        Log.d(TAG, "addPluginByName: " + availablePlugins.toString());
+        Log.d(TAG, "addPluginByName: " + availablePluginsLV2.toString());
         JSONObject plugins = availablePluginsLV2;
         Iterator<String> keys = plugins.keys();
 
