@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AmpRack</string>
     <string name="app_version">Version 3 Preview</string>
-    <string name="build_id">245</string>
+    <string name="build_id">246</string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>
@@ -375,6 +375,18 @@
         <item>libGxVintageFuzzMaster.lv2.so</item>
         <item>libGxVmk2.lv2.so</item>
         <item>libGxVoodoFuzz.lv2.so</item>
+        <item>bentdelay.so</item>
+        <item>casynth.so</item>
+        <item>cheapdist.so</item>
+        <item>envfollower.so</item>
+        <item>ewham.so</item>
+        <item>hip2b.so</item>
+        <item>lushlife.so</item>
+        <item>mindi.so</item>
+        <item>octolo.so</item>
+        <item>powercut.so</item>
+        <item>powerup.so</item>
+        <item>stuck.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

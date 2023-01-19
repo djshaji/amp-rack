@@ -292,6 +292,103 @@
         "id": 7043,
         "index": 0,
         "library": "libGxVoodoFuzz.lv2.so"
+    },
+
+    "23000": {
+        "name": "the infamous bent delay",
+        "id": 8001,
+        "index": 0,
+        "library": "bentdelay.so"
+    },
+    "23100": {
+        "name": "casynth",
+        "id": 8002,
+        "index": 0,
+        "library": "casynth.so"
+    },
+    "23200": {
+        "name": "the infamous cellular automaton synth",
+        "id": 8003,
+        "index": 0,
+        "library": "casynth.so"
+    },
+    "23300": {
+        "name": "the infamous cheap distortion",
+        "id": 8004,
+        "index": 0,
+        "library": "cheapdist.so"
+    },
+    "23400": {
+        "name": "the infamous envelope follower",
+        "id": 8005,
+        "index": 0,
+        "library": "envfollower.so"
+    },
+    "23500": {
+        "name": "the infamous ewham",
+        "id": 8006,
+        "index": 0,
+        "library": "ewham.so"
+    },
+    "23600": {
+        "name": "the infamous Hip2B",
+        "id": 8007,
+        "index": 0,
+        "library": "hip2b.so"
+    },
+    "23700": {
+        "name": "hip2b",
+        "id": 8008,
+        "index": 0,
+        "library": "hip2b.so"
+    },
+    "23800": {
+        "name": "the infamous lush life",
+        "id": 8009,
+        "index": 0,
+        "library": "lushlife.so"
+    },
+    "23900": {
+        "name": "lushlife",
+        "id": 8010,
+        "index": 0,
+        "library": "lushlife.so"
+    },
+    "24000": {
+        "name": "the infamous mindi",
+        "id": 8011,
+        "index": 0,
+        "library": "mindi.so"
+    },
+    "24100": {
+        "name": "the infamous octolo",
+        "id": 8012,
+        "index": 0,
+        "library": "octolo.so"
+    },
+    "24200": {
+        "name": "octolo",
+        "id": 8013,
+        "index": 0,
+        "library": "octolo.so"
+    },
+    "24300": {
+        "name": "the infamous power cut",
+        "id": 8014,
+        "index": 0,
+        "library": "powercut.so"
+    },
+    "24400": {
+        "name": "the infamous power up",
+        "id": 8015,
+        "index": 0,
+        "library": "powerup.so"
+    },
+    "24500": {
+        "name": "the infamous stuck",
+        "id": 8016,
+        "index": 0,
+        "library": "stuck.so"
     }
 }
 

@@ -13,8 +13,8 @@ android {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 23
         targetSdk 31
-        versionCode 28
-        versionName '2.94'
+        versionCode 30
+        versionName '2.96'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -26,7 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        versionNameSuffix '-Version 2 [LV2]'
+        versionNameSuffix '-Version 3  [Preview]'
     }
 
     buildTypes {
