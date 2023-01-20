@@ -1,0 +1,733 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2ui:   <http://lv2plug.in/ns/extensions/ui#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0>
+    a param:ControlGroup ;
+    lv2:symbol "WOOSH0" ;
+    lv2:name "Woosh 0" .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1>
+    a param:ControlGroup ;
+    lv2:symbol "WOOSH1" ;
+    lv2:name "Woosh 1" .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2>
+    a param:ControlGroup ;
+    lv2:symbol "WOOSH2" ;
+    lv2:name "Woosh 2" .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3>
+    a param:ControlGroup ;
+    lv2:symbol "WOOSH3" ;
+    lv2:name "Woosh 3" .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4>
+    a param:ControlGroup ;
+    lv2:symbol "WOOSH4" ;
+    lv2:name "Woosh 4" .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5>
+    a param:ControlGroup ;
+    lv2:symbol "WOOSH5" ;
+    lv2:name "Woosh 5" .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife>
+        a lv2:Plugin, lv2:ModulatorPlugin ;
+        doap:name "the infamous lush life" ;
+        doap:license <http://opensource.org/licenses/GPL-2.0> ;
+        doap:description "a synthetic double tracker" ;
+        doap:maintainer [
+                foaf:name "Spencer Jackson" ;
+                foaf:homepage <http://ssj71.github.io/infamousPlugins> ;
+                foaf:mbox <mailto:ssjackson71@gmail.com> ;
+        ] ;
+        lv2:minorVersion 0 ;
+        lv2:microVersion 1 ;
+        rdfs:comment "A synthetic double tracker for vocals or other monophonic sounds. It is capable of everything from lush chorus, to thin doubles, to weird over-the-top effects. It is modulation ready with 6 double tracks each controllable by 2 lfos." ;
+        lv2:optionalFeature lv2:hardRTCapable ;
+        lv2ui:ui <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife_ui> ;
+
+
+        lv2:port [
+                a lv2:InputPort, lv2:AudioPort ;
+                lv2:index 0 ;
+                lv2:symbol "INPUT" ;
+                lv2:name "Audio In" ;
+        ] ;
+        lv2:port [
+                a lv2:OutputPort, lv2:AudioPort ;
+                lv2:index 1 ;
+                lv2:symbol "OUTPUTL" ;
+                lv2:name "Audio Out Left" ;
+        ] ;
+        lv2:port [
+                a lv2:OutputPort, lv2:AudioPort ;
+                lv2:index 2 ;
+                lv2:symbol "OUTPUTR" ;
+                lv2:name "Audio Out Right" ;
+        ] ;
+        lv2:port [
+                a lv2:OutputPort, lv2:ControlPort ;
+                lv2:index 3 ;
+                lv2:symbol "LATENCY" ;
+                lv2:name "Latency" ;
+                lv2:minimum 0 ;
+                lv2:maximum 100000 ;
+                lv2:portProperty lv2:reportsLatency, lv2:integer, pprops:notOnGUI;
+        ] ;
+        lv2:port [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 4 ;
+                lv2:symbol "MASTERGAIN" ;
+                lv2:name "Master Gain" ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 5 ;
+                lv2:symbol "DRYGAIN" ;
+                lv2:name "Dry Gain" ;
+                lv2:default 0.5 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 6 ;
+                lv2:symbol "DRYPAN" ;
+                lv2:name "Dry Pan" ;
+                lv2:default 0.0 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ; 
+        ], [ 
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 7 ;
+                lv2:symbol "LFOSHAPE" ;
+                lv2:name "LFO Shape" ;
+                lv2:default 0.7 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ; 
+                lv2:scalePoint [ rdfs:label "Noise"; rdf:value 0.0 ] ;
+                lv2:scalePoint [ rdfs:label "Sine"; rdf:value 1.0 ] ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 8 ;
+                lv2:symbol "LFOSYNC" ;
+                lv2:name "Sync LFOs" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ; 
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+        ], [
+
+
+
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 9 ;
+                lv2:symbol "ACTIVE0" ;
+                lv2:name "Active 0" ;
+                lv2:default 1 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 10 ;
+                lv2:symbol "DETUNE0" ;
+                lv2:name "Detune 0" ;
+                lv2:default 0.001 ;
+                lv2:minimum -24.0 ;
+                lv2:maximum 24.0 ;
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 11 ;
+                lv2:symbol "DTLFOAMT0" ;
+                lv2:name "Detune LFO Amount" ;
+                lv2:default 0.05 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 12.0 ; 
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 12 ;
+                lv2:symbol "DTLFOFREQ0" ;
+                lv2:name "Detune LFO Frequency" ;
+                lv2:default 0.3 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 30.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 13 ;
+                lv2:symbol "DELAY0" ;
+                lv2:name "Delay 0" ;
+                lv2:default 10.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 300.0 ;
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 14 ;
+                lv2:symbol "DLLFOAMT0" ;
+                lv2:name "Delay LFO Amount" ;
+                lv2:default 10.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 75.0 ; 
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 15 ;
+                lv2:symbol "DLLFOFREQ0" ;
+                lv2:name "Delay LFO Frequency" ;
+                lv2:default 0.6 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 16 ;
+                lv2:symbol "GAIN0" ;
+                lv2:name "Gain 0" ;
+                lv2:default 0.5 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 17 ;
+                lv2:symbol "PAN0" ;
+                lv2:name "Pan 0" ;
+                lv2:default 0.0 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh0> ;
+        ], [
+
+
+
+
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 18 ;
+                lv2:symbol "ACTIVE1" ;
+                lv2:name "Active 1" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 19 ;
+                lv2:symbol "DETUNE1" ;
+                lv2:name "Detune 1" ;
+                lv2:default -0.1 ;
+                lv2:minimum -24.0 ;
+                lv2:maximum 24.0 ;
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 20 ;
+                lv2:symbol "DTLFOAMT1" ;
+                lv2:name "Detune LFO Amount" ;
+                lv2:default 0.1 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 12.0 ; 
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 21 ;
+                lv2:symbol "DTLFOFREQ1" ;
+                lv2:name "Detune LFO Frequency" ;
+                lv2:default 0.55 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 30.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 22 ;
+                lv2:symbol "DELAY1" ;
+                lv2:name "Delay 1" ;
+                lv2:default 70.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 300.0 ;
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 23 ;
+                lv2:symbol "DLLFOAMT1" ;
+                lv2:name "Delay LFO Amount" ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 75.0 ; 
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 24 ;
+                lv2:symbol "DLLFOFREQ1" ;
+                lv2:name "Delay LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 25 ;
+                lv2:symbol "GAIN1" ;
+                lv2:name "Gain 1" ;
+                lv2:default 0.80 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 26 ;
+                lv2:symbol "PAN1" ;
+                lv2:name "Pan 1" ;
+                lv2:default -0.50 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh1> ;
+        ], [
+
+
+
+
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 27 ;
+                lv2:symbol "ACTIVE2" ;
+                lv2:name "Active 2" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 28 ;
+                lv2:symbol "DETUNE2" ;
+                lv2:name "Detune 2" ;
+                lv2:default 0.2 ;
+                lv2:minimum -24.0 ;
+                lv2:maximum 24.0 ;
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 29 ;
+                lv2:symbol "DTLFOAMT2" ;
+                lv2:name "Detune LFO Amount" ;
+                lv2:default 0.1 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 12.0 ; 
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 30 ;
+                lv2:symbol "DTLFOFREQ2" ;
+                lv2:name "Detune LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 30.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 31 ;
+                lv2:symbol "DELAY2" ;
+                lv2:name "Delay 2" ;
+                lv2:default 110.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 300.0 ;
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 32 ;
+                lv2:symbol "DLLFOAMT2" ;
+                lv2:name "Delay LFO Amount" ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 75.0 ; 
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 33 ;
+                lv2:symbol "DLLFOFREQ2" ;
+                lv2:name "Delay LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 34 ;
+                lv2:symbol "GAIN2" ;
+                lv2:name "Gain 2" ;
+                lv2:default 0.40 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 35 ;
+                lv2:symbol "PAN2" ;
+                lv2:name "Pan 2" ;
+                lv2:default 0.90 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh2> ;
+        ], [
+
+
+
+
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 36 ;
+                lv2:symbol "ACTIVE3" ;
+                lv2:name "Active 3" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 37 ;
+                lv2:symbol "DETUNE3" ;
+                lv2:name "Detune 3" ;
+                lv2:default -0.2 ;
+                lv2:minimum -24.0 ;
+                lv2:maximum 24.0 ;
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 38 ;
+                lv2:symbol "DTLFOAMT3" ;
+                lv2:name "Detune LFO Amount" ;
+                lv2:default 0.1 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 12.0 ; 
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 39 ;
+                lv2:symbol "DTLFOFREQ3" ;
+                lv2:name "Detune LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 30.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 40 ;
+                lv2:symbol "DELAY3" ;
+                lv2:name "Delay 3" ;
+                lv2:default 120.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 300.0 ;
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 41 ;
+                lv2:symbol "DLLFOAMT3" ;
+                lv2:name "Delay LFO Amount" ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 75.0 ; 
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 42 ;
+                lv2:symbol "DLLFOFREQ3" ;
+                lv2:name "Delay LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 43 ;
+                lv2:symbol "GAIN3" ;
+                lv2:name "Gain 3" ;
+                lv2:default 0.40 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 44 ;
+                lv2:symbol "PAN3" ;
+                lv2:name "Pan 3" ;
+                lv2:default -0.90 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh3> ;
+        ], [
+
+
+
+
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 45 ;
+                lv2:symbol "ACTIVE4" ;
+                lv2:name "Active 4" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 46 ;
+                lv2:symbol "DETUNE4" ;
+                lv2:name "Detune 4" ;
+                lv2:default 0.05 ;
+                lv2:minimum -24.0 ;
+                lv2:maximum 24.0 ;
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 47 ;
+                lv2:symbol "DTLFOAMT4" ;
+                lv2:name "Detune LFO Amount" ;
+                lv2:default 0.1 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 12.0 ; 
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 48 ;
+                lv2:symbol "DTLFOFREQ4" ;
+                lv2:name "Detune LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 30.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 49 ;
+                lv2:symbol "DELAY4" ;
+                lv2:name "Delay 4" ;
+                lv2:default 40.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 300.0 ;
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 50 ;
+                lv2:symbol "DLLFOAMT4" ;
+                lv2:name "Delay LFO Amount" ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 75.0 ; 
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 51 ;
+                lv2:symbol "DLLFOFREQ4" ;
+                lv2:name "Delay LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 52 ;
+                lv2:symbol "GAIN4" ;
+                lv2:name "Gain 4" ;
+                lv2:default 0.30 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 53 ;
+                lv2:symbol "PAN4" ;
+                lv2:name "Pan 4" ;
+                lv2:default 0.20 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh4> ;
+        ], [
+
+
+
+
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 54 ;
+                lv2:symbol "ACTIVE5" ;
+                lv2:name "Active 5" ;
+                lv2:default 0 ;
+                lv2:minimum 0 ;
+                lv2:maximum 1 ;
+                lv2:portProperty lv2:integer ;
+                lv2:portProperty lv2:toggled ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 55 ;
+                lv2:symbol "DETUNE5" ;
+                lv2:name "Detune 5" ;
+                lv2:default -0.05 ;
+                lv2:minimum -24.0 ;
+                lv2:maximum 24.0 ;
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 56 ;
+                lv2:symbol "DTLFOAMT5" ;
+                lv2:name "Detune LFO Amount" ;
+                lv2:default 0.1 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 12.0 ; 
+                units:unit units:semitone12TET ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 57 ;
+                lv2:symbol "DTLFOFREQ5" ;
+                lv2:name "Detune LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 30.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 58 ;
+                lv2:symbol "DELAY5" ;
+                lv2:name "Delay 5" ;
+                lv2:default 30.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 300.0 ;
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 59 ;
+                lv2:symbol "DLLFOAMT5" ;
+                lv2:name "Delay LFO Amount" ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 75.0 ; 
+                units:unit units:ms;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 60 ;
+                lv2:symbol "DLLFOFREQ5" ;
+                lv2:name "Delay LFO Frequency" ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 2.0 ; 
+                units:unit units:hz ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 61 ;
+                lv2:symbol "GAIN5" ;
+                lv2:name "Gain 5" ;
+                lv2:default 0.30 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+                units:unit units:coef ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ;
+        ], [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 62 ;
+                lv2:symbol "PAN5" ;
+                lv2:name "Pan 5" ;
+                lv2:default -0.20 ;
+                lv2:minimum -1.0 ;
+                lv2:maximum 1.0 ;
+                pg:group <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:groups:woosh5> ; 
+        ] .
+
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:preset:00Dfault>
+        a pset:Preset ;
+        lv2:appliesTo <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife> ;
+        rdfs:label "00 Dfault" ;
+        rdfs:seeAlso <lushlife_presets.ttl> .
+        
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:preset:01Stereo>
+        a pset:Preset ;
+        lv2:appliesTo <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife> ;
+        rdfs:label "01 Stereo" ;
+        rdfs:seeAlso <lushlife_presets.ttl> .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:preset:02PingPongPitch>
+        a pset:Preset ;
+        lv2:appliesTo <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife> ;
+        rdfs:label "02 Ping Pong Pitch" ;
+        rdfs:seeAlso <lushlife_presets.ttl> .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:preset:03TightChoir>
+        a pset:Preset ;
+        lv2:appliesTo <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife> ;
+        rdfs:label "03 Tight Choir" ;
+        rdfs:seeAlso <lushlife_presets.ttl> .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:preset:04Lush>
+        a pset:Preset ;
+        lv2:appliesTo <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife> ;
+        rdfs:label "04 Lush" ;
+        rdfs:seeAlso <lushlife_presets.ttl> .
+
+<http://ssj71.github.io/infamousPlugins/plugs.html#lushlife:preset:05bluebellchoir>
+        a pset:Preset ;
+        lv2:appliesTo <http://ssj71.github.io/infamousPlugins/plugs.html#lushlife> ;
+        rdfs:label "05 Thick as a Brick" ;
+        rdfs:seeAlso <lushlife_presets.ttl> .

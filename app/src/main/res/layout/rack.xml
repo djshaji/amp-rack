@@ -69,7 +69,8 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/settings"
-                android:layout_width="50dp"
+                android:layout_width="30dp"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:drawableLeft="@drawable/ic_baseline_settings_24"
@@ -82,6 +83,114 @@
                 android:background="@android:color/transparent"
                 android:drawableLeft="@drawable/ic_baseline_more_vert_24" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_corners_transparent"
+            android:layout_width="match_parent"
+            android:id="@+id/mixer"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:rotation="-90"
+                    android:fontFamily="@font/comfortaa"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="In "/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_margin="10dp"
+                        android:id="@+id/mixer_input_progress"
+                        android:background="@color/fui_transparent"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.slider.Slider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="-12"
+                        android:id="@+id/mixer_input_slider"
+                        android:valueTo="0"
+                        android:value="0"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:rotation="-90"
+                    android:fontFamily="@font/comfortaa"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="0dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Out"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_margin="10dp"
+                        android:id="@+id/mixer_output_progress"
+                        android:background="@color/fui_transparent"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.slider.Slider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="-12"
+                        android:valueTo="0"
+                        android:id="@+id/mixer_output_slider"
+                        android:value="0"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_baseline_arrow_circle_up_24"
+                    android:gravity="right"
+                    android:id="@+id/mixer_hide_button"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/fui_transparent"
+                    android:layout_gravity="right"
+                    android:fontFamily="@font/comfortaa"/>
+
+            </LinearLayout>
         </LinearLayout>
 
 
