@@ -95,6 +95,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/mixer_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -116,7 +117,7 @@
                     android:orientation="vertical">
 
                     <ProgressBar
-                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_margin="10dp"
                         android:id="@+id/mixer_input_progress"
@@ -126,10 +127,10 @@
                     <com.google.android.material.slider.Slider
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:valueFrom="-12"
+                        android:valueFrom="0"
                         android:id="@+id/mixer_input_slider"
-                        android:valueTo="0"
-                        android:value="0"/>
+                        android:valueTo="1"
+                        android:value="1"/>
 
                 </LinearLayout>
 
@@ -137,6 +138,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:id="@+id/mixer_output"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -157,7 +159,7 @@
                     android:orientation="vertical">
 
                     <ProgressBar
-                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_margin="10dp"
                         android:id="@+id/mixer_output_progress"
@@ -167,10 +169,10 @@
                     <com.google.android.material.slider.Slider
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:valueFrom="-12"
-                        android:valueTo="0"
+                        android:valueFrom="0"
+                        android:valueTo="1"
                         android:id="@+id/mixer_output_slider"
-                        android:value="0"/>
+                        android:value="1"/>
 
                 </LinearLayout>
 
@@ -179,10 +181,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <Button
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_baseline_arrow_circle_up_24"
+                    android:textOff="Hide Mixer "
+                    android:textOn="Show Mixer "
+                    android:padding="5dp"
+                    android:drawableRight="@drawable/ic_baseline_volume_up_24"
                     android:gravity="right"
                     android:id="@+id/mixer_hide_button"
                     android:layout_marginRight="10dp"

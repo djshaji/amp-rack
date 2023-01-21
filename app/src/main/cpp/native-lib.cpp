@@ -658,3 +658,24 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_addPluginLazyLV2(JNIEnv *env, jcla
     env->ReleaseStringUTFChars(library, nativeString);
     return engine -> activePlugins.size();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setInputVolume(JNIEnv *env, jclass clazz, jfloat volume) {
+    // TODO: implement setVolume()
+    IN
+    if (engine == NULL) {
+        HERE LOGF ("engine is NULL"); OUT
+    }
+
+    engine -> mFullDuplexPass . inputVolume = volume ;
+    OUT
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setOutputVolume(JNIEnv *env, jclass clazz,
+                                                              jfloat volume) {
+    // TODO: implement setOutputVolume()
+    IN
+    engine -> mFullDuplexPass . outputVolume = volume ;
+    OUT
+}

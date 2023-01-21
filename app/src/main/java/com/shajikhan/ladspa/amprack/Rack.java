@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -43,6 +44,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -454,6 +456,37 @@ public class Rack extends Fragment {
                 commands.mainActivity = mainActivity;
                 commands.show();
                 return true;
+            }
+        });
+
+
+        LinearLayout inputMixer = mainActivity.findViewById(R.id.mixer_input);
+        LinearLayout outputMixer = mainActivity.findViewById(R.id.mixer_output);
+
+        ToggleButton toggleMixer = mainActivity.findViewById(R.id.mixer_hide_button);
+        toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (!b) {
+                inputMixer.setVisibility(View.VISIBLE);
+                outputMixer.setVisibility(View.VISIBLE);
+            } else {
+                inputMixer.setVisibility(View.GONE);
+                outputMixer.setVisibility(View.GONE);
+            }
+        });
+        Slider inputVolume = mainActivity.findViewById(R.id.mixer_input_slider);
+        Slider outputVolume = mainActivity.findViewById(R.id.mixer_output_slider);
+
+        inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                AudioEngine.setInputVolume(value);
+            }
+        });
+
+        outputVolume.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                AudioEngine.setOutputVolume(value);
             }
         });
     }

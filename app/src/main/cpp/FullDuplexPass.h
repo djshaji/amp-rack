@@ -26,6 +26,8 @@ class FullDuplexPass : public FullDuplexStream {
     //| TODO: Limit number of plugins active in free version?
 public:
     #define MAX_PLUGINS 10 // for now
+    float inputVolume = 1.0 ;
+    float outputVolume = 1.0 ;
     void (*connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
                          unsigned long Port,
                          LADSPA_Data * DataLocation);
@@ -66,17 +68,28 @@ public:
         // It is possible that there may be fewer input than output samples.
         int32_t samplesToProcess = std::min(numInputSamples, numOutputSamples);
 
+        float inSamples [samplesToProcess];
+        for (int i = 0 ; i < samplesToProcess ; i ++) {
+            inSamples [i] = inputFloats [i] * inputVolume ;
+        }
+
         // this
         // am I devloper yet?
 //        memcpy(outputData, inputData, samplesToProcess);
-        process(inputFloats, numInputSamples);
+        process(inSamples, numInputSamples);
         /* this is not supposed to be called directly.
          * hence the entire vringbuffer stuff
          */
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
-            *outputFloats++ = *inputFloats++  * 0.95; // do some arbitrary processing
+            *outputFloats++ = inSamples [i]  * outputVolume; // do some arbitrary processing
         }
+
+
+
+//        for (int32_t i = 0; i < samplesToProcess; i++) {
+//            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing
+//        }
 
         // If there are fewer input samples then clear the rest of the buffer.
         int32_t samplesLeft = numOutputSamples - numInputSamples;
@@ -84,13 +97,11 @@ public:
             *outputFloats++ = 0.0; // silence
         }
 
-//        OUT ;
+         //        OUT ;
         return oboe::DataCallbackResult::Continue;
     }
 
     void process (const float * data, int samplesToProcess) {
-//        float dummySecondChannel [200];// arbitrary!
-
         for (int i = 0 ; i < activePlugins ; i ++) {
             if (inputPorts [i] != -1)
                 connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) data);
@@ -122,7 +133,6 @@ public:
         if (recordingActive) {
             FileWriter::process(samplesToProcess, data);
         }
-
     }
 };
 #endif //SAMPLES_FULLDUPLEXPASS_H
