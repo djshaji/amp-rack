@@ -300,7 +300,7 @@ public class Rack extends Fragment {
         if (mainActivity.defaultSharedPreferences.getBoolean("pro", false)) {
             getPro.setVisible(false);
             TextView textView = view.findViewById(R.id.app_main_title);
-            textView.setText("Amp Pro");
+            textView.setText("Pro");
         }
 
         getPro.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -462,19 +462,22 @@ public class Rack extends Fragment {
 
         LinearLayout inputMixer = mainActivity.findViewById(R.id.mixer_input);
         LinearLayout outputMixer = mainActivity.findViewById(R.id.mixer_output);
+        LinearLayout mixer = mainActivity.findViewById(R.id.mixer);
 
-        ToggleButton toggleMixer = mainActivity.findViewById(R.id.mixer_hide_button);
+        ToggleButton toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
         toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
             if (!b) {
-                inputMixer.setVisibility(View.VISIBLE);
-                outputMixer.setVisibility(View.VISIBLE);
+                mixer.setVisibility(View.VISIBLE);
             } else {
-                inputMixer.setVisibility(View.GONE);
-                outputMixer.setVisibility(View.GONE);
+                mixer.setVisibility(View.GONE);
             }
         });
+
         Slider inputVolume = mainActivity.findViewById(R.id.mixer_input_slider);
         Slider outputVolume = mainActivity.findViewById(R.id.mixer_output_slider);
+
+        mainActivity.inputMeter = mainActivity.findViewById(R.id.mixer_input_progress);
+        mainActivity.outputMeter = mainActivity.findViewById(R.id.mixer_output_progress);
 
         inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
             @Override

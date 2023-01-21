@@ -430,3 +430,4 @@ float FileWriter::blocks_to_seconds(int blocks){
 void FileWriter::setFileType (int fType) {
     fileType = static_cast<FileType>(fType);
 }
+

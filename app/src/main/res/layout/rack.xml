@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:fontFamily="@font/gruppo"
                 android:shadowColor="@color/white"
                 android:shadowRadius="5"
@@ -51,11 +51,35 @@
                 android:textSize="30dp"
                 android:textStyle="bold" />
 
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff=""
+                android:textOn=""
+                android:padding="5dp"
+                android:drawableRight="@drawable/ic_baseline_volume_up_24"
+                android:gravity="right"
+                android:id="@+id/mixer_toggle"
+                android:layout_marginRight="10dp"
+                android:background="@color/fui_transparent"
+                android:layout_gravity="right"
+                android:fontFamily="@font/comfortaa"/>
+
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/onoff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/settings"
+                android:layout_width="30dp"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/ic_baseline_settings_24"
+                android:visibility="gone" />
 
             <ToggleButton
                 android:id="@+id/record_button"
@@ -66,15 +90,6 @@
                 android:drawableRight="@drawable/ic_baseline_fiber_manual_record_24"
                 android:textOff="Rec"
                 android:textOn="Stop" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/settings"
-                android:layout_width="30dp"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_baseline_settings_24"
-                android:visibility="gone" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/menu_button"
@@ -175,25 +190,6 @@
                         android:value="1"/>
 
                 </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="Hide Mixer "
-                    android:textOn="Show Mixer "
-                    android:padding="5dp"
-                    android:drawableRight="@drawable/ic_baseline_volume_up_24"
-                    android:gravity="right"
-                    android:id="@+id/mixer_hide_button"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/fui_transparent"
-                    android:layout_gravity="right"
-                    android:fontFamily="@font/comfortaa"/>
 
             </LinearLayout>
         </LinearLayout>

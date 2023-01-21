@@ -76,6 +76,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -180,6 +181,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PopupMenu optionsMenu;
     String lastRecordedFileName;
     NotificationManagerCompat notificationManager;
+    static ProgressBar inputMeter ;
+    static ProgressBar outputMeter ;
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -2101,5 +2104,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean isPluginLV2 (String pluginName) {
 //        Log.d(TAG, "isPluginLV2: " + pluginName + " in " + lv2Plugins.toString() + " = " + lv2Plugins.contains(pluginName));
         return lv2Plugins.contains(pluginName);
+    }
+
+    static void setMixerMeter (float inputValue, float outputValue) {
+        inputMeter.setProgress((int) (inputValue * 100));
+        outputMeter.setProgress((int) (outputValue * 100));
     }
 }

@@ -62,6 +62,8 @@ public class AudioEngine {
     static native void native_setDefaultStreamValues(int defaultSampleRate, int defaultFramesPerBurst);
 
     static native void setLibraryPath (String path);
+    static native void setInputVolume (float volume);
+    static native void setOutputVolume (float volume);
 
     static native void testLV2 ();
 
@@ -85,6 +87,10 @@ public class AudioEngine {
         progress.setIcon(R.drawable.logo);
         progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progress.show();
+    }
+
+    void setInputMeter (float value) {
+
     }
 
     static void hideProgress () {

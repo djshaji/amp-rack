@@ -28,6 +28,7 @@ public:
     #define MAX_PLUGINS 10 // for now
     float inputVolume = 1.0 ;
     float outputVolume = 1.0 ;
+    bool meterEnabled = false ;
     void (*connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
                          unsigned long Port,
                          LADSPA_Data * DataLocation);

@@ -161,6 +161,7 @@ public:
     void setFileType(int fType);
 
     void setChannels(int channels);
+
 };
 
 
