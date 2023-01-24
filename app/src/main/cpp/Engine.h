@@ -8,6 +8,7 @@
 #include "SharedLibrary.h"
 #include "Plugin.h"
 #include "FileWriter.h"
+#include "Meter.h"
 
 class Engine : public oboe::AudioStreamCallback {
 public:
@@ -46,6 +47,7 @@ public:
     bool lazyLoad = false ;
 
     FileWriter * fileWriter ;
+    Meter * meter ;
     std::string externalStoragePath ;
 
     std::vector <SharedLibrary *> libraries ;

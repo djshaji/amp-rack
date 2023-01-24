@@ -8,7 +8,8 @@
 #include "upwaker.h"
 #include "sema.h"
 
-
+#ifndef VRINGBUFFER_H
+#define VRINGBUFFER_H
 
 enum vringbuffer_receiver_callback_return_t {
     VRB_CALLBACK_DIDNT_USE_BUFFER,
@@ -108,6 +109,4 @@ void	vringbuffer_return_writing	(vringbuffer_t *vrb, void *data);
 int	vringbuffer_writing_size	(vringbuffer_t *vrb);
 
 
-
-
-
+#endif

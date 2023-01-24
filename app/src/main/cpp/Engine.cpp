@@ -6,6 +6,7 @@
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
     fileWriter = new FileWriter ();
+
 //    discoverPlugins();
 //    loadPlugins();
 }
@@ -58,6 +59,8 @@ bool Engine::setEffectOn(bool isOn) {
                 if (mFullDuplexPass.recordingActive) {
                     fileWriter->startRecording();
                 }
+                if (mFullDuplexPass.meterEnabled)
+                    meter -> enable();
 //                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }

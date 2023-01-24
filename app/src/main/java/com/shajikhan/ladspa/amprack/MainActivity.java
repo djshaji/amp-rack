@@ -2079,8 +2079,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void testLV2 () {
 //        Log.d(TAG, "testLV2: " + getLV2Info("eql"));
-//        AudioEngine.testLV2();
-        Log.d(TAG, "testLV2: " + getLV2Info("mda-Limiter.so", "http://drobilla.net/plugins/mda/Limiter"));
+        AudioEngine.testLV2();
+//        Log.d(TAG, "testLV2: " + getLV2Info("mda-Limiter.so", "http://drobilla.net/plugins/mda/Limiter"));
     }
 
     public static String getLV2Info (String libraryName, String plugin) {
@@ -2108,6 +2108,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     static void setMixerMeter (float inputValue, float outputValue) {
         inputMeter.setProgress((int) (inputValue * 100));
+        outputMeter.setProgress((int) (outputValue * 100));
+    }
+    static void setMixerMeterSwitch (float inputValue, boolean isInput) {
+        if (isInput)
+            inputMeter.setProgress((int) (inputValue * 100));
+        else
+            outputMeter.setProgress((int) (inputValue * 100));
+    }
+
+    static void setMixerMeterInput (float inputValue) {
+        inputMeter.setProgress((int) (inputValue * 100));
+    }
+    static void setMixerMeterOutput (float outputValue) {
         outputMeter.setProgress((int) (outputValue * 100));
     }
 }

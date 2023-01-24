@@ -26,6 +26,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_create(JNIEnv *env, jclass clazz) 
     if (engine == nullptr) {
         engine = new Engine () ;
         env ->GetJavaVM(&engine -> vm);
+        engine -> meter = new Meter (engine -> vm) ;
     }
 
     OUT ;
@@ -627,7 +628,11 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_testLV2(JNIEnv *env, jclass clazz)
 //    engine -> libraries.at(0)->load();
 //    engine ->addPluginToRack(0,0);
 
-    engine->addPluginToRackLazy("rkrlv2.so", 0, SharedLibrary::LV2);
+//    engine->addPluginToRackLazy("rkrlv2.so", 0, SharedLibrary::LV2);
+    engine ->meter->env->CallStaticVoidMethod(
+            engine->meter->mainActivity,
+            engine->meter->setMixerMeter, 1.0f, true);
+
 }
 extern "C"
 JNIEXPORT void JNICALL

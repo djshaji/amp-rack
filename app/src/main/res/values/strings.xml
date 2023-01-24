@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Amp</string>
+    <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 3 Preview</string>
     <string name="build_id">247</string>
     <string-array name="tap_plugins">

@@ -21,6 +21,7 @@
 #include "ladspa.h"
 #include "FullDuplexStream.h"
 #include "FileWriter.h"
+#include "Meter.h"
 
 class FullDuplexPass : public FullDuplexStream {
     //| TODO: Limit number of plugins active in free version?
@@ -28,7 +29,7 @@ public:
     #define MAX_PLUGINS 10 // for now
     float inputVolume = 1.0 ;
     float outputVolume = 1.0 ;
-    bool meterEnabled = false ;
+    bool meterEnabled = true ;
     void (*connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
                          unsigned long Port,
                          LADSPA_Data * DataLocation);
@@ -74,6 +75,9 @@ public:
             inSamples [i] = inputFloats [i] * inputVolume ;
         }
 
+        if (meterEnabled) {
+            Meter::process (samplesToProcess, inputFloats);
+        }
         // this
         // am I devloper yet?
 //        memcpy(outputData, inputData, samplesToProcess);
@@ -134,6 +138,8 @@ public:
         if (recordingActive) {
             FileWriter::process(samplesToProcess, data);
         }
+
+
     }
 };
 #endif //SAMPLES_FULLDUPLEXPASS_H
