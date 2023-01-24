@@ -22,6 +22,7 @@ static jobject gClassLoader;
 static jmethodID gFindClassMethod;
 bool Meter::enabled = false ;
 float Meter::lastTotal = 0 ;
+bool Meter::isInput = true;
 
 JNIEnv* getEnv() {
     JNIEnv *env;

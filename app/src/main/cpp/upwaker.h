@@ -16,6 +16,8 @@
    whether it would work.
 */
 
+#ifndef UPWAKE_H
+#define UPWAKE_H
 
 #include <pthread.h>
 
@@ -30,3 +32,5 @@ typedef struct {
 upwaker_t *create_upwaker(void);
 void upwaker_sleep(upwaker_t *upwaker);
 void upwaker_wake_up(upwaker_t *upwaker);
+
+#endif // UPWAKE_H

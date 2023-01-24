@@ -55,6 +55,7 @@ public:
     static jclass mainActivity ;
     static JNIEnv *env;
     static bool enabled ;
+    static bool isInput ;
     static float lastTotal ;
     static int autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size);
 
@@ -106,29 +107,18 @@ public:
         }
 
         float total = 0 ;
+        float max = 0 ;
 
         for (int i = 0 ; i < bufferUsed; i ++) {
-            float avg = 0 ;
             for (int j = 0 ; j < sbuffer [i].pos ; j ++) {
-                avg += sbuffer [i].data [j] ;
+                if (sbuffer [i].data [j] > max)
+                    max = sbuffer [i].data [j];
             }
-
-            avg = avg / sbuffer [i].pos ;
-            total += avg ;
         }
 
-        if (lastTotal > total + .2) {
-            bufferUsed = 0;
-            return  VRB_CALLBACK_USED_BUFFER;
-        }
-
-        total = abs (total / bufferUsed) * 100;
-        LOGD("%f", total);
-        env->CallStaticVoidMethod(mainActivity, setMixerMeter, (jfloat) total, true);
-        lastTotal = total ;
-
+//        LOGD("%f", max);
+        env->CallStaticVoidMethod(mainActivity, setMixerMeter, (jfloat) max, isInput);
         bufferUsed = 0 ;
-//        OUT
         return VRB_CALLBACK_USED_BUFFER;
     }
 
