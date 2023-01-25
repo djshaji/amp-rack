@@ -6,15 +6,21 @@
 #include "Meter.h"
 
 vringbuffer_t * Meter::vringbuffer ;
+vringbuffer_t * Meter::vringbufferOutput ;
 Meter::buffer_t *Meter::current_buffer;
 int Meter::bufferUsed  = 0;
+int Meter::bufferUsedOutput  = 0;
+Meter::staticBuffer_t Meter::buffersOutput [1024] ;
 Meter::staticBuffer_t Meter::buffers [1024] ;
 int Meter::jack_samplerate = 48000 ;
 int Meter::block_size = 384 ;
 int Meter::MAX_STATIC_BUFFER  = 32;
 jmethodID Meter::setMixerMeter ;
 jclass Meter::mainActivity ;
+jmethodID Meter::setMixerMeterOutput ;
+jclass Meter::mainActivityOutput ;
 JNIEnv * Meter::env = NULL;
+JNIEnv * Meter::envOutput = NULL;
 JavaVM *Meter:: vm = NULL  ;
 
 JavaVM* gJvm = nullptr;
@@ -86,8 +92,19 @@ Meter::Meter(JavaVM *pVm) {
         return ;
     }
 
+    vringbufferOutput = vringbuffer_create(JC_MAX(4,seconds_to_buffers(1)),
+                                     JC_MAX(4,seconds_to_buffers(40)),
+                                     (size_t) buffer_size_in_bytes);
+
+    if(vringbufferOutput == NULL){
+        HERE LOGF ("Unable to create ringbuffer output!") ;
+        OUT
+        return ;
+    }
+
     /// TODO: Free this memory!
     vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
+    vringbuffer_set_autoincrease_callback(vringbufferOutput,autoincrease_callback,0);
     current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
     empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * 1));
 
@@ -112,6 +129,7 @@ void Meter::enable () {
      */
 
     vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
+    vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
     enabled = true ;
 //    env->CallStaticVoidMethod(mainActivity, setMixerMeter, (jfloat ) 1.0f, true);
     OUT
@@ -178,26 +196,40 @@ int Meter::updateOutput (float *data, size_t frames) {
     env->CallStaticVoidMethod(mainActivity, setMixerMeter, avg, false);
 }
 
-void Meter::process (int nframes, const float * data) {
-//    IN
-    if (bufferUsed < MAX_STATIC_BUFFER) {
-        for (int i = 0; i < nframes; i++) {
-            buffers[bufferUsed].data [i] = data[i];
+void Meter::process (int nframes, const float * data, bool isInput) {
+    if (isInput) {
+        if (bufferUsed < MAX_STATIC_BUFFER) {
+            for (int i = 0; i < nframes; i++) {
+                buffers[bufferUsed].data[i] = data[i];
+            }
+
+            buffers[bufferUsed].pos = nframes;
+            buffers[bufferUsed].isInput = isInput;
+
+            bufferUsed++;
+            return;
+        } else {
+            vringbuffer_return_writing(vringbuffer, buffers);
         }
 
-        buffers[bufferUsed].pos = nframes;
-        bufferUsed++;
-//        OUT
-        return ;
-
-    } else {
-//        LOGD("return writing");
-        vringbuffer_return_writing(vringbuffer,buffers);
+        vringbuffer_trigger_autoincrease_callback(vringbuffer);
     }
+    else {
+        if (bufferUsedOutput < MAX_STATIC_BUFFER) {
+            for (int i = 0; i < nframes; i++) {
+                buffersOutput[bufferUsedOutput].data[i] = data[i];
+            }
 
+            buffersOutput[bufferUsedOutput].pos = nframes;
+            buffersOutput[bufferUsedOutput].isInput = isInput;
 
-    /// does the following do ANYTHING?
-    vringbuffer_trigger_autoincrease_callback(vringbuffer);
-//    OUT
+            bufferUsedOutput++;
+            return;
+        } else {
+            vringbuffer_return_writing(vringbufferOutput, buffersOutput);
+        }
+
+        vringbuffer_trigger_autoincrease_callback(vringbufferOutput);
+    }
 }
 

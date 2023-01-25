@@ -35,16 +35,20 @@ class Meter {
         int overruns;
         float pos;
         float data[192];
+        bool isInput ;
 //    float *data;
     } staticBuffer_t;
 
     static vringbuffer_t * vringbuffer ;
+    static vringbuffer_t * vringbufferOutput ;
     static buffer_t *current_buffer;
     float *empty_buffer;
     static int jack_samplerate ;
     int buffer_size_in_bytes = 192;
     static int block_size ;
     static int bufferUsed  ;
+    static int bufferUsedOutput  ;
+    static staticBuffer_t buffersOutput [1024] ;
     static staticBuffer_t buffers [1024] ;
     static int MAX_STATIC_BUFFER  ;
     static JavaVM *vm ;
@@ -54,6 +58,9 @@ public:
     static jmethodID setMixerMeter ;
     static jclass mainActivity ;
     static JNIEnv *env;
+    static jmethodID setMixerMeterOutput ;
+    static jclass mainActivityOutput ;
+    static JNIEnv *envOutput;
     static bool enabled ;
     static bool isInput ;
     static float lastTotal ;
@@ -79,50 +86,90 @@ public:
 
     int updateOutput(float *data, size_t frames);
 
+    static enum vringbuffer_receiver_callback_return_t meter_callback_output (vringbuffer_t *vrb,bool first_time,void *element) {
+        if (first_time) {
+            envOutput = getEnv();
+            if (envOutput == nullptr)
+                LOGF("envOutput is null");
+            mainActivityOutput = findClassWithEnv(envOutput, "com/shajikhan/ladspa/amprack/MainActivity");
+            if (mainActivityOutput == nullptr) {
+                HERE
+                LOGF("cannot find class mainactivityOutput!");
+            }
+
+            setMixerMeterOutput = envOutput->GetStaticMethodID(mainActivityOutput, "setMixerMeterSwitch",
+                                                               "(FZ)V");
+            if (setMixerMeterOutput == nullptr) {
+                LOGF("cannot find method!");
+            }
+
+        }
+
+        if (first_time==true) {
+            return static_cast<vringbuffer_receiver_callback_return_t>(true);
+        }
+
+        staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;
+        float total = 0 ;
+        float max = 0 ;
+
+        for (int i = 0; i < bufferUsedOutput; i++) {
+            for (int j = 0; j < sbuffer[i].pos; j++) {
+                if (sbuffer[i].data[j] > max)
+                    max = sbuffer[i].data[j];
+            }
+        }
+
+        LOGD ("%f", max);
+        envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
+        bufferUsedOutput = 0;
+        return VRB_CALLBACK_USED_BUFFER;
+
+    }
+
     static enum vringbuffer_receiver_callback_return_t meter_callback (vringbuffer_t *vrb,bool first_time,void *element){
 //        IN
         if (first_time) {
-//            vm ->AttachCurrentThread(&env, NULL);
-//            vm-> GetEnv((void**)&env, JNI_VERSION_1_6);
-//            mainActivity = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
             env = getEnv();
             if (env == nullptr)
                 LOGF("env is null");
             mainActivity = findClassWithEnv(env, "com/shajikhan/ladspa/amprack/MainActivity");
             if (mainActivity == nullptr) {
-                HERE LOGF("cannot find class mainactivity!");
+                HERE
+                LOGF("cannot find class mainactivity!");
             }
 
-            setMixerMeter = env->GetStaticMethodID(mainActivity, "setMixerMeterSwitch", "(FZ)V");
+            setMixerMeter = env->GetStaticMethodID(mainActivity, "setMixerMeterSwitch",
+                                                   "(FZ)V");
             if (setMixerMeter == nullptr) {
                 LOGF("cannot find method!");
             }
 
         }
 
-        staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;
 
         if (first_time==true) {
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
+        staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;
         float total = 0 ;
         float max = 0 ;
 
-        for (int i = 0 ; i < bufferUsed; i ++) {
-            for (int j = 0 ; j < sbuffer [i].pos ; j ++) {
-                if (sbuffer [i].data [j] > max)
-                    max = sbuffer [i].data [j];
+        for (int i = 0; i < bufferUsed; i++) {
+            for (int j = 0; j < sbuffer[i].pos; j++) {
+                if (sbuffer[i].data[j] > max)
+                    max = sbuffer[i].data[j];
             }
         }
 
-//        LOGD("%f", max);
-        env->CallStaticVoidMethod(mainActivity, setMixerMeter, (jfloat) max, isInput);
-        bufferUsed = 0 ;
+        env->CallStaticVoidMethod(mainActivity, setMixerMeter, (jfloat) max, true);
+        bufferUsed = 0;
+
         return VRB_CALLBACK_USED_BUFFER;
     }
 
-    static void process(int frames, const float *data);
+    static void process(int frames, const float *data, bool isInput);
 
     void enable();
 

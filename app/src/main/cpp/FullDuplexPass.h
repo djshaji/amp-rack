@@ -76,7 +76,7 @@ public:
         }
 
         if (meterEnabled) {
-            Meter::process (samplesToProcess, inputFloats);
+            Meter::process (samplesToProcess, inSamples, true);
         }
         // this
         // am I devloper yet?
@@ -87,12 +87,15 @@ public:
          */
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
-            *outputFloats++ = inSamples [i]  * outputVolume; // do some arbitrary processing
+            inSamples [i] = inSamples [i]  * outputVolume; // do some arbitrary processing
+            *outputFloats++ = inSamples [i];
         }
 
+        if (meterEnabled) {
+            Meter::process (samplesToProcess, inSamples, false);
+        }
 
-
-//        for (int32_t i = 0; i < samplesToProcess; i++) {
+        //        for (int32_t i = 0; i < samplesToProcess; i++) {
 //            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing
 //        }
 
@@ -102,7 +105,7 @@ public:
             *outputFloats++ = 0.0; // silence
         }
 
-         //        OUT ;
+        //        OUT ;
         return oboe::DataCallbackResult::Continue;
     }
 
