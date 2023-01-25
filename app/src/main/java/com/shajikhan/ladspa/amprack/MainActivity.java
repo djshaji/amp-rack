@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     File dir;
     HashCommands hashCommands;
     JSONObject rdf ;
+    Slider inputVolume, outputVolume ;
+    ToggleButton toggleMixer ;
     static int totalPlugins = 0 ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
@@ -1098,6 +1100,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (!AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
             toast(getResources().getString(R.string.lowLatencyWarning));
         }
+
+        inputMeter.setProgress(0);
+        outputMeter.setProgress(0);
     }
 
     private boolean isRecordPermissionGranted() {
@@ -1561,7 +1566,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         preset = presetToString();
         if (preset == null)
             return;
-        sharedPreferences.edit().putString("activePreset", preset).apply();
+        defaultSharedPreferences.edit().putString("activePreset", preset).apply();
+        defaultSharedPreferences.edit().putFloat("inputVolume", inputVolume.getValue()).apply();
+        defaultSharedPreferences.edit().putFloat("outputVolume", outputVolume.getValue()).apply();
+        defaultSharedPreferences.edit().putBoolean("toggleMixer", toggleMixer.isChecked()).apply();
+
+        Log.d(TAG, "saveActivePreset: toggle mixer: " +  !toggleMixer.isChecked());
         Log.d(TAG, "saveActivePreset: Saved preset: " + preset);
     }
 
@@ -1570,6 +1580,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return ;
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
+        AudioEngine.toggleMixer(sharedPreferences.getBoolean("toggleMixer", true));
+
         if (preset != null) {
             loadPreset(preset);
         }

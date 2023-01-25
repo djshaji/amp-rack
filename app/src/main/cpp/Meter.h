@@ -120,7 +120,7 @@ public:
             }
         }
 
-        LOGD ("%f", max);
+//        LOGD ("%f", max);
         envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
         bufferUsedOutput = 0;
         return VRB_CALLBACK_USED_BUFFER;

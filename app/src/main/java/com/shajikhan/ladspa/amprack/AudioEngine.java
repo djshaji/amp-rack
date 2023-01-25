@@ -64,6 +64,7 @@ public class AudioEngine {
     static native void setLibraryPath (String path);
     static native void setInputVolume (float volume);
     static native void setOutputVolume (float volume);
+    static native void toggleMixer (boolean toggle);
 
     static native void testLV2 ();
 

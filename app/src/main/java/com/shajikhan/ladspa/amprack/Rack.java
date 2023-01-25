@@ -464,8 +464,10 @@ public class Rack extends Fragment {
         LinearLayout outputMixer = mainActivity.findViewById(R.id.mixer_output);
         LinearLayout mixer = mainActivity.findViewById(R.id.mixer);
 
-        ToggleButton toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
-        toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
+        mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
+
+        mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
+            AudioEngine.toggleMixer(!b);
             if (!b) {
                 mixer.setVisibility(View.VISIBLE);
             } else {
@@ -473,25 +475,31 @@ public class Rack extends Fragment {
             }
         });
 
-        Slider inputVolume = mainActivity.findViewById(R.id.mixer_input_slider);
-        Slider outputVolume = mainActivity.findViewById(R.id.mixer_output_slider);
+        mainActivity.toggleMixer.setChecked(mainActivity.defaultSharedPreferences.getBoolean("toggleMixer", false));
+        Log.d(TAG, "onViewCreated: toggle mixer: " + mainActivity.defaultSharedPreferences.getBoolean("toggleMixer", true));
+        mainActivity. inputVolume = mainActivity.findViewById(R.id.mixer_input_slider);
+        mainActivity. outputVolume = mainActivity.findViewById(R.id.mixer_output_slider);
 
         mainActivity.inputMeter = mainActivity.findViewById(R.id.mixer_input_progress);
         mainActivity.outputMeter = mainActivity.findViewById(R.id.mixer_output_progress);
 
-        inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
+        mainActivity. inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 AudioEngine.setInputVolume(value);
             }
         });
 
-        outputVolume.addOnChangeListener(new Slider.OnChangeListener() {
+        mainActivity. outputVolume.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 AudioEngine.setOutputVolume(value);
             }
         });
+
+        mainActivity.inputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f));
+        mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
+
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

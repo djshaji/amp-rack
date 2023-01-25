@@ -684,3 +684,13 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setOutputVolume(JNIEnv *env, jclas
     engine -> mFullDuplexPass . outputVolume = volume ;
     OUT
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleMixer(JNIEnv *env, jclass clazz,
+                                                          jboolean toggle) {
+    // TODO: implement toggleMixer()
+    if (engine == NULL) return ;
+    engine->mFullDuplexPass.meterEnabled = toggle ;
+    LOGD("setting mixer to %d", toggle);
+}
