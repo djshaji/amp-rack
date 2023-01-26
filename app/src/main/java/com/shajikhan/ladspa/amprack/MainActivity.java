@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     File dir;
     HashCommands hashCommands;
     JSONObject rdf ;
+    JSONObject ampModels ;
     Slider inputVolume, outputVolume ;
     ToggleButton toggleMixer ;
     static int totalPlugins = 0 ;
@@ -216,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
         availablePluginsLV2 = ConnectGuitar.loadJSONFromAssetFile(this, "lv2_plugins.json");
+        ampModels = ConnectGuitar.loadJSONFromAssetFile(this, "amps.json");
 
         Iterator<String> keys = availablePluginsLV2.keys();
 

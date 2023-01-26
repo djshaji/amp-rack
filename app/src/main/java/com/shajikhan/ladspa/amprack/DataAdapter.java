@@ -26,6 +26,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,7 +71,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             }
         });
 
-        holder.getTextView().setText(AudioEngine.getActivePluginName(position));
+        String pluginName = AudioEngine.getActivePluginName(position) ;
+        holder.getTextView().setText(pluginName);
         int numControls = AudioEngine.getPluginControls(position);
         for (int i = 0 ; i < numControls ; i ++) {
             LinearLayout layout = new LinearLayout(context);
@@ -94,7 +96,40 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             EditText editText = new EditText(context);
             Slider slider = new Slider(context);
             Spinner spinner = new Spinner(context);
+            boolean isSpinner = false ;
+            if (mainActivity.ampModels.has(pluginName)) {
+                JSONObject control ;
+                ArrayList <String> models = new ArrayList<>();
+                try {
+                    control = mainActivity.ampModels.getJSONObject(pluginName) ;
+                    if (control.has(String.valueOf(i))) {
+                        isSpinner = true ;
+                        JSONArray modelsData = control.getJSONArray(String.valueOf(i));
+                        for (int x_ = 0 ; x_ < modelsData.length() ; x_++) {
+                            models.add(modelsData.getString(x_));
+                        }
 
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
+                        android.R.layout.simple_spinner_item, models);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+//                spinner.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+            }
+
+
+            if (isSpinner) {
+                layout.addView(spinner);
+                slider.setVisibility(View.GONE);
+                editText.setVisibility(View.GONE);
+            }
+
+            layout.addView(slider);
+            holder.sliders.add(slider);
             /*
             if (mainActivity.rdf.has (String.valueOf(plugins.get(position)))) {
                 Log.d(TAG, "onBindViewHolder: loading spinner for " + String.valueOf(plugins.get(position)));
@@ -147,8 +182,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             }
              */
 
-            layout.addView(slider);
-            holder.sliders.add(slider);
 
             editText.setMaxLines(1);
             editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(4) });
@@ -189,6 +222,23 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             }
 
             slider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+            LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            spinnerLayoutParams.setMargins(0,20,0,20);
+            spinner.setLayoutParams(spinnerLayoutParams);
+            spinner.setSelection((int) slider.getValue());
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    editText.setText(String.valueOf(i));
+                    slider.setValue(Float.valueOf(i));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
 
             slider.addOnChangeListener(new Slider.OnChangeListener() {
                 @Override
