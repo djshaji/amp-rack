@@ -97,6 +97,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             Slider slider = new Slider(context);
             Spinner spinner = new Spinner(context);
             boolean isSpinner = false ;
+            Log.d(TAG, "onBindViewHolder: " + pluginName);
             if (mainActivity.ampModels.has(pluginName)) {
                 JSONObject control ;
                 ArrayList <String> models = new ArrayList<>();

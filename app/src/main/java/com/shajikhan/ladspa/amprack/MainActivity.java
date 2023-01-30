@@ -236,8 +236,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Log.d(TAG, "onCreate: bootstart: " + defaultSharedPreferences.getLong("bootStartz", 1L) + " bootFinish: " + defaultSharedPreferences.getLong("bootFinish", 1L));
-        if (defaultSharedPreferences.getLong("bootFinish", 1L) < defaultSharedPreferences.getLong("bootStart", 0L))
+        if (defaultSharedPreferences.getLong("bootFinish", 1L) < defaultSharedPreferences.getLong("bootStart", 0L)) {
             safeMode = true ;
+            Log.d(TAG, "onCreate: turned on safe mode");
+        }
 
         defaultSharedPreferences.edit().putLong("bootStart", System.currentTimeMillis()).commit();
 
@@ -1578,8 +1580,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void loadActivePreset() {
-        if (safeMode)
+        if (safeMode) {
+            Log.d(TAG, "loadActivePreset: skipping loading preset");
             return ;
+        }
+
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
         AudioEngine.toggleMixer(sharedPreferences.getBoolean("toggleMixer", true));

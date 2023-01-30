@@ -11,5 +11,166 @@
       "Nihon Ace",
       "Porky"
     ]
+  },
+
+  "C* AmpVTS - Idealised guitar amplification": {
+    "4": [
+      "Basswoman",
+      "Stanford",
+      "Wookie",
+      "DC 30",
+      "Juice 800",
+      "Twin",
+      "AK 20",
+      "Nihon Ace",
+      "Porky"
+    ]
+  },
+
+  "rkr Cabinet": {
+    "2": [
+      "Marshall 4-12\"",
+      "Celestion G12M",
+      "Jensen Alinco P12-N" ,
+      "Jensen Alinco P15-N"  ,
+      "Eminence Delta Demon"  ,
+      "Celestion EVH12"  ,
+      "Eminence Copperhead"  ,
+      "Mesa Boogie"  ,
+      "Jazz-Chorus"  ,
+      "Vox-Bright"  ,
+      "Marshall I"
+
+    ]
+  },
+
+  "C* CabinetIII - Simplistic loudspeaker cabinet emulation": {
+    "0": [
+      "Off",
+      "Twin",
+      "Wookie",
+      "Blue",
+      "Indigo",
+      "Supra",
+      "Tweedie",
+      "Basswoman",
+      "Martial",
+      "Poser",
+      "Cabby",
+      "Angel",
+      "Matched",
+      "Yellow",
+      "Piquey",
+      "Paladin",
+      "Turtle"
+    ]
+  },
+
+  "C* CabinetIV - Idealised loudspeaker cabinet": {
+    "0": [
+      "Mega wookie 800",
+      "Mega wookie 812",
+      "Mega wookie 828",
+      "Mega wookie 868",
+      "Mega wookie 908",
+      "Mega wookie 912",
+      "Mega wookie 936",
+      "Mega wookie 968",
+      "Mega wookie 992",
+      "Unmatched",
+      "Twin A",
+      "Twin B",
+      "Twin C",
+      "Blue A",
+      "Blue B",
+      "Tweedie A",
+      "Tweedie B",
+      "Mini Wookie A",
+      "Mini Wookie B",
+      "Rosie A",
+      "Rosie B",
+      "Indigo",
+      "Angel",
+      "Sixty-one",
+      "Sixty-two"
+    ]
+  },
+
+  "C* Saturate - Various static nonlinearities, 8x oversampled": {
+    "0": [
+      "Bypass",
+      "Atan",
+      "Atan15",
+      "Clip",
+      "One5",
+      "One53",
+      "Clip3",
+      "Clip9",
+      "Sin1",
+      "Pow7",
+      "Tanh",
+      "Rectify"
+    ]
+  },
+
+  "TAP Reverberator": {
+    "7": [
+      "AfterBurn" ,
+      "AfterBurn (Long)" ,
+      "Ambience" ,
+      "Ambience (Thick)" ,
+      "Ambience (Thick) - HD" ,
+      "Cathedral" ,
+      "Cathedral - HD" ,
+      "Drum Chamber" ,
+      "Garage" ,
+      "Garage (Bright)" ,
+      "Gymnasium" ,
+      "Gymnasium (Bright)" ,
+      "Gymnasium (Bright) - HD" ,
+      "Hall (Small)" ,
+      "Hall (Medium)" ,
+      "Hall (Large)" ,
+      "Hall (Large) - HD" ,
+      "Plate (Small)" ,
+      "Plate (Medium)" ,
+      "Plate (Large)" ,
+      "Plate (Large) - HD" ,
+      "Pulse Chamber" ,
+      "Pulse Chamber (Reverse)" ,
+      "Resonator (96 ms)" ,
+      "Resonator (152 ms)" ,
+      "Resonator (208 ms)" ,
+      "Room (Small)" ,
+      "Room (Medium)" ,
+      "Room (Large)" ,
+      "Room (Large) - HD" ,
+      "Slap Chamber" ,
+      "Slap Chamber - HD" ,
+      "Slap Chamber (Bright)" ,
+      "Slap Chamber (Bright) - HD" ,
+      "Smooth Hall (Small)" ,
+      "Smooth Hall (Medium)" ,
+      "Smooth Hall (Large)" ,
+      "Smooth Hall (Large) - HD" ,
+      "Vocal Plate" ,
+      "Vocal Plate - HD" ,
+      "Warble Chamber" ,
+      "Warehouse" ,
+      "Warehouse - HD"
+
+    ]
+  },
+
+  "MDA Combo": {
+    "0": [
+      "D.I. (flat frequency response)",
+      "Tradtional speaker simulator",
+      "Small radio speaker",
+      "Small combo (close mic)",
+      "Small combo (far mic)",
+      "Large stack (front mic)",
+      "Large stack (side mic, scooped mids)"
+    ]
   }
 }
