@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:id="@+id/wallpaper"
-        android:src="@drawable/a5"/>
+        android:id="@+id/wallpaper"/>
 
     <LinearLayout
         app:layout_constraintVertical_weight="1"
