@@ -1569,8 +1569,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         String preset;
         preset = presetToString();
         if (preset == null)
-            return;
-        defaultSharedPreferences.edit().putString("activePreset", preset).apply();
+            Log.d(TAG, "saveActivePreset: preset is null");
+        else {
+            sharedPreferences.edit().putString("activePreset", preset).apply();
+            Log.d(TAG, "saveActivePreset: saved " + preset);
+        }
+
         defaultSharedPreferences.edit().putFloat("inputVolume", inputVolume.getValue()).apply();
         defaultSharedPreferences.edit().putFloat("outputVolume", outputVolume.getValue()).apply();
         defaultSharedPreferences.edit().putBoolean("toggleMixer", toggleMixer.isChecked()).apply();
@@ -1585,13 +1589,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return ;
         }
 
+
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
         AudioEngine.toggleMixer(sharedPreferences.getBoolean("toggleMixer", true));
 
         if (preset != null) {
+            Log.d(TAG, "loadActivePreset: " + preset);
             loadPreset(preset);
-        }
+        } else
+            Log.d(TAG, "loadActivePreset: active preset is null or empty");
     }
 
     void loadPreset(Map map) {

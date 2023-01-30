@@ -110,7 +110,7 @@ public class ConnectGuitar extends AppCompatActivity {
             json = new String(buffer, "UTF-8");
         } catch (IOException ex) {
             ex.printStackTrace();
-            Log.e(TAG, "loadJSONFromAsset: unable to parse json", ex);
+            Log.e(TAG, "loadJSONFromAsset: unable to parse json " + filename, ex);
             return null;
         }
 
@@ -119,7 +119,7 @@ public class ConnectGuitar extends AppCompatActivity {
             jsonObject = new JSONObject(json);
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e(TAG, "loadJSONFromAsset: cannot parse json", e);
+            Log.e(TAG, "loadJSONFromAsset: cannot parse json " + filename, e);
         }
 
         return jsonObject;
