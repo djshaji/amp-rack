@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String CHANNEL_ID = "default";
     static Context context;
     SwitchMaterial onOff;
-    static boolean useWinampSkin = true ;
     int deviceWidth;
     int deviceHeight;
     long totalMemory = 0;
@@ -167,7 +166,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     Slider inputVolume, outputVolume ;
     ToggleButton toggleMixer ;
     static int totalPlugins = 0 ;
-    static WinampSkin winampSkin ;
+    static boolean useTheme = true ;
+    static SkinEngine skinEngine ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -209,14 +209,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         context = this;
 
         Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
-        if (useWinampSkin)
-            winampSkin = new WinampSkin(this);
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add(this, "saveActivePreset");
         hashCommands.add(this, "printActivePreset");
         hashCommands.add(this, "proDialog");
         hashCommands.add (this, "testLV2");
+        skinEngine = new SkinEngine(this);
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
@@ -623,10 +622,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         defaultSharedPreferences.edit().putLong("bootFinish", System.currentTimeMillis()).commit();
         if (safeMode) {
             toast("Safe mode was enabled because the app did not load successfully. Some features may be disabled.");
-        }
-
-        if (useWinampSkin) {
-            winampSkin.skinMainWindow(findViewById(R.id.wallpaper));
         }
 
         Log.d(TAG, "onCreate: boot complete, we are now live.");
@@ -1890,11 +1885,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
-        if (useWinampSkin) {
-//            winampSkin.apply();
-            return;
+        if (useTheme) {
+            skinEngine.wallpaper(imageView);
+            return ;
         }
-
         String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "2.9 Beta");
 //        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "a1");
         Bitmap bitmap = null;

@@ -500,6 +500,8 @@ public class Rack extends Fragment {
         mainActivity.inputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f));
         mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
 
+        ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
+        mainActivity.skinEngine.header(wallpaper);
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {
