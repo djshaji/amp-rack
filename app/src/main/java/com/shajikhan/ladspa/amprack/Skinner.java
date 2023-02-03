@@ -82,13 +82,13 @@ public class Skinner {
             return null ;
         }
 
-        if (width == -1) width = height * (mBitmap.getWidth() / mBitmap.getHeight());
-        if (height == -1) height = width * (mBitmap.getHeight() / mBitmap.getWidth());
+        if (width == -1) width = (int) (height * ((float) mBitmap.getWidth() / (float) mBitmap.getHeight()));
+        if (height == -1) height = (int) (width * ((float) mBitmap.getHeight() / (float) mBitmap.getWidth()));
 
-        Log.d(TAG, "getBitmapFromAssets: " +
-                String.format("scaling from %dx%d to %dx%d",
-                        mBitmap.getWidth(), mBitmap.getHeight(),
-                        width, height));
+//        Log.d(TAG, "getBitmapFromAssets: " +
+//                String.format("scaling from %dx%d to %dx%d",
+//                        mBitmap.getWidth(), mBitmap.getHeight(),
+//                        width, height));
         return Bitmap.createScaledBitmap(mBitmap,
                 (int) width,
                 (int) height,

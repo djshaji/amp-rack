@@ -4,6 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -124,11 +128,12 @@ public class Rack extends Fragment {
             return ;
         }
 
-        SwitchMaterial onOff = view.findViewById(R.id.onoff);
+        ToggleButton onOff = view.findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mainActivity.toggleEffect(!b);
+                mainActivity.skinEngine.toggle(onOff, b);
             }
         });
 
@@ -500,8 +505,19 @@ public class Rack extends Fragment {
         mainActivity.inputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f));
         mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
 
-        ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
-        mainActivity.skinEngine.header(wallpaper);
+        if (mainActivity.useTheme) {
+            ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
+            mainActivity.skinEngine.wallpaper(wallpaper);
+            mainActivity.skinEngine.header(mainActivity.findViewById(R.id.master_button_box));
+
+            onOff.setTextOff("");
+            onOff.setTextOn("");
+            onOff.setText("");
+//            onOff.setBackgroundColor(getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+//            onOff.setScaleX(.5f);
+//            onOff.setScaleY(.5f);
+            mainActivity.skinEngine.toggle(onOff, false);
+        }
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

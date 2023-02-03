@@ -1,0 +1,50 @@
+{
+    "theme": {
+        "name": "default",
+        "author": "AmpRack",
+        "screenshot": "screen.png"
+    },
+    
+    "wallpaper": {
+        "background_canbe": "#000000",
+        "bg": "bg.png"
+    },
+    
+    "toggle": {
+        "on": "on.png",
+        "off": "off.png"
+    },
+    
+    "slider": {
+        "thumb": "thumb.png",
+        "bg": "thumb_bg.png"
+    },
+    
+    "header": {
+        "logo": "logo.png",
+        "bg": "header.png"
+    },
+    
+    "menu": {
+        "overflow": "menu_overflow.png",
+        "bg": "menu_bg.png",
+        "active": "menu_active.png"
+    },
+    
+    "card": {
+        "bg": "card_bg.png"
+    },
+    
+    "button": {
+        "bg": "button_bg.png",
+        "pressed": "button_pressed.png"
+    },
+    
+    "icons": {
+        "up": "up.png",
+        "down": "down.png",
+        "rec": "rec.png",
+        "delete": "delete.png",
+        "plus": "plus.png"
+    }
+}
