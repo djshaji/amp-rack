@@ -128,12 +128,11 @@ public class Rack extends Fragment {
             return ;
         }
 
-        ToggleButton onOff = view.findViewById(R.id.onoff);
+        SwitchMaterial onOff = view.findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mainActivity.toggleEffect(!b);
-                mainActivity.skinEngine.toggle(onOff, b);
             }
         });
 
@@ -510,13 +509,15 @@ public class Rack extends Fragment {
             mainActivity.skinEngine.wallpaper(wallpaper);
             mainActivity.skinEngine.header(mainActivity.findViewById(R.id.master_button_box));
 
-            onOff.setTextOff("");
-            onOff.setTextOn("");
-            onOff.setText("");
-//            onOff.setBackgroundColor(getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
-//            onOff.setScaleX(.5f);
-//            onOff.setScaleY(.5f);
-            mainActivity.skinEngine.toggle(onOff, false);
+            ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
+            mainActivity.skinEngine.toggle(toggleButton, false);
+
+            toggleButton.setVisibility(View.VISIBLE);
+            onOff.setVisibility(View.GONE);
+
+            mainActivity.skinEngine.view (optionsBtn, "menu", "overflow", SkinEngine.Resize.Height, .5f);
+            optionsBtn.setCompoundDrawables(null, null, null, null);
+            mainActivity.skinEngine.setLogo(mainActivity.findViewById(R.id.logo_img));
         }
     }
 

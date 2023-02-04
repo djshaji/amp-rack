@@ -67,8 +67,16 @@
                 android:layout_gravity="right"
                 android:fontFamily="@font/comfortaa"/>
 
-            <ToggleButton
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/onoff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp" />
+
+
+            <ToggleButton
+                android:id="@+id/onofftoggle"
+                android:visibility="gone"
                 android:textOn=""
                 android:layout_gravity="right"
                 android:gravity="center|center_vertical"

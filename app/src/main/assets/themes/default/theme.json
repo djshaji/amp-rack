@@ -26,7 +26,7 @@
     },
     
     "menu": {
-        "overflow": "menu_overflow.png",
+        "overflow": "overflow.png",
         "bg": "menu_bg.png",
         "active": "menu_active.png"
     },

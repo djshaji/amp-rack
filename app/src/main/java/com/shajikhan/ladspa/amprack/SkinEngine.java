@@ -7,6 +7,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
@@ -111,6 +112,45 @@ public class SkinEngine {
         });
     }
 
+    enum Resize {
+        Width,
+        Height,
+        None
+    }
+
+    void view (View view, String category, String name, Resize resize, float factor) {
+        view.setBackground(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                int w = view.getWidth(), h = view.getHeight() ;
+                Bitmap b ;
+                if (resize == Resize.Width)
+                    b = skinner.getBitmapFromAssets((int) ((float) w * factor), -1, themeDir + config.get(category).get(name));
+                else if (resize == Resize.Height)
+                    b = skinner.getBitmapFromAssets(-1 , (int) ((float) h * factor), themeDir + config.get(category).get(name));
+                else
+                    b = skinner.getBitmapFromAssets(w , h, themeDir + config.get(category).get(name));
+                setBounds(0, 0, w, h);
+                canvas.drawBitmap(b, (w - b.getWidth()) / 2, (h - b.getHeight()) / 2, paint);
+            }
+
+            @Override
+            public void setAlpha(int i) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
+    }
+
     void toggle (ToggleButton toggleButton, boolean state) {
         String on = config.get("toggle").get("on") ;
         if (! state) {
@@ -144,5 +184,11 @@ public class SkinEngine {
         });
 
 
+    }
+
+    void setLogo (ImageView imageView) {
+        Bitmap b = skinner.getBitmapFromAssets(imageView.getWidth(), -1, themeDir + config.get("header").get("logo"));
+        if (b != null)
+            imageView.setImageBitmap(b);
     }
 }
