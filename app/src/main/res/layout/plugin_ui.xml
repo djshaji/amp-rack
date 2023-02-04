@@ -40,6 +40,18 @@
                         android:layout_marginRight="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+                    <ToggleButton
+                        android:textOn=""
+                        android:layout_gravity="right"
+                        android:gravity="center|center_vertical"
+                        android:textOff=""
+                        android:background="@color/fui_transparent"
+                        android:layout_width="48dp"
+                        android:layout_marginRight="10dp"
+                        android:padding="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp" />
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_margin="10dp"

@@ -82,6 +82,9 @@ public class Skinner {
             return null ;
         }
 
+        if (width == 0 || height == 0)
+            return mBitmap;
+
         if (width == -1) width = (int) (height * ((float) mBitmap.getWidth() / (float) mBitmap.getHeight()));
         if (height == -1) height = (int) (width * ((float) mBitmap.getHeight() / (float) mBitmap.getWidth()));
 

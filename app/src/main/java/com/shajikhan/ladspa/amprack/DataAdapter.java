@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -97,6 +98,20 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             Slider slider = new Slider(context);
             Spinner spinner = new Spinner(context);
             boolean isSpinner = false ;
+
+            if (mainActivity.useTheme) {
+                mainActivity.skinEngine.slider(slider);
+                holder.toggleButton.setChecked(true);
+                mainActivity.skinEngine.toggle(holder.toggleButton, true);
+                holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        holder.switchMaterial.setChecked(isChecked);
+                        mainActivity.skinEngine.toggle(holder.toggleButton, isChecked);
+                    }
+                });
+            }
+
             Log.d(TAG, "onBindViewHolder: " + pluginName);
             if (mainActivity.ampModels.has(pluginName)) {
                 JSONObject control ;
@@ -310,6 +325,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         LinearLayout linearLayout ;
         TextView pluginName ;
         SwitchMaterial switchMaterial ;
+        ToggleButton toggleButton ;
         MaterialButton deleteButton, moveUpButton, moveDownButton ;
 
         public ViewHolder(@NonNull View itemView) {
@@ -329,6 +345,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             LinearLayout l = (LinearLayout) linearLayout.getChildAt(0);
             pluginName = (TextView) l.getChildAt(0);
             switchMaterial = (SwitchMaterial) l.getChildAt(1);
+            toggleButton = (ToggleButton) l.getChildAt(2);
+            if (mainActivity.useTheme) {
+                switchMaterial.setVisibility(View.GONE);
+            } else {
+                toggleButton.setVisibility(View.GONE);
+            }
+
             linearLayout = (LinearLayout) linearLayout.getChildAt(1);
         }
 

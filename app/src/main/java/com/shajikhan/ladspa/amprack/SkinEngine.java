@@ -1,10 +1,12 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONException;
@@ -187,8 +190,63 @@ public class SkinEngine {
     }
 
     void setLogo (ImageView imageView) {
-        Bitmap b = skinner.getBitmapFromAssets(imageView.getWidth(), -1, themeDir + config.get("header").get("logo"));
+        Bitmap b = skinner.getBitmapFromAssets(0, 0, themeDir + config.get("header").get("logo"));
         if (b != null)
             imageView.setImageBitmap(b);
+    }
+
+    void slider (Slider slider) {
+        ColorStateList active = ColorStateList.valueOf(Color.parseColor(config.get("slider").get("active")));
+        ColorStateList base = ColorStateList.valueOf(Color.parseColor(config.get("slider").get("base")));
+        ///| TODO: Maybe use custom colors here
+        slider.setTrackInactiveTintList(base);
+        slider.setTrackActiveTintList(active);
+
+        /* is this required, or is color enough for the track?
+        slider.setBackground(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                int sliderWidth = slider.getWidth(),
+                        sliderHeight = slider.getHeight();
+                setBounds(0, 0, sliderWidth, sliderHeight);
+                Bitmap bg = skinner.getBitmapFromAssets(-1, 0, themeDir + config.get ("slider").get ("bg"));
+                if (bg == null)
+                        return ;
+                int w = bg.getWidth();
+
+                int top = (sliderHeight - bg.getHeight()) / 2 ;
+                for (int i = 0 ; i + w < slider.getWidth(); i = i + w) {
+                    canvas.drawBitmap(bg, i, top, paint);
+                }
+            }
+
+            @Override
+            public void setAlpha(int i) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
+
+         */
+
+        if (slider != null) {
+            Bitmap bg = skinner.getBitmapFromAssets(-1, 0, themeDir + config.get ("slider").get ("thumb"));
+            if (bg == null)
+                return ;
+            int w = bg.getWidth();
+            // this is a great way to get a drawable from a bitmap into a view
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(bg);
+            slider.setCustomThumbDrawable(bitmapDrawable);
+        }
+
     }
 }
