@@ -82,8 +82,12 @@ public class Skinner {
             return null ;
         }
 
-        if (width == 0 || height == 0)
+        if (width == 0 || height == 0) {
+            Log.d(TAG, "getBitmapFromAssets: returning " +
+                    String.format ("[%s: %dx%d]",
+                            filename, mBitmap.getWidth(), mBitmap.getHeight()));
             return mBitmap;
+        }
 
         if (width == -1) width = (int) (height * ((float) mBitmap.getWidth() / (float) mBitmap.getHeight()));
         if (height == -1) height = (int) (width * ((float) mBitmap.getHeight() / (float) mBitmap.getWidth()));

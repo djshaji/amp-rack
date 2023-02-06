@@ -17,7 +17,9 @@
     
     "slider": {
         "thumb": "thumb.png",
-        "bg": "thumb_bg.png"
+        "bg": "thumb_bg.png",
+        "active": "#2c4dd3",
+        "base": "#ffffff"
     },
     
     "header": {
@@ -37,7 +39,8 @@
     
     "button": {
         "bg": "button_bg.png",
-        "pressed": "button_pressed.png"
+        "pressed": "button_pressed.png",
+        "text-color": "#ffffff"
     },
     
     "icons": {
@@ -45,6 +48,6 @@
         "down": "down.png",
         "rec": "rec.png",
         "delete": "delete.png",
-        "plus": "plus.png"
+        "add": "plus.png"
     }
 }

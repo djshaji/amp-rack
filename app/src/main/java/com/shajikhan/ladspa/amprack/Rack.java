@@ -511,6 +511,13 @@ public class Rack extends Fragment {
 
             ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
             mainActivity.skinEngine.toggle(toggleButton, false);
+            toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mainActivity.toggleEffect(!isChecked);
+                    mainActivity.skinEngine.toggle(toggleButton, isChecked);
+                }
+            });
 
             toggleButton.setVisibility(View.VISIBLE);
             onOff.setVisibility(View.GONE);
@@ -518,6 +525,8 @@ public class Rack extends Fragment {
             mainActivity.skinEngine.view (optionsBtn, "menu", "overflow", SkinEngine.Resize.Height, .5f);
             optionsBtn.setCompoundDrawables(null, null, null, null);
             mainActivity.skinEngine.setLogo(mainActivity.findViewById(R.id.logo_img));
+
+            mainActivity.skinEngine.fab(fab,  SkinEngine.Resize.Width, 1);
         }
     }
 

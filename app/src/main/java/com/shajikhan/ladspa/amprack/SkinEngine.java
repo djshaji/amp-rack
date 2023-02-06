@@ -8,8 +8,10 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
@@ -17,6 +19,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -30,6 +33,7 @@ public class SkinEngine {
     MainActivity mainActivity ;
     String TAG = getClass().getSimpleName() ;
     String theme = "default" ;
+    int nativeTheme = R.style.Theme_AmpRack;
     String themeDir = "themes/default/";
     HashMap <String, HashMap <String, String>> config = new HashMap<>();
     JSONObject jsonConfig ;
@@ -121,11 +125,27 @@ public class SkinEngine {
         None
     }
 
-    void view (View view, String category, String name, Resize resize, float factor) {
-        view.setBackground(new Drawable() {
+    void fab (ExtendedFloatingActionButton _button, Resize resize, float factor) {
+        _button.hide();
+        Bitmap bitmap = skinner.getBitmapFromAssets(-1, 0, themeDir + config.get("icons").get("add"));
+        BitmapDrawable drawable = new BitmapDrawable(bitmap);
+        _button.setIcon(drawable);
+//        _button.setBackgroundDrawable(drawable);
+//        _button.setCompoundDrawables(drawable, null, null, null);
+        button (_button, resize, factor);
+        _button.show();
+    }
+
+    void button (Button button, Resize resize, float factor) {
+        view (button, "button", "bg", Resize.Width, 1);
+        button.setTextColor(Color.parseColor(config.get("button").get("text-color")));
+    }
+
+    void view (View _view, String category, String name, Resize resize, float factor) {
+        _view.setBackground(new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
-                int w = view.getWidth(), h = view.getHeight() ;
+                int w = _view.getWidth(), h = _view.getHeight() ;
                 Bitmap b ;
                 if (resize == Resize.Width)
                     b = skinner.getBitmapFromAssets((int) ((float) w * factor), -1, themeDir + config.get(category).get(name));
@@ -248,5 +268,9 @@ public class SkinEngine {
             slider.setCustomThumbDrawable(bitmapDrawable);
         }
 
+    }
+
+    void setNativeTheme () {
+        mainActivity.setTheme(nativeTheme);
     }
 }
