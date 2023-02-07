@@ -184,6 +184,17 @@ public class Tracks extends Fragment {
             DynamicsProcessing dynamicsProcessing = new DynamicsProcessing(0, player.getAudioSessionId(), config);
             player.setAuxEffectInfo(new AuxEffectInfo(dynamicsProcessing.getId(),1));
         }
+
+        if (mainActivity.useTheme) {
+            LinearLayout playerWindow = mainActivity.findViewById(R.id.tracks_player);
+            playerWindow.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card (playerWindow);
+
+                }
+            });
+        }
     }
 
     public void load (String [] files) {

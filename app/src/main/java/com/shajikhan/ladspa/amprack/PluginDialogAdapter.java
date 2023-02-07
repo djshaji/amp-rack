@@ -86,6 +86,16 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
                 }
             }
         });
+
+        if (mainActivity.useTheme) {
+            layout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card (layout);
+
+                }
+            });
+        }
     }
 
     @Override

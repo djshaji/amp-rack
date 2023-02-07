@@ -153,6 +153,16 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
                 dialog.show();
             }
         });
+
+        if (mainActivity.useTheme) {
+            linearLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card (linearLayout);
+
+                }
+            });
+        }
     }
 
     @Override
