@@ -74,6 +74,7 @@ public class Rack extends Fragment {
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
     JSONObject jsonObject = new JSONObject();
+    boolean mixerInit = false ;
 
     /*
     Rack () {
@@ -473,6 +474,16 @@ public class Rack extends Fragment {
         mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
             AudioEngine.toggleMixer(!b);
             if (!b) {
+                if (! mixerInit) {
+                    mixer.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "run: theming mixer");
+                            mainActivity.skinEngine.card(mixer);
+
+                        }
+                    });
+                }
                 mixer.setVisibility(View.VISIBLE);
             } else {
                 mixer.setVisibility(View.GONE);
@@ -532,13 +543,17 @@ public class Rack extends Fragment {
             mainActivity.skinEngine.slider(mainActivity.outputVolume);
 //            mainActivity.skinEngine.card (mixer);
 
-            mixer.post(new Runnable() {
-                @Override
-                public void run() {
-                    mainActivity.skinEngine.card (mixer);
+            if (mixer.getVisibility() == View.VISIBLE) {
+                mixerInit = true ;
+                mixer.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i(TAG, "run: theming mixer");
+                        mainActivity.skinEngine.card(mixer);
 
-                }
-            });
+                    }
+                });
+            }
         }
     }
 

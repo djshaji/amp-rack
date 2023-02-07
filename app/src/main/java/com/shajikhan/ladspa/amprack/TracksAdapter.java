@@ -89,6 +89,16 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
                 }
             });
         }
+
+        if (mainActivity.useTheme) {
+            linearLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card (linearLayout);
+
+                }
+            });
+        }
     }
 
     @Override

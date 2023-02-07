@@ -39,6 +39,7 @@
         <LinearLayout
             android:layout_margin="10dp"
             android:layout_width="match_parent"
+            android:id="@+id/tracks_player"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corners_transparent"
             android:orientation="horizontal">

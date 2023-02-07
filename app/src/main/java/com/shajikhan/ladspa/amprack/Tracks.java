@@ -35,8 +35,10 @@ public class Tracks extends Fragment {
     TracksAdapter tracksAdapter ;
     RecyclerView recyclerView ;
     ToggleButton playPause ;
+    boolean themeInit = false;
     String TAG = getClass().getSimpleName();
     ExoPlayer player ;
+    LinearLayout playerWindow ;
 
     Tracks () {
         tracksAdapter = new TracksAdapter();
@@ -185,13 +187,13 @@ public class Tracks extends Fragment {
             player.setAuxEffectInfo(new AuxEffectInfo(dynamicsProcessing.getId(),1));
         }
 
+        playerWindow = mainActivity.findViewById(R.id.tracks_player);
         if (mainActivity.useTheme) {
-            LinearLayout playerWindow = mainActivity.findViewById(R.id.tracks_player);
+            mainActivity.skinEngine.card (playerWindow);
             playerWindow.post(new Runnable() {
                 @Override
                 public void run() {
                     mainActivity.skinEngine.card (playerWindow);
-
                 }
             });
         }
