@@ -34,7 +34,16 @@
     },
     
     "card": {
-        "bg": "card_bg.png"
+        "bg": "#3f3f3f",
+        "top-left": "card/top_left.png",
+        "top-right": "card/top_right.png",
+        "top": "card/top.png",
+        "bottom": "card/bottom.png",
+        "left": "card/left.png",
+        "right": "card/right.png",
+        "bottom-left": "card/bottom_left.png",
+        "bottom-right": "card/bottom_right.png",
+        "alpha": "100"
     },
     
     "button": {

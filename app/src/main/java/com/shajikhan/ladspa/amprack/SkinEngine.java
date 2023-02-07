@@ -174,6 +174,39 @@ public class SkinEngine {
         });
     }
 
+    void drawableLeft (Button _view, String category, String name, Resize resize, float factor) {
+        _view.setCompoundDrawables(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                int w = _view.getWidth(), h = _view.getHeight() ;
+                Bitmap b ;
+                if (resize == Resize.Width)
+                    b = skinner.getBitmapFromAssets((int) ((float) w * factor), -1, themeDir + config.get(category).get(name));
+                else if (resize == Resize.Height)
+                    b = skinner.getBitmapFromAssets(-1 , (int) ((float) h * factor), themeDir + config.get(category).get(name));
+                else
+                    b = skinner.getBitmapFromAssets(w , h, themeDir + config.get(category).get(name));
+                setBounds(0, 0, w, h);
+                canvas.drawBitmap(b, (w - b.getWidth()) / 2, 0, paint);
+            }
+
+            @Override
+            public void setAlpha(int i) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        }, null, null, null);
+    }
+
     void toggle (ToggleButton toggleButton, boolean state) {
         String on = config.get("toggle").get("on") ;
         if (! state) {
@@ -272,5 +305,79 @@ public class SkinEngine {
 
     void setNativeTheme () {
         mainActivity.setTheme(nativeTheme);
+    }
+
+    void card (View layout) {
+        int w = layout.getWidth(), h = layout.getHeight() ;
+        Log.d(TAG, "card() called with: layout = [" + layout + "]" +
+                String.format("\n%d x %d", w, h));
+        Bitmap topLeft = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top-left"));
+        Bitmap topRight = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top-right"));
+        Bitmap bottomLeft = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("bottom-left"));
+        Bitmap bottomRight = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("bottom-right"));
+        Bitmap top = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top"));
+        Bitmap bottom = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("bottom"));
+        Bitmap left = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("left"));
+        Bitmap right = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("right"));
+
+        String bg = config.get("card").get("bg") ;
+        int alpha = Integer.valueOf(config.get("card").get("alpha"));
+        Bitmap bgBitmap = null ;
+        if (bg.startsWith("#") == false) {
+            bgBitmap = skinner.getBitmapFromAssets(0, -1, themeDir + bg);
+        }
+
+        BitmapDrawable bitmapDrawable = new BitmapDrawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                setBounds(0, 0, w, h);
+                if (bg.startsWith("#"))
+                    canvas.drawColor(Color.parseColor(bg));
+
+                Log.d(TAG, "draw: " + String.format("topright %d x %d", topRight.getWidth(), topRight.getHeight()));
+
+                int painted = 0 ;
+                int tWidth = top.getWidth();
+                for (painted = 0 ; painted + tWidth < w + tWidth ; painted = painted + tWidth) {
+                    canvas.drawBitmap(top, painted, 0, paint);
+                }
+
+                tWidth = bottom.getWidth();
+                int bottomHeight = h - bottom.getHeight();
+                for (painted = 0 ; painted + tWidth < w + tWidth ; painted = painted + tWidth) {
+                    canvas.drawBitmap(bottom, painted, bottomHeight, paint);
+                }
+
+                int tHeight = left.getHeight() ;
+                for (painted = 0 ; painted + tHeight < h + tHeight; painted = painted + tHeight) {
+                    canvas.drawBitmap(left, 0, painted, paint);
+                }
+
+                tHeight = right.getHeight() ;
+                bottomHeight = w - right.getWidth() ;
+                for (painted = 0 ; painted + tHeight < h + tHeight; painted = painted + tHeight) {
+                    canvas.drawBitmap(right, bottomHeight, painted, paint);
+                }
+
+                canvas.drawBitmap(topLeft, 0, 0, paint);
+                canvas.drawBitmap(topRight, layout.getWidth() - topRight.getWidth() , 0, paint);
+                canvas.drawBitmap(bottomLeft, 0, h - bottomLeft.getHeight(), paint);
+                canvas.drawBitmap(bottomRight, w - bottomRight.getWidth(), h - bottomRight.getHeight(), paint);
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        } ;
+
+        bitmapDrawable.setAlpha(alpha);
+        layout.setBackground(bitmapDrawable);
+        layout.getBackground().setAlpha(alpha);
     }
 }

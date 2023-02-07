@@ -219,6 +219,9 @@ public class Presets extends Fragment {
             }
         });
 
+        if (mainActivity.useTheme) {
+            mainActivity.skinEngine.fab(presetFab, SkinEngine.Resize.Width,1);
+        }
     }
 
     public class PresetAdapter extends FragmentStateAdapter {

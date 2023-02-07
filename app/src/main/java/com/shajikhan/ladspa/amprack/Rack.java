@@ -527,6 +527,18 @@ public class Rack extends Fragment {
             mainActivity.skinEngine.setLogo(mainActivity.findViewById(R.id.logo_img));
 
             mainActivity.skinEngine.fab(fab,  SkinEngine.Resize.Width, 1);
+
+            mainActivity.skinEngine.slider(mainActivity.inputVolume);
+            mainActivity.skinEngine.slider(mainActivity.outputVolume);
+//            mainActivity.skinEngine.card (mixer);
+
+            mixer.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card (mixer);
+
+                }
+            });
         }
     }
 

@@ -1886,7 +1886,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
         if (useTheme) {
-//            skinEngine.wallpaper(imageView);
+            skinEngine.setNativeTheme();
+            skinEngine.wallpaper(imageView);
             return ;
         }
         String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "2.9 Beta");

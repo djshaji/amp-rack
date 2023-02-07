@@ -313,6 +313,24 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
         }
+
+        if (mainActivity.useTheme) {
+//            mainActivity.skinEngine.card (holder.root);
+            mainActivity.skinEngine.drawableLeft(holder.moveDownButton, "icons", "down", SkinEngine.Resize.Width, .75f);
+            mainActivity.skinEngine.drawableLeft(holder.moveUpButton, "icons", "up", SkinEngine.Resize.Width, .75f);
+            mainActivity.skinEngine.drawableLeft(holder.deleteButton, "icons", "delete", SkinEngine.Resize.Width, .75f);
+            holder.deleteButton.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+            holder.moveDownButton.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+            holder.moveUpButton.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+            holder.root.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card (holder.root);
+
+                }
+            });
+        }
+
     }
 
     @Override
@@ -323,6 +341,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         ArrayList <Slider> sliders ;
         LinearLayout linearLayout ;
+        LinearLayout root ;
         TextView pluginName ;
         SwitchMaterial switchMaterial ;
         ToggleButton toggleButton ;
@@ -331,8 +350,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             sliders = new ArrayList<>();
+            root = (LinearLayout) itemView ;
             linearLayout = (LinearLayout) itemView ;
             linearLayout = (LinearLayout) linearLayout.getChildAt(0);
+            root = (LinearLayout) linearLayout.getChildAt(0);
             linearLayout = (LinearLayout) linearLayout.getChildAt(0);
             // this one is the plugin holder we want
             linearLayout = (LinearLayout) linearLayout.getChildAt(0);
