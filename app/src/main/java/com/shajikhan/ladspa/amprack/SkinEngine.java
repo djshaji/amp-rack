@@ -185,9 +185,14 @@ public class SkinEngine {
                 else if (resize == Resize.Height)
                     b = skinner.getBitmapFromAssets(-1 , (int) ((float) h * factor), themeDir + config.get(category).get(name));
                 else
-                    b = skinner.getBitmapFromAssets(w , h, themeDir + config.get(category).get(name));
+                    b = skinner.getBitmapFromAssets(0 , 0, themeDir + config.get(category).get(name));
                 setBounds(0, 0, w, h);
-                canvas.drawBitmap(b, (w - b.getWidth()) / 2, 0, paint);
+                if (resize == Resize.None) {
+                    setBounds(0, 0, b.getWidth(), b.getHeight());
+                    canvas.drawBitmap(b, 0, 0, paint);
+                }
+                else
+                    canvas.drawBitmap(b, (w - b.getWidth()) / 2, 0, paint);
             }
 
             @Override
