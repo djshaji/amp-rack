@@ -98,6 +98,23 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
 
                 }
             });
+
+            if (tracks.themeInit == false) {
+                Log.d(TAG, "onBindViewHolder: tracks for " + tracks.filesDir);
+                tracks.themeInit = true ;
+                if (tracks.filesDir == "assets://drums") {
+                    Log.i(TAG, "onBindViewHolder: fixing drums player");
+                    tracks.playerWindow.setBackground(null);
+                }
+                mainActivity.skinEngine.card (tracks.playerWindow);
+                tracks.playerWindow.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.skinEngine.card (tracks.playerWindow);
+                    }
+                });
+
+            }
         }
     }
 

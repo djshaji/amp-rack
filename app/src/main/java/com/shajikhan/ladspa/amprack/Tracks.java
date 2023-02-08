@@ -37,6 +37,7 @@ public class Tracks extends Fragment {
     ToggleButton playPause ;
     boolean themeInit = false;
     String TAG = getClass().getSimpleName();
+    String filesDir ;
     ExoPlayer player ;
     LinearLayout playerWindow ;
 
@@ -188,18 +189,10 @@ public class Tracks extends Fragment {
         }
 
         playerWindow = mainActivity.findViewById(R.id.tracks_player);
-        if (mainActivity.useTheme) {
-            mainActivity.skinEngine.card (playerWindow);
-            playerWindow.post(new Runnable() {
-                @Override
-                public void run() {
-                    mainActivity.skinEngine.card (playerWindow);
-                }
-            });
-        }
     }
 
     public void load (String [] files) {
+        filesDir = "assets://drums";
         for (int i = 0 ; i < files.length; i ++) {
 //            File file = new File("assets:///drums/" + files [i]);
             tracksAdapter.add("asset:///drums/" + files [i]);
@@ -208,6 +201,7 @@ public class Tracks extends Fragment {
 
     public void load (File dir) {
         Log.d(TAG, "load: loading folder " + dir.getAbsolutePath());
+        filesDir = dir.getPath() ;
         File [] files = dir.listFiles();
         Log.d(TAG, "load: " + files.length + " files found");
         for (int i = 0 ; i < files.length; i ++) {

@@ -510,7 +510,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .hide(drums)
                                 .commit();
 
-                        skinEngine.card (tracks.playerWindow);
                         return true;
                     case R.id.page_drums:
                         fragment = drums;
@@ -522,7 +521,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 .hide(presets)
                                 .hide(tracks)
                                 .commit();
-                        skinEngine.card (drums.playerWindow);
                         return true;
                         /*
                         if (presets.loginNotice == null)
