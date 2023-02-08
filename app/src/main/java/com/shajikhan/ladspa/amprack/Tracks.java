@@ -2,6 +2,7 @@ package com.shajikhan.ladspa.amprack;
 
 import static com.shajikhan.ladspa.amprack.MainActivity.context;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.media.audiofx.DynamicsProcessing;
 import android.media.audiofx.NoiseSuppressor;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class Tracks extends Fragment {
     String filesDir ;
     ExoPlayer player ;
     LinearLayout playerWindow ;
+    BitmapDrawable play, pause, reset ;
 
     Tracks () {
         tracksAdapter = new TracksAdapter();
@@ -84,13 +86,18 @@ public class Tracks extends Fragment {
                 if (!b) {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_play_arrow_24));
                     player.pause();
-                    if (mainActivity.useTheme)
-                        mainActivity.skinEngine.view(playPause, "icons", "play", SkinEngine.Resize.Width, 1);
+                    if (mainActivity.useTheme) {
+                        if (pause != null)
+                            playPause.setCompoundDrawables(pause, null, null, null);
+                    }
                 } else {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_pause_24));
                     player.play();
-                    if (mainActivity.useTheme)
-                        mainActivity.skinEngine.view(playPause, "icons", "pause", SkinEngine.Resize.Width, 1);
+                    if (mainActivity.useTheme) {
+                        if (pause != null)
+                            playPause.setCompoundDrawables(play, null, null, null);
+
+                    }
                 }
 
 //                player.setSkipSilenceEnabled(b);
@@ -147,13 +154,9 @@ public class Tracks extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     player.setRepeatMode(Player.REPEAT_MODE_ONE);
-                    if (mainActivity.useTheme)
-                        mainActivity.skinEngine.view(loop, "check", "on", SkinEngine.Resize.Width, 1);
                 }
                 else {
                     player.setRepeatMode(Player.REPEAT_MODE_OFF);
-                    if (mainActivity.useTheme)
-                        mainActivity.skinEngine.view(loop, "check", "off", SkinEngine.Resize.Width, 1);
                 }
             }
         });
@@ -200,8 +203,15 @@ public class Tracks extends Fragment {
 
         playerWindow = mainActivity.findViewById(R.id.tracks_player);
         if (mainActivity.useTheme) {
-            mainActivity.skinEngine.view(loop, "icons", "loop", SkinEngine.Resize.Width, 1);
-            mainActivity.skinEngine.view(playPause, "icons", "play", SkinEngine.Resize.Width, 1);
+            play = mainActivity.skinEngine.bitmapDrawable("icons", "play");
+            pause = mainActivity.skinEngine.bitmapDrawable("icons", "pause");
+            reset = mainActivity.skinEngine.bitmapDrawable("icons", "reset");
+            if (play != null)
+                playPause.setCompoundDrawables(play, null, null, null);
+
+
+            if (reset != null)
+                resetBPM.setBackground(reset);
 
             mainActivity.skinEngine.slider(slider);
             mainActivity.skinEngine.slider(bpm);

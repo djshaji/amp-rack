@@ -3,6 +3,8 @@ package com.shajikhan.ladspa.amprack;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,8 +93,6 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
         }
 
         if (mainActivity.useTheme) {
-            mainActivity.skinEngine.drawableLeft(holder.fileButton, "icons", "media", SkinEngine.Resize.None, 1);
-            mainActivity.skinEngine.view(holder.deleteButton, "icons", "delete", SkinEngine.Resize.Width, 1);
             linearLayout.post(new Runnable() {
                 @Override
                 public void run() {

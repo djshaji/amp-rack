@@ -66,6 +66,6 @@
         "play": "play.png",
         "pause": "pause.png",
         "media": "play_small.png",
-        "loop": "loop.png"
+        "reset": "loop.png"
     }
 }

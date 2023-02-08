@@ -174,6 +174,11 @@ public class SkinEngine {
         });
     }
 
+    BitmapDrawable bitmapDrawable (String category, String name) {
+        Log.d(TAG, "bitmapDrawable() called with: category = [" + category + "], name = [" + name + "]");
+        return new BitmapDrawable(skinner.getBitmapFromAssets(0 , 0, themeDir + config.get(category).get(name)));
+    }
+
     void drawableLeft (Button _view, String category, String name, Resize resize, float factor) {
         _view.setCompoundDrawables(new Drawable() {
             @Override
@@ -190,6 +195,7 @@ public class SkinEngine {
                 if (resize == Resize.None) {
                     setBounds(0, 0, b.getWidth(), b.getHeight());
                     canvas.drawBitmap(b, 0, 0, paint);
+//                    canvas.drawColor(Color.parseColor("#ffffff"));
                 }
                 else
                     canvas.drawBitmap(b, (w - b.getWidth()) / 2, 0, paint);
