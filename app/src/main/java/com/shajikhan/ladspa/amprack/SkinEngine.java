@@ -8,12 +8,14 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RotateDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import org.checkerframework.checker.units.qual.K;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -390,5 +393,19 @@ public class SkinEngine {
         bitmapDrawable.setAlpha(alpha);
         layout.setBackground(bitmapDrawable);
         layout.getBackground().setAlpha(alpha);
+    }
+
+    boolean hasKnob () {
+        return config.get ("knob") == null ? true : false ;
+    }
+
+    void knob (SeekBar seekBar, int knobSize, int min, int max, int value) {
+        BitmapDrawable drawable = bitmapDrawable("knobs", String.valueOf(knobSize));
+        RotateDrawable rotateDrawable = new RotateDrawable();
+        rotateDrawable.setDrawable(drawable);
+        rotateDrawable.setFromDegrees(min);
+        rotateDrawable.setToDegrees(max);
+        rotateDrawable.setLevel(value);
+        seekBar.setBackground(drawable);
     }
 }

@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
@@ -497,11 +498,14 @@ public class Rack extends Fragment {
 
         mainActivity.inputMeter = mainActivity.findViewById(R.id.mixer_input_progress);
         mainActivity.outputMeter = mainActivity.findViewById(R.id.mixer_output_progress);
+        mainActivity.seekBarIn = mainActivity.findViewById(R.id.mixer_input_seekbar);
+        mainActivity.seekBarOut = mainActivity.findViewById(R.id.mixer_output_seekbar);
 
         mainActivity. inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 AudioEngine.setInputVolume(value);
+                mainActivity.seekBarIn.setProgress((int) (value * 100));
             }
         });
 
@@ -509,6 +513,7 @@ public class Rack extends Fragment {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 AudioEngine.setOutputVolume(value);
+                mainActivity.seekBarOut.setProgress((int) (value * 100));
             }
         });
 
@@ -550,6 +555,60 @@ public class Rack extends Fragment {
                     public void run() {
                         Log.i(TAG, "run: theming mixer");
                         mainActivity.skinEngine.card(mixer);
+
+                    }
+                });
+            }
+
+            if (mainActivity.skinEngine.hasKnob()) {
+                mainActivity.inputVolume.setVisibility(View.GONE);
+                mainActivity.outputVolume.setVisibility(View.GONE);
+
+                mainActivity.seekBarIn.setVisibility(View.VISIBLE);
+                mainActivity.seekBarOut.setVisibility(View.VISIBLE);
+
+                mainActivity.seekBarIn.setMax(100);
+                mainActivity.seekBarOut.setMax(100);
+
+                mainActivity.skinEngine.knob(mainActivity.seekBarIn, 3, 0, 100, 100);
+                mainActivity.skinEngine.knob(mainActivity.seekBarOut, 3, 0, 100, 100);
+
+                mainActivity.seekBarIn.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            mainActivity.inputVolume.setValue(progress / 100);
+                            mainActivity.skinEngine.knob(mainActivity.seekBarIn, 3, 0, 100, progress);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+                mainActivity.seekBarOut.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            mainActivity.outputVolume.setValue(progress / 100);
+                            mainActivity.skinEngine.knob(mainActivity.seekBarOut, 3, 0, 100, progress);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
 
                     }
                 });

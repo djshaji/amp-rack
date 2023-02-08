@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -97,6 +98,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             EditText editText = new EditText(context);
             Slider slider = new Slider(context);
             Spinner spinner = new Spinner(context);
+            SeekBar seekBar = new SeekBar(context);
             boolean isSpinner = false ;
 
             if (mainActivity.useTheme) {
@@ -110,6 +112,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         mainActivity.skinEngine.toggle(holder.toggleButton, isChecked);
                     }
                 });
+
             }
 
             Log.d(TAG, "onBindViewHolder: " + pluginName);
@@ -330,6 +333,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                 }
             });
+
         }
 
     }

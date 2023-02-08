@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     JSONObject rdf ;
     JSONObject ampModels ;
     Slider inputVolume, outputVolume ;
+    SeekBar seekBarIn, seekBarOut ;
     ToggleButton toggleMixer ;
     static int totalPlugins = 0 ;
     static boolean useTheme = true ;

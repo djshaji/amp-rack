@@ -67,5 +67,11 @@
         "pause": "pause.png",
         "media": "play_small.png",
         "reset": "loop.png"
+    },
+
+    "knobs": {
+        "3": "knobs/5.png",
+        "2": "knobs/4.png",
+        "1": "knobs/3.png"
     }
 }
