@@ -411,7 +411,7 @@ public class SkinEngine {
 
     void rotate (View view, int knobSize, float angle) {
         Bitmap bitmap = skinner.getBitmapFromAssets(0, 0,
-                config.get("knobs").get(String.valueOf(knobSize)));
+                themeDir + config.get("knobs").get(String.valueOf(knobSize)));
         view.setBackground(new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {

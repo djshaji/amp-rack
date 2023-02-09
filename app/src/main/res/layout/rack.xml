@@ -202,7 +202,7 @@
                     app:valueMax="100"
                     app:value="50"
                     app:valuePosition="center"
-                    app:needleOnTop="false"
+                    app:needleOnTop="true"
                     app:showKnob="false"
                     app:overlaySurfaceColor="@color/fui_transparent"
                     app:overlayBorderMargin="0dp"
@@ -212,6 +212,10 @@
                     app:showSector="false"
                     app:showValue="true"
                     app:showNeedle="true"
+                    app:needleMajorRadius="0.5"
+                    app:needleColor="@color/colorPrimary"
+                    app:needleMinorRadius="0.5"
+                    app:needleThickness="12dp"
                     android:id="@+id/rotary_input_volume"/>
 
 
