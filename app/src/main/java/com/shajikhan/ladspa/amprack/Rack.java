@@ -562,7 +562,13 @@ public class Rack extends Fragment {
 
             if (mainActivity.skinEngine.hasKnob()) {
                 RotarySeekbar rotarySeekbarIn = mainActivity.findViewById(R.id.rotary_input_volume);
-                mainActivity.skinEngine.rotary(rotarySeekbarIn, 3, 0, 100, 50);
+                rotarySeekbarIn.setOnValueChangedListener(new RotarySeekbar.OnValueChangedListener() {
+                    @Override
+                    public void onValueChanged(RotarySeekbar sourceSeekbar, float value) {
+                        mainActivity.skinEngine.rotate(sourceSeekbar, 3, (float) ((value / 100) * 3.6f));
+                    }
+                });
+
 
                 mainActivity.inputVolume.setVisibility(View.GONE);
                 mainActivity.outputVolume.setVisibility(View.GONE);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RotarySeekbar_DefaultMaterialStyle">
+        <item name="showTicks">true</item>
+        <item name="showNeedle">true</item>
+
+        <item name="textSize">20sp</item>
+
+        <item name="ticksColor">?attr/colorPrimaryVariant</item>
+        <item name="needleColor">?attr/colorPrimaryVariant</item>
+        <item name="knobColor">?attr/colorPrimary</item>
+        <item name="sectorRangeColor">@color/sector_range_color</item>
+        <item name="sectorValueColor">@color/sector_value_color</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+
+        <item name="overlaySurfaceColor">?android:colorBackground</item>
+
+        <item name="needleMajorRadius">0.8</item>
+        <item name="ticksMinorRadius">0.8</item>
+        <item name="ticksMajorRadius">1.0</item>
+        <item name="sectorMinorRadius">0.4</item>
+        <item name="sectorMajorRadius">0.75</item>
+        <item name="valuePosition">bottom</item>
+
+        <item name="valueMin">0</item>
+        <item name="valueMax">100</item>
+        <item name="valueNumSteps">100</item>
+        <item name="valueNumDigits">0</item>
+        <item name="unit">%</item>
+        <item name="numTicks">11</item>
+    </style>
+</resources>

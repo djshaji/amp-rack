@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RotarySeekbar">
+        <attr name="showValue" format="boolean" />
+        <attr name="showUnit" format="boolean" />
+        <attr name="showKnob" format="boolean" />
+        <attr name="showSector" format="boolean" />
+
+        <!-- Enable painting of indicator needle -->
+        <attr name="showNeedle" format="boolean" />
+
+        <!-- Enable radial ticks -->
+        <attr name="showTicks" format="boolean" />
+
+        <!-- Default value -->
+        <attr name="value" format="float" />
+        <!-- Minimal value of Seekbar -->
+        <attr name="valueMin" format="float" />
+        <!-- Maximum value of Seekbar -->
+        <attr name="valueMax" format="float" />
+        <!-- Number of steps starting at minValue to get to maxValue, i.e. numSteps=#values-1 -->
+        <attr name="valueNumSteps" format="integer" />
+        <!-- Number of digits after . to display -->
+        <attr name="valueNumDigits" format="integer" />
+
+        <!-- Placement of value indicator relative to the rotation center -->
+        <attr name="valuePosition" format="enum">
+            <enum name="bottom" value="0" />
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="center" value="4" />
+        </attr>
+
+        <!-- Unit string to append to the value. Only shown if showUnit is true -->
+        <attr name="unit" format="string" />
+
+        <!-- size of value text -->
+        <attr name="textSize" format="dimension" />
+        <!-- The textColor user for the value -->
+        <attr name="textColor" format="color" />
+
+        <!-- Notify listeners of live changes -->
+        <attr name="trackValue" format="boolean" />
+
+        <!-- The relative radius of the central knob. Less than 0.01f disables the central knob -->
+        <attr name="knobRadius" format="float" />
+
+        <!-- The color of the central knob -->
+        <attr name="knobColor" format="color" />
+
+        <!-- The opening angle of the value selection section. Set to 0 for a full circle knob -->
+        <attr name="sectorOpenAngle" format="float" />
+
+        <!-- Rotation of sector opening around center in degrees; 0²:corresponds to opening towards
+        the bottom, 90²:towards the left, 180²:towards the top, 270²:towards the right -->
+        <attr name="sectorRotation" format="integer" />
+
+        <!-- Sets the relative  minor radius of the sector arc, relative to the size of the view. -->
+        <attr name="sectorMinorRadius" format="float" />
+        <!-- Sets the relative major radius of the sector arc, relative to the size of the view. -->
+        <attr name="sectorMajorRadius" format="float" />
+
+        <!-- The background color of zoomed overlay view -->
+        <attr name="overlaySurfaceColor" format="color" />
+
+        <!-- The indication color of the swept arc from the current value to the max value -->
+        <attr name="sectorRangeColor" format="color" />
+        <!-- The primary indication color of the swept arc from minValue to the current value -->
+        <attr name="sectorValueColor" format="color" />
+
+        <!-- The relative minor radius of the radial tick lines -->
+        <attr name="ticksMinorRadius" format="float" />
+        <!-- The relative major radius of the radial tick lines -->
+        <attr name="ticksMajorRadius" format="float" />
+
+        <!-- The indication color used for the ticks -->
+        <attr name="ticksColor" format="color" />
+
+        <!-- Thickness of the radial tick lines -->
+        <attr name="ticksThickness" format="dimension" />
+
+        <!-- Subtract the tick radial lines from the sectors, can be used to create negative space
+        around ticks or in combination with ticks -->
+        <attr name="ticksSubtract" format="boolean" />
+
+        <!-- The thickness of the tick lines subtraction -->
+        <attr name="ticksSubtractionThickness" format="dimension" />
+
+        <!-- Number of ticks to paint around the value sector. -->
+        <attr name="numTicks" format="integer" />
+
+        <!-- The color of the needle -->
+        <attr name="needleColor" format="color" />
+
+        <!-- The tickness of the needle line -->
+        <attr name="needleThickness" format="dimension" />
+
+        <!-- The relative minor radius of the needle indicator line. (Default=0.0) -->
+        <attr name="needleMinorRadius" format="float" />
+
+        <!-- The relative major radius of the needle indicator line. (Default=1.0) -->
+        <attr name="needleMajorRadius" format="float" />
+
+        <!-- Draw needle on top of the central knob. -->
+        <attr name="needleOnTop" format="boolean" />
+
+        <!-- The margin between the zoomed on-touch view and the screen edges. Default=4dp -->
+        <attr name="overlayBorderMargin" format="dimension" />
+    </declare-styleable>
+</resources>

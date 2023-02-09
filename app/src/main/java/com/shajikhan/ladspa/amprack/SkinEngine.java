@@ -409,8 +409,45 @@ public class SkinEngine {
         seekBar.setBackground(drawable);
     }
 
-    void rotary (RotarySeekbar seekBar, int knobSize, int min, int max, int value) {
+    void rotate (View view, int knobSize, float angle) {
+        Bitmap bitmap = skinner.getBitmapFromAssets(0, 0,
+                config.get("knobs").get(String.valueOf(knobSize)));
+        view.setBackground(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                canvas.drawBitmap(bitmap, 0, 0, paint);
+                canvas.rotate(angle);
+                canvas.restore();
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
+    }
+
+    void rotary (RotarySeekbar seekBar, int knobSize, float min, float max, float value) {
         Bitmap bitmap = skinner.getBitmapFromAssets (0, 0, themeDir + config.get("knobs").get("3"));
+        RotateDrawable rotateDrawable ;
         seekBar.setBackground(new BitmapDrawable(bitmap));
+        seekBar.setMaxValue(max);
+        seekBar.setMinValue(min);
+        seekBar.setValue(value);
+        seekBar.setRotation((float) value/max);
+        Log.d(TAG, "rotary: " + String.format(
+                "[%f %f]: %f (%f)", min, max, value, seekBar.valueToRotation()
+        ));
     }
 }
