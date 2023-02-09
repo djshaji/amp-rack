@@ -408,4 +408,9 @@ public class SkinEngine {
         rotateDrawable.setLevel(value);
         seekBar.setBackground(drawable);
     }
+
+    void rotary (RotarySeekbar seekBar, int knobSize, int min, int max, int value) {
+        Bitmap bitmap = skinner.getBitmapFromAssets (0, 0, themeDir + config.get("knobs").get("3"));
+        seekBar.setBackground(new BitmapDrawable(bitmap));
+    }
 }

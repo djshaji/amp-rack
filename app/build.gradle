@@ -108,6 +108,8 @@ dependencies {
     // Google Ad Mob
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
 
+    // round seekbar
+
     implementation 'com.google.oboe:oboe:1.6.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.1'

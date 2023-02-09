@@ -195,6 +195,19 @@
                     android:layout_height="100dp"
                     android:id="@+id/mixer_output_seekbar"/>
 
+                <com.shajikhan.ladspa.amprack.RotarySeekbar
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:showTicks="true"
+                    app:valueMin="0"
+                    app:valueMax="100"
+                    app:value="50"
+                    app:needleOnTop="true"
+                    app:showKnob="true"
+                    app:showSector="false"
+                    app:showNeedle="false"
+                    android:id="@+id/rotary_input_volume"/>
+
             </LinearLayout>
 
             <LinearLayout
