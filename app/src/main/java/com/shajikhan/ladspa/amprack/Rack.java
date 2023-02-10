@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -498,14 +499,11 @@ public class Rack extends Fragment {
 
         mainActivity.inputMeter = mainActivity.findViewById(R.id.mixer_input_progress);
         mainActivity.outputMeter = mainActivity.findViewById(R.id.mixer_output_progress);
-        mainActivity.seekBarIn = mainActivity.findViewById(R.id.mixer_input_seekbar);
-        mainActivity.seekBarOut = mainActivity.findViewById(R.id.mixer_output_seekbar);
 
         mainActivity. inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 AudioEngine.setInputVolume(value);
-                mainActivity.seekBarIn.setProgress((int) (value * 100));
             }
         });
 
@@ -513,7 +511,6 @@ public class Rack extends Fragment {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 AudioEngine.setOutputVolume(value);
-                mainActivity.seekBarOut.setProgress((int) (value * 100));
             }
         });
 
@@ -561,67 +558,44 @@ public class Rack extends Fragment {
             }
 
             if (mainActivity.skinEngine.hasKnob()) {
-                RotarySeekbar rotarySeekbarIn = mainActivity.findViewById(R.id.rotary_input_volume);
-                mainActivity.skinEngine.rotary(rotarySeekbarIn, 3, 0, 100, 50);
-                rotarySeekbarIn.setOnValueChangedListener(new RotarySeekbar.OnValueChangedListener() {
+                mainActivity.rotarySeekbarIn = mainActivity.findViewById(R.id.rotary_input_volume);
+                mainActivity.skinEngine.rotary(mainActivity.rotarySeekbarIn, 3, 0, 100, 50);
+
+                mainActivity.rotarySeekbarOut = mainActivity.findViewById(R.id.rotary_output_volume);
+                mainActivity.displayIn = mainActivity.findViewById(R.id.rotary_input_display);
+                mainActivity.displayOut = mainActivity.findViewById(R.id.rotary_output_display);
+                mainActivity.skinEngine.rotary(mainActivity.rotarySeekbarOut, 3, 0, 100, 50);
+                mainActivity.rotarySeekbarIn.setValue(mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f) * 100);
+                mainActivity.rotarySeekbarOut.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f)*100);
+                mainActivity.displayIn.setText(String.valueOf((int) (mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f)* 100)));
+                mainActivity.displayOut.setText(String.valueOf((int) (mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f)* 100)));
+
+                mainActivity.rotarySeekbarIn.setVisibility(View.VISIBLE);
+                mainActivity.rotarySeekbarOut.setVisibility(View.VISIBLE);
+
+                mainActivity.rotarySeekbarIn.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onValueChanged(RotarySeekbar sourceSeekbar, float value) {
-//                        mainActivity.skinEngine.rotate(sourceSeekbar, 3, (float) ((value / 100) * 360f));
+                    public boolean onTouch(View v, MotionEvent event) {
+                        float value = mainActivity.rotarySeekbarIn.getValue() ;
+                        mainActivity.displayIn.setText(String.valueOf((int) value));
+                        mainActivity.inputVolume.setValue(value/100);
+                        return false;
+                    }
+                });
+
+                mainActivity.rotarySeekbarOut.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        float value = mainActivity.rotarySeekbarOut.getValue() ;
+                        mainActivity.displayOut.setText(String.valueOf((int) value));
+                        mainActivity.outputVolume.setValue(value/100);
+                        return false;
                     }
                 });
 
 
                 mainActivity.inputVolume.setVisibility(View.GONE);
                 mainActivity.outputVolume.setVisibility(View.GONE);
-
-                mainActivity.seekBarIn.setVisibility(View.VISIBLE);
-                mainActivity.seekBarOut.setVisibility(View.VISIBLE);
-
-                mainActivity.seekBarIn.setMax(100);
-                mainActivity.seekBarOut.setMax(100);
-
-                mainActivity.skinEngine.knob(mainActivity.seekBarIn, 3, 0, 100, 100);
-                mainActivity.skinEngine.knob(mainActivity.seekBarOut, 3, 0, 100, 100);
-
-                mainActivity.seekBarIn.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser) {
-                            mainActivity.inputVolume.setValue(progress / 100);
-                            mainActivity.skinEngine.knob(mainActivity.seekBarIn, 3, 0, 100, progress);
-                        }
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-
-                mainActivity.seekBarOut.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser) {
-                            mainActivity.outputVolume.setValue(progress / 100);
-                            mainActivity.skinEngine.knob(mainActivity.seekBarOut, 3, 0, 100, progress);
-                        }
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
             }
         }
     }
