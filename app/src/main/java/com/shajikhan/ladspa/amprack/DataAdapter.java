@@ -6,6 +6,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -376,32 +377,54 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         knobslayer ++ ;
                     }
 
-                    Log.d(TAG, "onBindViewHolder: " + String.format(
-                            "control: %d\tknob: %d\trow: %d\tlayer: %d\ttype: %d",
-                            i, knobPos, row, knobslayer, knobType
-                    ));
-
                     RotarySeekbar rotarySeekbar = new RotarySeekbar(mainActivity);
+                    TextView label = new TextView(mainActivity),
+                            display = new TextView(mainActivity);
+                    LinearLayout layoutRotary = new LinearLayout(mainActivity);
+                    layoutRotary.setOrientation(LinearLayout.VERTICAL);
+                    layoutRotary.addView(display);
+                    layoutRotary.addView(rotarySeekbar);
+                    layoutRotary.addView(label);
                     rotarySeekbar.setMinValue(slider.getValueFrom());
                     rotarySeekbar.setMaxValue(slider.getValueTo());
                     rotarySeekbar.setValue(slider.getValue());
 
+                    label.setText(string);
+                    LinearLayout.LayoutParams layoutParamsL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT) ;
+                    layoutParamsL.gravity = Gravity.CENTER;
+                    label.setLayoutParams(layoutParamsL);
+                    label.setGravity(Gravity.CENTER);
+
                     mainActivity.skinEngine.rotary(rotarySeekbar, knobType, slider.getValueFrom(), slider.getValueTo(), slider.getValue());
-                    knobsLayout.addView(rotarySeekbar);
-                    ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    knobsLayout.addView(layoutRotary);
+                    Log.d(TAG, "onBindViewHolder: " + String.format(
+                            "Setting size for knob type %d", knobType
+                    ));
+
+                    LinearLayout.LayoutParams layoutParams ;
                     switch (knobType) {
                         case 1:
-                            layoutParams.width = 50 ;
-                            layoutParams.height = 50 ;
+                            layoutParams = new LinearLayout.LayoutParams(180,180) ;
+                            layoutParams.setMargins(2, 0, 2, 0);
+                            break ;
                         case 2:
-                            layoutParams.width = 75 ;
-                            layoutParams.height = 75 ;
+                            layoutParams = new LinearLayout.LayoutParams(220,220) ;
+                            layoutParams.setMargins(10, 0, 10, 0);
+                            break ;
                         case 3:
                         default:
-                            layoutParams.width = 100 ;
-                            layoutParams.height = 100 ;
+                            layoutParams = new LinearLayout.LayoutParams(300,300) ;
+                            layoutParams.setMargins(20, 0, 20, 0);
+                            break ;
                     }
+
+                    layoutParams.gravity = Gravity.CENTER;
                     rotarySeekbar.setLayoutParams(layoutParams);
+                    rotarySeekbar.setShowValue(false);
+
+                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParamsContainer.gravity = Gravity.CENTER;
+                    knobsLayout.setLayoutParams(layoutParamsContainer);
 
                     layout.setVisibility(View.GONE);
                     textView.setVisibility(View.GONE);

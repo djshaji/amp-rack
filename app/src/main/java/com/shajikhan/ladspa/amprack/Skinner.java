@@ -134,4 +134,8 @@ public class Skinner {
 
         return mBitmap ;
     }
+
+    int pixelToDp (int px) {
+        return px / (mainActivity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
 }
