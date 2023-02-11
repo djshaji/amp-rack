@@ -64,8 +64,8 @@ public class RotarySeekbar extends View {
     private float mTextWidth = 0.0f;
     private float mTextHeight = 0.0f;
 
-    private boolean mNeedleOnTop = true;
-    private float mKnobRadius = 0.3f;
+    private boolean mNeedleOnTop = false;
+    public float mKnobRadius = 0.1f;
 
     private int mSectorRotation = 0; // degrees. Extra rotation of the Seekbar. User set.
     private float mSectorHalfOpening = 30; // degrees
@@ -74,20 +74,20 @@ public class RotarySeekbar extends View {
     private float mTickMinRadiusScale = 0.8f;
     private float mTickMajRadiusScale = 1.0f;
 
-    private boolean mShowValue = true;
-    private boolean mShowNeedle = true;
+    private boolean mShowValue = false;
+    private boolean mShowNeedle = false;
     private boolean mShowKnob = true;
-    private boolean mShowTicks = true;
-    private boolean mShowSector = true;
-    private boolean mSubtractTicks = true;
-    private boolean mShowUnit = true;
+    private boolean mShowTicks = false;
+    private boolean mShowSector = false;
+    private boolean mSubtractTicks = false;
+    private boolean mShowUnit = false;
 
     private boolean mTrackValue = false;
     private float mStartScrollValue;
 
     private int mNumTicks = 2; // +1 sections
 
-    private int mKnobColor = 0xff666666;
+    public int mKnobColor = 0xff666666;
     private int mTextColor = 0xff000000;
     private int mSectorColor = 0xffdddddd;
     private int mValueSectorColor = 0xffaaaaaa;
@@ -100,7 +100,7 @@ public class RotarySeekbar extends View {
     private float mTicksWidth = dpToPx(4);
     private float mTicksSubtractWidth = dpToPx(2);
 
-    private float mNeedleMinorRadius = 0.0f;
+    private float mNeedleMinorRadius = 1.0f;
     private float mNeedleMajorRadius = 1.0f;
 
     private float mOverlayBorderMargin = dpToPx(4);

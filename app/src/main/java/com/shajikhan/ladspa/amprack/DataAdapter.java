@@ -1,6 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -8,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -81,7 +83,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         LinearLayout knobsLayout = new LinearLayout (mainActivity);
         knobsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.addView(knobsLayout);
         int knobslayer = 0;
         JSONObject knobsConfig = null;
@@ -371,11 +373,17 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     if (row > knobslayer) {
                         knobsLayout = new LinearLayout(mainActivity);
-                        knobsLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         linearLayout.addView(knobsLayout);
                         knobslayer ++ ;
                     }
+
+                    knobsLayout.setOrientation(LinearLayout.HORIZONTAL);
+//                    knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    LinearLayout.LayoutParams lpk = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    lpk.setMargins(0, 10, 0, 10);
+                    lpk.gravity = Gravity.CENTER;
+
+                    knobsLayout.setLayoutParams(lpk);
 
                     RotarySeekbar rotarySeekbar = new RotarySeekbar(mainActivity);
                     TextView label = new TextView(mainActivity),
@@ -390,7 +398,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     rotarySeekbar.setValue(slider.getValue());
 
                     label.setText(string);
+                    label.setPadding(10, 10, 10, 10);
+                    display.setPadding(10, 10, 10, 10);
                     LinearLayout.LayoutParams layoutParamsL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT) ;
+                    layoutParamsL.setMargins(0, 10, 0, 30);
                     layoutParamsL.gravity = Gravity.CENTER;
                     label.setLayoutParams(layoutParamsL);
                     label.setGravity(Gravity.CENTER);
@@ -406,15 +417,21 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         case 1:
                             layoutParams = new LinearLayout.LayoutParams(180,180) ;
                             layoutParams.setMargins(2, 0, 2, 0);
+                            label.setTextSize(6);
+                            display.setTextSize(6);
                             break ;
                         case 2:
                             layoutParams = new LinearLayout.LayoutParams(220,220) ;
                             layoutParams.setMargins(10, 0, 10, 0);
+                            label.setTextSize(8);
+                            display.setTextSize(8);
                             break ;
                         case 3:
                         default:
                             layoutParams = new LinearLayout.LayoutParams(300,300) ;
                             layoutParams.setMargins(20, 0, 20, 0);
+                            label.setTextSize(10);
+                            display.setTextSize(10);
                             break ;
                     }
 
@@ -422,9 +439,24 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     rotarySeekbar.setLayoutParams(layoutParams);
                     rotarySeekbar.setShowValue(false);
 
-                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layoutParamsContainer.gravity = Gravity.CENTER;
-                    knobsLayout.setLayoutParams(layoutParamsContainer);
+                    display.setText (String.valueOf(slider.getValue()));
+                    display.setGravity(Gravity.CENTER);
+                    Typeface font = Typeface.createFromAsset(mainActivity.getAssets(), "start.ttf");
+
+                    display.setTypeface(font);
+                    label.setTypeface(font);
+
+                    rotarySeekbar.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            display.setText(String.valueOf(rotarySeekbar.getValue()));
+                            return false;
+                        }
+                    });
+
+//                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    layoutParamsContainer.gravity = Gravity.CENTER;
+//                    knobsLayout.setLayoutParams(layoutParamsContainer);
 
                     layout.setVisibility(View.GONE);
                     textView.setVisibility(View.GONE);
