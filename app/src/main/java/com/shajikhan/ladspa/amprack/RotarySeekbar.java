@@ -270,7 +270,9 @@ public class RotarySeekbar extends View {
         /*materialOverlay.initializeElevationOverlay(getContext());
         materialOverlay.setShadowCompatibilityMode(MaterialShapeDrawable.SHADOW_COMPAT_MODE_DEFAULT);
         materialOverlay.setElevation(dpToPx(4));*/
-        materialOverlay.setStroke(dpToPx(2), 0x66000000);
+
+//        I commented below to hide overlay
+//        materialOverlay.setStroke(dpToPx(2), 0x66000000);
         materialOverlay.setFillColor(ColorStateList.valueOf(mOverlaySurfaceColor));
         mOverlay = new LayerDrawable(new Drawable[]{
                 materialOverlay,
