@@ -7,6 +7,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -388,11 +389,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     RotarySeekbar rotarySeekbar = new RotarySeekbar(mainActivity);
                     TextView label = new TextView(mainActivity),
                             display = new TextView(mainActivity);
+
+                    Typeface font = Typeface.createFromAsset(mainActivity.getAssets(), "start.ttf");
+
+                    display.setTypeface(font);
+                    label.setTypeface(font);
                     LinearLayout layoutRotary = new LinearLayout(mainActivity);
                     layoutRotary.setOrientation(LinearLayout.VERTICAL);
-                    layoutRotary.addView(display);
-                    layoutRotary.addView(rotarySeekbar);
-                    layoutRotary.addView(label);
                     rotarySeekbar.setMinValue(slider.getValueFrom());
                     rotarySeekbar.setMaxValue(slider.getValueTo());
                     rotarySeekbar.setValue(slider.getValue());
@@ -441,10 +444,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     display.setText (String.valueOf(slider.getValue()));
                     display.setGravity(Gravity.CENTER);
-                    Typeface font = Typeface.createFromAsset(mainActivity.getAssets(), "start.ttf");
-
-                    display.setTypeface(font);
-                    label.setTypeface(font);
 
                     rotarySeekbar.setOnTouchListener(new View.OnTouchListener() {
                         @Override
@@ -452,7 +451,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                             display.setText(String.valueOf(rotarySeekbar.getValue()));
                             return false;
                         }
+
+
                     });
+
+
 
 //                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                    layoutParamsContainer.gravity = Gravity.CENTER;
@@ -460,6 +463,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     layout.setVisibility(View.GONE);
                     textView.setVisibility(View.GONE);
+
+                    layoutRotary.addView(display);
+                    layoutRotary.addView(rotarySeekbar);
+                    layoutRotary.addView(label);
+
                 }
             }
         }
