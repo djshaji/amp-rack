@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PluginDialogAdapter pluginDialogAdapter;
     SharedPreferences defaultSharedPreferences = null;
     Notification notification;
+    JSONObject knobsLayout ;
     PurchasesResponseListener purchasesResponseListener;
     public static boolean proVersion = false;
     File dir;
@@ -225,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
         availablePluginsLV2 = ConnectGuitar.loadJSONFromAssetFile(this, "lv2_plugins.json");
         ampModels = ConnectGuitar.loadJSONFromAssetFile(this, "amps.json");
+        knobsLayout = ConnectGuitar.loadJSONFromAssetFile(this, "knobs.json");
 
         Iterator<String> keys = availablePluginsLV2.keys();
 

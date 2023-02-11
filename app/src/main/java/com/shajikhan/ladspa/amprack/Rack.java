@@ -77,7 +77,6 @@ public class Rack extends Fragment {
     PopupMenu optionsMenu ;
     JSONObject jsonObject = new JSONObject();
     boolean mixerInit = false ;
-
     /*
     Rack () {
         mainActivity = (MainActivity) getActivity();

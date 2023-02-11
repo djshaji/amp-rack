@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
@@ -76,6 +77,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         String pluginName = AudioEngine.getActivePluginName(position) ;
         holder.getTextView().setText(pluginName);
         int numControls = AudioEngine.getPluginControls(position);
+
+        LinearLayout knobsLayout = new LinearLayout (mainActivity);
+        knobsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        linearLayout.addView(knobsLayout);
+        int knobslayer = 0;
+        JSONObject knobsConfig = null;
+        try {
+            knobsConfig = mainActivity.knobsLayout.getJSONObject(String.valueOf(numControls));
+        } catch (JSONException e) {
+            Log.e(TAG, "onBindViewHolder: no json config for knobs: " + numControls, e);
+        }
+
         for (int i = 0 ; i < numControls ; i ++) {
             LinearLayout layout = new LinearLayout(context);
             layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -315,6 +329,84 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 public void afterTextChanged(Editable editable) {
                 }
             });
+
+            if (mainActivity.useTheme) {
+                if (! isSpinner) {
+                    int row = 0, knobType = 3, knobPos = i ;
+
+                    for (Iterator<String> it = knobsConfig.keys(); it.hasNext(); ) {
+                        JSONArray arrayList ;
+                        String key = it.next();
+                        try {
+                            arrayList = knobsConfig.getJSONArray(key);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            break ;
+                        }
+
+                        Log.d(TAG, "onBindViewHolder: " + String.format (
+                                "row %s: %s", key, arrayList.toString()
+                        ));
+
+                        if (knobPos >= arrayList.length()) {
+                            row ++ ;
+                            Log.d(TAG, "onBindViewHolder: " + String.format(
+                                    "knobpos %d > row length %d = %d",
+                                    knobPos, arrayList.length(), knobPos - arrayList.length()
+                            ));
+                            knobPos = knobPos - arrayList.length() ;
+                            Log.d(TAG, "onBindViewHolder: knobpos truncated to " + knobPos);
+                            continue;
+                        }
+
+                        try {
+                            knobType = arrayList.getInt(knobPos);
+                        } catch (JSONException e) {
+                            Log.wtf(TAG, "onBindViewHolder: unable to parse knob type for control " + i + ", row: " + row, e);
+                        }
+
+                        break ;
+                    }
+
+                    if (row > knobslayer) {
+                        knobsLayout = new LinearLayout(mainActivity);
+                        knobsLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        linearLayout.addView(knobsLayout);
+                        knobslayer ++ ;
+                    }
+
+                    Log.d(TAG, "onBindViewHolder: " + String.format(
+                            "control: %d\tknob: %d\trow: %d\tlayer: %d\ttype: %d",
+                            i, knobPos, row, knobslayer, knobType
+                    ));
+
+                    RotarySeekbar rotarySeekbar = new RotarySeekbar(mainActivity);
+                    rotarySeekbar.setMinValue(slider.getValueFrom());
+                    rotarySeekbar.setMaxValue(slider.getValueTo());
+                    rotarySeekbar.setValue(slider.getValue());
+
+                    mainActivity.skinEngine.rotary(rotarySeekbar, knobType, slider.getValueFrom(), slider.getValueTo(), slider.getValue());
+                    knobsLayout.addView(rotarySeekbar);
+                    ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    switch (knobType) {
+                        case 1:
+                            layoutParams.width = 50 ;
+                            layoutParams.height = 50 ;
+                        case 2:
+                            layoutParams.width = 75 ;
+                            layoutParams.height = 75 ;
+                        case 3:
+                        default:
+                            layoutParams.width = 100 ;
+                            layoutParams.height = 100 ;
+                    }
+                    rotarySeekbar.setLayoutParams(layoutParams);
+
+                    layout.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                }
+            }
         }
 
         if (mainActivity.useTheme) {
@@ -333,6 +425,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                 }
             });
+
 
         }
 
