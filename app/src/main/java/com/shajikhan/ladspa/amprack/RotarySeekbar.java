@@ -411,7 +411,7 @@ public class RotarySeekbar extends View {
          */
         RectF bounds = mLayedOutSeekbar.getBounds();
         float aspectRatio = bounds.width()/bounds.height();
-        calculateOverlayBounds(aspectRatio);
+        calculateOverlayBounds(bounds, aspectRatio);
 
         int padding = dpToPx(OVERLAY_PADDING_DP);
         RectF overlayBounds = new RectF(0,0,
@@ -769,7 +769,49 @@ public class RotarySeekbar extends View {
         invalidate();
     }
 
-    private void calculateOverlayBounds(float aspectRatio) {
+    private void calculateOverlayBounds(RectF bounds, float aspectRatio) {
+        //Log.d("calculateOverlayBounds", getResources().getResourceName(getId()));
+        Rect visibleRect = new Rect();
+        getGlobalVisibleRect(visibleRect);//, globalOffset);
+        //Log.d("calculateOverlayBounds", "getGlobalVisibleRect("+visibleRect.left+", "+visibleRect.top+")");
+
+        View root = getRootView();
+        int rootWidth = root.getWidth();
+        int rootHeight = root.getHeight();
+
+        int centerX = visibleRect.centerX() + (getPaddingLeft()-getPaddingRight());
+        int centerY = visibleRect.centerY() + (getPaddingTop()-getPaddingBottom());
+        //Log.d("calculateOverlayBounds", "center: ("+centerX+", "+centerY+")");
+
+        int overlayHeight = (int) bounds.height() + 70;
+        int overlayWidth = (int)(overlayHeight*aspectRatio);
+        // TODO: make sure overlay size is not larger than screen:
+        //Log.d("calculateOverlayBounds", "overlayWidth, overlayHeight: "+overlayWidth+",\t"+overlayHeight);
+
+        mOverlayGlobalBounds.left = mOverlayGlobalBounds.top = 0; // to avoid bugs below.
+        mOverlayGlobalBounds.right = overlayWidth;
+        mOverlayGlobalBounds.bottom = overlayHeight;
+
+        int posX, posY;
+        if(centerX < (overlayWidth/2+mOverlayBorderMargin))
+            posX = (int)mOverlayBorderMargin; // at left edge
+        else if(centerX > (rootWidth-overlayWidth/2-mOverlayBorderMargin))
+            posX = rootWidth-overlayWidth-(int)mOverlayBorderMargin; // push in from right
+        else
+            posX = centerX-overlayWidth/2;
+
+        if(centerY < (overlayHeight/2+mOverlayBorderMargin))
+            posY = (int)mOverlayBorderMargin; // at top edge
+        else if(centerY > (rootHeight-overlayHeight/2-mOverlayBorderMargin))
+            posY = rootHeight-overlayHeight-(int)mOverlayBorderMargin; // push in from bottom
+        else
+            posY = centerY-overlayHeight/2;
+
+        //Log.d("calculateOverlayBounds", "overlay pos("+posX+", "+posY+")\n");
+        mOverlayGlobalBounds.offsetTo(posX, posY);
+    }
+
+    private void calculateOverlayBounds1(float aspectRatio) {
         //Log.d("calculateOverlayBounds", getResources().getResourceName(getId()));
         Rect visibleRect = new Rect();
         getGlobalVisibleRect(visibleRect);//, globalOffset);
