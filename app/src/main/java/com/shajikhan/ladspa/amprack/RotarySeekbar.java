@@ -86,7 +86,7 @@ public class RotarySeekbar extends View {
     private boolean mTrackValue = false;
     private float mStartScrollValue;
 
-    private int mNumTicks = 2; // +1 sections
+    private int mNumTicks = 0; // +1 sections
 
     public int mKnobColor = 0xff666666;
     private int mTextColor = 0xff000000;

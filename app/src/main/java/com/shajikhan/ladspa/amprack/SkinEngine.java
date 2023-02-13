@@ -439,6 +439,8 @@ public class SkinEngine {
     }
 
     void rotary (RotarySeekbar seekBar, int knobSize, float min, float max, float value) {
+        seekBar.mNeedleColor = Color.parseColor(config.get("knobs").get("thumbColor"));
+        seekBar.mKnobColor = Color.parseColor(config.get("knobs").get("thumbColor"));
         Bitmap bitmap = skinner.getBitmapFromAssets (0, 0, themeDir + config.get("knobs").get(String.valueOf(knobSize)));
         RotateDrawable rotateDrawable ;
         seekBar.setBackground(new BitmapDrawable(bitmap));

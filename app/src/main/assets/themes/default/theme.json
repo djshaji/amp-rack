@@ -72,6 +72,7 @@
     "knobs": {
         "3": "knobs/5.png",
         "2": "knobs/4.png",
-        "1": "knobs/3.png"
+        "1": "knobs/3.png",
+        "thumbColor":"#545454"
     }
 }

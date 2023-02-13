@@ -394,7 +394,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     Typeface font = Typeface.createFromAsset(mainActivity.getAssets(), "start.ttf");
 
                     display.setTypeface(font);
-                    label.setTypeface(font);
+//                    label.setTypeface(font);
                     LinearLayout layoutRotary = new LinearLayout(mainActivity);
                     layoutRotary.setOrientation(LinearLayout.VERTICAL);
                     rotarySeekbar.setMinValue(slider.getValueFrom());
@@ -421,20 +421,20 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         case 1:
                             layoutParams = new LinearLayout.LayoutParams(180,180) ;
                             layoutParams.setMargins(2, 0, 2, 0);
-                            label.setTextSize(6);
+                            label.setTextSize(10);
                             display.setTextSize(6);
                             break ;
                         case 2:
                             layoutParams = new LinearLayout.LayoutParams(220,220) ;
                             layoutParams.setMargins(10, 0, 10, 0);
-                            label.setTextSize(8);
+                            label.setTextSize(12);
                             display.setTextSize(8);
                             break ;
                         case 3:
                         default:
                             layoutParams = new LinearLayout.LayoutParams(300,300) ;
                             layoutParams.setMargins(20, 0, 20, 0);
-                            label.setTextSize(10);
+                            label.setTextSize(13);
                             display.setTextSize(10);
                             break ;
                     }
@@ -449,7 +449,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     rotarySeekbar.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            display.setText(String.valueOf(rotarySeekbar.getValue()));
+                            display.setText(String.format("%.2f", rotarySeekbar.getValue()));
                             linearLayout.requestDisallowInterceptTouchEvent(true);
                             return false;
                         }
@@ -458,7 +458,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     });
 
 //                    rotarySeekbar.parentLayout = linearLayout;
-                    rotarySeekbar.mNeedleColor = mainActivity.getResources().getColor(com.google.android.material.R.color.design_default_color_primary);
 //                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                    layoutParamsContainer.gravity = Gravity.CENTER;
 //                    knobsLayout.setLayoutParams(layoutParamsContainer);
