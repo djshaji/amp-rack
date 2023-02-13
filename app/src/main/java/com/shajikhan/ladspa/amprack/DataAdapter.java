@@ -449,6 +449,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     rotarySeekbar.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
+                            slider.setValue(rotarySeekbar.getValue());
                             display.setText(String.format("%.2f", rotarySeekbar.getValue()));
                             linearLayout.requestDisallowInterceptTouchEvent(true);
                             return false;

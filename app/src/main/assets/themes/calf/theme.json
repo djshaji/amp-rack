@@ -53,7 +53,7 @@
     },
     
     "button": {
-        "bg": "card/bg.png",
+        "bg": "button.png",
         "pressed": "button_pressed.png",
         "text-color": "#ffffff"
     },

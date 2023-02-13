@@ -73,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp" />
 
-
             <ToggleButton
                 android:id="@+id/onofftoggle"
                 android:visibility="gone"
@@ -84,9 +83,9 @@
                 android:background="@color/fui_transparent"
                 android:layout_width="48dp"
                 android:padding="5dp"
+                android:paddingLeft="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/settings"
                 android:layout_width="30dp"
@@ -104,7 +103,7 @@
                 android:background="@android:color/transparent"
                 android:drawableRight="@drawable/ic_baseline_fiber_manual_record_24"
                 android:textOff="Rec"
-                android:textOn="Stop" />
+                android:textOn="Off" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/menu_button"

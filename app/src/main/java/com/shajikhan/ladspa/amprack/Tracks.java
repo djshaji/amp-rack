@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -197,8 +198,10 @@ public class Tracks extends Fragment {
                 limiter.setReleaseTime(50);
             }
 
-            DynamicsProcessing dynamicsProcessing = new DynamicsProcessing(0, player.getAudioSessionId(), config);
-            player.setAuxEffectInfo(new AuxEffectInfo(dynamicsProcessing.getId(),1));
+            if (player.getAudioSessionId() != C.AUDIO_SESSION_ID_UNSET) {
+                DynamicsProcessing dynamicsProcessing = new DynamicsProcessing(0, player.getAudioSessionId(), config);
+                player.setAuxEffectInfo(new AuxEffectInfo(dynamicsProcessing.getId(), 1));
+            }
         }
 
         playerWindow = mainActivity.findViewById(R.id.tracks_player);
