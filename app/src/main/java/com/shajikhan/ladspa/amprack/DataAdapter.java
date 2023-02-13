@@ -449,13 +449,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
                             display.setText(String.valueOf(rotarySeekbar.getValue()));
+                            linearLayout.requestDisallowInterceptTouchEvent(true);
                             return false;
                         }
 
 
                     });
-
-
 
 //                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                    layoutParamsContainer.gravity = Gravity.CENTER;
