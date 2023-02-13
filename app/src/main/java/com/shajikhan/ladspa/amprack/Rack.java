@@ -595,11 +595,11 @@ public class Rack extends Fragment {
 
                 mainActivity.inputVolume.setVisibility(View.GONE);
                 mainActivity.outputVolume.setVisibility(View.GONE);
-            } else {
-                LinearLayout rotaryRack = mainActivity.findViewById(R.id.rotary_rack);
-                rotaryRack.setVisibility(View.GONE);
-
             }
+        } else {
+            LinearLayout rotaryRack = mainActivity.findViewById(R.id.rotary_rack);
+            rotaryRack.setVisibility(View.GONE);
+
         }
     }
 

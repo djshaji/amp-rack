@@ -27,10 +27,6 @@
             android:title="Audio Encoders Supported"
             android:key="encoders_supported"
             android:summary="OPUS\nMP3\nPCM WAV 16 bit"/>
-        <Preference
-            android:title="Credits"
-            app:key="credits"
-            android:summary="@string/credits"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

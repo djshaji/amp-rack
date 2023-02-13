@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     ToggleButton toggleMixer ;
     static int totalPlugins = 0 ;
     static boolean useTheme = true ;
+    String theme = "Material";
     static SkinEngine skinEngine ;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
@@ -220,7 +221,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "printActivePreset");
         hashCommands.add(this, "proDialog");
         hashCommands.add (this, "testLV2");
-        skinEngine = new SkinEngine(this);
+
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        theme = defaultSharedPreferences.getString("theme", "Material");
+        if (theme == "Material") {
+            useTheme = false;
+        } else {
+            skinEngine = new SkinEngine(this);
+            skinEngine.setTheme(theme);
+
+        }
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
@@ -243,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Log.d(TAG, "onCreate: [LV2 plugins]: " + availablePluginsLV2.toString());
 
-        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Log.d(TAG, "onCreate: bootstart: " + defaultSharedPreferences.getLong("bootStartz", 1L) + " bootFinish: " + defaultSharedPreferences.getLong("bootFinish", 1L));
         if (defaultSharedPreferences.getLong("bootFinish", 1L) < defaultSharedPreferences.getLong("bootStart", 0L)) {
             safeMode = true ;
@@ -1897,7 +1907,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             skinEngine.wallpaper(imageView);
             return ;
         }
-        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "2.9 Beta");
+
+        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "700032");
 //        String resIdString = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", "a1");
         Bitmap bitmap = null;
         switch (resIdString) {
@@ -1934,8 +1945,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 bitmap = BitmapFactory.decodeResource(resources, R.drawable.a1);
                 context.setTheme(R.style.Theme_1);
                 break;
-            case "a5":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.a5);
+            case "700032":
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg);
                 context.setTheme(R.style.Theme_AmpRack);
                 break;
             case "a2":
@@ -1951,7 +1962,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 context.setTheme(R.style.Theme_4);
                 break;
             case "2.9 Beta":
-                bitmap = BitmapFactory.decodeResource(resources, R.drawable.giancarlo);
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg);
                 context.setTheme(R.style.Theme_29beta);
                 break;
         }

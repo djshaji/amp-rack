@@ -35,9 +35,9 @@ import java.util.Iterator;
 public class SkinEngine {
     MainActivity mainActivity ;
     String TAG = getClass().getSimpleName() ;
-    String theme = "calf" ;
+    String theme = "Adwaita" ;
     int nativeTheme = R.style.Theme_AmpRack;
-    String themeDir = "themes/calf/";
+    String themeDir = "themes/Adwaita/";
     HashMap <String, HashMap <String, String>> config = new HashMap<>();
     JSONObject jsonConfig ;
     Skinner skinner ;
@@ -56,7 +56,7 @@ public class SkinEngine {
         skinner = new Skinner(mainActivity);
         skinner.init();
         paint = new Paint();
-        setTheme("calf"); // sane default
+        setTheme("Adwaita"); // sane default
     }
 
     void load () {

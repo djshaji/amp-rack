@@ -3,13 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
-        android:title="Background"
-        android:key="background"
+        android:title="Theme"
+        android:key="theme"
         android:defaultValue=">2.9 Beta"
-        app:entryValues="@array/bg_m3"
-        app:entries="@array/bg_m3_names"/>
+        app:entryValues="@array/themes"
+        app:entries="@array/themes"/>
     <Preference
-        android:title="Select a custom background"
-        android:key="background_custom"/>
+        android:title="Set Wallpaper"
+        android:key="background"/>
+
+    <Preference
+        android:summary="Restart the app for theme change to take effect."/>
 
 </PreferenceScreen>
