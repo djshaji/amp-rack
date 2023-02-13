@@ -38,6 +38,7 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 public class RotarySeekbar extends View {
 
     private static final String TAG = "RotarySeekbar";
+    View instanceView = this ;
 
     private static final int DEFAULT_STYLE_RES = R.style.RotarySeekbar_DefaultMaterialStyle;
 
@@ -64,19 +65,19 @@ public class RotarySeekbar extends View {
     private float mTextWidth = 0.0f;
     private float mTextHeight = 0.0f;
 
-    private boolean mNeedleOnTop = false;
+    private boolean mNeedleOnTop = true;
     public float mKnobRadius = 0.1f;
 
     private int mSectorRotation = 0; // degrees. Extra rotation of the Seekbar. User set.
     private float mSectorHalfOpening = 30; // degrees
     private float mSectorMinRadiusScale = 0.4f;
-    private float mSectorMajRadiusScale = 0.75f;
+    private float mSectorMajRadiusScale = 1.75f;
     private float mTickMinRadiusScale = 0.8f;
     private float mTickMajRadiusScale = 1.0f;
 
     private boolean mShowValue = false;
-    private boolean mShowNeedle = false;
-    private boolean mShowKnob = true;
+    private boolean mShowNeedle = true;
+    private boolean mShowKnob = false;
     private boolean mShowTicks = false;
     private boolean mShowSector = false;
     private boolean mSubtractTicks = false;
@@ -92,16 +93,16 @@ public class RotarySeekbar extends View {
     private int mSectorColor = 0xffdddddd;
     private int mValueSectorColor = 0xffaaaaaa;
     private int mTicksColor = 0xff006699;
-    private int mNeedleColor = 0xff880000;
+    public int mNeedleColor = getResources().getColor(com.firebase.ui.auth.R.color.colorPrimary);
 
     private int mOverlaySurfaceColor = 0xffffffff;
 
     private float mNeedleWidth = dpToPx(4);
-    private float mTicksWidth = dpToPx(4);
+    private float mTicksWidth = dpToPx(0);
     private float mTicksSubtractWidth = dpToPx(2);
 
-    private float mNeedleMinorRadius = 1.0f;
-    private float mNeedleMajorRadius = 1.0f;
+    private float mNeedleMinorRadius = 0.5f;
+    private float mNeedleMajorRadius = 0.5f;
 
     private float mOverlayBorderMargin = dpToPx(4);
 
@@ -273,7 +274,7 @@ public class RotarySeekbar extends View {
 
 //        I commented below to hide overlay
 //        materialOverlay.setStroke(dpToPx(2), 0x66000000);
-        materialOverlay.setFillColor(ColorStateList.valueOf(mOverlaySurfaceColor));
+        materialOverlay.setFillColor(ColorStateList.valueOf(getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent)));
         mOverlay = new LayerDrawable(new Drawable[]{
                 materialOverlay,
                 mOverlaySeekbarProxy
@@ -665,7 +666,7 @@ public class RotarySeekbar extends View {
         boolean result = mDetector.onTouchEvent(event);
         if(!result) {
             if(event.getAction() == MotionEvent.ACTION_UP) {
-                getRootView().getOverlay().remove(mOverlay);
+//                getRootView().getOverlay().remove(mOverlay);
 
                 // Make sure we are drawing correctly, once the overlay is removed.
                 mLayedOutSeekbar.recreatePaths();
@@ -899,7 +900,13 @@ public class RotarySeekbar extends View {
             mStartScrollValue = mValue;
             mAccumulatedAngleChange = 0.0f;
             invalidate(); // force redraw, where we don't draw the layed out View (this)
-            getRootView().getOverlay().add(mOverlay);
+//            getRootView().getOverlay().add(mOverlay);
+            mLayedOutSeekbar.recreatePaths();
+            invalidate();
+            mbScrolling = false;
+
+            if(!mTrackValue && mStartScrollValue != mValue && mListener!=null)
+                mListener.onValueChanged((RotarySeekbar) instanceView, mValue);
             return true; // must return true for onScroll to be called (!)
         }
 

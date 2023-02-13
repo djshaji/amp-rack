@@ -42,6 +42,7 @@ import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     int totalItems = 0;
+    int xOffset = 0, yOffset = 0 ;
     String TAG = this.getClass().getSimpleName();
     Context context = null ;
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
@@ -456,6 +457,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     });
 
+//                    rotarySeekbar.parentLayout = linearLayout;
+                    rotarySeekbar.mNeedleColor = mainActivity.getResources().getColor(com.google.android.material.R.color.design_default_color_primary);
 //                    LinearLayout.LayoutParams layoutParamsContainer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                    layoutParamsContainer.gravity = Gravity.CENTER;
 //                    knobsLayout.setLayoutParams(layoutParamsContainer);
