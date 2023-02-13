@@ -48,7 +48,8 @@
         "right": "card/right.png",
         "bottom-left": "card/bottom_left.png",
         "bottom-right": "card/bottom_right.png",
-        "alpha": "100"
+        "alpha": "100",
+        "padding": "20"
     },
     
     "button": {
@@ -67,5 +68,12 @@
         "pause": "pause.png",
         "media": "play_small.png",
         "reset": "loop.png"
+    },
+
+    "knobs": {
+        "3": "knobs/5.png",
+        "2": "knobs/4.png",
+        "1": "knobs/3.png",
+        "thumbColor":"#545454"
     }
 }

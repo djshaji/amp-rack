@@ -35,9 +35,9 @@ import java.util.Iterator;
 public class SkinEngine {
     MainActivity mainActivity ;
     String TAG = getClass().getSimpleName() ;
-    String theme = "default" ;
+    String theme = "calf" ;
     int nativeTheme = R.style.Theme_AmpRack;
-    String themeDir = "themes/default/";
+    String themeDir = "themes/calf/";
     HashMap <String, HashMap <String, String>> config = new HashMap<>();
     JSONObject jsonConfig ;
     Skinner skinner ;
@@ -56,7 +56,7 @@ public class SkinEngine {
         skinner = new Skinner(mainActivity);
         skinner.init();
         paint = new Paint();
-        setTheme("default"); // sane default
+        setTheme("calf"); // sane default
     }
 
     void load () {
@@ -393,10 +393,18 @@ public class SkinEngine {
         bitmapDrawable.setAlpha(alpha);
         layout.setBackground(bitmapDrawable);
         layout.getBackground().setAlpha(alpha);
+
+        /*
+        if (config.get("card").get("padding") != null) {
+            int padding = Integer.valueOf(config.get("card").get("padding"));
+            layout.setPadding(padding, padding, padding, padding);
+        }
+
+         */
     }
 
     boolean hasKnob () {
-        return config.get ("knob") == null ? true : false ;
+        return jsonConfig.has("knobs");
     }
 
     void knob (SeekBar seekBar, int knobSize, int min, int max, int value) {

@@ -335,7 +335,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
 
-            if (mainActivity.useTheme) {
+            if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob()) {
                 if (! isSpinner) {
                     int row = 0, knobType = 3, knobPos = i ;
 

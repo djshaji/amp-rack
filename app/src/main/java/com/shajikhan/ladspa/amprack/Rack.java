@@ -558,11 +558,11 @@ public class Rack extends Fragment {
 
             if (mainActivity.skinEngine.hasKnob()) {
                 mainActivity.rotarySeekbarIn = mainActivity.findViewById(R.id.rotary_input_volume);
-                mainActivity.skinEngine.rotary(mainActivity.rotarySeekbarIn, 3, 0, 100, 50);
-
                 mainActivity.rotarySeekbarOut = mainActivity.findViewById(R.id.rotary_output_volume);
                 mainActivity.displayIn = mainActivity.findViewById(R.id.rotary_input_display);
                 mainActivity.displayOut = mainActivity.findViewById(R.id.rotary_output_display);
+                mainActivity.skinEngine.rotary(mainActivity.rotarySeekbarIn, 3, 0, 100, 50);
+
                 mainActivity.skinEngine.rotary(mainActivity.rotarySeekbarOut, 3, 0, 100, 50);
                 mainActivity.rotarySeekbarIn.setValue(mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f) * 100);
                 mainActivity.rotarySeekbarOut.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f)*100);
@@ -595,6 +595,10 @@ public class Rack extends Fragment {
 
                 mainActivity.inputVolume.setVisibility(View.GONE);
                 mainActivity.outputVolume.setVisibility(View.GONE);
+            } else {
+                LinearLayout rotaryRack = mainActivity.findViewById(R.id.rotary_rack);
+                rotaryRack.setVisibility(View.GONE);
+
             }
         }
     }
