@@ -341,12 +341,30 @@ public class SkinEngine {
             bgBitmap = skinner.getBitmapFromAssets(0, -1, themeDir + bg);
         }
 
+        Bitmap finalBgBitmap = bgBitmap;
         BitmapDrawable bitmapDrawable = new BitmapDrawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 setBounds(0, 0, w, h);
                 if (bg.startsWith("#"))
                     canvas.drawColor(Color.parseColor(bg));
+                else {
+                    int j = 0, i = 0 ;
+                    boolean drawing = true ;
+                    while (drawing) {
+                        canvas.drawBitmap(finalBgBitmap, i, j, paint);
+                        i = finalBgBitmap.getWidth() ;
+                        if (i > canvas.getWidth()) {
+                            i = 0 ;
+                            j += finalBgBitmap.getHeight();
+
+                            if (j > canvas.getHeight()) {
+                                drawing = false;
+                                break ;
+                            }
+                        }
+                    }
+                }
 
                 Log.d(TAG, "draw: " + String.format("topright %d x %d", topRight.getWidth(), topRight.getHeight()));
 

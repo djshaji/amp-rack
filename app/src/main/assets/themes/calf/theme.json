@@ -39,7 +39,7 @@
     },
     
     "card": {
-        "bg": "#3f3f3f",
+        "bg": "card/bg.png",
         "top-left": "card/top_left.png",
         "top-right": "card/top_right.png",
         "top": "card/top.png",
@@ -53,7 +53,7 @@
     },
     
     "button": {
-        "bg": "button_bg.png",
+        "bg": "card/bg.png",
         "pressed": "button_pressed.png",
         "text-color": "#ffffff"
     },
