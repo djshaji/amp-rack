@@ -205,6 +205,18 @@ public class SettingsActivity extends AppCompatActivity implements
                     return true;
                 }
             });
+
+            Preference themePreference1 = findPreference("theme") ;
+            themePreference1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    sharedPreferences.edit().remove("background").commit();
+                    sharedPreferences.edit().putString("theme", newValue.toString()).commit();
+
+                    return false;
+                }
+            });
         }
     }
 
@@ -267,6 +279,7 @@ public class SettingsActivity extends AppCompatActivity implements
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPreferences.edit().putString("background", selectedImage.toString()).commit();
+            Log.d(TITLE_TAG, "onActivityResult: setting wallpaper: " + selectedImage.toString());
         }
     }
 }

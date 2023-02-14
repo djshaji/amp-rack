@@ -57,6 +57,11 @@
         <item>a4</item>
         <item>a5</item>
     </string-array>
+    <string-array name="themes">
+        <item>Material</item>
+        <item>Adwaita</item>
+        <item>TubeAmp</item>
+    </string-array>
     <string-array name="bg_m3_names">
         <item>2.9 Beta</item>
         <item>Passion</item>

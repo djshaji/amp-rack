@@ -152,28 +152,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView.LayoutManager layoutManager;
     ConstraintLayout linearLayoutPluginDialog;
     boolean lazyLoad = true;
-    String[] sharedLibraries ;
-    static String [] sharedLibrariesLV2;
+    String[] sharedLibraries;
+    static String[] sharedLibrariesLV2;
     PluginDialogAdapter pluginDialogAdapter;
     SharedPreferences defaultSharedPreferences = null;
     Notification notification;
-    JSONObject knobsLayout ;
+    JSONObject knobsLayout;
     PurchasesResponseListener purchasesResponseListener;
     public static boolean proVersion = false;
     File dir;
     HashCommands hashCommands;
-    JSONObject rdf ;
-    JSONObject ampModels ;
-    Slider inputVolume, outputVolume ;
-    SeekBar seekBarIn, seekBarOut ;
-    RotarySeekbar rotarySeekbarIn, rotarySeekbarOut ;
-    TextView displayIn, displayOut ;
+    JSONObject rdf;
+    JSONObject ampModels;
+    Slider inputVolume, outputVolume;
+    SeekBar seekBarIn, seekBarOut;
+    RotarySeekbar rotarySeekbarIn, rotarySeekbarOut;
+    TextView displayIn, displayOut;
 
-    ToggleButton toggleMixer ;
-    static int totalPlugins = 0 ;
-    static boolean useTheme = true ;
-    String theme = "Material";
-    static SkinEngine skinEngine ;
+    ToggleButton toggleMixer;
+    static int totalPlugins = 0;
+    static boolean useTheme = true;
+    String theme = "TubeAmp";
+    static SkinEngine skinEngine;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PopupMenu optionsMenu;
     String lastRecordedFileName;
     NotificationManagerCompat notificationManager;
-    static ProgressBar inputMeter ;
-    static ProgressBar outputMeter ;
+    static ProgressBar inputMeter;
+    static ProgressBar outputMeter;
 
     // Used to load the 'amprack' library on application startup.
     static {
@@ -220,12 +220,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "saveActivePreset");
         hashCommands.add(this, "printActivePreset");
         hashCommands.add(this, "proDialog");
-        hashCommands.add (this, "testLV2");
+        hashCommands.add(this, "testLV2");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        theme = defaultSharedPreferences.getString("theme", "Material");
-        if (theme == "Material") {
+        theme = defaultSharedPreferences.getString("theme", "TubeAmp");
+        Log.d(TAG, "onCreate: loading theme " + theme);
+        if (theme .equals("Material")) {
             useTheme = false;
         } else {
             skinEngine = new SkinEngine(this);
@@ -244,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         while (keys.hasNext()) {
             String key = keys.next();
             try {
-                String _p = availablePluginsLV2.getJSONObject(key).getString("name") ;
+                String _p = availablePluginsLV2.getJSONObject(key).getString("name");
                 Log.d(TAG, "onCreate: found LV2 plugin " + key + ": " + _p);
                 lv2Plugins.add(_p);
             } catch (JSONException e) {
@@ -256,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Log.d(TAG, "onCreate: bootstart: " + defaultSharedPreferences.getLong("bootStartz", 1L) + " bootFinish: " + defaultSharedPreferences.getLong("bootFinish", 1L));
         if (defaultSharedPreferences.getLong("bootFinish", 1L) < defaultSharedPreferences.getLong("bootStart", 0L)) {
-            safeMode = true ;
+            safeMode = true;
             Log.d(TAG, "onCreate: turned on safe mode");
         }
 
@@ -1401,8 +1402,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         else {
             if (library > 149 /* because we have 149 lADSPA libraries */) {
                 ret = AudioEngine.addPluginLazyLV2(sharedLibrariesLV2[library - sharedLibraries.length], plug);
-            }
-            else
+            } else
                 ret = AudioEngine.addPluginLazy(sharedLibraries[library], plug);
         }
 
@@ -1599,14 +1599,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         defaultSharedPreferences.edit().putFloat("outputVolume", outputVolume.getValue()).apply();
         defaultSharedPreferences.edit().putBoolean("toggleMixer", toggleMixer.isChecked()).apply();
 
-        Log.d(TAG, "saveActivePreset: toggle mixer: " +  !toggleMixer.isChecked());
+        Log.d(TAG, "saveActivePreset: toggle mixer: " + !toggleMixer.isChecked());
         Log.d(TAG, "saveActivePreset: Saved preset: " + preset);
     }
 
     void loadActivePreset() {
         if (safeMode) {
             Log.d(TAG, "loadActivePreset: skipping loading preset");
-            return ;
+            return;
         }
 
 
@@ -1902,6 +1902,37 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
+        String wallpaper = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", null);
+        Log.d(TAG, "applyWallpaper: wallpaper: " + wallpaper);
+        if (useTheme) {
+            skinEngine.setNativeTheme();
+            if (wallpaper != null) {
+                skinEngine.wallpaper(imageView);
+                return;
+            }
+        }
+
+        context.setTheme(R.style.Theme_AmpRack);
+        Bitmap bitmap = null;
+        if (wallpaper != null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(_context.getContentResolver(), Uri.parse(wallpaper));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (bitmap == null || wallpaper == null) {
+            bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg);
+        }
+
+        imageView.setCropToPadding(true);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        imageView.setImageBitmap(bitmap);
+    }
+
+    public static void applyWallpaper1(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
         if (useTheme) {
             skinEngine.setNativeTheme();
             skinEngine.wallpaper(imageView);

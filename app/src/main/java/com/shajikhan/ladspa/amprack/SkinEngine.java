@@ -9,7 +9,9 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RotateDrawable;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +31,7 @@ import org.checkerframework.checker.units.qual.K;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -90,8 +93,26 @@ public class SkinEngine {
         if (wallpaper.startsWith("#")) {
             wall.setBackgroundColor(Color.parseColor(wallpaper));
         } else {
+            String customBg = mainActivity.defaultSharedPreferences.getString("background", null);
             Bitmap bg = skinner.getBitmapFromAssets( skinner.displayMetrics.widthPixels, -1, themeDir + wallpaper);
-            wall.setImageBitmap(bg);
+            if (customBg == null)
+                wall.setImageBitmap(bg);
+            else {
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), Uri.parse(customBg));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (bitmap != null) {
+                    wall.setCropToPadding(true);
+                    wall.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    wall.setImageBitmap(bitmap);
+                }
+                else
+                    wall.setImageBitmap(bg);
+            }
         }
     }
 

@@ -5,12 +5,12 @@
     <ListPreference
         android:title="Theme"
         android:key="theme"
-        android:defaultValue=">2.9 Beta"
+        android:defaultValue="TubeAmp"
         app:entryValues="@array/themes"
         app:entries="@array/themes"/>
     <Preference
         android:title="Set Wallpaper"
-        android:key="background"/>
+        android:key="background_custom"/>
 
     <Preference
         android:summary="Restart the app for theme change to take effect."/>
