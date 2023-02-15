@@ -471,6 +471,7 @@ public class Rack extends Fragment {
         LinearLayout mixer = mainActivity.findViewById(R.id.mixer);
 
         mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
+        mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", false);
 
         mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
             AudioEngine.toggleMixer(!b);
@@ -520,6 +521,51 @@ public class Rack extends Fragment {
         mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
 
         ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
+        Button patchUp = mainActivity.findViewById(R.id.patch_up),
+                patchDown = mainActivity.findViewById(R.id.patch_down);
+        TextView patchName = mainActivity.findViewById(R.id.patch_name),
+                patchNo = mainActivity.findViewById(R.id.patch_no);
+
+        patchUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (! mainActivity.useTheme && ! onOff.isChecked())
+                    onOff.setChecked(true);
+
+                if (mainActivity.useTheme && ! toggleButton.isChecked())
+                    toggleButton.setChecked(true);
+
+                int p = Integer.valueOf(String.valueOf(patchNo.getText()));
+                p ++ ;
+                if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
+                    return ;
+
+                mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
+                patchNo.setText(String.valueOf(p));
+                patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+            }
+        });
+
+        patchDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (! mainActivity.useTheme && ! onOff.isChecked())
+                    onOff.setChecked(true);
+
+                if (mainActivity.useTheme && ! toggleButton.isChecked())
+                    toggleButton.setChecked(true);
+
+                int p = Integer.valueOf(String.valueOf(patchNo.getText()));
+                p -- ;
+                if (p < 1)
+                    return ;
+
+                mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
+                patchNo.setText(String.valueOf(p));
+                patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+            }
+        });
+
         if (mainActivity.useTheme) {
             ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
             mainActivity.skinEngine.wallpaper(wallpaper);
@@ -559,52 +605,10 @@ public class Rack extends Fragment {
                 });
             }
 
-            Button patchUp = mainActivity.findViewById(R.id.patch_up),
-                    patchDown = mainActivity.findViewById(R.id.patch_down);
-            TextView patchName = mainActivity.findViewById(R.id.patch_name),
-                    patchNo = mainActivity.findViewById(R.id.patch_no);
-
-            patchUp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (! mainActivity.useTheme && ! onOff.isChecked())
-                        onOff.setChecked(true);
-
-                    if (mainActivity.useTheme && ! toggleButton.isChecked())
-                        toggleButton.setChecked(true);
-
-                    int p = Integer.valueOf(String.valueOf(patchNo.getText()));
-                    p ++ ;
-                    if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
-                        return ;
-
-                    mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
-                    patchNo.setText(String.valueOf(p));
-                    patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
-                }
-            });
-
-            patchDown.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (! mainActivity.useTheme && ! onOff.isChecked())
-                        onOff.setChecked(true);
-
-                    if (mainActivity.useTheme && ! toggleButton.isChecked())
-                        toggleButton.setChecked(true);
-
-                    int p = Integer.valueOf(String.valueOf(patchNo.getText()));
-                    p -- ;
-                    if (p < 1)
-                        return ;
-
-                    mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
-                    patchNo.setText(String.valueOf(p));
-                    patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
-                }
-            });
-
             if (mainActivity.skinEngine.hasKnob()) {
+                LinearLayout rotaryRack = mainActivity.findViewById(R.id.rotary_rack);
+                rotaryRack.setVisibility(View.VISIBLE);
+
                 mainActivity.rotarySeekbarIn = mainActivity.findViewById(R.id.rotary_input_volume);
                 mainActivity.rotarySeekbarOut = mainActivity.findViewById(R.id.rotary_output_volume);
                 mainActivity.displayIn = mainActivity.findViewById(R.id.rotary_input_display);
@@ -644,10 +648,6 @@ public class Rack extends Fragment {
                 mainActivity.inputVolume.setVisibility(View.GONE);
                 mainActivity.outputVolume.setVisibility(View.GONE);
             }
-        } else {
-            LinearLayout rotaryRack = mainActivity.findViewById(R.id.rotary_rack);
-            rotaryRack.setVisibility(View.GONE);
-
         }
     }
 

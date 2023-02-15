@@ -229,6 +229,7 @@
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:id="@+id/rotary_rack"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
