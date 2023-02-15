@@ -516,12 +516,12 @@ public class Rack extends Fragment {
         mainActivity.inputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("inputVolume", 1.0f));
         mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
 
+        ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
         if (mainActivity.useTheme) {
             ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
             mainActivity.skinEngine.wallpaper(wallpaper);
             mainActivity.skinEngine.header(mainActivity.findViewById(R.id.master_button_box));
 
-            ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
             mainActivity.skinEngine.toggle(toggleButton, false);
             toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -564,6 +564,12 @@ public class Rack extends Fragment {
             patchUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (! mainActivity.useTheme && ! onOff.isChecked())
+                        onOff.setChecked(true);
+
+                    if (mainActivity.useTheme && ! toggleButton.isChecked())
+                        toggleButton.setChecked(true);
+
                     int p = Integer.valueOf(String.valueOf(patchNo.getText()));
                     p ++ ;
                     if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
@@ -578,6 +584,9 @@ public class Rack extends Fragment {
             patchDown.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (mainActivity.onOff != null && ! mainActivity.onOff.isChecked())
+                        mainActivity.onOff.setChecked(true);
+
                     int p = Integer.valueOf(String.valueOf(patchNo.getText()));
                     p -- ;
                     if (p < 1)

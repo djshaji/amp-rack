@@ -148,13 +148,13 @@
                     android:textSize="15dp"
                     android:layout_weight="1"
                     android:id="@+id/patch_name"
-                    android:text="Tube Screamer"/>
+                    android:text="Tap to change"/>
 
                 <Button
-                    android:id="@+id/patch_up"
+                    android:id="@+id/patch_down"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+                    android:background="@drawable/ic_baseline_keyboard_arrow_down_24"/>
 
                 <TextView
                     android:padding="10dp"
@@ -164,13 +164,13 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/start"
                     android:textSize="20dp"
-                    android:text="01"/>
+                    android:text="00"/>
 
                 <Button
-                    android:id="@+id/patch_down"
+                    android:id="@+id/patch_up"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/ic_baseline_keyboard_arrow_down_24"/>
+                    android:background="@drawable/ic_baseline_keyboard_arrow_up_24"/>
             </LinearLayout>
 
             <TextView
