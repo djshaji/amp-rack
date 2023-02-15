@@ -419,22 +419,26 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     ));
 
                     LinearLayout.LayoutParams layoutParams ;
+                    int w = 0;
                     switch (knobType) {
                         case 1:
-                            layoutParams = new LinearLayout.LayoutParams(180,180) ;
+                            w = (int) (180 * mainActivity.skinEngine.scaleFactor);
+                            layoutParams = new LinearLayout.LayoutParams(w,w) ;
                             layoutParams.setMargins(2, 0, 2, 0);
                             label.setTextSize(10);
                             display.setTextSize(6);
                             break ;
                         case 2:
-                            layoutParams = new LinearLayout.LayoutParams(220,220) ;
+                            w = (int) (220 * mainActivity.skinEngine.scaleFactor);
+                            layoutParams = new LinearLayout.LayoutParams(w,w) ;
                             layoutParams.setMargins(10, 0, 10, 0);
                             label.setTextSize(12);
                             display.setTextSize(8);
                             break ;
                         case 3:
                         default:
-                            layoutParams = new LinearLayout.LayoutParams(300,300) ;
+                            w = (int) (300 * mainActivity.skinEngine.scaleFactor);
+                            layoutParams = new LinearLayout.LayoutParams(w,w) ;
                             layoutParams.setMargins(20, 0, 20, 0);
                             label.setTextSize(13);
                             display.setTextSize(10);

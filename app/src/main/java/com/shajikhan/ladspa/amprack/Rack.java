@@ -471,7 +471,6 @@ public class Rack extends Fragment {
         LinearLayout mixer = mainActivity.findViewById(R.id.mixer);
 
         mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
-        mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", false);
 
         mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
             AudioEngine.toggleMixer(!b);
@@ -567,6 +566,7 @@ public class Rack extends Fragment {
         });
 
         if (mainActivity.useTheme) {
+            mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", false);
             ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
             mainActivity.skinEngine.wallpaper(wallpaper);
             mainActivity.skinEngine.header(mainActivity.findViewById(R.id.master_button_box));

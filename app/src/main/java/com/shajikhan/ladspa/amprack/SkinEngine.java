@@ -12,7 +12,9 @@ import android.graphics.drawable.RotateDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,6 +47,11 @@ public class SkinEngine {
     HashMap <String, HashMap <String, String>> config = new HashMap<>();
     JSONObject jsonConfig ;
     Skinner skinner ;
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    Display display ;
+    int screenWidth = 1800, screenHeight = 2400 ;
+    float scaleFactor = 1 ;
+
     Paint paint ;
 
     void setTheme (String _theme) {
@@ -61,6 +68,13 @@ public class SkinEngine {
         skinner.init();
         paint = new Paint();
         setTheme("Adwaita"); // sane default
+        mainActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        display = mainActivity.getWindowManager().getDefaultDisplay();
+        screenWidth = display.getWidth() ;
+        screenHeight = display.getHeight();
+        scaleFactor = screenWidth / 1120f ;
+
+        Log.d(TAG, "SkinEngine: " + displayMetrics);
     }
 
     void load () {
@@ -534,7 +548,23 @@ public class SkinEngine {
         seekBar.mNeedleColor = Color.parseColor(config.get("knobs").get("thumbColor"));
         seekBar.mKnobColor = Color.parseColor(config.get("knobs").get("thumbColor"));
         Bitmap bitmap = skinner.getBitmapFromAssets (0, 0, themeDir + config.get("knobs").get(String.valueOf(knobSize)));
-        RotateDrawable rotateDrawable ;
+        /*
+        if (displayMetrics.widthPixels < 1080) {
+            Display d = mainActivity.getWindowManager().getDefaultDisplay();
+            Log.d(TAG, "rotary: detected screen dimensions: " + String.format(
+                    "%d x %d", d.getWidth(), d.getHeight()
+            ));
+            float aspectRatio = bitmap.getWidth() / bitmap.getHeight(),
+                    bw = bitmap.getWidth() * (d.getWidth()/1080f),
+                    bh = bw * aspectRatio ;
+
+            Log.d(TAG, "rotary: scaled dimensions " +
+                    String.format("%f %f %f",
+                            aspectRatio, bw, bh));
+            bitmap = Bitmap.createScaledBitmap(bitmap, (int) bw, (int) bh, true);
+        }
+
+         */
         seekBar.setBackground(new BitmapDrawable(bitmap));
         seekBar.setMaxValue(max);
         seekBar.setMinValue(min);
