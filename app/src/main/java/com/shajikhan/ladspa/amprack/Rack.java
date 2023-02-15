@@ -474,7 +474,10 @@ public class Rack extends Fragment {
 
         mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
             AudioEngine.toggleMixer(!b);
+            if (mainActivity.useTheme)
+                mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", !b);
             if (!b) {
+
                 if (! mixerInit) {
                     mixer.post(new Runnable() {
                         @Override
@@ -584,8 +587,11 @@ public class Rack extends Fragment {
             patchDown.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mainActivity.onOff != null && ! mainActivity.onOff.isChecked())
-                        mainActivity.onOff.setChecked(true);
+                    if (! mainActivity.useTheme && ! onOff.isChecked())
+                        onOff.setChecked(true);
+
+                    if (mainActivity.useTheme && ! toggleButton.isChecked())
+                        toggleButton.setChecked(true);
 
                     int p = Integer.valueOf(String.valueOf(patchNo.getText()));
                     p -- ;

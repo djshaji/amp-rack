@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -118,6 +119,13 @@ public class SkinEngine {
 
     void header (LinearLayout layout) {
         String hBg = config.get("header").get("bg");
+        String textColor = config.get("button").get("text-color");
+        TextView appTitle = mainActivity.findViewById(R.id.app_main_title);
+        appTitle.setTextColor(Color.parseColor(textColor));
+
+        ToggleButton record = mainActivity.findViewById(R.id.record_button);
+        record.setTextColor(Color.parseColor(textColor));
+
         Bitmap headerBg = skinner.getBitmapFromAssets(skinner.displayMetrics.widthPixels, -1, themeDir + hBg);
         layout.setBackground(new Drawable() {
             @Override
@@ -246,6 +254,43 @@ public class SkinEngine {
         String on = config.get("toggle").get("on") ;
         if (! state) {
             on = config.get("toggle").get("off");
+        }
+
+        String finalOn = on;
+        toggleButton.setButtonDrawable(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
+                Bitmap b = skinner.getBitmapFromAssets(w , -1, themeDir + finalOn);
+                setBounds(0, 0, w, h);
+                canvas.drawBitmap(b, (w - b.getWidth()) / 2, (h - b.getHeight()) / 2, paint);
+            }
+
+            @Override
+            public void setAlpha(int i) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
+
+
+    }
+
+    void toggleWithKey (ToggleButton toggleButton, String key, String onState, String offState, boolean state) {
+        if (config.get(key).get(onState) == null)
+            return;
+        String on = config.get(key).get(onState) ;
+        if (! state) {
+            on = config.get(key).get(offState);
         }
 
         String finalOn = on;

@@ -61,6 +61,7 @@
         <item>Material</item>
         <item>Adwaita</item>
         <item>TubeAmp</item>
+        <item>Analog</item>
     </string-array>
     <string-array name="bg_m3_names">
         <item>2.9 Beta</item>

@@ -44,7 +44,7 @@ public class Tracks extends Fragment {
     LinearLayout playerWindow ;
     BitmapDrawable play, pause, reset ;
 
-    Tracks () {
+    public Tracks () {
         tracksAdapter = new TracksAdapter();
     }
 
