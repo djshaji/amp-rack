@@ -556,6 +556,39 @@ public class Rack extends Fragment {
                 });
             }
 
+            Button patchUp = mainActivity.findViewById(R.id.patch_up),
+                    patchDown = mainActivity.findViewById(R.id.patch_down);
+            TextView patchName = mainActivity.findViewById(R.id.patch_name),
+                    patchNo = mainActivity.findViewById(R.id.patch_no);
+
+            patchUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int p = Integer.valueOf(String.valueOf(patchNo.getText()));
+                    p ++ ;
+                    if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
+                        return ;
+
+                    mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
+                    patchNo.setText(String.valueOf(p));
+                    patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+                }
+            });
+
+            patchDown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int p = Integer.valueOf(String.valueOf(patchNo.getText()));
+                    p -- ;
+                    if (p < 1)
+                        return ;
+
+                    mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
+                    patchNo.setText(String.valueOf(p));
+                    patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+                }
+            });
+
             if (mainActivity.skinEngine.hasKnob()) {
                 mainActivity.rotarySeekbarIn = mainActivity.findViewById(R.id.rotary_input_volume);
                 mainActivity.rotarySeekbarOut = mainActivity.findViewById(R.id.rotary_output_volume);

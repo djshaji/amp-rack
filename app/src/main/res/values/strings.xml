@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 3 Preview</string>
-    <string name="build_id">253</string>
+    <string name="build_id">289</string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>

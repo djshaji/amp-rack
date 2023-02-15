@@ -88,10 +88,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 //        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.addView(knobsLayout);
         int knobslayer = 0;
+        boolean pluginsHasKnobs = true;
         JSONObject knobsConfig = null;
         try {
             knobsConfig = mainActivity.knobsLayout.getJSONObject(String.valueOf(numControls));
         } catch (JSONException e) {
+            pluginsHasKnobs = false ;
             Log.e(TAG, "onBindViewHolder: no json config for knobs: " + numControls, e);
         }
 
@@ -335,7 +337,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
 
-            if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob()) {
+            if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob() && pluginsHasKnobs) {
                 if (! isSpinner) {
                     int row = 0, knobType = 3, knobPos = i ;
 
