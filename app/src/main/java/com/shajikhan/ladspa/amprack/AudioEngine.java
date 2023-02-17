@@ -43,6 +43,7 @@ public class AudioEngine {
     static native int movePluginDown (int plugin) ;
 
     static native boolean togglePlugin (int plugin, boolean state) ;
+    static native void bypass (boolean state) ;
 
     static native void setExportFormat (int format);
 

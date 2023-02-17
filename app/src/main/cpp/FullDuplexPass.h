@@ -49,6 +49,7 @@ public:
     int outputPorts2 [MAX_PLUGINS] ;
     int activePlugins =  0 ;
     bool recordingActive = false ;
+    bool bypass = false ;
 
     virtual oboe::DataCallbackResult
     onBothStreamsReady(
@@ -81,7 +82,8 @@ public:
         // this
         // am I devloper yet?
 //        memcpy(outputData, inputData, samplesToProcess);
-        process(inSamples, numInputSamples);
+        if (! bypass)
+            process(inSamples, numInputSamples);
         /* this is not supposed to be called directly.
          * hence the entire vringbuffer stuff
          */

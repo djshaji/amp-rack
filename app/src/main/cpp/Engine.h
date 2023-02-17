@@ -15,6 +15,7 @@ public:
     std::string LIBRARY_PATH ;
     Engine() ;
     JavaVM * vm ;
+    bool              mIsEffectOn = false;
 
     int deletePluginFromRack(int pIndex);
     void setRecordingDeviceId(int32_t deviceId);
@@ -70,7 +71,6 @@ public:
 
 
 private:
-    bool              mIsEffectOn = false;
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;

@@ -213,12 +213,9 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_deletePlugin(JNIEnv *env, jclass c
     // TODO: implement deletePlugin()
     IN
     LOGD("Deleting plugin at position %d", plugin);
-    if (engine -> mIsEffectOn)
-        engine->setEffectOn(false);
+    engine -> mFullDuplexPass.bypass = true ;
     bool res = engine->deletePluginFromRack(plugin);
-    if (engine -> mIsEffectOn)
-        engine->setEffectOn(true);
-
+    engine -> mFullDuplexPass.bypass = false ;
     OUT
     return res ;
 }
@@ -388,12 +385,9 @@ JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginDown(JNIEnv *env, jclass clazz,
                                                              jint plugin) {
     // TODO: implement movePluginDown()
-    if (engine -> mIsEffectOn)
-        engine->setEffectOn(false);
-
+    engine -> mFullDuplexPass.bypass = true ;
     int res = engine ->moveActivePluginDown(plugin);
-    if (engine -> mIsEffectOn)
-        engine->setEffectOn(true);
+    engine -> mFullDuplexPass.bypass = false ;
     return res ;
 }
 
@@ -401,12 +395,9 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginUp(JNIEnv *env, jclass clazz, jint plugin) {
     // TODO: implement movePluginUp()
-    if (engine -> mIsEffectOn)
-        engine->setEffectOn(false);
-
+    engine -> mFullDuplexPass.bypass = true ;
     int res = engine ->moveActivePluginUp(plugin);
-    if (engine -> mIsEffectOn)
-        engine->setEffectOn(true);
+    engine -> mFullDuplexPass.bypass = false ;
     return res ;
 }
 extern "C"
@@ -725,4 +716,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_printActiveChain(JNIEnv *env, jcla
             LOGD("[%d] %d -> %f", i, control, *engine -> activePlugins.at(i)->pluginControls.at(control)->def);
         }
     }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_bypass(JNIEnv *env, jclass clazz, jboolean state) {
+    // TODO: implement bypass()
+    engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) :   engine -> mFullDuplexPass.bypass = state ;
 }

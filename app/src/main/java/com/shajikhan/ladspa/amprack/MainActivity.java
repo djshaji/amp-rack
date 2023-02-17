@@ -1638,6 +1638,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     void loadPreset(String preset) {
         // forgot to add this. that this was forgotten was very difficult to guess
+        AudioEngine.bypass(true);
         AudioEngine.clearActiveQueue();
 
         Log.d(TAG, "loadPreset: " + preset);
@@ -1647,6 +1648,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e(TAG, "loadPreset: Unable to load preset\n" + preset, e);
+            AudioEngine.bypass(false);
             return;
         }
 
@@ -1720,6 +1722,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             plugin++;
         }
 
+        AudioEngine.bypass(false);
     }
 
     private boolean LoadFragment(Fragment fragment) {
