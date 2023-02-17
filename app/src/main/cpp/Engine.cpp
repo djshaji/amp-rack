@@ -462,7 +462,7 @@ int Engine :: moveActivePluginUp (int _p) {
     }
 
     auto it = activePlugins.begin() + _p;
-    std::rotate(it, it - 1, activePlugins.end());
+    std::rotate(it - 1,  it, activePlugins.end());
     buildPluginChain();
     OUT
     return _p - 1 ;

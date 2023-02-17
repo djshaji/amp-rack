@@ -590,10 +590,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         notifyItemMoved(index, index - 1);
+        AudioEngine.movePluginUp(index);
+
     }
 
     void moveItemDown (int index) {
-        if (index == getItemCount()) {
+        if (index >= getItemCount() - 1) {
             Toast.makeText(context,
                     "Plugin is already at the end",
                     Toast.LENGTH_LONG)
@@ -602,6 +604,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         notifyItemMoved(index, index + 1);
+        AudioEngine.movePluginDown(index);
     }
 
     void reset () {

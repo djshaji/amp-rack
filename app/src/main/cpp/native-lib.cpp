@@ -213,8 +213,14 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_deletePlugin(JNIEnv *env, jclass c
     // TODO: implement deletePlugin()
     IN
     LOGD("Deleting plugin at position %d", plugin);
+    if (engine -> mIsEffectOn)
+        engine->setEffectOn(false);
+    bool res = engine->deletePluginFromRack(plugin);
+    if (engine -> mIsEffectOn)
+        engine->setEffectOn(true);
+
     OUT
-    return engine->deletePluginFromRack(plugin);
+    return res ;
 }
 
 extern "C"
@@ -382,14 +388,26 @@ JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginDown(JNIEnv *env, jclass clazz,
                                                              jint plugin) {
     // TODO: implement movePluginDown()
-    return engine ->moveActivePluginDown(plugin);
+    if (engine -> mIsEffectOn)
+        engine->setEffectOn(false);
+
+    int res = engine ->moveActivePluginDown(plugin);
+    if (engine -> mIsEffectOn)
+        engine->setEffectOn(true);
+    return res ;
 }
 
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_movePluginUp(JNIEnv *env, jclass clazz, jint plugin) {
     // TODO: implement movePluginUp()
-    return engine->moveActivePluginUp(plugin);
+    if (engine -> mIsEffectOn)
+        engine->setEffectOn(false);
+
+    int res = engine ->moveActivePluginUp(plugin);
+    if (engine -> mIsEffectOn)
+        engine->setEffectOn(true);
+    return res ;
 }
 extern "C"
 JNIEXPORT void JNICALL
@@ -693,4 +711,18 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleMixer(JNIEnv *env, jclass cl
     if (engine == NULL) return ;
     engine->mFullDuplexPass.meterEnabled = toggle ;
     LOGD("setting mixer to %d", toggle);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_printActiveChain(JNIEnv *env, jclass clazz) {
+    // TODO: implement printActiveChain()
+    IN
+    if (engine == NULL) return ;
+
+    for (int i = 0 ; i < engine -> activePlugins.size() ; i ++) {
+        LOGE("---------| %d / %d|----------", i, engine->activePlugins.size());
+        for (int control = 0 ; control < engine -> activePlugins.at(i)->pluginControls.size() ; control ++) {
+            LOGD("[%d] %d -> %f", i, control, *engine -> activePlugins.at(i)->pluginControls.at(control)->def);
+        }
+    }
 }

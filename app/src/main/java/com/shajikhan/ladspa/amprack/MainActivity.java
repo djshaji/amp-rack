@@ -221,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "printActivePreset");
         hashCommands.add(this, "proDialog");
         hashCommands.add(this, "testLV2");
+        hashCommands.add(this, "printDebugLog");
+        hashCommands.add(this, "printActiveChain");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -1826,9 +1828,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    void printDebugLog() {
+    public static void printDebugLog() {
         AudioEngine.debugInfo();
 
+    }
+
+    public static void printActiveChain () {
+        AudioEngine.printActiveChain();
     }
 
     private void createNotificationChannel() {
