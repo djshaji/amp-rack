@@ -35,6 +35,10 @@ public class MyPresets extends Fragment {
     boolean shared = false;
     boolean quick = false ;
 
+    public MyPresets () {
+
+    }
+
     MyPresets (ProgressBar _progressBar) {
         progressBar = _progressBar;
     }

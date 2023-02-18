@@ -525,6 +525,14 @@ public class Rack extends Fragment {
         TextView patchName = mainActivity.findViewById(R.id.patch_name),
                 patchNo = mainActivity.findViewById(R.id.patch_no);
 
+        patchName.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (patchName.getText().equals("Tap to load"))
+                    patchDown.performClick();
+                return false;
+            }
+        });
         patchUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -556,8 +564,8 @@ public class Rack extends Fragment {
 
                 int p = Integer.valueOf(String.valueOf(patchNo.getText()));
                 p -- ;
-                if (p < 1)
-                    return ;
+                if (p < 0)
+                    p = 0 ;
 
                 mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
                 patchNo.setText(String.valueOf(p));

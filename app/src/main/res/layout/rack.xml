@@ -148,7 +148,7 @@
                     android:textSize="15dp"
                     android:layout_weight="1"
                     android:id="@+id/patch_name"
-                    android:text="Tap to change"/>
+                    android:text="Tap to load"/>
 
                 <Button
                     android:id="@+id/patch_down"
