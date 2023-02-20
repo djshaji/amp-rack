@@ -51,6 +51,10 @@ public class MyPresets extends Fragment {
         quick = _quick;
     }
 
+    void load () {
+        db.getFavorites(myPresetsAdapter, shared, quick);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -1078,6 +1078,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onStart: " + String.format(
                 "bootFinish: %d", bootFinish
         ));
+
+        // when savedInstanceState is not null
+        if (quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
+            Log.d(TAG, "onViewCreated: loading quick patch manually");
+            quickPatch.load();
+        }
+
+
     }
 
     @Override
