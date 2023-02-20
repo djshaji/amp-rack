@@ -30,6 +30,8 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firestore.v1.WriteResult;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -129,9 +131,18 @@ public class FirestoreDB {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         Map preset = (Map) document.getData();
-                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
+//                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
+                        Log.d(TAG, "onComplete: " + String.format(
+                                "preset: %s",
+                                preset.toString()
+                        ));
                         if (preset.get("uid") .equals(uid) && shared == true)
                             continue;
+
+                        if (shared && preset.get("controls").toString().equals("{}")) {
+                            Log.d(TAG, "onComplete: skipping empty preset " + preset.get("name"));
+                            continue;
+                        }
                         preset.put("path", document.getReference().getPath());
                         presetsAdapter.addPreset(preset);
                     }

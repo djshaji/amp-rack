@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     AlertDialog pluginDialog;
     ImageView pluginDialogWallpaper;
     AudioManager audioManager;
+    long bootFinish = 0 ;
     static public JSONObject pluginCategories;
     public Spinner pluginDialogCategorySpinner;
     AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput;
@@ -213,6 +214,45 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+
+        if (savedInstanceState != null) {
+            // to remove duplicate fragments
+            List<Fragment> al = getSupportFragmentManager().getFragments();
+            if (al == null) {
+                // code that handles no existing fragments
+                Log.d(TAG, "onCreate: no existing fragments");
+//                return;
+            } else {
+                for (Fragment frag : al) {
+                    // To save any of the fragments, add this check.
+                    // A tag can be added as a third parameter to the fragment when you commit it
+                    if (frag == null) {
+                        continue;
+                    }
+
+                    switch (frag.getTag()) {
+                        case "qp":
+                            quickPatch = (MyPresets) frag;
+                            break;
+                        case "rack":
+                            rack = (Rack) frag;
+                            break ;
+                        case "presets":
+                            presets = (Presets) frag;
+                            break;
+                        case "tracks":
+                            tracks = (Tracks) frag;
+                            break ;
+                        case "drums":
+                            drums = (Tracks) frag;
+                            break;
+                        default:
+                    }
+                    Log.d(TAG, "onCreate: " + frag);
+//                getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                }
+            }
+        }
 
         Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
         hashCommands = new HashCommands(this);
@@ -392,32 +432,36 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // load included plugins
         loadPlugins();
 
-        rack = new Rack();
-        Log.d(TAG, "onCreate: creating tracks UI");
-        tracks = new Tracks();
-        drums = new Tracks();
-        presets = new Presets();
-        quickPatch = new MyPresets(false, true);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, quickPatch, null)
-                .commit();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, rack, null)
-                .commit();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, presets, null)
-                .commit();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, tracks, null)
-                .commit();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, drums, null)
-                .commit();
+        if (savedInstanceState == null) {
+            Log.d(TAG, "onCreate: savedInstanceState is not null");
+
+            rack = new Rack();
+            tracks = new Tracks();
+            drums = new Tracks();
+            presets = new Presets();
+            quickPatch = new MyPresets(false, true);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, quickPatch, "qp")
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, rack, "rack")
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, presets, "presets")
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, tracks, "tracks")
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, drums, "drums")
+                    .commit();
+        }
 
 //        LoadFragment(presets);
 //        LoadFragment(rack);
@@ -639,12 +683,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onCreate: Loading JSON");
         rdf = loadJSONFromAsset("plugins_info.json");
 
-        defaultSharedPreferences.edit().putLong("bootFinish", System.currentTimeMillis()).commit();
+        bootFinish = System.currentTimeMillis();
+        defaultSharedPreferences.edit().putLong("bootFinish", bootFinish).commit();
         if (safeMode) {
             toast("Safe mode was enabled because the app did not load successfully. Some features may be disabled.");
         }
 
-        Log.d(TAG, "onCreate: boot complete, we are now live.");
+        Log.d(TAG, "onCreate: boot complete, we are now live bootFinish: [" + bootFinish + "]");
     }
 
     void showMediaPlayerDialog() {
@@ -1030,6 +1075,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onStart() {
         super.onStart();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        Log.d(TAG, "onStart: " + String.format(
+                "bootFinish: %d", bootFinish
+        ));
     }
 
     @Override
