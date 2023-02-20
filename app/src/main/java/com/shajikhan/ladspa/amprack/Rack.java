@@ -599,7 +599,7 @@ public class Rack extends Fragment {
 
             mainActivity.skinEngine.slider(mainActivity.inputVolume);
             mainActivity.skinEngine.slider(mainActivity.outputVolume);
-//            mainActivity.skinEngine.card (mixer);
+            mainActivity.skinEngine.card (mixer);
 
             if (mixer.getVisibility() == View.VISIBLE) {
                 mixerInit = true ;

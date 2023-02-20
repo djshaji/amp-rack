@@ -67,7 +67,9 @@
         "play": "play.png",
         "pause": "pause.png",
         "media": "play_small.png",
-        "reset": "loop.png"
+        "reset": "loop.png",
+        "mixer-on": "mixer_on.png",
+        "mixer-off": "mixer_off.png"
     },
 
     "knobs": {
