@@ -433,4 +433,5 @@
         Default background photo by Giancarlo Duarte
         https://unsplash.com/photos/cTj8vbZeX44
     </string>
+    <string name="title_activity_delete_account">DeleteAccount</string>
 </resources>

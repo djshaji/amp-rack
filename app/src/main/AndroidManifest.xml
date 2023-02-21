@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySplash">
         <activity
+            android:name=".DeleteAccount"
+            android:exported="false"
+            android:label="@string/title_activity_delete_account"
+            android:theme="@style/Theme.MySplash" />
+        <activity
             android:name=".Files"
             android:exported="false"
             android:label="@string/title_activity_files"
@@ -65,16 +70,16 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.shajikhan.ladspa.amprack.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
     </application>
 
 </manifest>

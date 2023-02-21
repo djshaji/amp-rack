@@ -1,0 +1,1178 @@
+{
+  "Red.Pink": [
+    "#D32F2F",
+    "#C2185B"
+  ],
+  "Red.Purple": [
+    "#D32F2F",
+    "#7B1FA2"
+  ],
+  "Red.DeepPurple": [
+    "#D32F2F",
+    "#512DA8"
+  ],
+  "Red.Indigo": [
+    "#D32F2F",
+    "#303F9F"
+  ],
+  "Red.Blue": [
+    "#D32F2F",
+    "#1976D2"
+  ],
+  "Red.LightBlue": [
+    "#D32F2F",
+    "#0288D1"
+  ],
+  "Red.Cyan": [
+    "#D32F2F",
+    "#0097A7"
+  ],
+  "Red.Teal": [
+    "#D32F2F",
+    "#00796B"
+  ],
+  "Red.Green": [
+    "#D32F2F",
+    "#388E3C"
+  ],
+  "Red.LightGreen": [
+    "#D32F2F",
+    "#689F38"
+  ],
+  "Red.Lime": [
+    "#D32F2F",
+    "#AFB42B"
+  ],
+  "Red.Yellow": [
+    "#D32F2F",
+    "#FBC02D"
+  ],
+  "Red.Orange": [
+    "#D32F2F",
+    "#F57C00"
+  ],
+  "Red.DeepOrange": [
+    "#D32F2F",
+    "#E64A19"
+  ],
+  "Red.Brown": [
+    "#D32F2F",
+    "#5D4037"
+  ],
+  "Red.Gray": [
+    "#D32F2F",
+    "#616161"
+  ],
+  "Red.BlueGray": [
+    "#D32F2F",
+    "#455A64"
+  ],
+  "Pink.Red": [
+    "#C2185B",
+    "#D32F2F"
+  ],
+  "Pink.Purple": [
+    "#C2185B",
+    "#7B1FA2"
+  ],
+  "Pink.DeepPurple": [
+    "#C2185B",
+    "#512DA8"
+  ],
+  "Pink.Indigo": [
+    "#C2185B",
+    "#303F9F"
+  ],
+  "Pink.Blue": [
+    "#C2185B",
+    "#1976D2"
+  ],
+  "Pink.LightBlue": [
+    "#C2185B",
+    "#0288D1"
+  ],
+  "Pink.Cyan": [
+    "#C2185B",
+    "#0097A7"
+  ],
+  "Pink.Teal": [
+    "#C2185B",
+    "#00796B"
+  ],
+  "Pink.Green": [
+    "#C2185B",
+    "#388E3C"
+  ],
+  "Pink.LightGreen": [
+    "#C2185B",
+    "#689F38"
+  ],
+  "Pink.Lime": [
+    "#C2185B",
+    "#AFB42B"
+  ],
+  "Pink.Yellow": [
+    "#C2185B",
+    "#FBC02D"
+  ],
+  "Pink.Orange": [
+    "#C2185B",
+    "#F57C00"
+  ],
+  "Pink.DeepOrange": [
+    "#C2185B",
+    "#E64A19"
+  ],
+  "Pink.Brown": [
+    "#C2185B",
+    "#5D4037"
+  ],
+  "Pink.Gray": [
+    "#C2185B",
+    "#616161"
+  ],
+  "Pink.BlueGray": [
+    "#C2185B",
+    "#455A64"
+  ],
+  "Purple.Red": [
+    "#7B1FA2",
+    "#D32F2F"
+  ],
+  "Purple.Pink": [
+    "#7B1FA2",
+    "#C2185B"
+  ],
+  "Purple.Indigo": [
+    "#7B1FA2",
+    "#303F9F"
+  ],
+  "Purple.Blue": [
+    "#7B1FA2",
+    "#1976D2"
+  ],
+  "Purple.LightBlue": [
+    "#7B1FA2",
+    "#0288D1"
+  ],
+  "Purple.Cyan": [
+    "#7B1FA2",
+    "#0097A7"
+  ],
+  "Purple.Teal": [
+    "#7B1FA2",
+    "#00796B"
+  ],
+  "Purple.Green": [
+    "#7B1FA2",
+    "#388E3C"
+  ],
+  "Purple.LightGreen": [
+    "#7B1FA2",
+    "#689F38"
+  ],
+  "Purple.Lime": [
+    "#7B1FA2",
+    "#AFB42B"
+  ],
+  "Purple.Yellow": [
+    "#7B1FA2",
+    "#FBC02D"
+  ],
+  "Purple.Orange": [
+    "#7B1FA2",
+    "#F57C00"
+  ],
+  "Purple.DeepOrange": [
+    "#7B1FA2",
+    "#E64A19"
+  ],
+  "Purple.Brown": [
+    "#7B1FA2",
+    "#5D4037"
+  ],
+  "Purple.Gray": [
+    "#7B1FA2",
+    "#616161"
+  ],
+  "Purple.BlueGray": [
+    "#7B1FA2",
+    "#455A64"
+  ],
+  "DeepPurple.Red": [
+    "#512DA8",
+    "#D32F2F"
+  ],
+  "DeepPurple.Pink": [
+    "#512DA8",
+    "#C2185B"
+  ],
+  "DeepPurple.Indigo": [
+    "#512DA8",
+    "#303F9F"
+  ],
+  "DeepPurple.Blue": [
+    "#512DA8",
+    "#1976D2"
+  ],
+  "DeepPurple.LightBlue": [
+    "#512DA8",
+    "#0288D1"
+  ],
+  "DeepPurple.Cyan": [
+    "#512DA8",
+    "#0097A7"
+  ],
+  "DeepPurple.Teal": [
+    "#512DA8",
+    "#00796B"
+  ],
+  "DeepPurple.Green": [
+    "#512DA8",
+    "#388E3C"
+  ],
+  "DeepPurple.LightGreen": [
+    "#512DA8",
+    "#689F38"
+  ],
+  "DeepPurple.Lime": [
+    "#512DA8",
+    "#AFB42B"
+  ],
+  "DeepPurple.Yellow": [
+    "#512DA8",
+    "#FBC02D"
+  ],
+  "DeepPurple.Orange": [
+    "#512DA8",
+    "#F57C00"
+  ],
+  "DeepPurple.DeepOrange": [
+    "#512DA8",
+    "#E64A19"
+  ],
+  "DeepPurple.Brown": [
+    "#512DA8",
+    "#5D4037"
+  ],
+  "DeepPurple.Gray": [
+    "#512DA8",
+    "#616161"
+  ],
+  "DeepPurple.BlueGray": [
+    "#512DA8",
+    "#455A64"
+  ],
+  "Indigo.Red": [
+    "#303F9F",
+    "#D32F2F"
+  ],
+  "Indigo.Pink": [
+    "#303F9F",
+    "#C2185B"
+  ],
+  "Indigo.Purple": [
+    "#303F9F",
+    "#7B1FA2"
+  ],
+  "Indigo.DeepPurple": [
+    "#303F9F",
+    "#512DA8"
+  ],
+  "Indigo.Blue": [
+    "#303F9F",
+    "#1976D2"
+  ],
+  "Indigo.LightBlue": [
+    "#303F9F",
+    "#0288D1"
+  ],
+  "Indigo.Cyan": [
+    "#303F9F",
+    "#0097A7"
+  ],
+  "Indigo.Teal": [
+    "#303F9F",
+    "#00796B"
+  ],
+  "Indigo.Green": [
+    "#303F9F",
+    "#388E3C"
+  ],
+  "Indigo.LightGreen": [
+    "#303F9F",
+    "#689F38"
+  ],
+  "Indigo.Lime": [
+    "#303F9F",
+    "#AFB42B"
+  ],
+  "Indigo.Yellow": [
+    "#303F9F",
+    "#FBC02D"
+  ],
+  "Indigo.Orange": [
+    "#303F9F",
+    "#F57C00"
+  ],
+  "Indigo.DeepOrange": [
+    "#303F9F",
+    "#E64A19"
+  ],
+  "Indigo.Brown": [
+    "#303F9F",
+    "#5D4037"
+  ],
+  "Indigo.Gray": [
+    "#303F9F",
+    "#616161"
+  ],
+  "Indigo.BlueGray": [
+    "#303F9F",
+    "#455A64"
+  ],
+  "Blue.Red": [
+    "#1976D2",
+    "#D32F2F"
+  ],
+  "Blue.Pink": [
+    "#1976D2",
+    "#C2185B"
+  ],
+  "Blue.Purple": [
+    "#1976D2",
+    "#7B1FA2"
+  ],
+  "Blue.DeepPurple": [
+    "#1976D2",
+    "#512DA8"
+  ],
+  "Blue.Indigo": [
+    "#1976D2",
+    "#303F9F"
+  ],
+  "Blue.Cyan": [
+    "#1976D2",
+    "#0097A7"
+  ],
+  "Blue.Teal": [
+    "#1976D2",
+    "#00796B"
+  ],
+  "Blue.Green": [
+    "#1976D2",
+    "#388E3C"
+  ],
+  "Blue.LightGreen": [
+    "#1976D2",
+    "#689F38"
+  ],
+  "Blue.Lime": [
+    "#1976D2",
+    "#AFB42B"
+  ],
+  "Blue.Yellow": [
+    "#1976D2",
+    "#FBC02D"
+  ],
+  "Blue.Orange": [
+    "#1976D2",
+    "#F57C00"
+  ],
+  "Blue.DeepOrange": [
+    "#1976D2",
+    "#E64A19"
+  ],
+  "Blue.Brown": [
+    "#1976D2",
+    "#5D4037"
+  ],
+  "Blue.Gray": [
+    "#1976D2",
+    "#616161"
+  ],
+  "LightBlue.Red": [
+    "#0288D1",
+    "#D32F2F"
+  ],
+  "LightBlue.Pink": [
+    "#0288D1",
+    "#C2185B"
+  ],
+  "LightBlue.Purple": [
+    "#0288D1",
+    "#7B1FA2"
+  ],
+  "LightBlue.DeepPurple": [
+    "#0288D1",
+    "#512DA8"
+  ],
+  "LightBlue.Indigo": [
+    "#0288D1",
+    "#303F9F"
+  ],
+  "LightBlue.Cyan": [
+    "#0288D1",
+    "#0097A7"
+  ],
+  "LightBlue.Teal": [
+    "#0288D1",
+    "#00796B"
+  ],
+  "LightBlue.Green": [
+    "#0288D1",
+    "#388E3C"
+  ],
+  "LightBlue.LightGreen": [
+    "#0288D1",
+    "#689F38"
+  ],
+  "LightBlue.Lime": [
+    "#0288D1",
+    "#AFB42B"
+  ],
+  "LightBlue.Yellow": [
+    "#0288D1",
+    "#FBC02D"
+  ],
+  "LightBlue.Orange": [
+    "#0288D1",
+    "#F57C00"
+  ],
+  "LightBlue.DeepOrange": [
+    "#0288D1",
+    "#E64A19"
+  ],
+  "LightBlue.Brown": [
+    "#0288D1",
+    "#5D4037"
+  ],
+  "LightBlue.Gray": [
+    "#0288D1",
+    "#616161"
+  ],
+  "LightBlue.BlueGray": [
+    "#0288D1",
+    "#455A64"
+  ],
+  "Cyan.Red": [
+    "#0097A7",
+    "#D32F2F"
+  ],
+  "Cyan.Pink": [
+    "#0097A7",
+    "#C2185B"
+  ],
+  "Cyan.Purple": [
+    "#0097A7",
+    "#7B1FA2"
+  ],
+  "Cyan.DeepPurple": [
+    "#0097A7",
+    "#512DA8"
+  ],
+  "Cyan.Indigo": [
+    "#0097A7",
+    "#303F9F"
+  ],
+  "Cyan.Blue": [
+    "#0097A7",
+    "#1976D2"
+  ],
+  "Cyan.LightBlue": [
+    "#0097A7",
+    "#0288D1"
+  ],
+  "Cyan.Teal": [
+    "#0097A7",
+    "#00796B"
+  ],
+  "Cyan.Green": [
+    "#0097A7",
+    "#388E3C"
+  ],
+  "Cyan.LightGreen": [
+    "#0097A7",
+    "#689F38"
+  ],
+  "Cyan.Lime": [
+    "#0097A7",
+    "#AFB42B"
+  ],
+  "Cyan.Yellow": [
+    "#0097A7",
+    "#FBC02D"
+  ],
+  "Cyan.Orange": [
+    "#0097A7",
+    "#F57C00"
+  ],
+  "Cyan.DeepOrange": [
+    "#0097A7",
+    "#E64A19"
+  ],
+  "Cyan.Brown": [
+    "#0097A7",
+    "#5D4037"
+  ],
+  "Cyan.Gray": [
+    "#0097A7",
+    "#616161"
+  ],
+  "Cyan.BlueGray": [
+    "#0097A7",
+    "#455A64"
+  ],
+  "Teal.Red": [
+    "#00796B",
+    "#D32F2F"
+  ],
+  "Teal.Pink": [
+    "#00796B",
+    "#C2185B"
+  ],
+  "Teal.Purple": [
+    "#00796B",
+    "#7B1FA2"
+  ],
+  "Teal.DeepPurple": [
+    "#00796B",
+    "#512DA8"
+  ],
+  "Teal.Indigo": [
+    "#00796B",
+    "#303F9F"
+  ],
+  "Teal.Blue": [
+    "#00796B",
+    "#1976D2"
+  ],
+  "Teal.LightBlue": [
+    "#00796B",
+    "#0288D1"
+  ],
+  "Teal.Cyan": [
+    "#00796B",
+    "#0097A7"
+  ],
+  "Teal.Green": [
+    "#00796B",
+    "#388E3C"
+  ],
+  "Teal.LightGreen": [
+    "#00796B",
+    "#689F38"
+  ],
+  "Teal.Lime": [
+    "#00796B",
+    "#AFB42B"
+  ],
+  "Teal.Yellow": [
+    "#00796B",
+    "#FBC02D"
+  ],
+  "Teal.Orange": [
+    "#00796B",
+    "#F57C00"
+  ],
+  "Teal.DeepOrange": [
+    "#00796B",
+    "#E64A19"
+  ],
+  "Teal.Brown": [
+    "#00796B",
+    "#5D4037"
+  ],
+  "Teal.Gray": [
+    "#00796B",
+    "#616161"
+  ],
+  "Teal.BlueGray": [
+    "#00796B",
+    "#455A64"
+  ],
+  "Green.Red": [
+    "#388E3C",
+    "#D32F2F"
+  ],
+  "Green.Pink": [
+    "#388E3C",
+    "#C2185B"
+  ],
+  "Green.Purple": [
+    "#388E3C",
+    "#7B1FA2"
+  ],
+  "Green.DeepPurple": [
+    "#388E3C",
+    "#512DA8"
+  ],
+  "Green.Indigo": [
+    "#388E3C",
+    "#303F9F"
+  ],
+  "Green.Blue": [
+    "#388E3C",
+    "#1976D2"
+  ],
+  "Green.LightBlue": [
+    "#388E3C",
+    "#0288D1"
+  ],
+  "Green.Cyan": [
+    "#388E3C",
+    "#0097A7"
+  ],
+  "Green.Teal": [
+    "#388E3C",
+    "#00796B"
+  ],
+  "Green.Lime": [
+    "#388E3C",
+    "#AFB42B"
+  ],
+  "Green.Yellow": [
+    "#388E3C",
+    "#FBC02D"
+  ],
+  "Green.Orange": [
+    "#388E3C",
+    "#F57C00"
+  ],
+  "Green.DeepOrange": [
+    "#388E3C",
+    "#E64A19"
+  ],
+  "Green.Brown": [
+    "#388E3C",
+    "#5D4037"
+  ],
+  "Green.Gray": [
+    "#388E3C",
+    "#616161"
+  ],
+  "Green.BlueGray": [
+    "#388E3C",
+    "#455A64"
+  ],
+  "LightGreen.Red": [
+    "#689F38",
+    "#D32F2F"
+  ],
+  "LightGreen.Pink": [
+    "#689F38",
+    "#C2185B"
+  ],
+  "LightGreen.Purple": [
+    "#689F38",
+    "#7B1FA2"
+  ],
+  "LightGreen.DeepPurple": [
+    "#689F38",
+    "#512DA8"
+  ],
+  "LightGreen.Indigo": [
+    "#689F38",
+    "#303F9F"
+  ],
+  "LightGreen.Blue": [
+    "#689F38",
+    "#1976D2"
+  ],
+  "LightGreen.LightBlue": [
+    "#689F38",
+    "#0288D1"
+  ],
+  "LightGreen.Cyan": [
+    "#689F38",
+    "#0097A7"
+  ],
+  "LightGreen.Teal": [
+    "#689F38",
+    "#00796B"
+  ],
+  "LightGreen.Lime": [
+    "#689F38",
+    "#AFB42B"
+  ],
+  "LightGreen.Yellow": [
+    "#689F38",
+    "#FBC02D"
+  ],
+  "LightGreen.Orange": [
+    "#689F38",
+    "#F57C00"
+  ],
+  "LightGreen.DeepOrange": [
+    "#689F38",
+    "#E64A19"
+  ],
+  "LightGreen.Brown": [
+    "#689F38",
+    "#5D4037"
+  ],
+  "LightGreen.Gray": [
+    "#689F38",
+    "#616161"
+  ],
+  "LightGreen.BlueGray": [
+    "#689F38",
+    "#455A64"
+  ],
+  "Lime.Red": [
+    "#AFB42B",
+    "#D32F2F"
+  ],
+  "Lime.Pink": [
+    "#AFB42B",
+    "#C2185B"
+  ],
+  "Lime.Purple": [
+    "#AFB42B",
+    "#7B1FA2"
+  ],
+  "Lime.DeepPurple": [
+    "#AFB42B",
+    "#512DA8"
+  ],
+  "Lime.Indigo": [
+    "#AFB42B",
+    "#303F9F"
+  ],
+  "Lime.Blue": [
+    "#AFB42B",
+    "#1976D2"
+  ],
+  "Lime.LightBlue": [
+    "#AFB42B",
+    "#0288D1"
+  ],
+  "Lime.Cyan": [
+    "#AFB42B",
+    "#0097A7"
+  ],
+  "Lime.Teal": [
+    "#AFB42B",
+    "#00796B"
+  ],
+  "Lime.Green": [
+    "#AFB42B",
+    "#388E3C"
+  ],
+  "Lime.LightGreen": [
+    "#AFB42B",
+    "#689F38"
+  ],
+  "Lime.Yellow": [
+    "#AFB42B",
+    "#FBC02D"
+  ],
+  "Lime.Orange": [
+    "#AFB42B",
+    "#F57C00"
+  ],
+  "Lime.DeepOrange": [
+    "#AFB42B",
+    "#E64A19"
+  ],
+  "Lime.Brown": [
+    "#AFB42B",
+    "#5D4037"
+  ],
+  "Lime.Gray": [
+    "#AFB42B",
+    "#616161"
+  ],
+  "Lime.BlueGray": [
+    "#AFB42B",
+    "#455A64"
+  ],
+  "Yellow.Red": [
+    "#FBC02D",
+    "#D32F2F"
+  ],
+  "Yellow.Pink": [
+    "#FBC02D",
+    "#C2185B"
+  ],
+  "Yellow.Purple": [
+    "#FBC02D",
+    "#7B1FA2"
+  ],
+  "Yellow.DeepPurple": [
+    "#FBC02D",
+    "#512DA8"
+  ],
+  "Yellow.Indigo": [
+    "#FBC02D",
+    "#303F9F"
+  ],
+  "Yellow.Blue": [
+    "#FBC02D",
+    "#1976D2"
+  ],
+  "Yellow.LightBlue": [
+    "#FBC02D",
+    "#0288D1"
+  ],
+  "Yellow.Cyan": [
+    "#FBC02D",
+    "#0097A7"
+  ],
+  "Yellow.Teal": [
+    "#FBC02D",
+    "#00796B"
+  ],
+  "Yellow.Green": [
+    "#FBC02D",
+    "#388E3C"
+  ],
+  "Yellow.LightGreen": [
+    "#FBC02D",
+    "#689F38"
+  ],
+  "Yellow.Lime": [
+    "#FBC02D",
+    "#AFB42B"
+  ],
+  "Yellow.Orange": [
+    "#FBC02D",
+    "#F57C00"
+  ],
+  "Yellow.DeepOrange": [
+    "#FBC02D",
+    "#E64A19"
+  ],
+  "Yellow.Brown": [
+    "#FBC02D",
+    "#5D4037"
+  ],
+  "Yellow.Gray": [
+    "#FBC02D",
+    "#616161"
+  ],
+  "Yellow.BlueGray": [
+    "#FBC02D",
+    "#455A64"
+  ],
+  "Orange.Red": [
+    "#F57C00",
+    "#D32F2F"
+  ],
+  "Orange.Pink": [
+    "#F57C00",
+    "#C2185B"
+  ],
+  "Orange.Purple": [
+    "#F57C00",
+    "#7B1FA2"
+  ],
+  "Orange.DeepPurple": [
+    "#F57C00",
+    "#512DA8"
+  ],
+  "Orange.Indigo": [
+    "#F57C00",
+    "#303F9F"
+  ],
+  "Orange.Blue": [
+    "#F57C00",
+    "#1976D2"
+  ],
+  "Orange.LightBlue": [
+    "#F57C00",
+    "#0288D1"
+  ],
+  "Orange.Cyan": [
+    "#F57C00",
+    "#0097A7"
+  ],
+  "Orange.Teal": [
+    "#F57C00",
+    "#00796B"
+  ],
+  "Orange.Green": [
+    "#F57C00",
+    "#388E3C"
+  ],
+  "Orange.LightGreen": [
+    "#F57C00",
+    "#689F38"
+  ],
+  "Orange.Lime": [
+    "#F57C00",
+    "#AFB42B"
+  ],
+  "Orange.Yellow": [
+    "#F57C00",
+    "#FBC02D"
+  ],
+  "Orange.Brown": [
+    "#F57C00",
+    "#5D4037"
+  ],
+  "Orange.Gray": [
+    "#F57C00",
+    "#616161"
+  ],
+  "Orange.BlueGray": [
+    "#F57C00",
+    "#455A64"
+  ],
+  "DeepOrange.Red": [
+    "#E64A19",
+    "#D32F2F"
+  ],
+  "DeepOrange.Pink": [
+    "#E64A19",
+    "#C2185B"
+  ],
+  "DeepOrange.Purple": [
+    "#E64A19",
+    "#7B1FA2"
+  ],
+  "DeepOrange.DeepPurple": [
+    "#E64A19",
+    "#512DA8"
+  ],
+  "DeepOrange.Indigo": [
+    "#E64A19",
+    "#303F9F"
+  ],
+  "DeepOrange.Blue": [
+    "#E64A19",
+    "#1976D2"
+  ],
+  "DeepOrange.LightBlue": [
+    "#E64A19",
+    "#0288D1"
+  ],
+  "DeepOrange.Cyan": [
+    "#E64A19",
+    "#0097A7"
+  ],
+  "DeepOrange.Teal": [
+    "#E64A19",
+    "#00796B"
+  ],
+  "DeepOrange.Green": [
+    "#E64A19",
+    "#388E3C"
+  ],
+  "DeepOrange.LightGreen": [
+    "#E64A19",
+    "#689F38"
+  ],
+  "DeepOrange.Lime": [
+    "#E64A19",
+    "#AFB42B"
+  ],
+  "DeepOrange.Yellow": [
+    "#E64A19",
+    "#FBC02D"
+  ],
+  "DeepOrange.Brown": [
+    "#E64A19",
+    "#5D4037"
+  ],
+  "DeepOrange.Gray": [
+    "#E64A19",
+    "#616161"
+  ],
+  "DeepOrange.BlueGray": [
+    "#E64A19",
+    "#455A64"
+  ],
+  "Brown.Red": [
+    "#5D4037",
+    "#D32F2F"
+  ],
+  "Brown.Pink": [
+    "#5D4037",
+    "#C2185B"
+  ],
+  "Brown.Purple": [
+    "#5D4037",
+    "#7B1FA2"
+  ],
+  "Brown.DeepPurple": [
+    "#5D4037",
+    "#512DA8"
+  ],
+  "Brown.Indigo": [
+    "#5D4037",
+    "#303F9F"
+  ],
+  "Brown.Blue": [
+    "#5D4037",
+    "#1976D2"
+  ],
+  "Brown.LightBlue": [
+    "#5D4037",
+    "#0288D1"
+  ],
+  "Brown.Cyan": [
+    "#5D4037",
+    "#0097A7"
+  ],
+  "Brown.Teal": [
+    "#5D4037",
+    "#00796B"
+  ],
+  "Brown.Green": [
+    "#5D4037",
+    "#388E3C"
+  ],
+  "Brown.LightGreen": [
+    "#5D4037",
+    "#689F38"
+  ],
+  "Brown.Lime": [
+    "#5D4037",
+    "#AFB42B"
+  ],
+  "Brown.Yellow": [
+    "#5D4037",
+    "#FBC02D"
+  ],
+  "Brown.Orange": [
+    "#5D4037",
+    "#F57C00"
+  ],
+  "Brown.DeepOrange": [
+    "#5D4037",
+    "#E64A19"
+  ],
+  "Brown.Gray": [
+    "#5D4037",
+    "#616161"
+  ],
+  "Brown.BlueGray": [
+    "#5D4037",
+    "#455A64"
+  ],
+  "Gray.Red": [
+    "#616161",
+    "#D32F2F"
+  ],
+  "Gray.Pink": [
+    "#616161",
+    "#C2185B"
+  ],
+  "Gray.Purple": [
+    "#616161",
+    "#7B1FA2"
+  ],
+  "Gray.DeepPurple": [
+    "#616161",
+    "#512DA8"
+  ],
+  "Gray.Indigo": [
+    "#616161",
+    "#303F9F"
+  ],
+  "Gray.Blue": [
+    "#616161",
+    "#1976D2"
+  ],
+  "Gray.LightBlue": [
+    "#616161",
+    "#0288D1"
+  ],
+  "Gray.Cyan": [
+    "#616161",
+    "#0097A7"
+  ],
+  "Gray.Teal": [
+    "#616161",
+    "#00796B"
+  ],
+  "Gray.Green": [
+    "#616161",
+    "#388E3C"
+  ],
+  "Gray.LightGreen": [
+    "#616161",
+    "#689F38"
+  ],
+  "Gray.Lime": [
+    "#616161",
+    "#AFB42B"
+  ],
+  "Gray.Yellow": [
+    "#616161",
+    "#FBC02D"
+  ],
+  "Gray.Orange": [
+    "#616161",
+    "#F57C00"
+  ],
+  "Gray.DeepOrange": [
+    "#616161",
+    "#E64A19"
+  ],
+  "Gray.Brown": [
+    "#616161",
+    "#5D4037"
+  ],
+  "BlueGray.Red": [
+    "#455A64",
+    "#D32F2F"
+  ],
+  "BlueGray.Pink": [
+    "#455A64",
+    "#C2185B"
+  ],
+  "BlueGray.Purple": [
+    "#455A64",
+    "#7B1FA2"
+  ],
+  "BlueGray.DeepPurple": [
+    "#455A64",
+    "#512DA8"
+  ],
+  "BlueGray.Indigo": [
+    "#455A64",
+    "#303F9F"
+  ],
+  "BlueGray.LightBlue": [
+    "#455A64",
+    "#0288D1"
+  ],
+  "BlueGray.Cyan": [
+    "#455A64",
+    "#0097A7"
+  ],
+  "BlueGray.Teal": [
+    "#455A64",
+    "#00796B"
+  ],
+  "BlueGray.Green": [
+    "#455A64",
+    "#388E3C"
+  ],
+  "BlueGray.LightGreen": [
+    "#455A64",
+    "#689F38"
+  ],
+  "BlueGray.Lime": [
+    "#455A64",
+    "#AFB42B"
+  ],
+  "BlueGray.Yellow": [
+    "#455A64",
+    "#FBC02D"
+  ],
+  "BlueGray.Orange": [
+    "#455A64",
+    "#F57C00"
+  ],
+  "BlueGray.DeepOrange": [
+    "#455A64",
+    "#E64A19"
+  ],
+  "BlueGray.Brown": [
+    "#455A64",
+    "#5D4037"
+  ]
+}

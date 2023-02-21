@@ -10,6 +10,7 @@
 
     </PreferenceCategory>
     <PreferenceCategory
+        app:isPreferenceVisible="false"
         android:title="My Profile">
 
         <EditTextPreference
@@ -32,4 +33,17 @@
 
     </PreferenceCategory>
 
+    <Preference
+        android:title="Log out"
+        app:key="log_out"
+        app:icon="@drawable/ic_baseline_refresh_24"/>
+    <Preference
+        android:title=" "
+        android:summary="\n\n\n\n\n"/>
+
+    <Preference
+        android:title="Delete my account"
+        android:summary="Delete your account and all your associated data. This includes your presets and favorite plugins."
+        app:key="delete_account"
+        app:icon="@drawable/ic_baseline_delete_forever_24"/>
 </PreferenceScreen>

@@ -100,6 +100,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha01'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     def billing_version = "4.1.0"
@@ -125,4 +126,5 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation 'com.google.android.exoplayer:exoplayer-core:2.18.0'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 }
