@@ -1969,6 +1969,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
         String wallpaper = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", null);
         Log.d(TAG, "applyWallpaper: wallpaper: " + wallpaper);
+
         if (useTheme) {
             skinEngine.setNativeTheme();
             if (wallpaper != null) {
@@ -1977,7 +1978,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
-        context.setTheme(R.style.Theme_AmpRack);
+        String mTheme = PreferenceManager.getDefaultSharedPreferences(context).getString("color_scheme", "Theme.AmpRack") ;
+        SkinEngine.setColorScheme((MainActivity) context, mTheme);
+
         Bitmap bitmap = null;
         if (wallpaper != null) {
             try {
