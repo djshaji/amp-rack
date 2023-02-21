@@ -1586,6 +1586,17 @@ public class SkinEngine {
         setColorScheme(mainActivity, mTheme);
     }
 
+    void cardText (TextView textView) {
+        String c_ = config.get("card").get("text-color") ;
+        if (c_ == null)
+            c_ = config.get("button").get("text-color");
+        if (c_ == null)
+            return ;
+
+        int color = Color.parseColor(c_);
+        textView.setTextColor(color);
+    }
+
     void card (View layout) {
         int w = layout.getWidth(), h = layout.getHeight() ;
         Log.d(TAG, "card() called with: layout = [" + layout + "]" +

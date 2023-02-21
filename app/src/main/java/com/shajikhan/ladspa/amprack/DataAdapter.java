@@ -81,6 +81,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         String pluginName = AudioEngine.getActivePluginName(position) ;
         holder.getTextView().setText(pluginName);
+        if (mainActivity.useTheme)
+            mainActivity.skinEngine.cardText(holder.getTextView());
         int numControls = AudioEngine.getPluginControls(position);
 
         LinearLayout knobsLayout = new LinearLayout (mainActivity);
@@ -123,6 +125,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             boolean isSpinner = false ;
 
             if (mainActivity.useTheme) {
+                mainActivity.skinEngine.cardText(textView);
+
                 mainActivity.skinEngine.slider(slider);
                 holder.toggleButton.setChecked(true);
                 mainActivity.skinEngine.toggle(holder.toggleButton, true);
@@ -392,6 +396,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     RotarySeekbar rotarySeekbar = new RotarySeekbar(mainActivity);
                     TextView label = new TextView(mainActivity),
                             display = new TextView(mainActivity);
+
+                    mainActivity.skinEngine.cardText(label);
+                    mainActivity.skinEngine.cardText(display);
 
                     Typeface font = Typeface.createFromAsset(mainActivity.getAssets(), "start.ttf");
 

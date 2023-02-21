@@ -89,6 +89,11 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         name.setText(preset.get("name").toString());
         desc.setText(preset.get("desc").toString());
 
+        if (mainActivity.useTheme) {
+            mainActivity.skinEngine.cardText(name);
+            mainActivity.skinEngine.cardText(desc);
+        }
+
         MaterialButton materialButton = (MaterialButton) linearLayout1.getChildAt(1);
         materialButton.setOnClickListener(new View.OnClickListener() {
             @Override
