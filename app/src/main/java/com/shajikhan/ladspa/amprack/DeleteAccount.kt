@@ -3,7 +3,10 @@ package com.shajikhan.ladspa.amprack
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,7 +25,9 @@ class DeleteAccount : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MessageCard()
+
+
                 }
             }
         }
@@ -31,7 +36,7 @@ class DeleteAccount : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    Text(text = name)
 }
 
 @Preview(showBackground = true)
@@ -40,4 +45,14 @@ fun DefaultPreview() {
     AmpRackTheme {
         Greeting("Android")
     }
+
 }
+
+@Composable
+fun MessageCard() {
+    Column {
+        Text(text = "Delete Account", color = MaterialTheme.colorScheme.onPrimary)
+        Text("The following data will be deleted")
+    }
+}
+

@@ -434,4 +434,5 @@
         https://unsplash.com/photos/cTj8vbZeX44
     </string>
     <string name="title_activity_delete_account">DeleteAccount</string>
+    <string name="delete_warn">This action will delete the following data\n\t- Your presets\n\t-Your favorites\n\t-Associated account data</string>
 </resources>

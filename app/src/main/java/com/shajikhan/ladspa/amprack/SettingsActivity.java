@@ -1,6 +1,8 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -232,6 +234,25 @@ public class SettingsActivity extends AppCompatActivity implements
             String email = auth.getCurrentUser().getEmail();
             Preference preference = findPreference("email");
             preference.setTitle(email);
+
+            Preference deleteAccountButton = findPreference("delete_account");
+            deleteAccountButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("Are you sure you want to delete your account? This will delete your presets, favorites and all associated account data." +
+                                    "\n\nThis cannot be undone. Are you sure you want to proceed?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+
+                    return false;
+                }
+            });
         }
     }
 
