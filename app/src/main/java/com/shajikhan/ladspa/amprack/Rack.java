@@ -483,7 +483,8 @@ public class Rack extends Fragment {
                         @Override
                         public void run() {
                             Log.i(TAG, "run: theming mixer");
-                            mainActivity.skinEngine.card(mixer);
+                            if (mainActivity.useTheme)
+                                mainActivity.skinEngine.card(mixer);
 
                         }
                     });
@@ -547,6 +548,11 @@ public class Rack extends Fragment {
                 if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
                     return ;
 
+                if (mainActivity.quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
+                    MainActivity.alert("Restart the app to load patches", "Patches are not loaded. Restart the app to load patches.");
+                    return ;
+                }
+
                 mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
                 patchNo.setText(String.valueOf(p));
                 patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
@@ -566,6 +572,11 @@ public class Rack extends Fragment {
                 p -- ;
                 if (p < 0)
                     p = 0 ;
+
+                if (mainActivity.quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
+                    MainActivity.alert("Restart the app to load patches", "Patches are not loaded. Restart the app to load patches.");
+                    return ;
+                }
 
                 mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
                 patchNo.setText(String.valueOf(p));
