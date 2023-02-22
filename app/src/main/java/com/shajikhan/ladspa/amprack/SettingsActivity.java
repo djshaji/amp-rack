@@ -23,6 +23,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -228,14 +230,34 @@ public class SettingsActivity extends AppCompatActivity implements
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.account_pref, rootKey);
             FirebaseAuth auth = FirebaseAuth.getInstance() ;
-            if (auth == null || auth.getUid() == null)
+            Preference logOut = findPreference("log_out");
+            Preference details = findPreference("delete_account");
+            logOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken("983863263684-6ggjm8spjvvftm5noqtpl97v0le5laft.apps.googleusercontent.com")
+                            .requestEmail()
+                            .build();
+
+                    GoogleSignIn.getClient(getContext(), gso).signOut();
+                    auth.signOut();
+                    MainActivity.alert("Logged out", "You have been logged out");
+                    return false;
+                }
+            });
+            Preference deleteAccountButton = findPreference("delete_account");
+            if (auth == null || auth.getUid() == null) {
+                deleteAccountButton.setVisible(false);
+                logOut.setVisible(false);
+                details.setVisible(false);
                 return;
+            }
 
             String email = auth.getCurrentUser().getEmail();
             Preference preference = findPreference("email");
             preference.setTitle(email);
 
-            Preference deleteAccountButton = findPreference("delete_account");
             deleteAccountButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {

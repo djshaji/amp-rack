@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:title="Logged in as">
         <Preference
-            android:title="email@provider.com"
+            android:title="No user logged in"
             android:key="email"/>
 
     </PreferenceCategory>
