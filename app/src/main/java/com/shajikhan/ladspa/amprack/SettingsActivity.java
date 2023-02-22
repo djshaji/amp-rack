@@ -242,12 +242,13 @@ public class SettingsActivity extends AppCompatActivity implements
                     new AlertDialog.Builder(getContext())
                             .setMessage("Are you sure you want to delete your account? This will delete your presets, favorites and all associated account data." +
                                     "\n\nThis cannot be undone. Are you sure you want to proceed?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Delete my account", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-
+                                    Intent myIntent = new Intent(getContext(), DeleteData.class);
+                                    startActivity(myIntent);
                                 }
                             })
-                            .setNegativeButton("No", null)
+                            .setNegativeButton("Cancel", null)
                             .show();
 
                     return false;
