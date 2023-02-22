@@ -1091,6 +1091,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
+//        SkinEngine.setColorScheme(this, defaultSharedPreferences.getString("color_scheme", "AmpRack"));
         applyWallpaper(context, getWindow(), getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
 //        recreate();
         Log.d(TAG, "lifecycle: resumed");
@@ -1979,6 +1980,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         String mTheme = PreferenceManager.getDefaultSharedPreferences(context).getString("color_scheme", "Theme.AmpRack") ;
+        Log.d(TAG, "applyWallpaper: setting native theme " + mTheme);
         SkinEngine.setColorScheme((MainActivity) context, mTheme);
 
         Bitmap bitmap = null;

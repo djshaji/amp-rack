@@ -221,6 +221,19 @@ public class SettingsActivity extends AppCompatActivity implements
                     return false;
                 }
             });
+
+            /*
+            Preference colorScheme = findPreference("color_scheme");
+            colorScheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Log.d(getClass().getSimpleName(), "onPreferenceChange() called with: preference = [" + preference + "], newValue = [" + newValue + "]");
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("color_scheme", newValue.toString()).apply();
+                    return false;
+                }
+            });
+
+             */
         }
     }
 
