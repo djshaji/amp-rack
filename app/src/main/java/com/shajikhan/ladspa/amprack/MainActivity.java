@@ -1079,13 +1079,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 "bootFinish: %d", bootFinish
         ));
 
-        // when savedInstanceState is not null
-        if (quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
-            Log.d(TAG, "onViewCreated: loading quick patch manually");
-            quickPatch.load();
-        }
-
-
     }
 
     @Override
@@ -1124,6 +1117,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
 //        loadActivePreset();
+        // when savedInstanceState is not null
+        if (quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
+            Log.d(TAG, "onViewCreated: loading quick patch manually");
+            quickPatch.load();
+        }
     }
 
     @Override
