@@ -466,6 +466,14 @@ public class Rack extends Fragment {
             }
         });
 
+        ///| TODO: Remove this
+        logoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.drummer ();
+            }
+        });
+
 
         LinearLayout inputMixer = mainActivity.findViewById(R.id.mixer_input);
         LinearLayout outputMixer = mainActivity.findViewById(R.id.mixer_output);
