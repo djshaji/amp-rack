@@ -61,6 +61,7 @@ import android.text.BoringLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String TAG = "Amp Rack MainActivity";
     private static final String CHANNEL_ID = "default";
     static Context context;
+    static MainActivity mainActivity;
     SwitchMaterial onOff;
     int deviceWidth;
     int deviceHeight;
@@ -214,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        mainActivity = this ;
 
         if (savedInstanceState != null) {
             // to remove duplicate fragments
@@ -263,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "testLV2");
         hashCommands.add(this, "printDebugLog");
         hashCommands.add(this, "printActiveChain");
+        hashCommands.add(this, "drummer");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -2274,4 +2278,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static void setMixerMeterOutput (float outputValue) {
         outputMeter.setProgress((int) (outputValue * 100));
     }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (onOff.isChecked() == false)
+            return super.onKeyLongPress(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+            rack.patchDown.performClick();
+        else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+            rack.patchUp.performClick();
+
+        return super.onKeyLongPress(keyCode, event);
+    }
+
+    public static void drummer () {
+        Intent intent = new Intent(context, DrumMachineActivity.class);
+        mainActivity.startActivity(intent);
+     }
 }

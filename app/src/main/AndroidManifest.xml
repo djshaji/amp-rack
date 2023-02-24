@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shajikhan.ladspa.amprack" >
+    package="com.shajikhan.ladspa.amprack">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,14 +14,19 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MySplash" >
+        android:theme="@style/Theme.MySplash">
+        <activity
+            android:name=".DrumMachineActivity"
+            android:exported="false"
+            android:label="Drummer"
+            android:theme="@style/Theme.AmpRack" />
         <activity
             android:name=".DeleteData"
             android:exported="false" />
         <activity
             android:name=".DeleteAccount"
             android:exported="false"
-            android:label="@string/title_activity_delete_account"/>
+            android:label="@string/title_activity_delete_account" />
         <activity
             android:name=".Files"
             android:exported="false"
@@ -41,7 +46,7 @@
             android:name=".Purchase"
             android:exported="false"
             android:label="@string/title_activity_purchase"
-            android:theme="@style/Theme.AmpRack" >
+            android:theme="@style/Theme.AmpRack">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.shajikhan.ladspa.amprack.MainActivity" />
@@ -50,7 +55,7 @@
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.AmpRack" >
+            android:theme="@style/Theme.AmpRack">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.shajikhan.ladspa.amprack.MainActivity" />
@@ -61,7 +66,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -77,7 +82,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.shajikhan.ladspa.amprack.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />

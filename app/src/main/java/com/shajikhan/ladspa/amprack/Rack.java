@@ -75,6 +75,7 @@ public class Rack extends Fragment {
     MainActivity mainActivity ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
+    Button patchUp, patchDown ;
     JSONObject jsonObject = new JSONObject();
     boolean mixerInit = false ;
     /*
@@ -521,8 +522,8 @@ public class Rack extends Fragment {
         mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
 
         ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
-        Button patchUp = mainActivity.findViewById(R.id.patch_up),
-                patchDown = mainActivity.findViewById(R.id.patch_down);
+        patchUp = mainActivity.findViewById(R.id.patch_up);
+        patchDown = mainActivity.findViewById(R.id.patch_down);
         TextView patchName = mainActivity.findViewById(R.id.patch_name),
                 patchNo = mainActivity.findViewById(R.id.patch_no);
 
@@ -594,7 +595,8 @@ public class Rack extends Fragment {
             toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mainActivity.toggleEffect(!isChecked);
+//                    mainActivity.toggleEffect(!isChecked);
+                    onOff.setChecked(isChecked);
                     mainActivity.skinEngine.toggle(toggleButton, isChecked);
                 }
             });
