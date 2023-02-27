@@ -141,7 +141,13 @@ public class Rack extends Fragment {
 
         mainActivity.pluginDialog = mainActivity.createPluginDialog();
         if (mainActivity.useTheme)
-            mainActivity.skinEngine.card(mainActivity.linearLayoutPluginDialog);
+            mainActivity.linearLayoutPluginDialog.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card(mainActivity.linearLayoutPluginDialog);
+
+                }
+            });
 
         RecyclerView recyclerView1 = (RecyclerView) mainActivity.linearLayoutPluginDialog.findViewById(R.id.plugin_dialog_recycler_view);
         recyclerView1.setLayoutManager(new LinearLayoutManager(mainActivity));
@@ -596,6 +602,19 @@ public class Rack extends Fragment {
         });
 
         if (mainActivity.useTheme) {
+            TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label),
+                    inLabel = mainActivity.findViewById(R.id.mixer_input_label),
+                    inRotaryDisplay = mainActivity.findViewById(R.id.rotary_input_display),
+                    inRotaryLabel = mainActivity.findViewById(R.id.rotary_input_label),
+                    outRotaryDisplay = mainActivity.findViewById(R.id.rotary_output_display),
+                    outRotaryLabel = mainActivity.findViewById(R.id.rotary_output_label),
+                    outLabel = mainActivity.findViewById(R.id.mixer_output_label);
+
+            mainActivity.skinEngine.cardText(mixerLabel);
+            mainActivity.skinEngine.cardText(patchName);
+            mainActivity.skinEngine.cardText(inLabel);
+            mainActivity.skinEngine.cardText(outLabel);
+
             mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", false);
             ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
             mainActivity.skinEngine.wallpaper(wallpaper);
