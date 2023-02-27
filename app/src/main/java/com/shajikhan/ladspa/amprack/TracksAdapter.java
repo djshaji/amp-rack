@@ -93,6 +93,7 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
         }
 
         if (mainActivity.useTheme) {
+            mainActivity.skinEngine.cardText(holder.fileButton);
             linearLayout.post(new Runnable() {
                 @Override
                 public void run() {

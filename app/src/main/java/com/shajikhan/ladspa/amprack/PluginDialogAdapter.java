@@ -88,6 +88,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         });
 
         if (mainActivity.useTheme) {
+            mainActivity.skinEngine.cardText(holder.pluginName);
             layout.post(new Runnable() {
                 @Override
                 public void run() {

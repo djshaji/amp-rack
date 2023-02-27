@@ -878,6 +878,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         RecyclerView recyclerView1 = (RecyclerView) linearLayoutPluginDialog.getChildAt(2);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
+        if (useTheme)
+            skinEngine.view(linearLayoutPluginDialog, "wallpaper", "bg", SkinEngine.Resize.Width, 1);
         pluginDialogAdapter = new PluginDialogAdapter();
         pluginDialogAdapter.setMainActivity(context, this);
         recyclerView1.setAdapter(pluginDialogAdapter);

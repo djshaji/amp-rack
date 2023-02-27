@@ -7,7 +7,8 @@
     
     "wallpaper": {
         "background_canbe": "#000000",
-        "bg": "bg.png"
+        "bg1": "bg.png",
+        "bg": "#000000"
     },
 
     "check": {

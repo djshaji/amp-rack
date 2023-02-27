@@ -128,7 +128,7 @@ public class DrumMachine extends LinearLayout {
             for (ArrayList a: ticks) {
                 ToggleButton toggleButton = (ToggleButton) a.get(i);
                 if (toggleButton.isChecked()) {
-                    String uri = "assets:///" + dir + samples [i];
+                    String uri = "asset:///" + dir + samples [i];
                     Log.d(TAG, "createPlaylist: adding " + String.format(
                             "%s at %d",
                             uri,
