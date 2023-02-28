@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     ImageView pluginDialogWallpaper;
     AudioManager audioManager;
     long bootFinish = 0 ;
+    static boolean showIntro = false ;
     static public JSONObject pluginCategories;
     public Spinner pluginDialogCategorySpinner;
     AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput;
@@ -272,6 +273,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "drummer");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Log.d(TAG, "onCreate: " + String.format("" +
+                "%d: %d", BuildConfig.VERSION_CODE , defaultSharedPreferences.getInt("currentVersion", 0)));
+        if (BuildConfig.VERSION_CODE > defaultSharedPreferences.getInt("currentVersion", 0))
+            showIntro = true ;
+
+        if (showIntro) {
+            Intent intent = new Intent(this, Onboard.class) ;
+            startActivity(intent);
+        }
 
         theme = defaultSharedPreferences.getString("theme", "TubeAmp");
         Log.d(TAG, "onCreate: loading theme " + theme);
@@ -713,6 +724,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         Log.d(TAG, "onCreate: boot complete, we are now live bootFinish: [" + bootFinish + "]");
+        defaultSharedPreferences.edit().putInt("currentVersion", BuildConfig.VERSION_CODE);
     }
 
     void showMediaPlayerDialog() {

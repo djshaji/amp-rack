@@ -17,7 +17,8 @@
         android:theme="@style/Theme.MySplash">
         <activity
             android:name=".Onboard"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AmpRack" />
         <activity
             android:name=".DrumMachineActivity"
             android:exported="false"

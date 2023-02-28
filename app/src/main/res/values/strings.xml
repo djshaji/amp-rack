@@ -2,6 +2,11 @@
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 3 Preview</string>
     <string name="build_id">309</string>
+    <string name="onboard_theme_chooser">
+        Choose a theme for the UI. Choose Material Theme for Native
+        Android Material Design, or Tube Amp theme based on the new
+        skin engine.
+    </string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>
