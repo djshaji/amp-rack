@@ -132,6 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gruppo"
+                android:id="@+id/patch_label"
                 android:text="Patch"
                 android:textSize="25dp" />
 
@@ -380,6 +381,15 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:id="@+id/hide_panel"
+                android:drawableLeft="@drawable/ic_baseline_keyboard_double_arrow_up_24"
+                android:layout_marginRight="10dp"
+                android:background="@color/fui_transparent"
+                android:text="Hide Panel"/>
         </LinearLayout>
 
 

@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySplash">
         <activity
+            android:name=".Onboard"
+            android:exported="false" />
+        <activity
             android:name=".DrumMachineActivity"
             android:exported="false"
             android:label="Drummer"
@@ -66,7 +69,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

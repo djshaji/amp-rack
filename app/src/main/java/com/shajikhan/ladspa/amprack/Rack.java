@@ -489,6 +489,14 @@ public class Rack extends Fragment {
 
         mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
 
+        Button hidePanel = mainActivity.findViewById(R.id.hide_panel);
+        hidePanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.toggleMixer.setChecked(!mainActivity.toggleMixer.isChecked());
+            }
+        });
+
         mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
             AudioEngine.toggleMixer(!b);
             if (mainActivity.useTheme)
@@ -604,6 +612,7 @@ public class Rack extends Fragment {
         if (mainActivity.useTheme) {
             TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label),
                     inLabel = mainActivity.findViewById(R.id.mixer_input_label),
+                    patchLabel = mainActivity.findViewById(R.id.patch_label),
                     inRotaryDisplay = mainActivity.findViewById(R.id.rotary_input_display),
                     inRotaryLabel = mainActivity.findViewById(R.id.rotary_input_label),
                     outRotaryDisplay = mainActivity.findViewById(R.id.rotary_output_display),
@@ -614,6 +623,13 @@ public class Rack extends Fragment {
             mainActivity.skinEngine.cardText(patchName);
             mainActivity.skinEngine.cardText(inLabel);
             mainActivity.skinEngine.cardText(outLabel);
+            mainActivity.skinEngine.cardText(patchLabel);
+            mainActivity.skinEngine.cardText(patchNo);
+
+            mainActivity.skinEngine.cardText(inRotaryDisplay);
+            mainActivity.skinEngine.cardText(outRotaryDisplay);
+            mainActivity.skinEngine.cardText(inRotaryLabel);
+            mainActivity.skinEngine.cardText(outRotaryLabel);
 
             mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", false);
             ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);

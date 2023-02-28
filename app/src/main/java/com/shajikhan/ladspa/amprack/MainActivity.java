@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -34,6 +35,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     int deviceHeight;
     long totalMemory = 0;
     static boolean lowMemoryMode = false;
+    static boolean darkMode = false ;
     boolean safeMode = false;
     ToggleButton record;
     PopupMenu addPluginMenu;
@@ -278,6 +281,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             skinEngine = new SkinEngine(this);
             skinEngine.setTheme(theme);
 
+        }
+
+        int nightModeFlags =
+                getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                darkMode = true ;
+                break;
+            default:
+            case Configuration.UI_MODE_NIGHT_NO:
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                darkMode = false ;
+                break;
         }
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
@@ -477,6 +494,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
         /* we do this async after getting billing client result
         if (! proVersion) {
