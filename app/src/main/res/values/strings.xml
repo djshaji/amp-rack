@@ -441,4 +441,7 @@
     <string name="title_activity_delete_account">DeleteAccount</string>
     <string name="delete_warn">This action will delete the following data\n\t- Your presets\n\t-Your favorites\n\t-Associated account data</string>
     <string name="title_activity_drum_machine">DrumMachineActivity</string>
+    <string name="onboard_description">
+        ✓ More than 200 High Quality Effect Plugins\n\n✓ Low Latency\n\n✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n✓ Fully Skinnable User Interface\n\n✓ Save patches and share them with the world\n\nMade with ♥
+    </string>
 </resources>

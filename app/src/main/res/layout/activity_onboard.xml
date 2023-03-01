@@ -7,9 +7,61 @@
     tools:context=".Onboard">
 
     <LinearLayout
+        android:id="@+id/welcome_screen"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_margin="30dp"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/logo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/comfortaa"
+                android:textSize="40dp"
+                android:layout_marginLeft="10dp"
+                android:text="Amp Rack"/>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="17dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/comfortaa"
+            android:text="Advanced High Performance\nGuitar Effects Processor"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:textSize="17dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/comfortaa"
+            android:text="@string/onboard_description"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/onboard_page1"
         android:orientation="vertical"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="338dp">
 
@@ -58,13 +110,13 @@
             android:layout_height="wrap_content"
             android:src="@drawable/screenshot"
             android:id="@+id/screenshot"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/onboard_select_theme">
 
             <LinearLayout
@@ -80,6 +132,7 @@
                     android:textSize="24dp" />
 
                 <Spinner
+                    android:visibility="gone"
                     android:id="@+id/onboard_theme_selector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,6 +142,7 @@
             </LinearLayout>
 
             <TextView
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -101,29 +155,36 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
+                    android:layout_margin="20dp"
                     android:layout_height="wrap_content">
 
                     <RadioButton
+                        android:id="@+id/select_material"
+                        android:text="Material Design"
+                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                     </RadioButton>
                     <ImageView
-                        android:layout_width="200dp"
+                        android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:src="@drawable/material"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
+                    android:layout_margin="20dp"
                     android:layout_height="wrap_content">
 
                     <RadioButton
+                        android:id="@+id/select_tube"
+                        android:text="Classic Tube Amp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                     </RadioButton>
                     <ImageView
-                        android:layout_width="200dp"
+                        android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:src="@drawable/tube"/>
                 </LinearLayout>
@@ -133,6 +194,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/ic_baseline_info_24"
             android:text=" Learn More"/>
@@ -143,6 +205,7 @@
             android:layout_margin="10dp"
             android:layout_gravity="center"
             android:gravity="center"
+            android:visibility="gone"
             android:text="Detailed User Guide"/>
     </LinearLayout>
 
@@ -170,4 +233,17 @@
         android:textColor="@color/white"
         android:text="Next"
         android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/onboard_finish"
+        android:clickable="true"
+        android:layout_margin="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:text="Start"
+        android:drawableRight="@drawable/ic_baseline_check_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static boolean lowMemoryMode = false;
     static boolean darkMode = false ;
     boolean safeMode = false;
+    static boolean introShown = false ;
     ToggleButton record;
     PopupMenu addPluginMenu;
     RecyclerView recyclerView;
@@ -271,15 +272,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "printDebugLog");
         hashCommands.add(this, "printActiveChain");
         hashCommands.add(this, "drummer");
+        hashCommands.add(this, "resetOnboard");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Log.d(TAG, "onCreate: " + String.format("" +
                 "%d: %d", BuildConfig.VERSION_CODE , defaultSharedPreferences.getInt("currentVersion", 0)));
-        if (BuildConfig.VERSION_CODE > defaultSharedPreferences.getInt("currentVersion", 0))
-            showIntro = true ;
+        if (BuildConfig.VERSION_CODE > defaultSharedPreferences.getInt("currentVersion", 0)) {
+            Log.d(TAG, "onCreate: " + String.format(
+                    "Version Code: %d\t\tcurrent version: %d",
+                    BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)
+            ));
+            showIntro = true;
+        }
 
-        if (showIntro) {
+        Intent intentMain = getIntent();
+        int showOn = intentMain.getIntExtra("onboard", 0);
+
+        Log.d(TAG, "onCreate: showOn: " + showOn);
+
+        if (showIntro && ! introShown && showOn == 0) {
             Intent intent = new Intent(this, Onboard.class) ;
             startActivity(intent);
         }
@@ -724,7 +736,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         Log.d(TAG, "onCreate: boot complete, we are now live bootFinish: [" + bootFinish + "]");
-        defaultSharedPreferences.edit().putInt("currentVersion", BuildConfig.VERSION_CODE);
     }
 
     void showMediaPlayerDialog() {
@@ -1216,7 +1227,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void stopEffect() {
         Log.d(TAG, "Playing, attempting to stop");
         AudioEngine.setEffectOn(false);
-        if (!AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
+        if (bootFinish > 0 && !AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
+            Log.d(TAG, "stopEffect() called: Low Latency Warning");
             toast(getResources().getString(R.string.lowLatencyWarning));
         }
 
@@ -2327,5 +2339,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static void drummer () {
         Intent intent = new Intent(context, DrumMachineActivity.class);
         mainActivity.startActivity(intent);
+     }
+
+     public static void resetOnboard () {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().remove("currentVersion").apply();
      }
 }
