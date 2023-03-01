@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     AlertDialog pluginDialog;
     ImageView pluginDialogWallpaper;
     AudioManager audioManager;
+    boolean running = false ;
     long bootFinish = 0 ;
     static boolean showIntro = false ;
     static public JSONObject pluginCategories;
@@ -216,10 +217,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private BillingClient billingClient;
     private PurchasesUpdatedListener purchasesUpdatedListener;
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
+    Bundle savedState = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        savedState = savedInstanceState ;
         context = this;
         mainActivity = this ;
 
@@ -291,12 +294,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Log.d(TAG, "onCreate: showOn: " + showOn);
 
+        theme = defaultSharedPreferences.getString("theme", "TubeAmp");
+        String themeOnboarded = intentMain.getStringExtra("theme") ;
+        if (themeOnboarded != null)
+            theme = themeOnboarded ;
         if (showIntro && ! introShown && showOn == 0) {
             Intent intent = new Intent(this, Onboard.class) ;
             startActivity(intent);
         }
 
-        theme = defaultSharedPreferences.getString("theme", "TubeAmp");
         Log.d(TAG, "onCreate: loading theme " + theme);
         if (theme .equals("Material")) {
             useTheme = false;
@@ -1166,8 +1172,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 //        loadActivePreset();
         // when savedInstanceState is not null
-        if (quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
-            Log.d(TAG, "onViewCreated: loading quick patch manually");
+        if (quickPatch.myPresetsAdapter.allPresets.isEmpty() && savedState != null) {
+            Log.d(TAG, "onViewCreated: loading quick patch manually: " + savedState);
             quickPatch.load();
         }
     }
@@ -1204,6 +1210,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             stopEffect();
             notificationManager.cancelAll();
+            running = false ;
         } else {
             // apply settings
             applyPreferencesDevices();
@@ -1221,11 +1228,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
 
-        boolean success = AudioEngine.setEffectOn(true);
+        running = AudioEngine.setEffectOn(true);
     }
 
     private void stopEffect() {
-        Log.d(TAG, "Playing, attempting to stop");
+        if (! running) return;
+        Log.d(TAG, "Playing, attempting to stop, state: " + running);
         AudioEngine.setEffectOn(false);
         if (bootFinish > 0 && !AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
             Log.d(TAG, "stopEffect() called: Low Latency Warning");

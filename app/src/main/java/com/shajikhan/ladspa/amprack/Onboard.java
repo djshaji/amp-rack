@@ -31,6 +31,9 @@ public class Onboard extends AppCompatActivity {
         ExtendedFloatingActionButton next = findViewById(R.id.onboard_next);
         ExtendedFloatingActionButton finish = findViewById(R.id.onboard_finish);
 
+
+        RadioButton tube = findViewById(R.id.select_tube),
+                material = findViewById(R.id.select_material);
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +42,10 @@ public class Onboard extends AppCompatActivity {
                 finishAffinity();
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("onboard", 1);
+                String theme = "Material";
+                if (tube.isChecked())
+                    theme = "TubeAmp";
+                intent.putExtra("theme", theme);
                 startActivity(intent);
             }
         });
@@ -50,15 +57,12 @@ public class Onboard extends AppCompatActivity {
 
         Spinner spinner = findViewById(R.id.onboard_theme_selector);
 
-        RadioButton tube = findViewById(R.id.select_tube),
-                material = findViewById(R.id.select_material);
-
         tube.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (! isChecked) return;
                 material.setChecked(false);
-                PreferenceManager.getDefaultSharedPreferences (context).edit().putString("theme", "TubeAmp").apply();
+                PreferenceManager.getDefaultSharedPreferences (context).edit().putString("theme", "TubeAmp").commit();
             }
         });
 
