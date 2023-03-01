@@ -197,7 +197,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public Rack rack;
     public Tracks tracks, drums;
     public Presets presets;
-    public MyPresets quickPatch;
+//    public MyPresets quickPatch;
+    public QuickPatch quickPatch ;
     PopupMenu optionsMenu;
     String lastRecordedFileName;
     NotificationManagerCompat notificationManager;
@@ -222,6 +223,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        savedInstanceState = null ;
+        super.onCreate(null);
+
+         */
+
         savedState = savedInstanceState ;
         context = this;
         mainActivity = this ;
@@ -243,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                     switch (frag.getTag()) {
                         case "qp":
-                            quickPatch = (MyPresets) frag;
+                            quickPatch = (QuickPatch) frag;
                             break;
                         case "rack":
                             rack = (Rack) frag;
@@ -489,7 +497,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             tracks = new Tracks();
             drums = new Tracks();
             presets = new Presets();
-            quickPatch = new MyPresets(false, true);
+//            quickPatch = new MyPresets(false, true);
+            quickPatch = new QuickPatch() ;
 
             getSupportFragmentManager()
                     .beginTransaction()
