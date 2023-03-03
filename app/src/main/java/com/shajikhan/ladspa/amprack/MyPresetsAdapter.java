@@ -30,6 +30,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     MainActivity mainActivity = null;
     FirestoreDB db ;
     ProgressBar progressBar ;
+    boolean quick = false ;
     MyPresetsAdapter myPresetsAdapter ;
     String sortBy = "timestamp";
     String uid = null;
@@ -86,8 +87,10 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         TextView name = (TextView) linearLayout2.getChildAt(0);
         TextView desc = (TextView) linearLayout2.getChildAt(1);
 
-        name.setText(preset.get("name").toString());
-        desc.setText(preset.get("desc").toString());
+        String presetName = preset.get("name").toString() ;
+        String presetDesc = preset.get("desc").toString() ;
+        name.setText(presetName);
+        desc.setText(presetDesc);
 
         if (mainActivity.useTheme) {
             mainActivity.skinEngine.cardText(name);
@@ -99,6 +102,14 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
             @Override
             public void onClick(View view) {
                 mainActivity.loadPreset(preset);
+                mainActivity.patchName.setText(presetName);
+                mainActivity.patchDesc.setText(presetDesc);
+
+                if (quick)
+                    mainActivity.patchNo.setText(String.valueOf(position));
+                else
+                    mainActivity.patchNo.setText("-");
+
                 MainActivity.toast("Loaded preset " + preset.get ("name").toString());
             }
         });

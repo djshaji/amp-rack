@@ -53,6 +53,7 @@ public class MyPresets extends Fragment {
 
     void load () {
         db.getFavorites(myPresetsAdapter, shared, quick);
+        myPresetsAdapter.quick = quick ;
     }
 
     @Nullable

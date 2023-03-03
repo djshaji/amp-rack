@@ -478,7 +478,8 @@ public class Rack extends Fragment {
         logoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.drummer ();
+//                mainActivity.drummer ();
+                return;
             }
         });
 
@@ -551,6 +552,11 @@ public class Rack extends Fragment {
         TextView patchName = mainActivity.findViewById(R.id.patch_name),
                 patchNo = mainActivity.findViewById(R.id.patch_no);
 
+        TextView patchDesc = mainActivity.findViewById(R.id.patch_desc);
+        mainActivity.patchDesc = patchDesc ;
+        mainActivity.patchName = patchName ;
+        mainActivity.patchNo = patchNo;
+
         patchName.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -568,7 +574,10 @@ public class Rack extends Fragment {
                 if (mainActivity.useTheme && ! toggleButton.isChecked())
                     toggleButton.setChecked(true);
 
-                int p = Integer.valueOf(String.valueOf(patchNo.getText()));
+                String text = String.valueOf(patchNo.getText()) ;
+                if (text == "-")
+                    text = "0" ;
+                int p = Integer.valueOf(text);
                 p ++ ;
                 if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
                     return ;
@@ -581,6 +590,7 @@ public class Rack extends Fragment {
                 mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
                 patchNo.setText(String.valueOf(p));
                 patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+                patchDesc.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("desc"));
             }
         });
 
@@ -593,7 +603,11 @@ public class Rack extends Fragment {
                 if (mainActivity.useTheme && ! toggleButton.isChecked())
                     toggleButton.setChecked(true);
 
-                int p = Integer.valueOf(String.valueOf(patchNo.getText()));
+                String text = String.valueOf(patchNo.getText()) ;
+                if (text == "-")
+                    text = "0" ;
+                int p = Integer.valueOf(text);
+
                 p -- ;
                 if (p < 0)
                     p = 0 ;
@@ -606,6 +620,7 @@ public class Rack extends Fragment {
                 mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
                 patchNo.setText(String.valueOf(p));
                 patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+                patchDesc.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("desc"));
             }
         });
 

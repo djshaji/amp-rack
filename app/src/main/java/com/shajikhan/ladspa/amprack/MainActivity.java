@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static Context context;
     static MainActivity mainActivity;
     SwitchMaterial onOff;
+    TextView patchName, patchNo, patchDesc ;
     int deviceWidth;
     int deviceHeight;
     long totalMemory = 0;
@@ -1754,6 +1755,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             MainActivity.toast("Cannot load preset: " + e.getMessage());
             e.printStackTrace();
         }
+
 
     }
 
