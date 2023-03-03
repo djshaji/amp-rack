@@ -126,64 +126,83 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gruppo"
-                android:id="@+id/patch_label"
-                android:text="Patch"
-                android:textSize="25dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/start"
-                    android:textSize="15dp"
-                    android:layout_weight="1"
-                    android:layout_gravity="bottom"
-                    android:id="@+id/patch_name"
-                    android:text="Tap to load"/>
+                    android:orientation="vertical"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1">
 
-                <Button
-                    android:id="@+id/patch_down"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/ic_baseline_keyboard_arrow_down_24"/>
+                    <TextView
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gruppo"
+                        android:id="@+id/patch_label"
+                        android:text="Patch"
+                        android:textSize="25dp" />
 
-                <TextView
-                    android:padding="10dp"
-                    android:id="@+id/patch_no"
-                    android:background="@drawable/semi_trans"
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/start"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:id="@+id/patch_name"
+                        android:text="Tap to load"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/comfortaa"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="17dp"
+                        android:id="@+id/patch_desc"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
+                    android:layout_margin="10dp"
+                    android:id="@+id/patch_layout"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/start"
-                    android:textSize="20dp"
-                    android:text="00"/>
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/patch_up"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+
+                    <Button
+                        android:id="@+id/patch_up"
+                        android:layout_gravity="center"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/patch_no"
+                        android:background="@drawable/semi_trans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/start"
+                        android:textSize="20dp"
+                        android:text="00"/>
+                    <Button
+                        android:id="@+id/patch_down"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_baseline_keyboard_arrow_down_24"/>
+
+                </LinearLayout>
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/comfortaa"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
-                android:textSize="15dp"
-                android:id="@+id/patch_desc"/>
 
             <TextView
                 android:textStyle="bold"
