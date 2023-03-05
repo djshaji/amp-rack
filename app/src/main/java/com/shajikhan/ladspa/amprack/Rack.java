@@ -51,6 +51,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,6 +75,7 @@ import java.util.Map;
 
 public class Rack extends Fragment {
     MainActivity mainActivity ;
+    LinearProgressIndicator quickPatchProgress ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
     Button patchUp, patchDown ;
@@ -131,6 +133,8 @@ public class Rack extends Fragment {
             // we did this already
             return ;
         }
+
+        quickPatchProgress = mainActivity.findViewById(R.id.patch_loading);
 
         SwitchMaterial onOff = view.findViewById(R.id.onoff);
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -557,6 +561,16 @@ public class Rack extends Fragment {
         mainActivity.patchDesc = patchDesc ;
         mainActivity.patchName = patchName ;
         mainActivity.patchNo = patchNo;
+
+        LinearLayout patchMaster = mainActivity.findViewById(R.id.patch_master);
+        patchMaster.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (patchName.getText().equals("Tap to load"))
+                    patchDown.performClick();
+                return false;
+            }
+        });
 
         patchName.setOnTouchListener(new View.OnTouchListener() {
             @Override

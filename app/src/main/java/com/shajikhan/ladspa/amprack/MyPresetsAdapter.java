@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     MainActivity mainActivity = null;
     FirestoreDB db ;
     ProgressBar progressBar ;
+    LinearProgressIndicator quickPatchProgress ;
     boolean quick = false ;
     MyPresetsAdapter myPresetsAdapter ;
     String sortBy = "timestamp";

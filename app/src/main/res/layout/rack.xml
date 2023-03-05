@@ -47,6 +47,7 @@
                 android:shadowColor="@color/white"
                 android:shadowRadius="5"
                 android:text="Amp"
+                android:ellipsize="end"
                 android:id="@+id/app_main_title"
                 android:textColor="@color/white"
                 android:textSize="30dp"
@@ -136,6 +137,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_margin="5dp"
+                    android:id="@+id/patch_master"
                     android:layout_weight="1">
 
                     <TextView
@@ -167,6 +169,13 @@
                         android:layout_marginLeft="10dp"
                         android:textSize="17dp"
                         android:id="@+id/patch_desc"/>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:layout_margin="10dp"
+                        android:id="@+id/patch_loading"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -191,9 +200,12 @@
                         android:background="@drawable/semi_trans"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:gravity="center"
                         android:fontFamily="@font/start"
                         android:textSize="20dp"
-                        android:text="00"/>
+                        android:text="0"/>
                     <Button
                         android:id="@+id/patch_down"
                         android:layout_width="40dp"
@@ -211,6 +223,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gruppo"
                 android:text="Mixer"
+                android:layout_margin="5dp"
                 android:id="@+id/mixer_label"
                 android:textSize="25dp" />
 

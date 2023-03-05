@@ -113,6 +113,9 @@ public class FirestoreDB {
             presetsAdapter.progressBar.setVisibility(View.VISIBLE);
         }
 
+        if (quick && mainActivity.rack.quickPatchProgress != null)
+            mainActivity.rack.quickPatchProgress.setVisibility(View.GONE);
+
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
         if (auth == null && !quick) {
             Log.e(TAG, "loadUserPresets: uid is null", null);

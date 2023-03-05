@@ -73,6 +73,7 @@ public class MyPresets extends Fragment {
         myPresetsAdapter = new MyPresetsAdapter();
         myPresetsAdapter.setMainActivity(mainActivity);
         recyclerView.setAdapter(myPresetsAdapter);
+        myPresetsAdapter.quickPatchProgress = mainActivity.rack.quickPatchProgress;
 
         LinearLayout layout = (LinearLayout) view ;
         LinearLayout lx = (LinearLayout) ((LinearLayout) view).getChildAt(0);
