@@ -13,8 +13,8 @@ android {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 23
         targetSdk 31
-        versionCode 43
-        versionName '2.99i'
+        versionCode 45
+        versionName '3.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -26,7 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        versionNameSuffix '-Version 3  [Preview]'
+        versionNameSuffix 'Nighthawk'
     }
 
     buildTypes {
