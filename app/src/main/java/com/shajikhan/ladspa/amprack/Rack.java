@@ -640,6 +640,9 @@ public class Rack extends Fragment {
         });
 
         if (mainActivity.useTheme) {
+            mainActivity.skinEngine.cardText(mainActivity.patchDesc);
+            mainActivity.skinEngine.cardText(hidePanel);
+
             TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label),
                     inLabel = mainActivity.findViewById(R.id.mixer_input_label),
                     patchLabel = mainActivity.findViewById(R.id.patch_label),
