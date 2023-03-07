@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,6 +32,11 @@ public class Onboard extends AppCompatActivity {
         ExtendedFloatingActionButton next = findViewById(R.id.onboard_next);
         ExtendedFloatingActionButton finish = findViewById(R.id.onboard_finish);
 
+        TextView buildId = findViewById(R.id.onboard_build_number);
+        String version = String.format("Build %s Version Code %d",
+                getResources().getString(R.string.build_id),
+                BuildConfig.VERSION_CODE);
+        buildId.setText(version);
 
         RadioButton tube = findViewById(R.id.select_tube),
                 material = findViewById(R.id.select_material);

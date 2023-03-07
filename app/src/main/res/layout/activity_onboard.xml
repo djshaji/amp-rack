@@ -36,6 +36,20 @@
                 android:text="Amp Rack"/>
 
         </LinearLayout>
+
+        <TextView
+            android:fontFamily="@font/start"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/app_version"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/build_id"
+            android:id="@+id/onboard_build_number"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +59,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/comfortaa"
             android:text="Advanced High Performance\nGuitar Effects Processor"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
