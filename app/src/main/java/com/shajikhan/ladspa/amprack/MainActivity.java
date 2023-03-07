@@ -231,9 +231,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
-        savedState = savedInstanceState ;
+        savedState = savedInstanceState;
         context = this;
-        mainActivity = this ;
+        mainActivity = this;
 
         if (savedInstanceState != null) {
             // to remove duplicate fragments
@@ -256,13 +256,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             break;
                         case "rack":
                             rack = (Rack) frag;
-                            break ;
+                            break;
                         case "presets":
                             presets = (Presets) frag;
                             break;
                         case "tracks":
                             tracks = (Tracks) frag;
-                            break ;
+                            break;
                         case "drums":
                             drums = (Tracks) frag;
                             break;
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Log.d(TAG, "onCreate: " + String.format("" +
-                "%d: %d", BuildConfig.VERSION_CODE , defaultSharedPreferences.getInt("currentVersion", 0)));
+                "%d: %d", BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)));
         if (BuildConfig.VERSION_CODE > defaultSharedPreferences.getInt("currentVersion", 0)) {
             Log.d(TAG, "onCreate: " + String.format(
                     "Version Code: %d\t\tcurrent version: %d",
@@ -304,16 +304,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onCreate: showOn: " + showOn);
 
         theme = defaultSharedPreferences.getString("theme", "TubeAmp");
-        String themeOnboarded = intentMain.getStringExtra("theme") ;
+        String themeOnboarded = intentMain.getStringExtra("theme");
         if (themeOnboarded != null)
-            theme = themeOnboarded ;
-        if (showIntro && ! introShown && showOn == 0) {
-            Intent intent = new Intent(this, Onboard.class) ;
+            theme = themeOnboarded;
+        if (showIntro && !introShown && showOn == 0) {
+            Intent intent = new Intent(this, Onboard.class);
             startActivity(intent);
         }
 
         Log.d(TAG, "onCreate: loading theme " + theme);
-        if (theme .equals("Material")) {
+        if (theme.equals("Material")) {
             useTheme = false;
         } else {
             skinEngine = new SkinEngine(this);
@@ -326,12 +326,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         Configuration.UI_MODE_NIGHT_MASK;
         switch (nightModeFlags) {
             case Configuration.UI_MODE_NIGHT_YES:
-                darkMode = true ;
+                darkMode = true;
                 break;
             default:
             case Configuration.UI_MODE_NIGHT_NO:
             case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                darkMode = false ;
+                darkMode = false;
                 break;
         }
 
@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             drums = new Tracks();
             presets = new Presets();
 //            quickPatch = new MyPresets(false, true);
-            quickPatch = new QuickPatch() ;
+            quickPatch = new QuickPatch();
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -752,6 +752,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         Log.d(TAG, "onCreate: boot complete, we are now live bootFinish: [" + bootFinish + "]");
+        if (showIntro && ! introShown && showOn == 0) {
+            finishActivity(0);
+        }
     }
 
     void showMediaPlayerDialog() {

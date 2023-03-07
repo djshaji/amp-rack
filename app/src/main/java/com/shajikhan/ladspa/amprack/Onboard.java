@@ -40,6 +40,7 @@ public class Onboard extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("currentVersion", BuildConfig.VERSION_CODE).apply();
 
                 finishAffinity();
+                finish () ;
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("onboard", 1);
                 String theme = "Material";
