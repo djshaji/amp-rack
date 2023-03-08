@@ -755,6 +755,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (showIntro && ! introShown && showOn == 0) {
             finishActivity(0);
         }
+
+//        Log.d(TAG, "onCreate: mixer state: " + );
     }
 
     void showMediaPlayerDialog() {

@@ -1482,6 +1482,7 @@ public class SkinEngine {
     }
 
     void toggleWithKey (ToggleButton toggleButton, String key, String onState, String offState, boolean state) {
+        Log.d(TAG, "toggleWithKey() called with: toggleButton = [" + toggleButton + "], key = [" + key + "], onState = [" + onState + "], offState = [" + offState + "], state = [" + state + "]");
         if (config.get(key).get(onState) == null)
             return;
         String on = config.get(key).get(onState) ;

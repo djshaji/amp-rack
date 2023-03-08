@@ -13,7 +13,7 @@ android {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 23
         targetSdk 31
-        versionCode 46
+        versionCode 47
         versionName '3.01'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

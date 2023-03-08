@@ -531,7 +531,7 @@ public class Rack extends Fragment {
         });
 
         mainActivity.toggleMixer.setChecked(mainActivity.defaultSharedPreferences.getBoolean("toggleMixer", false));
-        Log.d(TAG, "onViewCreated: toggle mixer: " + mainActivity.defaultSharedPreferences.getBoolean("toggleMixer", true));
+        Log.d(TAG, "onViewCreated: toggle mixer: " + mainActivity.defaultSharedPreferences.getBoolean("toggleMixer", false));
         mainActivity. inputVolume = mainActivity.findViewById(R.id.mixer_input_slider);
         mainActivity. outputVolume = mainActivity.findViewById(R.id.mixer_output_slider);
 
@@ -668,7 +668,12 @@ public class Rack extends Fragment {
             mainActivity.skinEngine.cardText(inRotaryLabel);
             mainActivity.skinEngine.cardText(outRotaryLabel);
 
-            mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", false);
+            boolean mixerIsVisible  = false ;
+            if (mixer.getVisibility() == View.VISIBLE)
+                mixerIsVisible = true ;
+
+            mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", mixerIsVisible);
+
             ImageView wallpaper = mainActivity.findViewById(R.id.wallpaper);
             mainActivity.skinEngine.wallpaper(wallpaper);
             mainActivity.skinEngine.header(mainActivity.findViewById(R.id.master_button_box));
@@ -698,13 +703,14 @@ public class Rack extends Fragment {
 
             if (mixer.getVisibility() == View.VISIBLE) {
                 mixerInit = true ;
-                mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", true);
+//                mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", true);
 
                 mixer.post(new Runnable() {
                     @Override
                     public void run() {
                         Log.i(TAG, "run: theming mixer");
                         mainActivity.skinEngine.card(mixer);
+                        mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", true);
 
                     }
                 });

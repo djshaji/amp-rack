@@ -41,6 +41,26 @@ public class Onboard extends AppCompatActivity {
 
         RadioButton tube = findViewById(R.id.select_tube),
                 material = findViewById(R.id.select_material);
+
+        ImageView materialScreen = findViewById(R.id.material_screen),
+                tubeScreen = findViewById(R.id.tube_screen);
+
+        materialScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                material.setChecked(true);
+                tube.setChecked(false);
+            }
+        });
+
+        tubeScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                material.setChecked(false);
+                tube.setChecked(true);
+            }
+        });
+
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

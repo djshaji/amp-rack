@@ -189,6 +189,7 @@
                         android:layout_height="wrap_content">
                     </RadioButton>
                     <ImageView
+                        android:id="@+id/material_screen"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:src="@drawable/material"/>
@@ -206,6 +207,7 @@
                         android:layout_height="wrap_content">
                     </RadioButton>
                     <ImageView
+                        android:id="@+id/tube_screen"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:src="@drawable/tube"/>
