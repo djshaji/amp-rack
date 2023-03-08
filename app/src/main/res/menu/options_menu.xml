@@ -17,6 +17,9 @@
     <item android:id="@+id/bug_menu"
         android:title="Report a bug"/>
 
+    <item android:id="@+id/feature_menu"
+        android:title="Suggest a feature"/>
+
     <item android:id="@+id/how_to_use"
         android:title="How to use"/>
 

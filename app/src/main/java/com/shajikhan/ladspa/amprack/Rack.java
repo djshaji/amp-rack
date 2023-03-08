@@ -344,7 +344,8 @@ public class Rack extends Fragment {
         });
 
         MenuItem bug_item = optionsMenu.getMenu().getItem(5);
-        bug_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        MenuItem featureItem = optionsMenu.getMenu().getItem(6);
+        MenuItem.OnMenuItemClickListener menuItemClickListener = new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
@@ -359,7 +360,7 @@ public class Rack extends Fragment {
                 CheckBox notify = linearLayout.findViewById(R.id.bug_notify);
 
                 AlertDialog alertDialog = builder.create();
-                Button submit = linearLayout.findViewById(R.id.bug_submit);
+                MaterialButton submit = linearLayout.findViewById(R.id.bug_submit);
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -371,9 +372,12 @@ public class Rack extends Fragment {
                 alertDialog.show();
                 return true;
             }
-        }) ;
+        } ;
 
-        MenuItem howToUse = optionsMenu.getMenu().getItem(6);
+        bug_item.setOnMenuItemClickListener(menuItemClickListener) ;
+        featureItem.setOnMenuItemClickListener(menuItemClickListener) ;
+
+        MenuItem howToUse = optionsMenu.getMenu().getItem(7);
         howToUse.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -386,7 +390,7 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(7);
+        MenuItem exit_item = optionsMenu.getMenu().getItem(8);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -694,6 +698,8 @@ public class Rack extends Fragment {
 
             if (mixer.getVisibility() == View.VISIBLE) {
                 mixerInit = true ;
+                mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", true);
+
                 mixer.post(new Runnable() {
                     @Override
                     public void run() {

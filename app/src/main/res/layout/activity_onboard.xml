@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".Onboard">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:id="@+id/wallpaper_on"/>
+
     <LinearLayout
         android:id="@+id/welcome_screen"
         android:layout_width="match_parent"
@@ -41,6 +47,7 @@
             android:fontFamily="@font/start"
             android:layout_width="wrap_content"
             android:layout_marginTop="10dp"
+            android:textSize="11sp"
             android:layout_height="wrap_content"
             android:text="@string/app_version"/>
 

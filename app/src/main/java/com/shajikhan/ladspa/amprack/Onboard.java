@@ -37,6 +37,7 @@ public class Onboard extends AppCompatActivity {
                 getResources().getString(R.string.build_id),
                 BuildConfig.VERSION_CODE);
         buildId.setText(version);
+        MainActivity.applyWallpaper(context, getWindow(), getResources(), findViewById(R.id.wallpaper_on), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
 
         RadioButton tube = findViewById(R.id.select_tube),
                 material = findViewById(R.id.select_material);
