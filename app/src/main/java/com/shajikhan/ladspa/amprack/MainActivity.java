@@ -2345,6 +2345,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
     static void setMixerMeterSwitch (float inputValue, boolean isInput) {
+//        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput)
             inputMeter.setProgress((int) (inputValue * 100));
         else
@@ -2352,9 +2353,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     static void setMixerMeterInput (float inputValue) {
+//        Log.d(TAG, "setMixerMeterInput() called with: inputValue = [" + inputValue + "]");
         inputMeter.setProgress((int) (inputValue * 100));
     }
     static void setMixerMeterOutput (float outputValue) {
+//        Log.d(TAG, "setMixerMeterOutput() called with: outputValue = [" + outputValue + "]");
         outputMeter.setProgress((int) (outputValue * 100));
     }
 
