@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String CHANNEL_ID = "default";
     static Context context;
     static MainActivity mainActivity;
-    SwitchMaterial onOff;
+    SwitchMaterial onOff = null ;
     TextView patchName, patchNo, patchDesc ;
     int deviceWidth;
     int deviceHeight;
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static int totalPlugins = 0;
     static boolean useTheme = true;
     String theme = "TubeAmp";
-    static SkinEngine skinEngine;
+    static SkinEngine skinEngine = null;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     private static final int AUDIO_EFFECT_REQUEST = 0;
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         String themeOnboarded = intentMain.getStringExtra("theme");
         if (themeOnboarded != null)
             theme = themeOnboarded;
-        if (showIntro && !introShown && showOn == 0) {
+        if (showIntro && !introShown && showOn == 0 && ! lowMemoryMode) {
             Intent intent = new Intent(this, Onboard.class);
             startActivity(intent);
         }
@@ -2052,7 +2052,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         String wallpaper = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", null);
         Log.d(TAG, "applyWallpaper: wallpaper: " + wallpaper);
 
-        if (useTheme) {
+        if (useTheme && skinEngine != null) {
             skinEngine.setNativeTheme();
             if (wallpaper != null) {
                 skinEngine.wallpaper(imageView);
@@ -2358,17 +2358,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
 
+    /* the following supposibly adds hardware keyboard shortcut support a.k.a volume keys
+
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (onOff.isChecked() == false)
-            return super.onKeyLongPress(keyCode, event);
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
-            rack.patchDown.performClick();
-        else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP)
-            rack.patchUp.performClick();
+        if (onOff != null) {
+            if (onOff.isChecked() == false)
+                return super.onKeyLongPress(keyCode, event);
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+                rack.patchDown.performClick();
+            else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+                rack.patchUp.performClick();
+        }
 
         return super.onKeyLongPress(keyCode, event);
     }
+     */
 
     public static void drummer () {
         Intent intent = new Intent(context, DrumMachineActivity.class);
