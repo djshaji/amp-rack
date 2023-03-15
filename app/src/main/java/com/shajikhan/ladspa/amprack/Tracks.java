@@ -163,6 +163,8 @@ public class Tracks extends Fragment {
         });
 
         boolean dynamicsProcessingEnabled = mainActivity.defaultSharedPreferences.getBoolean("tracks_fx", true);
+        /* commenting out because causes crashes on some devices
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P && dynamicsProcessingEnabled) {
             // Cue CSI Miami music
             DynamicsProcessing.Config.Builder builder = new DynamicsProcessing.Config.Builder(
@@ -203,6 +205,8 @@ public class Tracks extends Fragment {
                 player.setAuxEffectInfo(new AuxEffectInfo(dynamicsProcessing.getId(), 1));
             }
         }
+
+         */
 
         playerWindow = mainActivity.findViewById(R.id.tracks_player);
         if (mainActivity.useTheme) {

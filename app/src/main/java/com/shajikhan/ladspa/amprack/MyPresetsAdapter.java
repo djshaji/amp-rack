@@ -237,9 +237,11 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
                 presets.add(m);
         } else {
             for (Map m : allPresets) {
-                if (favoritePresets.containsKey(m.get("path").toString())) {
-                    Log.d(TAG, "showOnlyFavorites: adding preset " + m.get("name"));
-                    presets.add(m);
+                if (favoritePresets != null) {
+                    if (favoritePresets.containsKey(m.get("path").toString())) {
+                        Log.d(TAG, "showOnlyFavorites: adding preset " + m.get("name"));
+                        presets.add(m);
+                    }
                 }
             }
         }
