@@ -84,6 +84,11 @@ public class Tracks extends Fragment {
         playPause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (getContext() == null) {
+                    Log.d("context is null", "onCheckedChanged() called with: compoundButton = [" + compoundButton + "], b = [" + b + "]");
+                    return;
+                }
+
                 if (!b) {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_play_arrow_24));
                     player.pause();

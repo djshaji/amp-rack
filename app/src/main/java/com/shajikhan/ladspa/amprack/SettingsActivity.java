@@ -120,6 +120,10 @@ public class SettingsActivity extends AppCompatActivity implements
             ArrayList<CharSequence> entryValues = new ArrayList<>();
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
             AudioManager audioManager = settingsActivity.audioManager;
+            if (audioManager == null) {
+                MainActivity.alert("Cannot connect to Audio Manager", "Cannot connect to audio manager. Please restart the app");
+                return;
+            }
 
             audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
             audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
