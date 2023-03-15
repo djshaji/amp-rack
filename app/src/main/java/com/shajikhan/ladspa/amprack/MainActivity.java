@@ -235,6 +235,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         context = this;
         mainActivity = this;
 
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        lowMemoryMode = memoryInfo.lowMemory ;
+
         if (savedInstanceState != null) {
             // to remove duplicate fragments
             List<Fragment> al = getSupportFragmentManager().getFragments();
@@ -313,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         Log.d(TAG, "onCreate: loading theme " + theme);
-        if (theme.equals("Material")) {
+        if (theme.equals("Material") || lowMemoryMode) {
             useTheme = false;
         } else {
             skinEngine = new SkinEngine(this);
@@ -562,11 +567,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onCreate: total memory available: " + totalMemory);
 
         int color = 0;
-        if (totalMemory > 2587765248l) {
+
+        if (! lowMemoryMode) {
             color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
         } else {
-            lowMemoryMode = true;
-            color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg1));
+            color = getResources().getColor(androidx.navigation.ui.R.color.design_default_color_primary);
         }
 //        getWindow().setStatusBarColor(color);
         color = adjustAlpha(color, .5f);
@@ -2039,6 +2044,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
+        if (lowMemoryMode) {
+            imageView.setBackgroundColor(_context.getResources().getColor(R.color.black));
+            return;
+        }
+
         String wallpaper = PreferenceManager.getDefaultSharedPreferences(_context).getString("background", null);
         Log.d(TAG, "applyWallpaper: wallpaper: " + wallpaper);
 
