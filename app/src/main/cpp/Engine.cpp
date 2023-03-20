@@ -1,5 +1,5 @@
 #include <cassert>
-#include <logging_macros.h>
+#include "logging_macros.h"
 
 #include "Engine.h"
 
@@ -330,7 +330,7 @@ void Engine::addPluginToRackLazy(char* library, int pluginIndex, SharedLibrary::
 
 void Engine::loadPlugin(char * filename, SharedLibrary::PluginType type) {
     IN
-    LOGS("Loading plugin %s", filename);
+    LOGD("Loading plugin %s", filename);
     SharedLibrary * sharedLibrary = new SharedLibrary (filename, type);
     libraries.push_back(sharedLibrary);
     OUT

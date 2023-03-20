@@ -444,4 +444,5 @@
     <string name="onboard_description">
         ✓ More than 200 High Quality Effect Plugins\n\n✓ Low Latency\n\n✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n✓ Fully Skinnable User Interface\n\n✓ Save patches and share them with the world\n\nMade with ♥
     </string>
+    <string name="title_activity_featured_videos">FeaturedVideos</string>
 </resources>

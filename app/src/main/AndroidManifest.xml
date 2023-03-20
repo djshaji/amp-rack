@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shajikhan.ladspa.amprack">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,6 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MySplash">
+        <activity
+            android:name=".FeaturedVideos"
+            android:exported="false"
+            android:label="@string/title_activity_featured_videos"
+            android:theme="@style/Theme.MySplash.NoActionBar" />
         <activity
             android:name=".Onboard"
             android:exported="false"

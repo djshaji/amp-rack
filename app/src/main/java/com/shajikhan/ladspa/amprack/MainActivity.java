@@ -289,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "printDebugLog");
         hashCommands.add(this, "printActiveChain");
         hashCommands.add(this, "drummer");
+        hashCommands.add(this, "featured");
         hashCommands.add(this, "resetOnboard");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -2385,5 +2386,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
      public static void resetOnboard () {
         PreferenceManager.getDefaultSharedPreferences(context).edit().remove("currentVersion").apply();
+     }
+
+     public static void featured () {
+         Intent intent = new Intent(context, FeaturedVideos.class);
+         mainActivity.startActivity(intent);
      }
 }

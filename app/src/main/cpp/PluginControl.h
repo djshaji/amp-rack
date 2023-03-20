@@ -2,7 +2,7 @@
 #define __PLUGIN_CONTROL_H
 
 #include <cstdlib>
-#include <logging_macros.h>
+#include "logging_macros.h"
 #include "ladspa.h"
 #include "lv2.h"
 #include "json.hpp"

@@ -7,14 +7,11 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="Embedded JDK" />
         <option name="modules">
           <set>
             <option value="/mnt/data/djshaji/Projects/AmpRack" />
             <option value="/mnt/data/djshaji/Projects/AmpRack/app" />
-            <option value="/mnt/data/djshaji/Projects/AmpRack/app/amp" />
-            <option value="/mnt/data/djshaji/Projects/AmpRack/app/crybabyx" />
-            <option value="/mnt/data/djshaji/Projects/AmpRack/app/distortionx" />
-            <option value="/mnt/data/djshaji/Projects/AmpRack/app/tubex" />
           </set>
         </option>
       </GradleProjectSettings>

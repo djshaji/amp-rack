@@ -4,7 +4,7 @@
 
 #ifndef AMP_RACK_PLUGIN2_H
 #define AMP_RACK_PLUGIN2_H
-#include <lv2.h>
+#include "lv2.h"
 #include "Plugin.h"
 
 class Plugin2: public Plugin {

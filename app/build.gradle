@@ -2,7 +2,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.android.application'
     id 'com.google.gms.google-services'
-    id 'org.jetbrains.kotlin.android'
+//    id 'org.jetbrains.kotlin.android'
 
 }
 
@@ -58,15 +58,19 @@ android {
         prefab true
         compose true
     }
+
+    /*
     kotlinOptions {
         jvmTarget = '1.8'
         freeCompilerArgs += [
                 "-Xallow-jvm-ir-dependencies",
-                "-P",
+                "-P"
                 "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
         ]
 
     }
+     */
+
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -75,6 +79,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+    namespace 'com.shajikhan.ladspa.amprack'
 }
 
 dependencies {
@@ -115,10 +120,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation project(path: ':app:amp')
-    implementation project(path: ':app:distortionx')
-    implementation project(path: ':app:crybabyx')
-    implementation project(path: ':app:tubex')
+//    implementation project(path: ':app:amp')
+//    implementation project(path: ':app:distortionx')
+//    implementation project(path: ':app:crybabyx')
+//    implementation project(path: ':app:tubex')
     implementation 'androidx.preference:preference:1.1.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

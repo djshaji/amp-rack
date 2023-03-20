@@ -2,7 +2,7 @@
 #define SHARED_LIBRARY_H
 
 #include <dlfcn.h>
-#include <logging_macros.h>
+#include "logging_macros.h"
 #include <cstring>
 #include <string>
 #include <set>
@@ -11,12 +11,12 @@
 #include "ladspa.h"
 #include "lv2.h"
 
-#include <lv2/worker/worker.h>
-#include <lv2/state/state.h>
-#include <lv2/log/log.h>
-#include <lv2/options/options.h>
-#include <lv2/ui/ui.h>
-#include <lv2/data-access/data-access.h>
+#include "lv2/worker/worker.h"
+#include "lv2/state/state.h"
+#include "lv2/log/log.h"
+#include "lv2/options/options.h"
+#include "lv2/ui/ui.h"
+#include "lv2/data-access/data-access.h"
 #include <jni.h>
 #include <map>
 

@@ -1,11 +1,11 @@
 #ifndef __PLUGIN_H
 #define __PLUGIN_H
-#include <ladspa.h>
-#include <lv2.h>
+#include "ladspa.h"
+#include "lv2.h"
 
 #include <cstddef>
 #include <fstream>
-#include <logging_macros.h>
+#include "logging_macros.h"
 #include <vector>
 
 #include "android/asset_manager.h"
