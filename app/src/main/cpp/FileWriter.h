@@ -112,10 +112,12 @@ public:
     void startRecording();
 
     static enum vringbuffer_receiver_callback_return_t disk_callback(vringbuffer_t *vrb,bool first_time,void *element){
+        IN
         staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;
         buffer_t *buffer=(buffer_t*)element;
 
         if (first_time==true) {
+            OUT
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
@@ -126,8 +128,9 @@ public:
                 disk_write(sbuffer [i] .data,sbuffer [i].pos);
             }
 
-            bufferUsed = 0 ;
+//            bufferUsed = 0 ;
         }
+        OUT
         return VRB_CALLBACK_USED_BUFFER;
     }
 
