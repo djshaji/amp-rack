@@ -152,6 +152,7 @@ public:
 
     static bool useStaticBuffer  ;
     static buffer_t *current_buffer;
+    static buffer_t *bg_buffer;
     static int MAX_STATIC_BUFFER  ;
     static staticBuffer_t buffers [32] ;
     static int bufferUsed ;

@@ -14,6 +14,7 @@ int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
 SNDFILE * FileWriter::soundfile = NULL;
 buffer_t *FileWriter::current_buffer;
+buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
 float FileWriter::min_buffer_time = -1.0f,
@@ -286,7 +287,7 @@ void FileWriter::stopRecording () {
     IN
     // because we use a large buffer, there can be samples in the buffer which have not been written yet
     if (useStaticBuffer)
-        vringbuffer_return_writing(vringbuffer,buffers);
+        vringbuffer_return_writing(vringbuffer,bg_buffer);
 
     vringbuffer_stop_callbacks(vringbuffer);
     closeFile();
@@ -314,6 +315,9 @@ void FileWriter::setBufferSize (int bufferSize) {
     /// TODO: Free this memory!
     vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
     current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
+    bg_buffer = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
+    HERE LOGD("using buffer size %d", bufferSize);
+    bg_buffer->data = static_cast<float *>(malloc(bufferSize));
     empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
     OUT
 }
@@ -429,9 +433,21 @@ int FileWriter::process(int nframes, const float *arg) {
 //            bufferUsed = 0;
         }
     } else {
-        current_buffer->data = (float *) arg;
-        current_buffer->pos = nframes;
-        vringbuffer_return_writing(vringbuffer,current_buffer);
+//        current_buffer->data = (float *) arg;
+
+//        LOGD("frames: %d", nframes);
+        for (int i = 0 ; i < nframes ; i ++) {
+            if (i > block_size) {
+                HERE LOGF("more samples than we can handle! [%d]", nframes) ;
+                break ;
+            }
+
+            bg_buffer->data[i] = arg [i] ;
+//            LOGD("buff: %d", i);
+        }
+
+        bg_buffer->pos = nframes;
+        vringbuffer_return_writing(vringbuffer,bg_buffer);
     }
 
 
