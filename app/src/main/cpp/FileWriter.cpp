@@ -3,12 +3,12 @@
 #include <chrono>
 #include "FileWriter.h"
 
-bool FileWriter:: useStaticBuffer = true ;
-staticBuffer_t FileWriter::buffers [1024];
+bool FileWriter:: useStaticBuffer = false ;
+staticBuffer_t FileWriter::buffers [32];
 /* the reason this has to be less than buffer size is that arrays start at zero
  * why this worked at all on some devices amazes me
  */
-int FileWriter::MAX_STATIC_BUFFER  = 1023;
+int FileWriter::MAX_STATIC_BUFFER  = 31;
 int FileWriter::bufferUsed = 0;
 int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
@@ -210,9 +210,10 @@ int FileWriter::disk_write(float *data,size_t frames) {
     for (int i = 0 ; i < frames ; i ++) {
         LOGD("%f\t", data [i]) ;
     }
-    */
+     */
 
-    IN
+
+//    IN
     if (fileType == MP3) {
         void * mp3_buffer =  malloc ((frames * 1.25) + 7200);
         int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (frames * 1.25) + 7200);
@@ -223,13 +224,13 @@ int FileWriter::disk_write(float *data,size_t frames) {
         }
 
         free(mp3_buffer);
-        OUT
+//        OUT
         return 0 ;
     }
 
     if (fileType== OPUS) {
         ope_encoder_write_float(oggOpusEnc, data, frames);
-        OUT
+//        OUT
         return 1;
     }
 
@@ -242,7 +243,7 @@ int FileWriter::disk_write(float *data,size_t frames) {
                 *f ++ ;
             }
 
-            OUT
+//            OUT
             return 1 ;
 
         } else {
@@ -253,7 +254,7 @@ int FileWriter::disk_write(float *data,size_t frames) {
             } else {
                 fwrite(opusOut, sizeof (unsigned char ), opusRead, outputFile) ;
                 opusRead = 0 ;
-                OUT
+//                OUT
                 return 1 ;
             }
 
@@ -265,11 +266,11 @@ int FileWriter::disk_write(float *data,size_t frames) {
         LOGF("Error. Can not write sndfile (%s)\n",
                       sf_strerror(FileWriter::soundfile)
         );
-        OUT
+//        OUT
         return 0;
     }
 
-    OUT
+//    OUT
     return 1;
 }
 
@@ -418,14 +419,14 @@ int FileWriter::process(int nframes, const float *arg) {
             }
 
             buffers[bufferUsed].pos = nframes;
-            bufferUsed++;
+            bufferUsed ++ ;
 //            OUT
             return 0;
 
         } else {
 //            LOGD("bufferUsed = MAX_STATIC_BUFFER, vringbuffer_return_writing") ;
             vringbuffer_return_writing(vringbuffer,buffers);
-            bufferUsed = 0;
+//            bufferUsed = 0;
         }
     } else {
         current_buffer->data = (float *) arg;
