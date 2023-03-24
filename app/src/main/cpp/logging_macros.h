@@ -32,7 +32,7 @@
 #define HERE __android_log_print(ANDROID_LOG_VERBOSE, "!!", "%s: %d", __FILE__, __LINE__) ;
 #define IN __android_log_print(ANDROID_LOG_VERBOSE, ">>", __PRETTY_FUNCTION__);
 #define OUT __android_log_print(ANDROID_LOG_VERBOSE, "<<", __PRETTY_FUNCTION__);
-
+#define PASS {int _hwye_ = 0 ;}
 #define ASSERT(cond, ...) if (!(cond)) {__android_log_assert(#cond, MODULE_NAME, __VA_ARGS__);}
 #else
 

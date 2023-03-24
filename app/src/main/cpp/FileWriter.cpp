@@ -3,12 +3,12 @@
 #include <chrono>
 #include "FileWriter.h"
 
-bool FileWriter:: useStaticBuffer = false ;
-staticBuffer_t FileWriter::buffers [32];
+bool FileWriter:: useStaticBuffer = true ;
+buffer_t * FileWriter::buffers [32] ;
 /* the reason this has to be less than buffer size is that arrays start at zero
  * why this worked at all on some devices amazes me
  */
-int FileWriter::MAX_STATIC_BUFFER  = 31;
+int FileWriter::MAX_STATIC_BUFFER  = 32;
 int FileWriter::bufferUsed = 0;
 int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
@@ -138,7 +138,7 @@ void FileWriter::openFile () {
         ope_comments_add(comments, "TITLE", "AmpRack Demo");
 
         oggOpusEnc = ope_encoder_create_file(filename.c_str(), comments, jack_samplerate, num_channels, 0, &error) ;
-        if (!error) {
+        if (error != NULL) {
             HERE LOGF("cannot create encoder: %s", ope_strerror(error));
         }
         err = ope_encoder_ctl(oggOpusEnc, OPUS_SET_BITRATE(bitRate));
@@ -206,12 +206,14 @@ void FileWriter::closeFile () {
 }
 
 int FileWriter::disk_write(float *data,size_t frames) {
+
     /*
     LOGD("----------| %d  |-----------", std::chrono::system_clock::now()) ;
     for (int i = 0 ; i < frames ; i ++) {
         LOGD("%f\t", data [i]) ;
     }
      */
+
 
 
 //    IN
@@ -287,7 +289,7 @@ void FileWriter::stopRecording () {
     IN
     // because we use a large buffer, there can be samples in the buffer which have not been written yet
     if (useStaticBuffer)
-        vringbuffer_return_writing(vringbuffer,bg_buffer);
+        vringbuffer_return_writing(vringbuffer,buffers);
 
     vringbuffer_stop_callbacks(vringbuffer);
     closeFile();
@@ -315,10 +317,15 @@ void FileWriter::setBufferSize (int bufferSize) {
     /// TODO: Free this memory!
     vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
     current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
-    bg_buffer = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
-    HERE LOGD("using buffer size %d", bufferSize);
+    bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
+//    HERE LOGD("using buffer size %d", bufferSize);
     bg_buffer->data = static_cast<float *>(malloc(bufferSize));
     empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
+    for (int i = 0 ; i < 32 ; i ++) {
+        buffers[i] = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
+        buffers [i] -> data = static_cast<float *>(malloc(block_size));
+    }
+
     OUT
 }
 
@@ -416,13 +423,13 @@ int FileWriter::process(int nframes, const float *arg) {
 //        LOGD("use static buffer");
         if (bufferUsed < MAX_STATIC_BUFFER) {
 //            LOGD("buffer used: %d", bufferUsed);
-//            LOGD("bufferUsed < MAX_STATIC_BUFFER, nframes: %d", nframes) ;
+//            LOGD("bufferUsed: %d, nframes: %d",  bufferUsed, nframes) ;
             for (int i = 0; i < nframes; i++) {
-                buffers[bufferUsed].data [i] = arg[i];
+                buffers[bufferUsed]->data [i] = arg[i];
 //                LOGD("buffers[bufferUsed].data [%d] = arg[%d];", i, i);
             }
 
-            buffers[bufferUsed].pos = nframes;
+            buffers[bufferUsed]->pos = nframes;
             bufferUsed ++ ;
 //            OUT
             return 0;
@@ -430,25 +437,34 @@ int FileWriter::process(int nframes, const float *arg) {
         } else {
 //            LOGD("bufferUsed = MAX_STATIC_BUFFER, vringbuffer_return_writing") ;
             vringbuffer_return_writing(vringbuffer,buffers);
-//            bufferUsed = 0;
+            bufferUsed = 0;
         }
     } else {
-//        current_buffer->data = (float *) arg;
+//        bg_buffer->data = (float *) arg;
 
 //        LOGD("frames: %d", nframes);
+
         for (int i = 0 ; i < nframes ; i ++) {
-            if (i > block_size) {
+            if (i >= block_size) {
                 HERE LOGF("more samples than we can handle! [%d]", nframes) ;
                 break ;
             }
 
-            bg_buffer->data[i] = arg [i] ;
-//            LOGD("buff: %d", i);
+            if (arg [i] < -10.0)
+                bg_buffer->data[i] = -10.0 ;
+            else if (arg [i] > 10.0)
+                bg_buffer->data[i] = 10.0 ;
+            else
+                bg_buffer->data[i] = arg [i] ;
         }
 
         bg_buffer->pos = nframes;
+//        bg_buffer->pos = nframes;
+//        current_buffer->data = (float *) arg;
+//        current_buffer->pos = nframes;
         vringbuffer_return_writing(vringbuffer,bg_buffer);
     }
+
 
 
     /// does the following do ANYTHING?

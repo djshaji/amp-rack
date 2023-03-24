@@ -113,8 +113,9 @@ public:
 
     static enum vringbuffer_receiver_callback_return_t disk_callback(vringbuffer_t *vrb,bool first_time,void *element){
 //        IN
-        staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;
+//        staticBuffer_t * sbuffer  = (staticBuffer_t * ) element ;
         buffer_t *buffer=(buffer_t*)element;
+        buffer_t ** doubleBuffer = static_cast<buffer_t **>(element);
 
         if (first_time==true) {
 //            LOGD( "first time out");
@@ -127,7 +128,7 @@ public:
         else {
 //            LOGD("buffer used: %d", bufferUsed);
             for (int i = 0 ; i < bufferUsed; i ++) {
-                disk_write(sbuffer [i] .data,sbuffer [i].pos);
+                disk_write(doubleBuffer [i] -> data,doubleBuffer [i] -> pos);
             }
 
             bufferUsed = 0 ;
@@ -154,7 +155,7 @@ public:
     static buffer_t *current_buffer;
     static buffer_t *bg_buffer;
     static int MAX_STATIC_BUFFER  ;
-    static staticBuffer_t buffers [32] ;
+    static buffer_t * buffers [32] ;
     static int bufferUsed ;
     static void send_buffer_to_disk_thread(buffer_t *buffer);
 

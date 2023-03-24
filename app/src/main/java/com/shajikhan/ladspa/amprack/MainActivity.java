@@ -871,6 +871,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        // Disabling this because this caused a crash when stopping recording ... I think
+        // very hard to debug ... VERY !!!
+        /*
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -881,6 +884,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
         }, 0, 1000);
+
+         */
 
         builder.setView(constraintLayout)
                 .setPositiveButton("Close", null);
@@ -914,14 +919,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 mediaPlayer.stop();
-                timer.cancel();
+//                timer.cancel();
             }
         });
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 mediaPlayer.stop();
-                timer.cancel();
+//                timer.cancel();
             }
         });
         dialog.show();

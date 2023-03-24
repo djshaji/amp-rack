@@ -113,8 +113,11 @@ Meter::Meter(JavaVM *pVm) {
 
 void Meter::enable () {
     IN
-    if (enabled)
+    if (enabled) {
+        LOGD("already enabled, exiting ..") ;
+        OUT
         return ;
+    }
 //    vm-> GetEnv((void**)&env, JNI_VERSION_1_6);
     /*
     mainActivity = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
