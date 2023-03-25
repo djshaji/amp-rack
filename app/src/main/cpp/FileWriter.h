@@ -125,6 +125,8 @@ public:
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
+        disk_write(buffer->data, buffer->pos);
+        return VRB_CALLBACK_USED_BUFFER;
         if (!useStaticBuffer) {
             if (bufferUsed < MAX_STATIC_BUFFER) {
                 for (int i = 0 ; i < buffer->pos ; i ++)
@@ -134,10 +136,10 @@ public:
                 bufferUsed ++ ;
             } else {
 //                LOGD("buffer used: %d", bufferUsed);
-                for (int i = 0 ; i < bufferUsed ; i ++)
-                    disk_write(buffers[i].data, buffers [i].pos);
-
-                disk_write(buffer->data, buffer->pos);
+//                for (int i = 0 ; i < bufferUsed ; i ++)
+//                    disk_write(buffers[i].data, buffers [i].pos);
+//
+//                disk_write(buffer->data, buffer->pos);
                 bufferUsed = 0;
             }
         }

@@ -230,6 +230,7 @@ int FileWriter::disk_write(float *data,size_t frames) {
     for (int i = 0 ; i < frames ; i ++) {
         LOGD("%f\t", data [i]) ;
     }
+     return 0 ;
      */
 
 
