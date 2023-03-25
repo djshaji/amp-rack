@@ -3,12 +3,12 @@
 #include <chrono>
 #include "FileWriter.h"
 
-bool FileWriter:: useStaticBuffer = true ;
-buffer_t * FileWriter::buffers [32] ;
+bool FileWriter:: useStaticBuffer = false ;
+staticBuffer_t FileWriter::buffers [1025] ;
 /* the reason this has to be less than buffer size is that arrays start at zero
  * why this worked at all on some devices amazes me
  */
-int FileWriter::MAX_STATIC_BUFFER  = 32;
+int FileWriter::MAX_STATIC_BUFFER  = 1024;
 int FileWriter::bufferUsed = 0;
 int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
@@ -205,6 +205,24 @@ void FileWriter::closeFile () {
     OUT
 }
 
+int FileWriter::disk_write_callback(float *arg,size_t nframes) {
+    if (bufferUsed < MAX_STATIC_BUFFER) {
+        for (int i = 0; i < nframes; i++) {
+            buffers[bufferUsed].data [i] = arg[i];
+        }
+
+        buffers[bufferUsed].pos = nframes;
+        bufferUsed ++ ;
+        return 0;
+
+    } else {
+        disk_write(arg, nframes);
+        bufferUsed = 0;
+    }
+
+    return 0 ;
+}
+
 int FileWriter::disk_write(float *data,size_t frames) {
 
     /*
@@ -321,10 +339,10 @@ void FileWriter::setBufferSize (int bufferSize) {
 //    HERE LOGD("using buffer size %d", bufferSize);
     bg_buffer->data = static_cast<float *>(malloc(bufferSize));
     empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
-    for (int i = 0 ; i < 32 ; i ++) {
-        buffers[i] = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
-        buffers [i] -> data = static_cast<float *>(malloc(block_size));
-    }
+//    for (int i = 0 ; i < 32 ; i ++) {
+//        buffers[i] = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
+//        buffers [i] -> data = static_cast<float *>(malloc(block_size));
+//    }
 
     OUT
 }
@@ -425,11 +443,11 @@ int FileWriter::process(int nframes, const float *arg) {
 //            LOGD("buffer used: %d", bufferUsed);
 //            LOGD("bufferUsed: %d, nframes: %d",  bufferUsed, nframes) ;
             for (int i = 0; i < nframes; i++) {
-                buffers[bufferUsed]->data [i] = arg[i];
+                buffers[bufferUsed].data [i] = arg[i];
 //                LOGD("buffers[bufferUsed].data [%d] = arg[%d];", i, i);
             }
 
-            buffers[bufferUsed]->pos = nframes;
+            buffers[bufferUsed].pos = nframes;
             bufferUsed ++ ;
 //            OUT
             return 0;

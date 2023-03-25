@@ -40,6 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:visibility="gone"
                     android:min="0"
                     android:id="@+id/media_seekbar"
                     android:max="100"/>

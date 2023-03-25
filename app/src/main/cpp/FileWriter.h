@@ -8,6 +8,7 @@
 #define ALIGN_UP_DOUBLE(p) ALIGN_UP(p,sizeof(double)) // Using double because double should always be very large.
 
 #include <string>
+#include <ctime>
 #include "logging_macros.h"
 #include "sndfile.h"
 #include "opus.h"
@@ -34,7 +35,7 @@ typedef struct buffer_t{
 typedef struct staticBuffer_t{
     int overruns;
     float pos;
-    float data[192];
+    float data[512];
 //    float *data;
 } staticBuffer_t;
 
@@ -97,6 +98,7 @@ public:
     FileWriter ();
     ~FileWriter ();
     static int disk_write(float *data, size_t frames);
+    int disk_write_callback(float *data, size_t frames);
 
     std::string filename ;
     void setBufferSize(int bufferSize);
@@ -123,8 +125,22 @@ public:
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
-        if (!useStaticBuffer)
-            disk_write(buffer->data,buffer->pos);
+        if (!useStaticBuffer) {
+            if (bufferUsed < MAX_STATIC_BUFFER) {
+                for (int i = 0 ; i < buffer->pos ; i ++)
+                    buffers[bufferUsed].data [i]  = buffer->data [i];
+
+                buffers[bufferUsed].pos = buffer->pos;
+                bufferUsed ++ ;
+            } else {
+//                LOGD("buffer used: %d", bufferUsed);
+                for (int i = 0 ; i < bufferUsed ; i ++)
+                    disk_write(buffers[i].data, buffers [i].pos);
+
+                disk_write(buffer->data, buffer->pos);
+                bufferUsed = 0;
+            }
+        }
         else {
 //            LOGD("buffer used: %d", bufferUsed);
             for (int i = 0 ; i < bufferUsed; i ++) {
@@ -155,7 +171,7 @@ public:
     static buffer_t *current_buffer;
     static buffer_t *bg_buffer;
     static int MAX_STATIC_BUFFER  ;
-    static buffer_t * buffers [32] ;
+    static staticBuffer_t buffers [1025] ;
     static int bufferUsed ;
     static void send_buffer_to_disk_thread(buffer_t *buffer);
 
