@@ -504,6 +504,7 @@ extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_getRecordingFileName(JNIEnv *env, jclass clazz) {
     // TODO: implement getRecordingFileName()
+    LOGD("%s", engine->fileWriter->filename.c_str());
     return env ->NewStringUTF(engine->fileWriter->filename.c_str());
 }
 extern "C"
@@ -732,17 +733,18 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleRecording(JNIEnv *env, jclas
     // TODO: implement toggleRecording()
     engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) : engine -> mFullDuplexPass.recordingActive = state ;
     if (state) {
-        char buffer [80];
-
-        time_t rawtime;
-        struct tm * timeinfo;
-        time (&rawtime);
-        timeinfo = localtime (&rawtime);
-
-        strftime (buffer,80,"%d-%m-%y__%I.%M%p",timeinfo);
-        engine->fileWriter->setFileName(engine->externalStoragePath + "/" + std::string (buffer)) ;
         engine->fileWriter->startRecording();
     }
     else
         engine->fileWriter->stopRecording();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setFileName(JNIEnv *env, jclass clazz,
+                                                          jstring file_name) {
+    // TODO: implement setFileName()
+    const char *nativeString = env->GetStringUTFChars(file_name, 0);
+    engine->fileWriter->setFileName(std::string (nativeString));
+    LOGD("file name set to %s", nativeString);
+    env->ReleaseStringUTFChars(file_name, nativeString);
 }

@@ -88,7 +88,7 @@ FileWriter::FileWriter () {
 
 void FileWriter::openFile () {
     IN
-    LOGD("using sample rate: %d\tchannels: %d", jack_samplerate, num_channels);
+    LOGD("opening file [%s] using sample rate: [%d]\tchannels: [%d]", filename.c_str(), jack_samplerate, num_channels);
     memset(&sf_info,0,sizeof(SF_INFO));
     memset (&opusIn, 0, 960*2);
     memset (&opusOut, 0, 3*1276);

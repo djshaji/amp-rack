@@ -56,7 +56,12 @@ bool Engine::setEffectOn(bool isOn) {
 //                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/") + std::string (buffer)) ;
 //                fileWriter->setFileName(externalStoragePath + "/" + std::string (buffer)) ;
 //                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
-                fileWriter->setBufferSize (mRecordingStream->getBufferSizeInFrames());
+                int bufferSizeInFrames = mRecordingStream->getBufferSizeInFrames() ;
+                fileWriter->setBufferSize (bufferSizeInFrames);
+
+                if (mFullDuplexPass.inSamples != NULL)
+                    free (static_cast<void *>(mFullDuplexPass.inSamples));
+                mFullDuplexPass.inSamples = static_cast<float *>(malloc(mFullDuplexPass.mBufferSize));
                 fileWriter->setChannels(mOutputChannelCount);
                 /*
                 if (mFullDuplexPass.recordingActive) {

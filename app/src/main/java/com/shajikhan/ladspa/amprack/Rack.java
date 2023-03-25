@@ -67,7 +67,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -188,11 +190,28 @@ public class Rack extends Fragment {
                         */
                     } else {
 //                        AudioEngine.setRecordingActive(b);
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
+                        Date date = new Date();
+                        mainActivity.lastRecordedFileName = formatter.format(date);
+                        AudioEngine.setFileName(mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName);
+                        switch (mainActivity.exportFormat) {
+                            case "0":
+                            default:
+                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".wav" ;
+                                break ;
+                            case "1":
+                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".ogg" ;
+                                break ;
+                            case "2":
+                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".mp3" ;
+                                break ;
+                        }
+
                         AudioEngine.toggleRecording(b);
                     }
                 } else {
-                    AudioEngine.toggleRecording(b);
                     mainActivity.lastRecordedFileName = AudioEngine.getRecordingFileName();
+                    AudioEngine.toggleRecording(b);
                     mainActivity.showMediaPlayerDialog();
                 }
             }
