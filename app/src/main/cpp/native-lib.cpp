@@ -730,8 +730,7 @@ JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleRecording(JNIEnv *env, jclass clazz,
                                                               jboolean state) {
     // TODO: implement toggleRecording()
-    engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) :   engine -> mFullDuplexPass.bypass = state ;
-    engine -> mFullDuplexPass.recordingActive = state ;
+    engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) : engine -> mFullDuplexPass.recordingActive = state ;
     if (state) {
         char buffer [80];
 
