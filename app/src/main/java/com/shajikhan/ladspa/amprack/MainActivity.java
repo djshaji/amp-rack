@@ -1229,10 +1229,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void toggleEffect(boolean isPlaying) {
         if (isPlaying) {
+            /*
             if (record.isChecked()) {
                 lastRecordedFileName = AudioEngine.getRecordingFileName();
                 showMediaPlayerDialog();
             }
+
+             */
 
             stopEffect();
             notificationManager.cancelAll();

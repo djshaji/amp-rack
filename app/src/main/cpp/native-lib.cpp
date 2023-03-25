@@ -80,9 +80,11 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setEffectOn(JNIEnv *env, jclass cl
         return JNI_FALSE;
     }
 
+    /*
     for (int x = 0 ; x < engine->activePlugins.size();x++) {
         engine->activePlugins.at(x)->print();
     }
+    */
 
     return engine->setEffectOn(is_effect_on) ? JNI_TRUE : JNI_FALSE;
 }
@@ -722,4 +724,26 @@ JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_bypass(JNIEnv *env, jclass clazz, jboolean state) {
     // TODO: implement bypass()
     engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) :   engine -> mFullDuplexPass.bypass = state ;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleRecording(JNIEnv *env, jclass clazz,
+                                                              jboolean state) {
+    // TODO: implement toggleRecording()
+    engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) :   engine -> mFullDuplexPass.bypass = state ;
+    engine -> mFullDuplexPass.recordingActive = state ;
+    if (state) {
+        char buffer [80];
+
+        time_t rawtime;
+        struct tm * timeinfo;
+        time (&rawtime);
+        timeinfo = localtime (&rawtime);
+
+        strftime (buffer,80,"%d-%m-%y__%I.%M%p",timeinfo);
+        engine->fileWriter->setFileName(engine->externalStoragePath + "/" + std::string (buffer)) ;
+        engine->fileWriter->startRecording();
+    }
+    else
+        engine->fileWriter->stopRecording();
 }

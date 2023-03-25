@@ -84,6 +84,8 @@ public:
 //        memcpy(outputData, inputData, samplesToProcess);
         if (! bypass)
             process(inSamples, numInputSamples);
+        else
+            LOGD("effect bypass");
         /* this is not supposed to be called directly.
          * hence the entire vringbuffer stuff
          */

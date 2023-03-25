@@ -36,29 +36,33 @@ bool Engine::setEffectOn(bool isOn) {
         if (isOn) {
             success = openStreams() == oboe::Result::OK;
             if (success) {
+                /*
                 for (int i = 0 ; i < activePlugins.size() ; i ++) {
                     activePlugins.at(i)->print();
                 }
+                */
                 mFullDuplexPass.start();
                 fileWriter->setSampleRate (mSampleRate);
 
-                char buffer [80];
-
-                time_t rawtime;
-                struct tm * timeinfo;
-                time (&rawtime);
-                timeinfo = localtime (&rawtime);
-
-                strftime (buffer,80,"%d-%m-%y__%I.%M%p",timeinfo);
+//                char buffer [80];
+//
+//                time_t rawtime;
+//                struct tm * timeinfo;
+//                time (&rawtime);
+//                timeinfo = localtime (&rawtime);
+//
+//                strftime (buffer,80,"%d-%m-%y__%I.%M%p",timeinfo);
 
 //                fileWriter->setFileName(externalStoragePath + std::string ("/AmpRack/") + std::string (buffer)) ;
-                fileWriter->setFileName(externalStoragePath + "/" + std::string (buffer)) ;
+//                fileWriter->setFileName(externalStoragePath + "/" + std::string (buffer)) ;
 //                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
                 fileWriter->setBufferSize (mRecordingStream->getBufferSizeInFrames());
                 fileWriter->setChannels(mOutputChannelCount);
+                /*
                 if (mFullDuplexPass.recordingActive) {
                     fileWriter->startRecording();
                 }
+                 */
 
                 meter->enable();
 //                addPluginToRack(0, 0);

@@ -164,13 +164,15 @@ public class Rack extends Fragment {
         mainActivity.record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (onOff.isChecked()) {
-                        MainActivity.toast("Cannot start or stop recording while playing");
-                        mainActivity.record.setChecked(!b);
-                        return;
-                    }
+                if (!onOff.isChecked()) {
+                    MainActivity.toast("Turn on the app to start recording");
+//                        mainActivity.record.setChecked(!b);
+                    if (b)
+                        compoundButton.setChecked(false);
+                    return;
+                }
 
+                if (b) {
                     if (!mainActivity.isStoragePermissionGranted()) {
 //                        requestReadStoragePermission();
                         mainActivity.requestWriteStoragePermission();
@@ -185,8 +187,13 @@ public class Rack extends Fragment {
                         }
                         */
                     } else {
-                        AudioEngine.setRecordingActive(b);
+//                        AudioEngine.setRecordingActive(b);
+                        AudioEngine.toggleRecording(b);
                     }
+                } else {
+                    AudioEngine.toggleRecording(b);
+                    mainActivity.lastRecordedFileName = AudioEngine.getRecordingFileName();
+                    mainActivity.showMediaPlayerDialog();
                 }
             }
         });

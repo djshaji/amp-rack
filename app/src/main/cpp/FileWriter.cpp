@@ -426,9 +426,10 @@ void FileWriter::process_fill_buffers(void *data, int samples){
 }
 
 int FileWriter::process(int nframes, const float *arg) {
-//    IN
+    IN
+    LOGD("file writer process");
     if (!ready) {
-//        LOGW("not ready, return");
+        HERE LOGW("not ready, return");
 //        OUT
         return 0 ;
     }
