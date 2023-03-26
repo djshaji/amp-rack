@@ -184,7 +184,7 @@ public class Rack extends Fragment {
                 mainActivity.outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
                 mainActivity.record.setEnabled(!isChecked);
                 if (isChecked)
-                    mainActivity.record.setText("Arm");
+                    mainActivity.record.setText("Tri");
                 else
                     mainActivity.record.setText("Rec");
                 mainActivity.triggerRecord = isChecked;
