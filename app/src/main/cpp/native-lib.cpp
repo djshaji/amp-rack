@@ -732,6 +732,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleRecording(JNIEnv *env, jclas
                                                               jboolean state) {
     // TODO: implement toggleRecording()
     engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) : engine -> mFullDuplexPass.recordingActive = state ;
+//    engine == NULL ?  LOGE("[%s] engine is null !", __PRETTY_FUNCTION__ ) : HERE ;
     if (state) {
         engine->fileWriter->startRecording();
     }

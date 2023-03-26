@@ -35,6 +35,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -119,8 +120,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -138,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     SwitchMaterial onOff = null ;
     String exportFormat ;
     TextView patchName, patchNo, patchDesc ;
+    ToggleButton triggerRecordToggle ;
     int deviceWidth;
     int deviceHeight;
     long totalMemory = 0;
@@ -146,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     boolean safeMode = false;
     static boolean introShown = false ;
     ToggleButton record;
+    boolean triggerRecord = false ;
+    boolean triggerRecordedSomething = false ;
+    boolean recording = false ;
     PopupMenu addPluginMenu;
     RecyclerView recyclerView;
     DataAdapter dataAdapter;
@@ -1274,6 +1281,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         inputMeter.setProgress(0);
         outputMeter.setProgress(0);
+        if(triggerRecordedSomething) {
+            showMediaPlayerDialog();
+            triggerRecordToggle.setChecked(false);
+            triggerRecordedSomething = false;
+//            outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+        }
+
+        if (record.isChecked())
+            record.setChecked(false);
     }
 
     private boolean isRecordPermissionGranted() {
@@ -2357,11 +2373,54 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
     static void setMixerMeterSwitch (float inputValue, boolean isInput) {
+        if (inputValue < 0.03)
+            return;
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput)
             inputMeter.setProgress((int) (inputValue * 100));
-        else
+        else {
             outputMeter.setProgress((int) (inputValue * 100));
+//            Log.d(TAG, "setMixerMeterSwitch: " + inputValue);
+            if (mainActivity.triggerRecord) {
+                if (mainActivity.recording) {
+                    if (inputValue < 0.1) {
+//                        mainActivity.record.setChecked(false);
+                        AudioEngine.toggleRecording(false);
+                        mainActivity.recording = false;
+                        outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+                    }
+                } else {
+                    if (inputValue > 0.3) {
+                        outputMeter.setProgressTintList(ColorStateList.valueOf(Color.RED));
+//                        mainActivity.record.setChecked(true);
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
+                        Date date = new Date();
+                        mainActivity.lastRecordedFileName = formatter.format(date);
+                        mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
+                        AudioEngine.setFileName(mainActivity.lastRecordedFileName);
+                        switch (mainActivity.exportFormat) {
+                            case "0":
+                            default:
+                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".wav" ;
+                                break ;
+                            case "1":
+                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".ogg" ;
+                                break ;
+                            case "2":
+                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".mp3" ;
+                                break ;
+                        }
+
+                        mainActivity.triggerRecordedSomething = true ;
+                        mainActivity.recording = true;
+                        Log.d(TAG, "setMixerMeterSwitch: triggering recording");
+                        AudioEngine.toggleRecording(true);
+//                        mainActivity.triggerRecordToggle.setChecked(false);
+                    }
+                }
+            }
+
+        }
     }
 
     static void setMixerMeterInput (float inputValue) {
@@ -2403,4 +2462,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          Intent intent = new Intent(context, FeaturedVideos.class);
          mainActivity.startActivity(intent);
      }
+
+     /*
+    public boolean hotkeys (int keyCode, KeyEvent event) {
+        Log.d(TAG, "hotkeys() called with: keyCode = [" + keyCode + "], event = [" + event + "]");
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_SPACE:
+                onOff.setChecked(!onOff.isChecked());
+                return true;
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return hotkeys(keyCode, event);
+    }
+
+      */
 }

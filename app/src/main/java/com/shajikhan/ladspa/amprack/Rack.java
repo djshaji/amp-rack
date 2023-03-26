@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -138,8 +141,19 @@ public class Rack extends Fragment {
 
         quickPatchProgress = mainActivity.findViewById(R.id.patch_loading);
 
-        SwitchMaterial onOff = view.findViewById(R.id.onoff);
-        onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mainActivity.onOff = view.findViewById(R.id.onoff);
+        /*
+        mainActivity.onOff.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Log.d(TAG, "onKey() called with: v = [" + v + "], keyCode = [" + keyCode + "], event = [" + event + "]");
+                return mainActivity.hotkeys(keyCode, event);
+            }
+        });
+
+         */
+
+        mainActivity.onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mainActivity.toggleEffect(!b);
@@ -162,17 +176,36 @@ public class Rack extends Fragment {
         mainActivity.pluginDialogAdapter.setMainActivity(getContext(), mainActivity);
         recyclerView1.setAdapter(mainActivity.pluginDialogAdapter);
 
+        mainActivity.triggerRecordToggle = view.findViewById(R.id.record_trigger);
         mainActivity.record = view.findViewById(R.id.record_button);
+        mainActivity.triggerRecordToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mainActivity.outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+                mainActivity.record.setEnabled(!isChecked);
+                if (isChecked)
+                    mainActivity.record.setText("Arm");
+                else
+                    mainActivity.record.setText("Rec");
+                mainActivity.triggerRecord = isChecked;
+                if (!isChecked && mainActivity.recording) {
+                    AudioEngine.toggleRecording(false);
+                    mainActivity.recording = false;
+                }
+            }
+        });
+
         mainActivity.record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (!onOff.isChecked()) {
+                if (!mainActivity.onOff.isChecked()) {
 //                        mainActivity.record.setChecked(!b);
                     if (b) {
                         compoundButton.setChecked(false);
                         MainActivity.toast("Turn on the app to start recording");
                     } else {
                         AudioEngine.toggleRecording(b);
+                        mainActivity.recording = b ;
                         mainActivity.showMediaPlayerDialog();
                     }
 
@@ -214,11 +247,14 @@ public class Rack extends Fragment {
                         }
 
                         AudioEngine.toggleRecording(b);
+                        mainActivity.recording = b ;
                     }
                 } else {
 //                    mainActivity.lastRecordedFileName = AudioEngine.getRecordingFileName();
                     AudioEngine.toggleRecording(b);
-                    mainActivity.showMediaPlayerDialog();
+                    mainActivity.recording = b ;
+                    if (!mainActivity.triggerRecord)
+                        mainActivity.showMediaPlayerDialog();
                 }
             }
         });
@@ -503,7 +539,20 @@ public class Rack extends Fragment {
             }
         });
 
-        ImageView logoBtn = view.findViewById(R.id.logo_img);
+        ImageView logoBtn = view.findViewById(R.id.logo_img) ;
+        /*
+        logoBtn.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Log.d(TAG, "onKey() called with: v = [" + v + "], keyCode = [" + keyCode + "], event = [" + event + "]");
+                if (event.getAction() == KeyEvent.ACTION_UP)
+                    mainActivity.hotkeys(keyCode, event);
+                return false;
+            }
+        });
+
+         */
+
         logoBtn.setLongClickable(true);
         logoBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -619,8 +668,8 @@ public class Rack extends Fragment {
         patchUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (! mainActivity.useTheme && ! onOff.isChecked())
-                    onOff.setChecked(true);
+                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
+                    mainActivity.onOff.setChecked(true);
 
                 if (mainActivity.useTheme && ! toggleButton.isChecked())
                     toggleButton.setChecked(true);
@@ -648,8 +697,8 @@ public class Rack extends Fragment {
         patchDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (! mainActivity.useTheme && ! onOff.isChecked())
-                    onOff.setChecked(true);
+                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
+                    mainActivity.onOff.setChecked(true);
 
                 if (mainActivity.useTheme && ! toggleButton.isChecked())
                     toggleButton.setChecked(true);
@@ -715,13 +764,13 @@ public class Rack extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //                    mainActivity.toggleEffect(!isChecked);
-                    onOff.setChecked(isChecked);
+                    mainActivity.onOff.setChecked(isChecked);
                     mainActivity.skinEngine.toggle(toggleButton, isChecked);
                 }
             });
 
             toggleButton.setVisibility(View.VISIBLE);
-            onOff.setVisibility(View.GONE);
+            mainActivity.onOff.setVisibility(View.GONE);
 
             mainActivity.skinEngine.view (optionsBtn, "menu", "overflow", SkinEngine.Resize.Height, .5f);
             optionsBtn.setCompoundDrawables(null, null, null, null);

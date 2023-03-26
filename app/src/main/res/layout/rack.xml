@@ -424,15 +424,32 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <Button
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:id="@+id/hide_panel"
-                android:drawableLeft="@drawable/ic_baseline_keyboard_double_arrow_up_24"
-                android:layout_marginRight="10dp"
-                android:background="@color/fui_transparent"
-                android:text="Hide Panel"/>
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="Trigger Rec"
+                    android:textOn="Trigger Off"
+                    android:background="@color/fui_transparent"
+                    android:id="@+id/record_trigger"/>
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:id="@+id/hide_panel"
+                    android:drawableLeft="@drawable/ic_baseline_keyboard_double_arrow_up_24"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/fui_transparent"
+                    android:text="Hide Panel"/>
+            </LinearLayout>
         </LinearLayout>
 
 

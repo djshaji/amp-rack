@@ -107,6 +107,8 @@ Meter::Meter(JavaVM *pVm) {
     vringbuffer_set_autoincrease_callback(vringbufferOutput,autoincrease_callback,0);
     current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
     empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * 1));
+    vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
+    vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
 
     OUT
 }
@@ -131,8 +133,6 @@ void Meter::enable () {
     }
      */
 
-    vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
-    vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
     enabled = true ;
 //    env->CallStaticVoidMethod(mainActivity, setMixerMeter, (jfloat ) 1.0f, true);
     OUT

@@ -49,6 +49,7 @@ public:
     int outputPorts2 [MAX_PLUGINS] ;
     int activePlugins =  0 ;
     bool recordingActive = false ;
+    bool triggerRecord = false ;
     bool bypass = false ;
     float * inSamples = NULL ;
 
@@ -141,6 +142,15 @@ public:
             */
         }
 
+        /*
+        if (triggerRecord) {
+            LOGD("%f", data [0]);
+            if (data [0] > 0.1)
+                recordingActive = true ;
+            else
+                recordingActive = false ;
+        }
+         */
 
         if (recordingActive) {
             FileWriter::process(samplesToProcess, data);
