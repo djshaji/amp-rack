@@ -21,7 +21,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
     if (_sampleRate > 0)
         sampleRate = _sampleRate ;
     else {
-        LOGF ("[%s: %s] 0 sample rate passed", __FILE__, __PRETTY_FUNCTION__ );
+        LOGD ("[%s: %s] 0 sample rate passed", __FILE__, __PRETTY_FUNCTION__ );
         sampleRate = 48000 ;
     }
 

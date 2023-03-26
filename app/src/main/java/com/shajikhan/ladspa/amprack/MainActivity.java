@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static Context context;
     static MainActivity mainActivity;
     SwitchMaterial onOff = null ;
+    String exportFormat ;
     TextView patchName, patchNo, patchDesc ;
     int deviceWidth;
     int deviceHeight;
@@ -1237,6 +1238,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
              */
 
+            if (record.isChecked())
+                record.setChecked(false);
             stopEffect();
             notificationManager.cancelAll();
             running = false ;
@@ -1963,8 +1966,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void applyPreferencesExport() {
-        String format = defaultSharedPreferences.getString("export_format", "1");
-        AudioEngine.setExportFormat(Integer.parseInt(format));
+        exportFormat = defaultSharedPreferences.getString("export_format", "1");
+        AudioEngine.setExportFormat(Integer.parseInt(exportFormat));
         Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
         Log.d(TAG, "applyPreferencesExport: setting bitrate " + bitRate * 1000);
         AudioEngine.setOpusBitRate(bitRate * 1000);

@@ -74,9 +74,9 @@ bool Engine::setEffectOn(bool isOn) {
                 mIsEffectOn = isOn;
             }
         } else {
-            if (mFullDuplexPass.recordingActive) {
-                fileWriter->stopRecording() ;
-            }
+//            if (mFullDuplexPass.recordingActive) {
+//                fileWriter->stopRecording() ;
+//            }
 
             mFullDuplexPass.stop();
             closeStreams();

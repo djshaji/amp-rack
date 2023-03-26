@@ -22,7 +22,7 @@ float FileWriter::min_buffer_time = -1.0f,
 int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
-vringbuffer_t * FileWriter::vringbuffer ;
+vringbuffer_t * FileWriter::vringbuffer = NULL;
 FileType FileWriter::fileType = MP3 ;
 OpusEncoder *FileWriter::encoder ;
 opus_int16 FileWriter::opusIn[960 * 2];
@@ -299,7 +299,6 @@ int FileWriter::disk_write(float *data,size_t frames) {
 void FileWriter::startRecording () {
     IN
     openFile();
-    vringbuffer_set_receiver_callback(vringbuffer,disk_callback);
     ready = true ;
     OUT
 }
@@ -307,11 +306,12 @@ void FileWriter::startRecording () {
 void FileWriter::stopRecording () {
     IN
     // because we use a large buffer, there can be samples in the buffer which have not been written yet
-    if (useStaticBuffer)
-        vringbuffer_return_writing(vringbuffer,buffers);
+//    if (useStaticBuffer)
+//        vringbuffer_return_writing(vringbuffer,buffers);
 
-    vringbuffer_stop_callbacks(vringbuffer);
+//    vringbuffer_stop_callbacks(vringbuffer);
     closeFile();
+    ready = false ;
     LOGD("recording stopped: %d buffer underruns", total_overruns);
     OUT
 }
@@ -323,23 +323,26 @@ void FileWriter::setBufferSize (int bufferSize) {
 
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
 
-    vringbuffer = vringbuffer_create(JC_MAX(4,seconds_to_buffers(min_buffer_time)),
-                                     JC_MAX(4,seconds_to_buffers(max_buffer_time)),
-                                     (size_t) buffer_size_in_bytes);
+    if (vringbuffer == NULL) {
+        vringbuffer = vringbuffer_create(JC_MAX(4, seconds_to_buffers(min_buffer_time)),
+                                         JC_MAX(4, seconds_to_buffers(max_buffer_time)),
+                                         (size_t) buffer_size_in_bytes);
+        vringbuffer_set_receiver_callback(vringbuffer, disk_callback);
+        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
+        /// TODO: Free this memory!
+        current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
+        bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
+//    HERE LOGD("using buffer size %d", bufferSize);
+        bg_buffer->data = static_cast<float *>(malloc(bufferSize));
+        empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
 
+    }
     if(vringbuffer == NULL){
         HERE LOGF ("Unable to create ringbuffer!") ;
         OUT
         return ;
     }
 
-    /// TODO: Free this memory!
-    vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
-    current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
-    bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
-//    HERE LOGD("using buffer size %d", bufferSize);
-    bg_buffer->data = static_cast<float *>(malloc(bufferSize));
-    empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
 //    for (int i = 0 ; i < 32 ; i ++) {
 //        buffers[i] = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
 //        buffers [i] -> data = static_cast<float *>(malloc(block_size));

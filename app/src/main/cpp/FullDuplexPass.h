@@ -50,6 +50,7 @@ public:
     int activePlugins =  0 ;
     bool recordingActive = false ;
     bool bypass = false ;
+    float * inSamples = NULL ;
 
     virtual oboe::DataCallbackResult
     onBothStreamsReady(
@@ -71,7 +72,7 @@ public:
         // It is possible that there may be fewer input than output samples.
         int32_t samplesToProcess = std::min(numInputSamples, numOutputSamples);
 
-        float inSamples [samplesToProcess];
+//        float inSamples [samplesToProcess];
         for (int i = 0 ; i < samplesToProcess ; i ++) {
             inSamples [i] = inputFloats [i] * inputVolume ;
         }
@@ -84,8 +85,7 @@ public:
 //        memcpy(outputData, inputData, samplesToProcess);
         if (! bypass)
             process(inSamples, numInputSamples);
-        else
-            LOGD("effect bypass");
+
         /* this is not supposed to be called directly.
          * hence the entire vringbuffer stuff
          */

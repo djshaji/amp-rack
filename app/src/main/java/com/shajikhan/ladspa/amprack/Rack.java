@@ -167,10 +167,15 @@ public class Rack extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (!onOff.isChecked()) {
-                    MainActivity.toast("Turn on the app to start recording");
 //                        mainActivity.record.setChecked(!b);
-                    if (b)
+                    if (b) {
                         compoundButton.setChecked(false);
+                        MainActivity.toast("Turn on the app to start recording");
+                    } else {
+                        AudioEngine.toggleRecording(b);
+                        mainActivity.showMediaPlayerDialog();
+                    }
+
                     return;
                 }
 
@@ -193,7 +198,8 @@ public class Rack extends Fragment {
                         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
                         Date date = new Date();
                         mainActivity.lastRecordedFileName = formatter.format(date);
-                        AudioEngine.setFileName(mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName);
+                        mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
+                        AudioEngine.setFileName(mainActivity.lastRecordedFileName);
                         switch (mainActivity.exportFormat) {
                             case "0":
                             default:
@@ -210,7 +216,7 @@ public class Rack extends Fragment {
                         AudioEngine.toggleRecording(b);
                     }
                 } else {
-                    mainActivity.lastRecordedFileName = AudioEngine.getRecordingFileName();
+//                    mainActivity.lastRecordedFileName = AudioEngine.getRecordingFileName();
                     AudioEngine.toggleRecording(b);
                     mainActivity.showMediaPlayerDialog();
                 }
