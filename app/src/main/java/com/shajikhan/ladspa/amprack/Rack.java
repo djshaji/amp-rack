@@ -618,6 +618,8 @@ public class Rack extends Fragment {
 
         mainActivity.inputMeter = mainActivity.findViewById(R.id.mixer_input_progress);
         mainActivity.outputMeter = mainActivity.findViewById(R.id.mixer_output_progress);
+        mainActivity.inputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+        mainActivity.outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
 
         mainActivity. inputVolume.addOnChangeListener(new Slider.OnChangeListener() {
             @Override

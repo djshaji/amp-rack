@@ -2387,6 +2387,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //                        mainActivity.record.setChecked(false);
                         AudioEngine.toggleRecording(false);
                         mainActivity.recording = false;
+                        mainActivity.triggerRecord = false;
+                        MainActivity.toast(String.format(
+                                "Recorded file %s",
+                                mainActivity.lastRecordedFileName
+                        ));
                         outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
                     }
                 } else {
