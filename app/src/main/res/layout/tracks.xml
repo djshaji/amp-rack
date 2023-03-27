@@ -61,6 +61,13 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gruppo"
                     android:text="Loop"/>
+                <CheckBox
+                    android:id="@+id/gapless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gruppo"
+                    android:tooltipText="Truncate silence for gapless playback"
+                    android:text="Trun"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"

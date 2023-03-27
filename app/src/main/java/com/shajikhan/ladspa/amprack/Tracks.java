@@ -167,6 +167,15 @@ public class Tracks extends Fragment {
             }
         });
 
+        CheckBox gapless = mainActivity.findViewById(R.id.gapless);
+        gapless.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                player.setSkipSilenceEnabled(isChecked);
+                player.setPauseAtEndOfMediaItems(!isChecked);
+            }
+        });
+
         boolean dynamicsProcessingEnabled = mainActivity.defaultSharedPreferences.getBoolean("tracks_fx", true);
         /* commenting out because causes crashes on some devices
 
