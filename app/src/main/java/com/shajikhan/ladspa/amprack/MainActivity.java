@@ -2373,7 +2373,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
     static void setMixerMeterSwitch (float inputValue, boolean isInput) {
-        if (inputValue < 0.03)
+        if (inputValue < 0.001)
             return;
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput)

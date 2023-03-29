@@ -160,7 +160,7 @@ public:
 
         for (int i = 0; i < bufferUsed; i++) {
             for (int j = 0; j < sbuffer[i].pos; j++) {
-                if (sbuffer[i].data[j] > max && sbuffer[i].data[j] > 0.01 && sbuffer[i].data[j] < 1.01)
+                if (sbuffer[i].data[j] > max /* && sbuffer[i].data[j] > 0.01 */ && sbuffer[i].data[j] < 1.01)
                     max = sbuffer[i].data[j];
             }
         }
