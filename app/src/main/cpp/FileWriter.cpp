@@ -3,6 +3,7 @@
 #include <chrono>
 #include "FileWriter.h"
 
+void * FileWriter::mp3_buffer = NULL;
 bool FileWriter:: useStaticBuffer = false ;
 staticBuffer_t FileWriter::buffers [1025] ;
 /* the reason this has to be less than buffer size is that arrays start at zero
@@ -159,6 +160,7 @@ void FileWriter::openFile () {
             HERE LOGF("Unable to intialize lame parameters: %d", retval);
         }
         outputFile = fopen(filename.c_str(), "wb");
+        mp3_buffer =  malloc ((block_size * 1.25) + 7200);
     }
 
     OUT
@@ -180,6 +182,7 @@ void FileWriter::closeFile () {
         fclose(outputFile);
         outputFile = NULL;
         lame = NULL ;
+        free(mp3_buffer);
     }
 
     else if (fileType == WAV && outputFile) {
@@ -237,15 +240,13 @@ int FileWriter::disk_write(float *data,size_t frames) {
 
 //    IN
     if (fileType == MP3) {
-        void * mp3_buffer =  malloc ((frames * 1.25) + 7200);
-        int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (frames * 1.25) + 7200);
+        int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (block_size * 1.25) + 7200);
         if (write < 0) {
             LOGF("unable to encode mp3 stream: %d", write);
         } else {
             fwrite(mp3_buffer, write, 1, outputFile);
         }
 
-        free(mp3_buffer);
 //        OUT
         return 0 ;
     }
@@ -333,7 +334,7 @@ void FileWriter::setBufferSize (int bufferSize) {
         current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
         bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
 //    HERE LOGD("using buffer size %d", bufferSize);
-        bg_buffer->data = static_cast<float *>(malloc(bufferSize));
+        bg_buffer->data = static_cast<float *>(malloc(buffer_size_in_bytes));
         empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
 
     }
