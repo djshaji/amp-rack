@@ -447,6 +447,10 @@
         <item>libgx_vibe.lv2.so</item>
         <item>libgx_w20.lv2.so</item>
         <item>libgx_zita_rev1.lv2.so</item>
+        <item>libFatFrog.lv2.so</item>
+        <item>libLittleFly.lv2.so</item>
+        <item>libXDarkTerror.lv2.so</item>
+        <item>libXTinyTerror.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
