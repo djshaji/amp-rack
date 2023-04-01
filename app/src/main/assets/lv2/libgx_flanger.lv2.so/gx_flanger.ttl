@@ -1,0 +1,145 @@
+#
+# Copyright (C) 2012 Hermann Meyer, Andreas Degert, Pete Shorthose, Steve Poskitt
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# --------------------------------------------------------------------------
+#
+
+
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix guiext: <http://lv2plug.in/ns/extensions/ui#>.
+@prefix time: <http://lv2plug.in/ns/ext/time#>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+
+<http://guitarix.sourceforge.net#me>
+	a foaf:Person ;
+	foaf:name "Guitarix team" ;
+	foaf:mbox <mailto:brummer@web.de> ;
+	rdfs:seeAlso <http://guitarix.sourceforge.net> .
+
+<http://guitarix.sourceforge.net/plugins/gx_flanger>
+	a doap:Project ;
+	doap:maintainer <http://guitarix.sourceforge.net#me> ;
+	doap:name "Gx_flanger" .
+
+<http://guitarix.sourceforge.net/plugins/gx_flanger#_flanger>
+    a lv2:Plugin ,
+        lv2:FlangerPlugin ;
+    doap:maintainer <http://guitarix.sourceforge.net#me> ;
+    doap:name "GxFlanger";
+    doap:license <http://opensource.org/licenses/isc> ;
+    lv2:project <http://guitarix.sourceforge.net/plugins/gx_flanger> ;
+    lv2:optionalFeature lv2:hardRTCapable ;
+    
+  guiext:ui <http://guitarix.sourceforge.net/plugins/gx_flanger#gui>;
+  
+    lv2:minorVersion 43;
+    lv2:microVersion 0;
+    
+rdfs:comment """
+
+"Flanging /ˈflændʒɪŋ/ is an audio effect produced by mixing two identical signals together, one signal delayed by a small and gradually changing period, usually smaller than 20 milliseconds. This produces a swept comb filter effect: peaks and notches are produced in the resulting frequency spectrum, related to each other in a linear harmonic series. Varying the time delay causes these to sweep up and down the frequency spectrum. A flanger is an effects unit that creates this effect.
+
+Part of the output signal is usually fed back to the input (a "re-circulating delay line"), producing a resonance effect which further enhances the intensity of the peaks and troughs. The phase of the fed-back signal is sometimes inverted, producing another variation on the flanging sound." Wikipedia
+
+*Unofficial documentation
+
+source: http://en.wikipedia.org/wiki/Flanging
+
+""";
+
+    lv2:port  [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 0 ;
+        lv2:symbol "depth" ;
+        lv2:name "DEPTH";
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 5.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 1 ;
+        lv2:symbol "width" ;
+        lv2:name "WIDTH";
+        lv2:default 5.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 10.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 2 ;
+        lv2:symbol "freq" ;
+        lv2:name "FREQ";
+        lv2:default 0.2 ;
+        lv2:minimum 0.05 ;
+        lv2:maximum 10.0 ;
+        units:unit units:hz ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "feedback" ;
+        lv2:name "FEEDBACK";
+        lv2:default -0.707 ;
+        lv2:minimum -0.99 ;
+        lv2:maximum 0.99 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "dry_wet" ;
+        lv2:name "WET";
+        lv2:default 100.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 100.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "mix" ;
+        lv2:name "MIX";
+        lv2:default 0.0 ;
+        lv2:minimum -1.0 ;
+        lv2:maximum 1.0 ;
+    ] , [
+        a lv2:AudioPort ,
+            lv2:OutputPort ;
+        lv2:index 6 ;
+        lv2:symbol "out" ;
+        lv2:name "Out" ;
+    ] , [
+        a lv2:AudioPort ,
+            lv2:InputPort ;
+        lv2:index 7 ;
+        lv2:symbol "in" ;
+        lv2:name "In" ;
+    ] .
+
+
+<http://guitarix.sourceforge.net/plugins/gx_flanger#gui>
+  a guiext:X11UI;
+  guiext:binary <gx_flanger_gui.so>;
+        lv2:extensionData guiext::idle ;
+        lv2:extensionData guiext:resize ;
+        lv2:extensionData guiext:idleInterface;
+        lv2:requiredFeature guiext:idleInterface;
+ .  
+  
