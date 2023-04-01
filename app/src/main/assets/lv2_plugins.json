@@ -445,17 +445,255 @@
         "library": "libGxReverseDelay.lv2.so"
     },
     "25500": {
-        "name": "Gx_tonemender_",
+        "name": "GxSwitchlessWah",
         "id": 8026,
+        "index": 0,
+        "library": "wah.so"
+    },
+    "25600": {
+        "name": "Gx_tonemender_",
+        "id": 8027,
         "index": 0,
         "library": "libGxToneMender.lv2.so"
     },
-    "25600": {
+    "25700": {
         "name": "GxZoom",
-        "id": 8027,
+        "id": 8028,
         "index": 0,
         "library": "libGxZoom.lv2.so"
+    },"25800": {
+        "name": "Gx_alembic",
+        "id": 8029,
+        "index": 0,
+        "library": "libgx_alembic.lv2.so"
+    },"25900": {
+        "name": "Gxbooster",
+        "id": 8030,
+        "index": 0,
+        "library": "libgxbooster.lv2.so"
+    },
+    "26000": {
+        "name": "Gx_expander",
+        "id": 8031,
+        "index": 0,
+        "library": "libgx_expander.lv2.so"
+    },
+    "26100": {
+        "name": "Gx_flanger",
+        "id": 8032,
+        "index": 0,
+        "library": "libgx_flanger.lv2.so"
+    },
+    "26200": {
+        "name": "GxFuzzMaster",
+        "id": 8033,
+        "index": 0,
+        "library": "libgx_fumaster.lv2.so"
+    },
+    "26300": {
+        "name": "GxFuzzFaceFuller",
+        "id": 8034,
+        "index": 0,
+        "library": "libgx_fuzzfacefm.lv2.so"
+    },
+    "26400": {
+        "name": "Gx_fuzzface_",
+        "id": 8035,
+        "index": 0,
+        "library": "libgx_fuzzface.lv2.so"
+    },
+    "26500": {
+        "name": "Gx_gcb_95_",
+        "id": 8036,
+        "index": 0,
+        "library": "libgx_gcb_95.lv2.so"
+    },
+    "26600": {
+        "name": "GxGraphicEQ",
+        "id": 8037,
+        "index": 0,
+        "library": "libgx_graphiceq.lv2.so"
+    },
+    "26700": {
+        "name": "GxHF_Brightener",
+        "id": 8038,
+        "index": 0,
+        "library": "libgx_hfb.lv2.so"
+    },
+    "26800": {
+        "name": "Gx_hogsfoot_",
+        "id": 8039,
+        "index": 0,
+        "library": "libgx_hogsfoot.lv2.so"
+    },
+    "26900": {
+        "name": "Gx_hornet_",
+        "id": 8040,
+        "index": 0,
+        "library": "libgx_hornet.lv2.so"
+    },
+    "27000": {
+        "name": "GxMultiBandCompressor",
+        "id": 8041,
+        "index": 0,
+        "library": "libgx_mbcompressor.lv2.so"
+    },
+    "27100": {
+        "name": "GxMultiBandDelay",
+        "id": 8042,
+        "index": 0,
+        "library": "libgx_mbdelay.lv2.so"
+    },
+    "27200": {
+        "name": "GxMultiBandDistortion",
+        "id": 8043,
+        "index": 0,
+        "library": "libgx_mbdistortion.lv2.so"
+    },
+    "27300": {
+        "name": "GxMultiBandEcho",
+        "id": 8044,
+        "index": 0,
+        "library": "libgx_mbecho.lv2.so"
+    },
+    "27400": {
+        "name": "Gx_mbreverb_",
+        "id": 8045,
+        "index": 0,
+        "library": "libgx_mbreverb.lv2.so"
+    },
+    "27500": {
+        "name": "Gx_mole_",
+        "id": 8046,
+        "index": 0,
+        "library": "libgx_mole.lv2.so"
+    },
+    "27600": {
+        "name": "Gxoc_2",
+        "id": 8047,
+        "index": 0,
+        "library": "libgx_oc_2.lv2.so"
+    },
+    "27700": {
+        "name": "Gx_phaser",
+        "id": 8048,
+        "index": 0,
+        "library": "libgx_phaser.lv2.so"
+    },
+    "27800": {
+        "name": "GxRangeMaster",
+        "id": 8049,
+        "index": 0,
+        "library": "libgx_rangem.lv2.so"
+    },
+    "27900": {
+        "name": "GxReverb-Stereo",
+        "id": 8050,
+        "index": 0,
+        "library": "libgx_reverb.lv2.so"
+    },
+    "28000": {
+        "name": "Gx_room_simulator_",
+        "id": 8051,
+        "index": 0,
+        "library": "libgx_room_simulator.lv2.so"
+    },
+    "28100": {
+        "name": "GxScreamingBird",
+        "id": 8052,
+        "index": 0,
+        "library": "libgx_scream.lv2.so"
+    },
+    "28200": {
+        "name": "Gxshimmizita",
+        "id": 8053,
+        "index": 0,
+        "library": "libgx_shimmizita.lv2.so"
+    },
+    "28300": {
+        "name": "Gx_studiopre",
+        "id": 8054,
+        "index": 0,
+        "library": "libgx_studiopre.lv2.so"
+    },
+    "28400": {
+        "name": "Gx Studio Preamp Stereo",
+        "id": 8055,
+        "index": 0,
+        "library": "libgx_studiopre_st.lv2.so"
+    },
+    "28500": {
+        "name": "Gx_susta_",
+        "id": 8056,
+        "index": 0,
+        "library": "libgx_susta.lv2.so"
+    },
+    "28600": {
+        "name": "Gx_switched_tremolo_",
+        "id": 8057,
+        "index": 0,
+        "library": "libgx_switched_tremolo.lv2.so"
+    },
+    "28700": {
+        "name": "GxTape",
+        "id": 8058,
+        "index": 0,
+        "library": "libgxtape.lv2.so"
+    },
+    "28800": {
+        "name": "Gx Tape Stereo",
+        "id": 8059,
+        "index": 0,
+        "library": "libgxtape_st.lv2.so"
+    },
+    "28900": {
+        "name": "GxTiltTone",
+        "id": 8060,
+        "index": 0,
+        "library": "libgxtilttone.lv2.so"
+    },
+    "29000": {
+        "name": "GxTremolo",
+        "id": 8061,
+        "index": 0,
+        "library": "libgx_tremolo.lv2.so"
+    },
+    "29100": {
+        "name": "GxRedeyeFx",
+        "id": 8062,
+        "index": 0,
+        "library": "libgxtubedelay.lv2.so"
+    },
+    "29200": {
+        "name": "GxTubeTremelo",
+        "id": 8063,
+        "index": 0,
+        "library": "libgxtubetremelo.lv2.so"
+    },
+    "29300": {
+        "name": "GxTubeVibrato",
+        "id": 8064,
+        "index": 0,
+        "library": "libgxtubevibrato.lv2.so"
+    },
+    "29400": {
+        "name": "Gx_vibe_mono",
+        "id": 8065,
+        "index": 0,
+        "library": "libgx_vibe.lv2.so"
+    },
+    "29500": {
+        "name": "Gx w20",
+        "id": 8066,
+        "index": 0,
+        "library": "libgx_w20.lv2.so"
+    },
+    "29600": {
+        "name": "GxZita_rev1-Stereo",
+        "id": 8067,
+        "index": 0,
+        "library": "libgx_zita_rev1.lv2.so"
     }
-
 }
+
 

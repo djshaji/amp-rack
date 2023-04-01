@@ -382,12 +382,16 @@
         <item>libGxVoodoFuzz.lv2.so</item>
         <item>bentdelay.so</item>
         <item>casynth.so</item>
+        <item>casynth.so</item>
         <item>cheapdist.so</item>
         <item>envfollower.so</item>
         <item>ewham.so</item>
         <item>hip2b.so</item>
+        <item>hip2b.so</item>
+        <item>lushlife.so</item>
         <item>lushlife.so</item>
         <item>mindi.so</item>
+        <item>octolo.so</item>
         <item>octolo.so</item>
         <item>powercut.so</item>
         <item>powerup.so</item>
@@ -404,6 +408,45 @@
         <item>libGxSwitchlessWah.lv2.so</item>
         <item>libGxToneMender.lv2.so</item>
         <item>libGxZoom.lv2.so</item>
+        <item>libgx_alembic.lv2.so</item>
+        <item>libgxbooster.lv2.so</item>
+        <item>libgx_expander.lv2.so</item>
+        <item>libgx_flanger.lv2.so</item>
+        <item>libgx_fumaster.lv2.so</item>
+        <item>libgx_fuzzfacefm.lv2.so</item>
+        <item>libgx_fuzzface.lv2.so</item>
+        <item>libgx_gcb_95.lv2.so</item>
+        <item>libgx_graphiceq.lv2.so</item>
+        <item>libgx_hfb.lv2.so</item>
+        <item>libgx_hogsfoot.lv2.so</item>
+        <item>libgx_hornet.lv2.so</item>
+        <item>libgx_mbcompressor.lv2.so</item>
+        <item>libgx_mbdelay.lv2.so</item>
+        <item>libgx_mbdistortion.lv2.so</item>
+        <item>libgx_mbecho.lv2.so</item>
+        <item>libgx_mbreverb.lv2.so</item>
+        <item>libgx_mole.lv2.so</item>
+        <item>libgx_oc_2.lv2.so</item>
+        <item>libgx_phaser.lv2.so</item>
+        <item>libgx_rangem.lv2.so</item>
+        <item>libgx_reverb.lv2.so</item>
+        <item>libgx_room_simulator.lv2.so</item>
+        <item>libgx_scream.lv2.so</item>
+        <item>libgx_shimmizita.lv2.so</item>
+        <item>libgx_studiopre.lv2.so</item>
+        <item>libgx_studiopre_st.lv2.so</item>
+        <item>libgx_susta.lv2.so</item>
+        <item>libgx_switched_tremolo.lv2.so</item>
+        <item>libgxtape.lv2.so</item>
+        <item>libgxtape_st.lv2.so</item>
+        <item>libgxtilttone.lv2.so</item>
+        <item>libgx_tremolo.lv2.so</item>
+        <item>libgxtubedelay.lv2.so</item>
+        <item>libgxtubetremelo.lv2.so</item>
+        <item>libgxtubevibrato.lv2.so</item>
+        <item>libgx_vibe.lv2.so</item>
+        <item>libgx_w20.lv2.so</item>
+        <item>libgx_zita_rev1.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

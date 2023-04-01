@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     RecyclerView.LayoutManager layoutManager;
     ConstraintLayout linearLayoutPluginDialog;
     boolean lazyLoad = true;
-    String[] sharedLibraries;
+    static String[] sharedLibraries;
     static String[] sharedLibrariesLV2;
     PluginDialogAdapter pluginDialogAdapter;
     SharedPreferences defaultSharedPreferences = null;
@@ -296,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "testLV2");
         hashCommands.add(this, "printDebugLog");
         hashCommands.add(this, "printActiveChain");
+        hashCommands.add(this, "printPluginsAll");
         hashCommands.add(this, "drummer");
         hashCommands.add(this, "featured");
         hashCommands.add(this, "resetOnboard");
@@ -2482,4 +2483,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
       */
+    public static void printPluginsAll () {
+        Log.d(TAG, "printPlugins: " + String.format(
+                "Shared libraries: %d", sharedLibrariesLV2.length
+        ));
+
+        for (int i = 0 ; i < sharedLibrariesLV2.length ; i ++) {
+            Log.d(TAG, String.format("printPluginsAll [%d]: %s", sharedLibraries.length + i, sharedLibrariesLV2 [i]));
+        }
+    }
 }
