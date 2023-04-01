@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 3 Nighthawk</string>
-    <string name="build_id">350</string>
+    <string name="build_id">354</string>
     <string name="onboard_theme_chooser">
         Choose a theme for the UI. Choose Material Theme for Native
         Android Material Design, or Tube Amp theme based on the new
@@ -392,6 +392,18 @@
         <item>powercut.so</item>
         <item>powerup.so</item>
         <item>stuck.so</item>
+        <item>libGx4BandEQ.lv2.so</item>
+        <item>libGxCabSim.lv2.so</item>
+        <item>libGxDenoiser2.lv2.so</item>
+        <item>libGxDistortionPlus.lv2.so</item>
+        <item>libGxFenderizer.lv2.so</item>
+        <item>libGxOsMutantes.lv2.so</item>
+        <item>libGxOverDriver.lv2.so</item>
+        <item>libGxPushPull.lv2.so</item>
+        <item>libGxReverseDelay.lv2.so</item>
+        <item>libGxSwitchlessWah.lv2.so</item>
+        <item>libGxToneMender.lv2.so</item>
+        <item>libGxZoom.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

@@ -389,6 +389,73 @@
         "id": 8016,
         "index": 0,
         "library": "stuck.so"
+    },
+    "24600": {
+        "name": "Gx4BandEQ",
+        "id": 8017,
+        "index": 0,
+        "library": "libGx4BandEQ.lv2.so"
+    },
+    "24700": {
+        "name": "Gx_cabsim_",
+        "id": 8018,
+        "index": 0,
+        "library": "libGxCabSim.lv2.so"
+    },
+    "24800": {
+        "name": "Gx_denoiser2_",
+        "id": 8019,
+        "index": 0,
+        "library": "libGxDenoiser2.lv2.so"
+    },
+    "24900": {
+        "name": "Gx_DistortionPlus_",
+        "id": 8020,
+        "index": 0,
+        "library": "libGxDistortionPlus.lv2.so"
+    },
+    "25000": {
+        "name": "Gx_fenderizer_",
+        "id": 8021,
+        "index": 0,
+        "library": "libGxFenderizer.lv2.so"
+    },
+    "25100": {
+        "name": "GxOsMutantes",
+        "id": 8022,
+        "index": 0,
+        "library": "libGxOsMutantes.lv2.so"
+    },
+    "25200": {
+        "name": "Gx_overdriver_",
+        "id": 8023,
+        "index": 0,
+        "library": "libGxOverDriver.lv2.so"
+    },
+    "25300": {
+        "name": "Gx_pushpull_",
+        "id": 8024,
+        "index": 0,
+        "library": "libGxPushPull.lv2.so"
+    },
+    "25400": {
+        "name": "GxReverseDelay",
+        "id": 8025,
+        "index": 0,
+        "library": "libGxReverseDelay.lv2.so"
+    },
+    "25500": {
+        "name": "Gx_tonemender_",
+        "id": 8026,
+        "index": 0,
+        "library": "libGxToneMender.lv2.so"
+    },
+    "25600": {
+        "name": "GxZoom",
+        "id": 8027,
+        "index": 0,
+        "library": "libGxZoom.lv2.so"
     }
+
 }
 
