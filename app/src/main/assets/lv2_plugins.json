@@ -693,7 +693,32 @@
         "id": 8067,
         "index": 0,
         "library": "libgx_zita_rev1.lv2.so"
+    },
+    "29700": {
+        "name": "FatFrog",
+        "id": 8068,
+        "index": 0,
+        "library": "libFatFrog.lv2.so"
+    },
+    "29800": {
+        "name": "LittleFly_",
+        "id": 8069,
+        "index": 0,
+        "library": "libLittleFly.lv2.so"
+    },
+    "29900": {
+        "name": "XDarkTerror",
+        "id": 8070,
+        "index": 0,
+        "library": "libXDarkTerror.lv2.so"
+    },
+    "30000": {
+        "name": "X_tinyterror_",
+        "id": 8071,
+        "index": 0,
+        "library": "libXTinyTerror.lv2.so"
     }
 }
+
 
 
