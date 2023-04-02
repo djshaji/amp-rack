@@ -53,5 +53,16 @@
 		"1": {
 			"0" :"'59 Bassman" ,"1" :"'69 Twin Reverb" ,"2" :"'64 Princeton" ,"3" :"'59/'81 JCM 800" ,"4" :"'78 Club &amp; Country" ,"5" :"'59/'86 AC-30 of sorts"
 		}
+	}, "24700": {
+			"3": {
+				"0": "Cream",
+				"1": "JMP",
+				"2": "JTM",
+				"3": "Laney",
+				"4": "Tri Amp",
+				"5": "Tri Axis",
+				"6": "V-Twin",
+				"7": "TubeAmp"
+		}
 	}
 }

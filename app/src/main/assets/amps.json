@@ -172,5 +172,25 @@
       "Large stack (front mic)",
       "Large stack (side mic, scooped mids)"
     ]
+  },
+
+  "Gx_cabsim_": {
+    "1": [
+      "Cream",
+      "JMP",
+      "JTM",
+      "Laney",
+      "Triamp",
+      "Triaxis",
+      "V-Twin",
+      "Tubeman"
+    ]
+  },
+
+  "rkr Reverb": {
+    "3": [
+      "Freeverb",
+      "Random"
+    ]
   }
 }

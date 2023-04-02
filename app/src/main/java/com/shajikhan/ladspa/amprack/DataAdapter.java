@@ -140,22 +140,27 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
             }
 
-            Log.d(TAG, "onBindViewHolder: " + pluginName);
+            Log.d(TAG, "onBindViewHolder: loading plugin -> " + pluginName );
             if (mainActivity.ampModels.has(pluginName)) {
+                Log.d(TAG, "onBindViewHolder: found amp model " + pluginName);
                 JSONObject control ;
                 ArrayList <String> models = new ArrayList<>();
                 try {
                     control = mainActivity.ampModels.getJSONObject(pluginName) ;
                     if (control.has(String.valueOf(i))) {
+                        Log.d(TAG, "onBindViewHolder: found control " + i);
                         isSpinner = true ;
                         JSONArray modelsData = control.getJSONArray(String.valueOf(i));
                         for (int x_ = 0 ; x_ < modelsData.length() ; x_++) {
+                            Log.d(TAG, "onBindViewHolder: " + modelsData.getString(x_));
                             models.add(modelsData.getString(x_));
                         }
 
+                    } else {
+                        Log.d(TAG, "onBindViewHolder: no control for " + i);
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "onBindViewHolder: error parsing amp model " + pluginName, e);
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
