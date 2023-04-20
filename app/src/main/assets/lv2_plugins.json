@@ -717,8 +717,125 @@
         "id": 8071,
         "index": 0,
         "library": "libXTinyTerror.lv2.so"
+    },
+
+    "31000": {
+        "name": "Gx_aclipper_",
+        "id": 8072,
+        "index": 0,
+        "library": "libgx_aclipper.lv2.so"
+    },
+
+    "32000": {
+        "name": "GxWah",
+        "id": 8073,
+        "index": 0,
+        "library": "libgxautowah.lv2.so"
+    },
+    "33000": {
+        "name": "Gx_bmp_",
+        "id": 8074,
+        "index": 0,
+        "library": "libgx_bmp.lv2.so"
+    },
+    "34000": {
+        "name": "GxBoss DS1",
+        "id": 8075,
+        "index": 0,
+        "library": "libgx_bossds1.lv2.so"
+    },
+
+    "35000": {
+        "name": "GxChorus-Stereo",
+        "id": 8076,
+        "index": 0,
+        "library": "libgx_chorus.lv2.so"
+    },
+    "36000": {
+        "name": "GxWahwah",
+        "id": 8077,
+        "index": 0,
+        "library": "libgx_colwah.lv2.so"
+    },
+
+    "37000": {
+        "name": "GxCompressor",
+        "id": 8078,
+        "index": 0,
+        "library": "libgx_compressor.lv2.so"
+    },
+
+    "38000": {
+        "name": "Gx_cstb_",
+        "id": 8079,
+        "index": 0,
+        "library": "libgx_cstb.lv2.so"
+    },
+
+    "39000": {
+        "name": "Gx_delay_stereo",
+        "id": 8080,
+        "index": 0,
+        "library": "libgx_delay.lv2.so"
+    },
+    "40000": {
+        "name": "Gxdigital_delay",
+        "id": 8081,
+        "index": 0,
+        "library": "libgx_digital_delay.lv2.so"
+    },
+
+    "41000": {
+        "name": "Gx_duck_delay_",
+        "id": 8082,
+        "index": 0,
+        "library": "libgx_duck_delay.lv2.so"
+    },
+
+    "42000": {
+        "name": "GxEchoCat",
+        "id": 8083,
+        "index": 0,
+        "library": "libgxechocat.lv2.so"
+    },
+
+    "43000": {
+        "name": "GxEcho-Stereo",
+        "id": 8084,
+        "index": 0,
+        "library": "libgx_echo.lv2.so"
+    },
+
+    "44000": {
+        "name": "GxFuzz",
+        "id": 8085,
+        "index": 0,
+        "library": "libgx_fuzz.lv2.so"
+    },
+
+    "45000": {
+        "name": "Gx_muff_",
+        "id": 8086,
+        "index": 0,
+        "library": "libgx_muff.lv2.so"
+    },
+
+    "46000": {
+        "name": "Gx_mxrdist_",
+        "id": 8087,
+        "index": 0,
+        "library": "libgx_mxrdist.lv2.so"
+    },
+
+    "47000": {
+        "name": "Gxts9sim",
+        "id": 8088,
+        "index": 0,
+        "library": "libgxts9.lv2.so"
     }
 }
+
+
 
 
 
