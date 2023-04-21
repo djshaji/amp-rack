@@ -1,0 +1,142 @@
+
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix guiext: <http://lv2plug.in/ns/extensions/ui#>.
+@prefix opts:   <http://lv2plug.in/ns/ext/options#> .
+@prefix time:   <http://lv2plug.in/ns/ext/time#>.
+@prefix units:  <http://lv2plug.in/ns/extensions/units#> .
+@prefix atom:   <http://lv2plug.in/ns/ext/atom#> .
+@prefix urid:   <http://lv2plug.in/ns/ext/urid#> .
+@prefix pprop:  <http://lv2plug.in/ns/ext/port-props#> .
+@prefix midi:   <http://lv2plug.in/ns/ext/midi#> .
+@prefix patch:  <http://lv2plug.in/ns/ext/patch#> .
+
+
+<urn:name#me>
+   a foaf:Person ;
+   foaf:name "brummer" .
+
+<https://github.com/brummer10/MetalTone>
+   a lv2:Plugin ,
+       lv2:DistortionPlugin ;
+   doap:maintainer <urn:name#me> ;
+   doap:name "MetalTone" ;
+   lv2:project <https://github.com/brummer10/MetalTone> ;
+   lv2:requiredFeature urid:map ;
+   lv2:optionalFeature lv2:hardRTCapable ;
+   lv2:minorVersion 1 ;
+   lv2:microVersion 2 ;
+
+guiext:ui <https://github.com/brummer10/MetalTone_ui> ;
+
+rdfs:comment """
+MetalTone is modeled after the renowned BOSS MT-2 Metal Zone(*), a high gain distortion pedal with an advanced EQ section.
+
+It has standard active EQ controls with a massive 15dB of cut/boost range for the lows and highs.
+It also sports a parametric active EQ for the mids with two controls: the frequency, and the boost/cut amount.
+
+The midfreq parameter has a very wide range, going from 200Hz all the way to 5kHz. As a result, it's better to think of it simply as a single highly flexible active EQ, 
+and disregard the idea that it's only for shaping the mids.
+
+Features:
+Modeled by Brummer
+Based on the BOSS MT-2 Metal Zone(*)
+
+(*) 'Other product names modeled in this software are trademarks of their respective companies that do not endorse and are not associated or affiliated with this software.
+BOSS MT-2 Metal Zone is a trademark or trade name of another manufacturer and was used merely to identify the product whose sound was reviewed in the creation of this 
+product. All other trademarks are the property of their respective holders.'
+""";
+
+
+   lv2:port  [
+       a lv2:AudioPort ,
+          lv2:InputPort ;
+      lv2:index 0 ;
+      lv2:symbol "in0" ;
+      lv2:name "In0" ;
+   ], [
+      a lv2:AudioPort ,
+           lv2:OutputPort ;
+      lv2:index 1 ;
+      lv2:symbol "out0" ;
+      lv2:name "Out0" ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 2 ;
+      lv2:designation lv2:enabled;
+      lv2:portProperty lv2:toggled ;
+      lv2:symbol "Bypass" ;
+      lv2:name "bypass" ;
+      lv2:default 1 ;
+      lv2:minimum 0 ;
+      lv2:maximum 1 ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 3 ;
+      lv2:symbol "DIST" ;
+      lv2:name "dist" ;
+      lv2:default 0.000000 ;
+      lv2:minimum 0.000000 ;
+      lv2:maximum 1.000000 ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 4 ;
+      lv2:symbol "HIGH" ;
+      lv2:name "high" ;
+      lv2:default 0.500000 ;
+      lv2:minimum 0.000000 ;
+      lv2:maximum 1.000000 ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 5 ;
+      lv2:symbol "LEVEL" ;
+      lv2:name "level" ;
+      lv2:default 0.300000 ;
+      lv2:minimum 0.000000 ;
+      lv2:maximum 1.000000 ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 6 ;
+      lv2:symbol "LOW" ;
+      lv2:name "low" ;
+      lv2:default 0.500000 ;
+      lv2:minimum 0.000000 ;
+      lv2:maximum 1.000000 ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 7 ;
+      lv2:symbol "MIDFREQ" ;
+      lv2:name "midfreq" ;
+      lv2:default 0.500000 ;
+      lv2:minimum 0.000000 ;
+      lv2:maximum 1.000000 ;
+   ], [
+      a lv2:InputPort ,
+          lv2:ControlPort ;
+      lv2:index 8 ;
+      lv2:symbol "MIDDLE" ;
+      lv2:name "middle" ;
+      lv2:default 0.500000 ;
+      lv2:minimum 0.000000 ;
+      lv2:maximum 1.000000 ;
+   ] .
+
+
+<https://github.com/brummer10/MetalTone_ui>
+   a guiext:X11UI;
+   guiext:binary <MetalTone_ui.so> ;
+       lv2:extensionData guiext::idle ;
+       lv2:extensionData guiext:resize ;
+       lv2:extensionData guiext:idleInterface ;
+       lv2:requiredFeature guiext:idleInterface ;
+       lv2:optionalFeature opts:options ;
+       opts:supportedOption guiext:scaleFactor ; .

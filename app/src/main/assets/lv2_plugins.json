@@ -832,6 +832,42 @@
         "id": 8088,
         "index": 0,
         "library": "libgxts9.lv2.so"
+    },
+    "31800": {
+        "name": "bluesbreaker",
+        "id": 8089,
+        "index": 0,
+        "library": "libbluesbreaker.so"
+    },
+    "31900": {
+        "name": "CollisionDrive",
+        "id": 8090,
+        "index": 0,
+        "library": "libCollisionDrive.so"
+    },
+    "32000": {
+        "name": "Harmonic Exciter",
+        "id": 8091,
+        "index": 0,
+        "library": "libHarmonicExciter.so"
+    },
+    "32100": {
+        "name": "MetalTone",
+        "id": 8092,
+        "index": 0,
+        "library": "libMetalTone.so"
+    },
+    "32200": {
+        "name": "Rumor",
+        "id": 8093,
+        "index": 0,
+        "library": "libRumor.so"
+    },
+    "32300": {
+        "name": "VintageAC30",
+        "id": 8094,
+        "index": 0,
+        "library": "libVintageAC30.so"
     }
 }
 
