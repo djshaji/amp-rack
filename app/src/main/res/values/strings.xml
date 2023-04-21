@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 3 Nighthawk</string>
-    <string name="build_id">362</string>
+    <string name="build_id">363</string>
     <string name="onboard_theme_chooser">
         Choose a theme for the UI. Choose Material Theme for Native
         Android Material Design, or Tube Amp theme based on the new
@@ -451,6 +451,23 @@
         <item>libLittleFly.lv2.so</item>
         <item>libXDarkTerror.lv2.so</item>
         <item>libXTinyTerror.lv2.so</item>
+        <item>libgx_aclipper.lv2.so</item>
+        <item>libgxautowah.lv2.so</item>
+        <item>libgx_bmp.lv2.so</item>
+        <item>libgx_bossds1.lv2.so</item>
+        <item>libgx_chorus.lv2.so</item>
+        <item>libgx_colwah.lv2.so</item>
+        <item>libgx_compressor.lv2.so</item>
+        <item>libgx_cstb.lv2.so</item>
+        <item>libgx_delay.lv2.so</item>
+        <item>libgx_digital_delay.lv2.so</item>
+        <item>libgx_duck_delay.lv2.so</item>
+        <item>libgxechocat.lv2.so</item>
+        <item>libgx_echo.lv2.so</item>
+        <item>libgx_fuzz.lv2.so</item>
+        <item>libgx_muff.lv2.so</item>
+        <item>libgx_mxrdist.lv2.so</item>
+        <item>libgxts9.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
