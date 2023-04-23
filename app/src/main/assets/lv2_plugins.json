@@ -868,7 +868,14 @@
         "id": 8094,
         "index": 0,
         "library": "libVintageAC30.so"
+    },
+    "32400": {
+        "name": "GxAmplifier",
+        "id": 8095,
+        "index": 0,
+        "library": "libgx_amp.lv2.so"
     }
+
 }
 
 
