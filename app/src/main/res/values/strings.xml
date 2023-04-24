@@ -475,6 +475,7 @@
         <item>libRumor.so</item>
         <item>libVintageAC30.so</item>
         <item>libgx_amp.lv2.so</item>
+        <item>libgxmetal_amp.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

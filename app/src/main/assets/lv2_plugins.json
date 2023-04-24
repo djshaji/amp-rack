@@ -874,7 +874,14 @@
         "id": 8095,
         "index": 0,
         "library": "libgx_amp.lv2.so"
+    },
+    "32500": {
+        "name": "GxMetalAmp",
+        "id": 8096,
+        "index": 0,
+        "library": "libgxmetal_amp.lv2.so"
     }
+
 
 }
 

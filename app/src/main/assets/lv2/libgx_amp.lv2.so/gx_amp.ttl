@@ -1,0 +1,337 @@
+#
+# Copyright (C) 2012 Hermann Meyer, Andreas Degert, Pete Shorthose, Steve Poskitt
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# --------------------------------------------------------------------------
+#
+
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix opt:  <http://lv2plug.in/ns/ext/options#> .
+@prefix guiext: <http://lv2plug.in/ns/extensions/ui#>.
+@prefix work:  <http://lv2plug.in/ns/ext/worker#> .
+@prefix mod: <http://moddevices.com/ns/mod#> .
+@prefix pprop: <http://lv2plug.in/ns/ext/port-props#> .
+
+<http://guitarix.sourceforge.net#me>
+	a foaf:Person ;
+	foaf:name "Guitarix team" ;
+	foaf:mbox <mailto:brummer@web.de> ;
+	rdfs:seeAlso <http://guitarix.sourceforge.net> .
+
+<http://guitarix.sourceforge.net/plugins/gx_amp>
+	a doap:Project ;
+	doap:maintainer <http://guitarix.sourceforge.net#me> ;
+	doap:name "GxAmplifier" .
+
+<http://guitarix.sourceforge.net/plugins/gx_amp#GUITARIX>
+    a lv2:Plugin ,
+        lv2:SimulatorPlugin ;
+    doap:maintainer <http://guitarix.sourceforge.net#me> ;
+    doap:name "GxAmplifier-X";
+    doap:license <http://opensource.org/licenses/isc> ;
+    lv2:project <http://guitarix.sourceforge.net/plugins/gx_amp> ;
+    lv2:optionalFeature lv2:hardRTCapable ;
+    lv2:requiredFeature urid:map ,
+        bufsz:boundedBlockLength ,
+        work:schedule ;
+    mod:brand "Guitarix" ;
+    mod:label "Gx Amp X" ;
+    bufsz:minBlockLength 64 ;
+    bufsz:maxBlockLength 8192 ;
+    lv2:extensionData work:interface ;
+
+    lv2:minorVersion 43;
+    lv2:microVersion 0;
+
+  guiext:ui <http://guitarix.sourceforge.net/plugins/gx_amp#gui>;
+
+rdfs:comment """
+This plugin is the combination of guitarix's head, tonestack and cabinet, which, in that order, composes the signal path. In the tube-amp part, "PreGain" corresponds to the gain used at the amp input, "Drive" controls the power amp gain, "Distortion" is a blend between clean and distorted sound (lower boundary is all clean, upper boundary all distorted) and "MasterGain" controls the output gain. Mainly, the responsible for the signal distortion are "PreGain" and "Drive" parameters. Besides that, there is a list of possible valve combinations so you can vary your distortion.
+
+At the Tonestack part, we find a basic equalization set ("Bass", "Middle", "Treble" and "Presence") and a list of tone-responses from a few well-known amps, you can check this list in the link at the end of this description (there might be some version differences).
+
+Finally, at the Cabinet path, we have "Cabinet", which corresponds to another output gain, it doesn't distort the signal so it can be used as a Master output and there's another list, containing a virtual sound of the cabinet of speakers selected (more details in the link below).
+
+Based on: 
+https://sourceforge.net/apps/mediawiki/guitarix/index.php?title=EnhancedUI
+https://sourceforge.net/apps/mediawiki/guitarix/index.php?title=Tonestack
+https://sourceforge.net/apps/mediawiki/guitarix/index.php?title=Cabinet_Impulse_Response_convolution
+""";
+
+    lv2:port [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 0 ;
+        lv2:symbol "MasterGain" ;
+        lv2:name "MasterGain";
+        lv2:default 0.0 ;
+        lv2:minimum -20.0 ;
+        lv2:maximum 20.0 ;
+        mod:default 0.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 1 ;
+        lv2:symbol "PreGain" ;
+        lv2:name "PreGain";
+        lv2:default 0.0 ;
+        lv2:minimum -20.0 ;
+        lv2:maximum 20.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 2 ;
+        lv2:symbol "Distortion" ;
+        lv2:name "Distortion";
+        lv2:default 20.0 ;
+        lv2:minimum 1.0 ;
+        lv2:maximum 100.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "Drive" ;
+        lv2:name "Drive";
+        lv2:default 0.25 ;
+        lv2:minimum 0.01 ;
+        lv2:maximum 1.0 ;
+    ] ,[
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "Middle" ;
+        lv2:name "Middle";
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "Bass" ;
+        lv2:name "Bass";
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 6 ;
+        lv2:symbol "Treble" ;
+        lv2:name "Treble";
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 7 ;
+        lv2:symbol "Cabinet" ;
+        lv2:name "Cabinet";
+        lv2:default 10.0 ;
+        lv2:minimum 1.0 ;
+        lv2:maximum 20.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 8 ;
+        lv2:symbol "Presence" ;
+        lv2:name "Presence";
+        lv2:default 5.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 10.0 ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 9 ;
+        lv2:symbol "model" ;
+        lv2:name "Model" ;
+        lv2:default 0 ;
+        lv2:minimum 0 ;
+        lv2:maximum 18 ;
+        lv2:portProperty lv2:integer;
+        lv2:portProperty lv2:enumeration ;
+        lv2:scalePoint [rdfs:label "12ax7"; rdf:value 0];
+        lv2:scalePoint [rdfs:label "12AU7"; rdf:value 1];
+        lv2:scalePoint [rdfs:label "12AT7"; rdf:value 2];
+        lv2:scalePoint [rdfs:label "6DJ8"; rdf:value 3];
+        lv2:scalePoint [rdfs:label "6C16"; rdf:value 4];
+        lv2:scalePoint [rdfs:label "6V6"; rdf:value 5];
+        lv2:scalePoint [rdfs:label "12ax7 feedback"; rdf:value 6];
+        lv2:scalePoint [rdfs:label "12AU7 feedback"; rdf:value 7];
+        lv2:scalePoint [rdfs:label "12AT7 feedback"; rdf:value 8];
+        lv2:scalePoint [rdfs:label "6DJ8 feedback"; rdf:value 9];
+        lv2:scalePoint [rdfs:label "pre 12ax7/ master 6V6"; rdf:value 10];
+        lv2:scalePoint [rdfs:label "pre 12AU7/ master 6V6"; rdf:value 11];
+        lv2:scalePoint [rdfs:label "pre 12AT7/ master 6V6"; rdf:value 12];
+        lv2:scalePoint [rdfs:label "pre 6DJ8/ master 6V6"; rdf:value 13];
+        lv2:scalePoint [rdfs:label "pre 12ax7/ push-pull 6V6"; rdf:value 14];
+        lv2:scalePoint [rdfs:label "pre 12AU7/ push-pull 6V6"; rdf:value 15];
+        lv2:scalePoint [rdfs:label "pre 12AT7/ push pull 6V6"; rdf:value 16];
+        lv2:scalePoint [rdfs:label "pre 6DJ8/ push-pull 6V6"; rdf:value 17];
+        lv2:scalePoint [rdfs:label "--"; rdf:value 18];
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 10 ;
+        lv2:symbol "t_model" ;
+        lv2:name "Tonestack Model" ;
+        lv2:default 1 ;
+        lv2:minimum 0 ;
+        lv2:maximum 26 ;
+        lv2:portProperty lv2:integer;
+        lv2:portProperty lv2:enumeration ;
+        lv2:scalePoint [rdfs:label "default"; rdf:value 0];
+        lv2:scalePoint [rdfs:label "Bassman Style"; rdf:value 1];
+        lv2:scalePoint [rdfs:label "Twin Reverb Style"; rdf:value 2];
+        lv2:scalePoint [rdfs:label "Princeton Style"; rdf:value 3];
+        lv2:scalePoint [rdfs:label "JCM-800 Style"; rdf:value 4];
+        lv2:scalePoint [rdfs:label "JCM-2000 Style"; rdf:value 5];
+        lv2:scalePoint [rdfs:label "M-Lead Style"; rdf:value 6];
+        lv2:scalePoint [rdfs:label "M2199 Style"; rdf:value 7];
+        lv2:scalePoint [rdfs:label "AC-30 Style"; rdf:value 8];
+        lv2:scalePoint [rdfs:label "Mesa Boogie Style"; rdf:value 9];
+        lv2:scalePoint [rdfs:label "SOL 100 Style"; rdf:value 10];
+        lv2:scalePoint [rdfs:label "JTM-45 Style"; rdf:value 11];
+        lv2:scalePoint [rdfs:label "AC-15 Style"; rdf:value 12];
+        lv2:scalePoint [rdfs:label "Peavey Style"; rdf:value 13];
+        lv2:scalePoint [rdfs:label "Ibanez Style"; rdf:value 14];
+        lv2:scalePoint [rdfs:label "Roland Style"; rdf:value 15];
+        lv2:scalePoint [rdfs:label "Ampeg Style"; rdf:value 16];
+        lv2:scalePoint [rdfs:label "Rev.Rocket Style"; rdf:value 17];
+        lv2:scalePoint [rdfs:label "MIG 100 H Style"; rdf:value 18];
+        lv2:scalePoint [rdfs:label "Triple Giant Style"; rdf:value 19];
+        lv2:scalePoint [rdfs:label "Trio Preamp Style"; rdf:value 20];
+        lv2:scalePoint [rdfs:label "Hughes&Kettner Style"; rdf:value 21];
+        lv2:scalePoint [rdfs:label "Fender Junior Style"; rdf:value 22];
+        lv2:scalePoint [rdfs:label "Fender Style"; rdf:value 23];
+        lv2:scalePoint [rdfs:label "Fender Deville Style"; rdf:value 24];
+        lv2:scalePoint [rdfs:label "Gibsen Style"; rdf:value 25];
+        lv2:scalePoint [rdfs:label "Off"; rdf:value 26];
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 11 ;
+        lv2:symbol "c_model" ;
+        lv2:name "Cab Model" ;
+        lv2:default 0 ;
+        lv2:minimum 0 ;
+        lv2:maximum 18 ;
+        lv2:portProperty lv2:integer;
+        lv2:portProperty lv2:enumeration ;
+        lv2:scalePoint [rdfs:label "4x12"; rdf:value 0];
+        lv2:scalePoint [rdfs:label "2x12"; rdf:value 1];
+        lv2:scalePoint [rdfs:label "1x12"; rdf:value 2];
+        lv2:scalePoint [rdfs:label "4x10"; rdf:value 3];
+        lv2:scalePoint [rdfs:label "2x10"; rdf:value 4];
+        lv2:scalePoint [rdfs:label "HighGain Style"; rdf:value 5];
+        lv2:scalePoint [rdfs:label "Twin Style"; rdf:value 6];
+        lv2:scalePoint [rdfs:label "Bassman Style"; rdf:value 7];
+        lv2:scalePoint [rdfs:label "Marshall Style"; rdf:value 8];
+        lv2:scalePoint [rdfs:label "AC30 Style"; rdf:value 9];
+        lv2:scalePoint [rdfs:label "Princeton Style"; rdf:value 10];
+        lv2:scalePoint [rdfs:label "A2 Style"; rdf:value 11];
+        lv2:scalePoint [rdfs:label "1x15"; rdf:value 12];
+        lv2:scalePoint [rdfs:label "Mesa Style"; rdf:value 13];
+        lv2:scalePoint [rdfs:label "Briliant"; rdf:value 14];
+        lv2:scalePoint [rdfs:label "Vitalize"; rdf:value 15];
+        lv2:scalePoint [rdfs:label "Charisma"; rdf:value 16];
+        lv2:scalePoint [rdfs:label "1x8"; rdf:value 17];
+        lv2:scalePoint [rdfs:label "Off"; rdf:value 18];
+    ] , [
+        a lv2:InputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports <http://lv2plug.in/ns/ext/patch#Message> ;
+        lv2:index 12 ;
+        lv2:symbol "control" ;
+        lv2:name "Control" ;
+    ] , [
+        a lv2:OutputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports <http://lv2plug.in/ns/ext/patch#Message> ;
+        lv2:index 13 ;
+        lv2:symbol "notify" ;
+        lv2:name "Notify" ;
+    ] , [
+        a lv2:OutputPort ,
+            lv2:ControlPort ;
+        lv2:index 14 ;
+        lv2:symbol "SCHEDULE" ;
+        lv2:name "SCHEDULE";
+        lv2:portProperty lv2:integer;
+        lv2:portProperty pprop:notOnGUI;
+        lv2:default 1.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] , [
+        a lv2:AudioPort ,
+            lv2:OutputPort ;
+        lv2:index 15 ;
+        lv2:symbol "out" ;
+        lv2:name "Out" ;
+    ] , [
+        a lv2:AudioPort ,
+            lv2:InputPort ;
+        lv2:index 16 ;
+        lv2:symbol "in" ;
+        lv2:name "in" ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 17 ;
+        lv2:symbol "BYPASS" ;
+        lv2:name "BYPASS" ;
+        lv2:default 1.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+        lv2:designation lv2:enabled;
+        lv2:portProperty lv2:toggled;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 18 ;
+        lv2:symbol "HIGHGAIN" ;
+        lv2:name "HIGHGAIN" ;
+        lv2:default 0.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+        lv2:portProperty lv2:toggled;
+    ] .
+
+
+<http://guitarix.sourceforge.net/plugins/gx_amp#gui>
+ a guiext:X11UI;
+  guiext:binary <gx_amp_gui.so>;
+        lv2:extensionData guiext::idle ;
+        lv2:extensionData guiext:resize ;
+        lv2:extensionData guiext:idleInterface;
+        lv2:requiredFeature guiext:idleInterface;
+        lv2:extensionData work:interface ;
+        guiext:portNotification [
+            guiext:plugin <http://guitarix.sourceforge.net/plugins/gx_amp#GUITARIX>;
+            lv2:symbol "notify" ;
+            guiext:notifyType atom:Blank
+  ] .
