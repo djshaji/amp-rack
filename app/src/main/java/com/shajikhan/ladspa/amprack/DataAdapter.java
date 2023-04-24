@@ -123,6 +123,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             Spinner spinner = new Spinner(context);
             SeekBar seekBar = new SeekBar(context);
             boolean isSpinner = false ;
+            boolean isBypass = false ;
+            if (string != null) {
+                Log.d(TAG, "onBindViewHolder: control name: " + string +
+                        " -> " + string.equalsIgnoreCase("bypass"));
+                isBypass = string.equalsIgnoreCase("bypass");
+            }
 
             if (mainActivity.useTheme) {
                 mainActivity.skinEngine.cardText(textView);
@@ -175,6 +181,34 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 layout.addView(spinner);
                 slider.setVisibility(View.GONE);
                 editText.setVisibility(View.GONE);
+            }
+
+            ToggleButton bypass = new ToggleButton(mainActivity);
+            if (isBypass) {
+                Log.d(TAG, "onBindViewHolder: turning on bypass switch");
+                bypass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (!isChecked)
+                            slider.setValue(0f);
+                        else
+                            slider.setValue(1f);
+
+//                        if (mainActivity.useTheme)
+//                            mainActivity.skinEngine.toggle(bypass, isChecked);
+                    }
+                });
+
+                slider.setVisibility(View.GONE);
+                editText.setVisibility(View.GONE);
+                linearLayout.addView(bypass);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(10,10,10,10);
+                bypass.setGravity (Gravity.CENTER);
+                layoutParams.gravity = Gravity.CENTER;
+                bypass.setLayoutParams(layoutParams);
+//                if (mainActivity.useTheme)
+//                    mainActivity.skinEngine.toggle(bypass, false);
             }
 
             layout.addView(slider);
@@ -276,6 +310,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             spinner.setLayoutParams(spinnerLayoutParams);
             spinner.setSelection((int) slider.getValue());
 
+            Log.d(TAG, "onBindViewHolder: " +
+                    String.format("[%s] %f",
+                            string,
+                            slider.getValue()));
+            if (slider.getValue() == 1f) {
+                bypass.setChecked(true);
+            } else
+                bypass.setChecked(false);
+
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -347,7 +390,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             });
 
             if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob() && pluginsHasKnobs) {
-                if (! isSpinner) {
+                if (! isSpinner && ! isBypass) {
                     int row = 0, knobType = 3, knobPos = i ;
 
                     for (Iterator<String> it = knobsConfig.keys(); it.hasNext(); ) {

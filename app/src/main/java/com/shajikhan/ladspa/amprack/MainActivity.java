@@ -1207,10 +1207,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 //        loadActivePreset();
         // when savedInstanceState is not null
+        // the problem with this is that when we start at first,
+        // this will be empty since firestore returns data async
+        /*
         if (quickPatch.myPresetsAdapter.allPresets.isEmpty() && savedState != null) {
             Log.d(TAG, "onViewCreated: loading quick patch manually: " + savedState);
             quickPatch.load();
         }
+
+         */
     }
 
     @Override
