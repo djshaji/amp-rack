@@ -880,12 +880,24 @@
         "id": 8096,
         "index": 0,
         "library": "libgxmetal_amp.lv2.so"
+    },
+    "32600": {
+        "name": "GxMetalHead",
+        "id": 8097,
+        "index": 0,
+        "library": "libgxmetal_head.lv2.so"
+    },
+    "32700": {
+        "name": "GxCabinet",
+        "id": 8098,
+        "index": 0,
+        "library": "libgx_cabinet.lv2.so"
+    },
+    "32800": {
+        "name": "Gxjcm800pre",
+        "id": 8099,
+        "index": 0,
+        "library": "libgx_jcm800pre.lv2.so"
     }
 
-
 }
-
-
-
-
-
