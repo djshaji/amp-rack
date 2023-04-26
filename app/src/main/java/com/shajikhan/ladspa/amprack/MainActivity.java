@@ -409,27 +409,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     if (list.isEmpty()) {
                         Log.d(TAG, "onQueryPurchasesResponse: no purchases");
                         Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
+
+                        /*
                         MobileAds.initialize(context, new OnInitializationCompleteListener() {
                             @Override
                             public void onInitializationComplete(InitializationStatus initializationStatus) {
-                                AdView mAdView = findViewById(R.id.adViewBanner);
-                                mAdView.setVisibility(View.VISIBLE);
-                            /*
-                            RequestConfiguration.Builder requestConfigurationBuilder = new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("BFB9B3B3E530352EEB4F664CA9D5E692"));
-                            RequestConfiguration requestConfiguration = requestConfigurationBuilder.build() ;
+//                                AdView mAdView = findViewById(R.id.adViewBanner);
+//                                mAdView.setVisibility(View.VISIBLE);
 
-                             */
+                            //RequestConfiguration.Builder requestConfigurationBuilder = new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("BFB9B3B3E530352EEB4F664CA9D5E692"));
+                            //RequestConfiguration requestConfiguration = requestConfigurationBuilder.build() ;
 
-                                AdRequest adRequest = new AdRequest.Builder().build();
+
+
+//                                AdRequest adRequest = new AdRequest.Builder().build();
                                 boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
                                 if (!isDebuggable) {
                                     Log.d(TAG, "onQueryPurchasesResponse: is not debuggable");
 //                                    mAdView.setAdUnitId("ca-app-pub-2182672984086800~2348124251");
                                 }
 
-                                mAdView.loadAd(adRequest);
+//                                mAdView.loadAd(adRequest);
                             }
                         });
+
+                         */
 
                         defaultSharedPreferences.edit().putBoolean("pro", false).apply();
                         return;
@@ -444,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         defaultSharedPreferences.edit().putBoolean("pro", true).apply();
                     } else {
                         Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
+                        /*
                         MobileAds.initialize(context, new OnInitializationCompleteListener() {
                             @Override
                             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -457,7 +462,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 }
                                 mAdView.loadAd(adRequest);
                             }
+
                         });
+                         */
 
                         defaultSharedPreferences.edit().putBoolean("pro", false).apply();
                     }
