@@ -1,0 +1,82 @@
+{
+    "theme": {
+        "name": "default",
+        "author": "AmpRack",
+        "screenshot": "screen.png"
+    },
+    
+    "wallpaper": {
+        "background_canbe": "#000000",
+        "bg": "#404040"
+    },
+
+    "check": {
+        "on": "checked.png",
+        "off": "unchecked.png"
+    },
+    
+    "toggle": {
+        "on": "on.png",
+        "off": "off.png"
+    },
+    
+    "slider": {
+        "thumb": "thumb.png",
+        "bg": "thumb_bg.png",
+        "active": "#2c4dd3",
+        "base": "#ffffff"
+    },
+    
+    "header": {
+        "logo": "logo.png",
+        "bg": "header.png"
+    },
+    
+    "menu": {
+        "overflow": "overflow.png",
+        "bg": "menu_bg.png",
+        "active": "menu_active.png"
+    },
+    
+    "card": {
+        "bg": "bg.jpg",
+        "top-left": "card/top_left.png",
+        "top-right": "card/top_right.png",
+        "top": "card/top.png",
+        "bottom": "card/bottom.png",
+        "left": "card/left.png",
+        "right": "card/right.png",
+        "bottom-left": "card/bottom_left.png",
+        "bottom-right": "card/bottom_right.png",
+        "alpha": "100",
+        "padding": "20",
+        "text-color": "#0b0b0b"
+    },
+    
+    "button": {
+        "bg": "button.png",
+        "pressed": "button_pressed.png",
+        "text-color": "#ffffff"
+    },
+    
+    "icons": {
+        "up": "up.png",
+        "down": "down.png",
+        "rec": "rec.png",
+        "delete": "delete.png",
+        "add": "plus.png",
+        "play": "play.png",
+        "pause": "pause.png",
+        "media": "play_small.png",
+        "reset": "loop.png",
+        "mixer-on": "mixer_on.png",
+        "mixer-off": "mixer_off.png"
+    },
+
+    "knobs": {
+        "3": "knobs/5.png",
+        "2": "knobs/4.png",
+        "1": "knobs/3.png",
+        "thumbColor":"#b1b3bb"
+    }
+}
