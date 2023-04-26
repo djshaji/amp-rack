@@ -893,5 +893,12 @@
         "id": 8098,
         "index": 0,
         "library": "libgnuitar-distort.lv2.so"
+    },
+    "32800": {
+        "name": "GNUitar Tube Amplifier",
+        "id": 8099,
+        "index": 0,
+        "library": "libgnuitar-distort2.lv2.so"
     }
+
 }
