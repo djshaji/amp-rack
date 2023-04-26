@@ -886,6 +886,12 @@
         "id": 8097,
         "index": 0,
         "library": "libgxmetal_head.lv2.so"
-    }
+    },
 
+    "32700": {
+        "name": "GNUitar Distortion",
+        "id": 8098,
+        "index": 0,
+        "library": "libgnuitar-distort.lv2.so"
+    }
 }
