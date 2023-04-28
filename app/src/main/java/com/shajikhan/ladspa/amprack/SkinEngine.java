@@ -1472,7 +1472,7 @@ public class SkinEngine {
         }
 
         String finalOn = on;
-        toggleButton.setButtonDrawable(new Drawable() {
+        Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
@@ -1501,12 +1501,13 @@ public class SkinEngine {
             public int getOpacity() {
                 return 0;
             }
-        });
+        } ;
 
-
+        toggleButton.setBackground(drawable);
     }
 
     void toggleWithKey (ToggleButton toggleButton, String key, String onState, String offState, boolean state) {
+//        UsefulStuff.printBackTrace();
         Log.d(TAG, "toggleWithKey() called with: toggleButton = [" + toggleButton + "], key = [" + key + "], onState = [" + onState + "], offState = [" + offState + "], state = [" + state + "]");
         if (config.get(key).get(onState) == null)
             return;
@@ -1516,9 +1517,10 @@ public class SkinEngine {
         }
 
         String finalOn = on;
-        toggleButton.setButtonDrawable(new Drawable() {
+        Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
+                Log.d(TAG, "toggle with key draw() called with: canvas = [" + canvas + "]");
                 int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
                 Bitmap b = skinner.getBitmapFromAssets(w , -1, themeDir + finalOn);
                 setBounds(0, 0, w, h);
@@ -1539,9 +1541,9 @@ public class SkinEngine {
             public int getOpacity() {
                 return 0;
             }
-        });
+        } ;
 
-
+        toggleButton.setBackground(drawable);
     }
 
     void setLogo (ImageView imageView) {

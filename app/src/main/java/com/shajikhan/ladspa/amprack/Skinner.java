@@ -9,6 +9,8 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 
+import io.grpc.okhttp.internal.Util;
+
 public class Skinner {
     String TAG = getClass().getSimpleName();
     MainActivity mainActivity ;
@@ -74,9 +76,8 @@ public class Skinner {
     }
 
     public Bitmap getBitmapFromAssets (int width, int height, String filename) {
-        Log.d(TAG, "getBitmapFromAssets() called with: {" +
-                        new Throwable().fillInStackTrace().getStackTrace()[4].getMethodName() +
-                "} width = [" + width + "], height = [" + height + "], filename = [" + filename + "]");
+        Log.d(TAG, "getBitmapFromAssets() called with: width = [" + width + "], height = [" + height + "], filename = [" + filename + "]");
+//        UsefulStuff.printBackTrace();
         InputStream assetFilename ;
         Bitmap mBitmap ;
 
