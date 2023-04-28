@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static int totalPlugins = 0;
     static boolean useTheme = true;
     String theme = "TubeAmp";
+    String customTheme = null ;
     static SkinEngine skinEngine = null;
 
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
@@ -319,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onCreate: showOn: " + showOn);
 
         theme = defaultSharedPreferences.getString("theme", "TubeAmp");
+//        customTheme = defaultSharedPreferences.getString("custom_theme", null);
         String themeOnboarded = intentMain.getStringExtra("theme");
         if (themeOnboarded != null)
             theme = themeOnboarded;
@@ -332,6 +334,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             useTheme = false;
         } else {
             skinEngine = new SkinEngine(this);
+            /*
+            if (customTheme != null) {
+                theme = customTheme;
+                skinEngine.custom = true ;
+            }
+
+             */
+
             skinEngine.setTheme(theme);
 
         }

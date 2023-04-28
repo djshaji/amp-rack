@@ -125,6 +125,33 @@ public class ConnectGuitar extends AppCompatActivity {
         return jsonObject;
     }
 
+    static public JSONObject loadJSONFromFile(Context context, Uri filename) {
+        Log.d(TAG, "loadJSONFromFile() called with: context = [" + context + "], filename = [" + filename + "]");
+        String json = null;
+        try {
+            InputStream is = context.getContentResolver().openInputStream(filename);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Log.e(TAG, "loadJSONFromFile: unable to parse json " + filename, ex);
+            return null;
+        }
+
+        JSONObject jsonObject = null ;
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "loadJSONFromFile: cannot parse json " + filename, e);
+        }
+
+        return jsonObject;
+    }
+
     Drawable getIcon (String filename) {
         switch (filename) {
             default:

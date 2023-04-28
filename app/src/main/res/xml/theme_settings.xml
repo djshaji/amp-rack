@@ -9,6 +9,11 @@
         app:entryValues="@array/themes"
         app:entries="@array/themes"/>
     <Preference
+        android:title="Load Theme From Folder"
+        android:summary="Load a theme from a folder on your device"
+        android:key="theme_custom"/>
+
+    <Preference
         android:title="Set Wallpaper"
         android:key="background_custom"/>
 

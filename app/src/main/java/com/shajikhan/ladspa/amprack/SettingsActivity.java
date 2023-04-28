@@ -209,10 +209,29 @@ public class SettingsActivity extends AppCompatActivity implements
                     intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
                     intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivityForResult(intent_upload,1);
+                    getActivity().startActivityForResult(intent_upload,1);
                     return true;
                 }
             });
+
+            Preference customTheme = findPreference("theme_custom");
+            if (customTheme == null) {
+                MainActivity.toast("custom_theme == null");
+            } else {
+                customTheme.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent_upload = new Intent();
+//                        intent_upload.setType("*/*");
+                        intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                        intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                        intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        getActivity().startActivityForResult(intent_upload, 2);
+
+                        return false;
+                    }
+                });
+            }
 
             Preference themePreference1 = findPreference("theme") ;
             themePreference1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -332,8 +351,8 @@ public class SettingsActivity extends AppCompatActivity implements
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-        if (resultCode == RESULT_OK) {
+        Log.d(TITLE_TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], imageReturnedIntent = [" + imageReturnedIntent + "]");
+        if (resultCode == RESULT_OK && requestCode == 1) {
             Uri selectedImage = imageReturnedIntent.getData();
             getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
             Log.d(TITLE_TAG, "onActivityResult: " + selectedImage.getPath());
@@ -341,6 +360,16 @@ public class SettingsActivity extends AppCompatActivity implements
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPreferences.edit().putString("background", selectedImage.toString()).commit();
             Log.d(TITLE_TAG, "onActivityResult: setting wallpaper: " + selectedImage.toString());
+        }
+
+        else if (resultCode == RESULT_OK && requestCode == 2) {
+            Uri selectedImage = imageReturnedIntent.getData();
+            getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
+            Log.d(TITLE_TAG, "onActivityResult: " + selectedImage.getPath());
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            sharedPreferences.edit().putString("theme", selectedImage.toString()).commit();
+            Log.d(TITLE_TAG, "onActivityResult: setting custom theme from folder: " + selectedImage.toString());
         }
     }
 }

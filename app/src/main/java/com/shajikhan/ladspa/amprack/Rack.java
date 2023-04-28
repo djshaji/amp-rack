@@ -589,6 +589,7 @@ public class Rack extends Fragment {
         });
 
         mainActivity.toggleMixer.setOnCheckedChangeListener((compoundButton, b) -> {
+            Log.d(TAG, "onViewCreated() called with: view = [" + view + "], savedInstanceState = [" + savedInstanceState + "]");
             AudioEngine.toggleMixer(!b);
             if (mainActivity.useTheme)
                 mainActivity.skinEngine.toggleWithKey(mainActivity.toggleMixer, "icons", "mixer-on", "mixer-off", !b);
@@ -766,6 +767,7 @@ public class Rack extends Fragment {
             toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.d(TAG, "onCheckedChanged() called with: buttonView = [" + buttonView + "], isChecked = [" + isChecked + "]");
 //                    mainActivity.toggleEffect(!isChecked);
                     mainActivity.onOff.setChecked(isChecked);
                     mainActivity.skinEngine.toggle(toggleButton, isChecked);

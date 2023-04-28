@@ -25,6 +25,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
@@ -34,7 +35,9 @@ import org.checkerframework.checker.units.qual.K;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -47,8 +50,11 @@ public class SkinEngine {
     HashMap <String, HashMap <String, String>> config = new HashMap<>();
     JSONObject jsonConfig ;
     Skinner skinner ;
+    public boolean custom = false ;
     DisplayMetrics displayMetrics = new DisplayMetrics();
     Display display ;
+    Uri themeUri ;
+    HashMap<String, Uri> themeFiles = new HashMap<>();
     int screenWidth = 1800, screenHeight = 2400 ;
     float scaleFactor = 1 ;
 
@@ -1238,8 +1244,20 @@ public class SkinEngine {
 
     void setTheme (String _theme) {
         theme = _theme ;
-        themeDir = String.format("themes/%s/", theme);
-        jsonConfig = ConnectGuitar.loadJSONFromAssetFile(mainActivity, themeDir + "theme.json");
+        if (theme.startsWith("content://"))
+            custom = true ;
+        Log.d(TAG, "setTheme() called with: _theme = [" + _theme + "]");
+        if (! custom) {
+            themeDir = String.format("themes/%s/", theme);
+            jsonConfig = ConnectGuitar.loadJSONFromAssetFile(mainActivity, themeDir + "theme.json");
+        }
+        else {
+            themeUri = Uri.parse(theme);
+            themeDir= "" ;
+            getUriFileList(themeUri);
+            Uri _json = themeFiles.get("theme.json");
+            jsonConfig = ConnectGuitar.loadJSONFromFile(mainActivity, _json);
+        }
         Log.d(TAG, "setTheme: " + jsonConfig.toString());
         load ();
     }
@@ -1247,6 +1265,7 @@ public class SkinEngine {
     SkinEngine (MainActivity _mainActivity) {
         mainActivity = _mainActivity ;
         skinner = new Skinner(mainActivity);
+        skinner.skinEngine = this ;
         skinner.init();
         paint = new Paint();
         setTheme("Adwaita"); // sane default
@@ -1457,7 +1476,13 @@ public class SkinEngine {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
-                Bitmap b = skinner.getBitmapFromAssets(w , -1, themeDir + finalOn);
+                Bitmap b ;
+                try {
+                    b = skinner.getBitmapFromAssets(w, -1, themeDir + finalOn);
+                } catch (AssertionError ae) {
+                    throw ae ;
+                }
+
                 setBounds(0, 0, w, h);
                 canvas.drawBitmap(b, (w - b.getWidth()) / 2, (h - b.getHeight()) / 2, paint);
             }
@@ -1629,8 +1654,15 @@ public class SkinEngine {
                     int j = 0, i = 0 ;
                     boolean drawing = true ;
                     while (drawing) {
+                        /*
+                        Log.d(TAG, "draw: " + String.format(
+                                "i: %d\tj: %d\twidth: %d\theight: %d",
+                                i, j, canvas.getWidth(), canvas.getHeight()
+                        ));
+
+                         */
                         canvas.drawBitmap(finalBgBitmap, i, j, paint);
-                        i = finalBgBitmap.getWidth() ;
+                        i += finalBgBitmap.getWidth() ;
                         if (i > canvas.getWidth()) {
                             i = 0 ;
                             j += finalBgBitmap.getHeight();
@@ -1770,5 +1802,29 @@ public class SkinEngine {
         Log.d(TAG, "rotary: " + String.format(
                 "[%f %f]: %f (%f)", min, max, value, seekBar.valueToRotation()
         ));
+    }
+
+    void getUriFileList (Uri uri) {
+        DocumentFile root = DocumentFile.fromTreeUri(mainActivity, uri);
+        DocumentFile [] files = root.listFiles() ;
+        for (DocumentFile file: files) {
+            Log.d(TAG, "getUriFileList: " + String.format(
+                    "\t%s:\t%s",
+                    file.getName(),
+                    file.getUri()
+            ));
+            themeFiles.put(file.getName(), file.getUri());
+            if (file.isDirectory()) {
+                DocumentFile [] _files = file.listFiles() ;
+                for (DocumentFile _file: _files) {
+                    Log.d(TAG, "getUriFileList: " + String.format(
+                            "\t%s:\t%s",
+                            _file.getName(),
+                            _file.getUri()
+                    ));
+                    themeFiles.put(file.getName() + "/" + _file.getName(), _file.getUri());
+                }
+            }
+        }
     }
 }

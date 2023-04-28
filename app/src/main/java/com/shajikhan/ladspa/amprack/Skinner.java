@@ -12,6 +12,8 @@ import java.io.InputStream;
 public class Skinner {
     String TAG = getClass().getSimpleName();
     MainActivity mainActivity ;
+//    int sanityCheck = 0 ;
+    SkinEngine skinEngine ;
 
     DisplayMetrics displayMetrics = new DisplayMetrics();
     float density = 1 ;
@@ -30,6 +32,7 @@ public class Skinner {
 
     Skinner (MainActivity _mainActivity) {
         mainActivity = _mainActivity ;
+        skinEngine = mainActivity.skinEngine ;
     }
 
     public int convertDpToPixel(float dp){
@@ -71,11 +74,18 @@ public class Skinner {
     }
 
     public Bitmap getBitmapFromAssets (int width, int height, String filename) {
+        Log.d(TAG, "getBitmapFromAssets() called with: {" +
+                        new Throwable().fillInStackTrace().getStackTrace()[4].getMethodName() +
+                "} width = [" + width + "], height = [" + height + "], filename = [" + filename + "]");
         InputStream assetFilename ;
         Bitmap mBitmap ;
 
         try {
-            assetFilename = mainActivity.getAssets().open(filename) ;
+            if (! skinEngine.custom)
+                assetFilename = mainActivity.getAssets().open(filename) ;
+            else
+                assetFilename = mainActivity.getContentResolver().openInputStream(skinEngine.themeFiles.get(filename));
+
             mBitmap = BitmapFactory.decodeStream(assetFilename);
         } catch (IOException e) {
             Log.e(TAG, "getBitmapFromAssets: unable to load " + filename, e);
