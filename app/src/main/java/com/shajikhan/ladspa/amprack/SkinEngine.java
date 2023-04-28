@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -55,6 +56,7 @@ public class SkinEngine {
     Display display ;
     Uri themeUri ;
     HashMap<String, Uri> themeFiles = new HashMap<>();
+    HashMap<String, Bitmap> bitmaps = new HashMap<>();
     int screenWidth = 1800, screenHeight = 2400 ;
     float scaleFactor = 1 ;
 
@@ -1816,6 +1818,7 @@ public class SkinEngine {
                     file.getUri()
             ));
             themeFiles.put(file.getName(), file.getUri());
+            bitmaps.put(file.getName(), skinner.getBitmap(file.getUri()));
             if (file.isDirectory()) {
                 DocumentFile [] _files = file.listFiles() ;
                 for (DocumentFile _file: _files) {
@@ -1825,6 +1828,8 @@ public class SkinEngine {
                             _file.getUri()
                     ));
                     themeFiles.put(file.getName() + "/" + _file.getName(), _file.getUri());
+                    bitmaps.put(file.getName() + "/" + _file.getName(), skinner.getBitmap(_file.getUri()));
+
                 }
             }
         }

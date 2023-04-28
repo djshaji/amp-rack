@@ -3,6 +3,7 @@ package com.shajikhan.ladspa.amprack;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -78,16 +79,25 @@ public class Skinner {
     public Bitmap getBitmapFromAssets (int width, int height, String filename) {
         Log.d(TAG, "getBitmapFromAssets() called with: width = [" + width + "], height = [" + height + "], filename = [" + filename + "]");
 //        UsefulStuff.printBackTrace();
-        InputStream assetFilename ;
-        Bitmap mBitmap ;
+        InputStream assetFilename = null;
+        Bitmap mBitmap = null;
 
         try {
-            if (! skinEngine.custom)
-                assetFilename = mainActivity.getAssets().open(filename) ;
-            else
-                assetFilename = mainActivity.getContentResolver().openInputStream(skinEngine.themeFiles.get(filename));
-
-            mBitmap = BitmapFactory.decodeStream(assetFilename);
+            if (! skinEngine.custom) {
+                if (skinEngine.bitmaps.containsKey(filename))
+                    mBitmap = skinEngine.bitmaps.get(filename) ;
+                else {
+                    assetFilename = mainActivity.getAssets().open(filename);
+                    mBitmap = BitmapFactory.decodeStream(assetFilename);
+                }
+                } else {
+                if (skinEngine.custom && skinEngine.bitmaps.containsKey(filename))
+                    mBitmap = skinEngine.bitmaps.get(filename);
+                else {
+                    assetFilename = mainActivity.getContentResolver().openInputStream(skinEngine.themeFiles.get(filename));
+                    mBitmap = BitmapFactory.decodeStream(assetFilename);
+                }
+            }
         } catch (IOException e) {
             Log.e(TAG, "getBitmapFromAssets: unable to load " + filename, e);
             return null ;
@@ -97,6 +107,14 @@ public class Skinner {
             Log.d(TAG, "getBitmapFromAssets: returning " +
                     String.format ("[%s: %dx%d]",
                             filename, mBitmap.getWidth(), mBitmap.getHeight()));
+            try {
+                if (assetFilename != null)
+                    assetFilename.close();
+            } catch (IOException e) {
+                Log.e(TAG, "getBitmapFromAssets: ", e);
+            }
+            if (!skinEngine.bitmaps.containsKey(filename))
+                skinEngine.bitmaps.put(filename, mBitmap.copy(mBitmap.getConfig(), true));
             return mBitmap;
         }
 
@@ -107,6 +125,12 @@ public class Skinner {
 //                String.format("scaling from %dx%d to %dx%d",
 //                        mBitmap.getWidth(), mBitmap.getHeight(),
 //                        width, height));
+        try {
+            if (assetFilename != null)
+                assetFilename.close();
+        } catch (IOException e) {
+            Log.e(TAG, "getBitmapFromAssets: ", e);
+        }
         return Bitmap.createScaledBitmap(mBitmap,
                 (int) width,
                 (int) height,
@@ -148,5 +172,18 @@ public class Skinner {
 
     int pixelToDp (int px) {
         return px / (mainActivity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public Bitmap getBitmap (Uri uri) {
+        Bitmap mBitmap = null ;
+        try {
+            InputStream assetFilename = mainActivity.getContentResolver().openInputStream(uri);
+            mBitmap = BitmapFactory.decodeStream(assetFilename);
+            assetFilename.close();
+        } catch (IOException e) {
+            Log.e(TAG, "getBitmap: ", e);
+        }
+
+        return mBitmap;
     }
 }
