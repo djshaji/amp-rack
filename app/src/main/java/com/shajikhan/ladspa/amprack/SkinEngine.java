@@ -1505,6 +1505,7 @@ public class SkinEngine {
             }
         } ;
 
+        toggleButton.setButtonDrawable(null);
         toggleButton.setBackground(drawable);
     }
 
@@ -1545,6 +1546,7 @@ public class SkinEngine {
             }
         } ;
 
+        toggleButton.setButtonDrawable(null);
         toggleButton.setBackground(drawable);
     }
 
