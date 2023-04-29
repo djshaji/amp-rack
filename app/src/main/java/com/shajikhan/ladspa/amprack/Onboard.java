@@ -109,6 +109,18 @@ public class Onboard extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        ExtendedFloatingActionButton skip = findViewById(R.id.onboard_skip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("currentVersion", BuildConfig.VERSION_CODE).apply();
+                finishAffinity();
+                finish () ;
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("onboard", 1);
+                startActivity(intent);
+            }
+        });
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +146,7 @@ public class Onboard extends AppCompatActivity {
                 finish.setVisibility(View.VISIBLE);
                 selectTheme.setVisibility(View.VISIBLE);
                 screen.setVisibility(View.GONE);
+                skip.setVisibility(View.GONE);
 
             }
         });

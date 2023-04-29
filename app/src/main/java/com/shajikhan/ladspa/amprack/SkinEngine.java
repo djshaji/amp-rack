@@ -1474,18 +1474,15 @@ public class SkinEngine {
         }
 
         String finalOn = on;
+
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
-                int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
+                Log.d(TAG, "toggle: draw() called with: canvas = [" + canvas + "]");
+                final int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
                 Bitmap b ;
-                try {
-                    b = skinner.getBitmapFromAssets(w, -1, themeDir + finalOn);
-                } catch (AssertionError ae) {
-                    throw ae ;
-                }
-
-                setBounds(0, 0, w, h);
+                b = skinner.getBitmapFromAssets(w, -1, themeDir + finalOn);
+//                setBounds(0, 0, w, h);
                 canvas.drawBitmap(b, (w - b.getWidth()) / 2, (h - b.getHeight()) / 2, paint);
             }
 
@@ -1505,8 +1502,10 @@ public class SkinEngine {
             }
         } ;
 
-        toggleButton.setButtonDrawable(null);
-        toggleButton.setBackground(drawable);
+//        toggleButton.setButtonDrawable(null);
+//        Bitmap b = skinner.getBitmapFromAssets(toggleButton.getWidth() , -1, themeDir + finalOn);
+//        BitmapDrawable bitmapDrawable = new BitmapDrawable(b);
+        toggleButton.setButtonDrawable(drawable);
     }
 
     void toggleWithKey (ToggleButton toggleButton, String key, String onState, String offState, boolean state) {
@@ -1524,9 +1523,10 @@ public class SkinEngine {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 Log.d(TAG, "toggle with key draw() called with: canvas = [" + canvas + "]");
-                int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
+//                apparently this causes an infinite loop of redraw
+//                setBounds(0, 0, w, h);
+                final int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
                 Bitmap b = skinner.getBitmapFromAssets(w , -1, themeDir + finalOn);
-                setBounds(0, 0, w, h);
                 canvas.drawBitmap(b, (w - b.getWidth()) / 2, (h - b.getHeight()) / 2, paint);
             }
 
@@ -1546,8 +1546,11 @@ public class SkinEngine {
             }
         } ;
 
-        toggleButton.setButtonDrawable(null);
-        toggleButton.setBackground(drawable);
+//        Bitmap b = skinner.getBitmapFromAssets(toggleButton.getWidth() , -1, themeDir + finalOn);
+
+//        BitmapDrawable bitmapDrawable = new BitmapDrawable(b);
+        toggleButton.setButtonDrawable(drawable);
+//        toggleButton.setBackground(drawable);
     }
 
     void setLogo (ImageView imageView) {
