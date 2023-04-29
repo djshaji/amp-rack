@@ -2095,6 +2095,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void applyWallpaper(Context _context, Window window, Resources resources, ImageView imageView, int width, int height) {
+        String mTheme = PreferenceManager.getDefaultSharedPreferences(context).getString("color_scheme", "Theme.AmpRack") ;
+        Log.d(TAG, "applyWallpaper: setting native theme " + mTheme);
+        SkinEngine.setColorScheme((MainActivity) context, mTheme);
+
         if (lowMemoryMode) {
             imageView.setBackgroundColor(_context.getResources().getColor(R.color.black));
             return;
@@ -2105,15 +2109,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         if (useTheme && skinEngine != null) {
             skinEngine.setNativeTheme();
-            if (wallpaper != null) {
-                skinEngine.wallpaper(imageView);
-                return;
-            }
+            skinEngine.wallpaper(imageView);
+            return ;
         }
-
-        String mTheme = PreferenceManager.getDefaultSharedPreferences(context).getString("color_scheme", "Theme.AmpRack") ;
-        Log.d(TAG, "applyWallpaper: setting native theme " + mTheme);
-        SkinEngine.setColorScheme((MainActivity) context, mTheme);
 
         Bitmap bitmap = null;
         if (wallpaper != null) {
@@ -2124,10 +2122,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
-        if (bitmap == null || wallpaper == null) {
+        if (bitmap == null)
             bitmap = BitmapFactory.decodeResource(resources, R.drawable.bg);
-        }
-
         imageView.setCropToPadding(true);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
