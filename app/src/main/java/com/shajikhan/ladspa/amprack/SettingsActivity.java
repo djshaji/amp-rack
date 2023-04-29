@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
+import android.util.ArraySet;
 import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
@@ -27,7 +26,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -200,6 +204,34 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.theme_settings, rootKey);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Set <String> customThemes = sharedPreferences.getStringSet("customThemes", null);
+            if (customThemes != null) {
+                ListPreference preference = findPreference("theme") ;
+                CharSequence[] values = preference.getEntryValues();
+                ArrayList<String> strings = new ArrayList<>(customThemes);
+                for (CharSequence s: values) {
+                    strings.add(String.valueOf(s)) ;
+                }
+
+                preference.setEntries((CharSequence[]) strings);
+                preference.setEntryValues((CharSequence[]) strings);
+            }
+
+            Preference themeFile = findPreference("theme_file");
+            themeFile.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent_upload = new Intent();
+                    intent_upload.setType("application/zip");
+                    intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                    intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                    intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    getActivity().startActivityForResult(intent_upload,3);
+                    return true;
+                }
+            });
+
             Preference preference = findPreference("background_custom");
             preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -369,6 +401,47 @@ public class SettingsActivity extends AppCompatActivity implements
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPreferences.edit().putString("theme", selectedImage.toString()).commit();
+            Log.d(TITLE_TAG, "onActivityResult: setting custom theme from folder: " + selectedImage.toString());
+        } else if (resultCode == RESULT_OK && requestCode == 3) {
+            Uri selectedImage = imageReturnedIntent.getData();
+            getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
+            Log.d(TITLE_TAG, "onActivityResult: " + selectedImage.getPath());
+
+            String basename = selectedImage.getLastPathSegment();
+            File newThemeDir = getApplicationContext().getExternalFilesDir(
+                    Environment.DIRECTORY_DOWNLOADS) ;
+            InputStream inputStream = null;
+            try {
+                inputStream = getContentResolver().openInputStream(selectedImage);
+            } catch (FileNotFoundException e) {
+                MainActivity.alert("Cannot load theme file", e.getMessage());
+                Log.e(TITLE_TAG, "onActivityResult: ", e);
+            }
+            try {
+                basename = SkinEngine.unzip(inputStream, newThemeDir.getPath());
+            } catch (IOException e) {
+                MainActivity.alert("Cannot unzip theme", e.getMessage());
+                Log.e(TITLE_TAG, "onActivityResult: ", e);
+            }
+
+            String dirPath = newThemeDir.getPath() + "/" + basename;
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            sharedPreferences.edit().putString("theme", dirPath).commit();
+            Set<String> customThemes = sharedPreferences.getStringSet("customThemes", null);
+            if (customThemes == null)
+                customThemes = new ArraySet<>();
+            if (customThemes != null && ! customThemes.contains(dirPath)) {
+                customThemes.add(dirPath);
+                sharedPreferences.edit().putStringSet("customThemes", customThemes).commit();
+            }
+
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.e(TITLE_TAG, "onActivityResult: ", e);
+                }
+            }
             Log.d(TITLE_TAG, "onActivityResult: setting custom theme from folder: " + selectedImage.toString());
         }
     }

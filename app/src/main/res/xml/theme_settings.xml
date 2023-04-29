@@ -12,7 +12,10 @@
         android:title="Load Theme From Folder"
         android:summary="Load a theme from a folder on your device"
         android:key="theme_custom"/>
-
+    <Preference
+        android:title="Load Theme From File"
+        android:summary="Load a theme from a file on your device"
+        android:key="theme_file"/>
     <Preference
         android:title="Set Wallpaper"
         android:key="background_custom"/>

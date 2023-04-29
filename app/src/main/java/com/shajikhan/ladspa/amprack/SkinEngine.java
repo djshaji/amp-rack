@@ -26,6 +26,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
@@ -35,12 +36,18 @@ import org.checkerframework.checker.units.qual.K;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class SkinEngine {
     MainActivity mainActivity ;
@@ -1246,15 +1253,24 @@ public class SkinEngine {
 
     void setTheme (String _theme) {
         theme = _theme ;
-        if (theme.startsWith("content://"))
+        if (theme.startsWith("content://") || theme.startsWith("/"))
             custom = true ;
-        Log.d(TAG, "setTheme() called with: _theme = [" + _theme + "]");
+        Log.d(TAG, "setTheme() called with: _theme = [" + _theme + "]\ncustom = " + custom);
         if (! custom) {
+            themeDir = theme;
             themeDir = String.format("themes/%s/", theme);
             jsonConfig = ConnectGuitar.loadJSONFromAssetFile(mainActivity, themeDir + "theme.json");
+            if (jsonConfig == null) {
+                MainActivity.toast("Theme loading failed: " + _theme);
+                setTheme("TubeAmp");
+                return;
+            }
         }
         else {
-            themeUri = Uri.parse(theme);
+            if (theme.startsWith("/"))
+                themeUri = Uri.fromFile(new File(theme));
+            else
+                themeUri = Uri.parse(theme);
             themeDir= "" ;
             getUriFileList(themeUri);
             Uri _json = themeFiles.get("theme.json");
@@ -1307,8 +1323,11 @@ public class SkinEngine {
     }
 
     void wallpaper (ImageView wall) {
-        String wallpaper = config.get("wallpaper").get("bg") ;
+        String wallpaper = PreferenceManager.getDefaultSharedPreferences(mainActivity).getString("background", null);
+        if (wallpaper == null)
+            wallpaper = config.get("wallpaper").get("bg") ;
         if (wallpaper.startsWith("#")) {
+            wall.setImageBitmap(null);
             wall.setBackgroundColor(Color.parseColor(wallpaper));
         } else {
             String customBg = mainActivity.defaultSharedPreferences.getString("background", null);
@@ -1391,15 +1410,26 @@ public class SkinEngine {
     }
 
     void view (View _view, String category, String name, Resize resize, float factor) {
+        String filename = config.get(category).get(name) ;
+        Log.d(TAG, "view: " + String.format("setting background to %s", filename));
+        /*
+        if (filename .startsWith("#")) {
+            _view.setBackground(null);
+            _view.setBackgroundColor(Color.parseColor(filename));
+            return;
+        }
+
+         */
+
         _view.setBackground(new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 int w = _view.getWidth(), h = _view.getHeight() ;
                 Bitmap b ;
                 if (resize == Resize.Width)
-                    b = skinner.getBitmapFromAssets((int) ((float) w * factor), -1, themeDir + config.get(category).get(name));
+                    b = skinner.getBitmapFromAssets((int) ((float) w * factor), -1, themeDir + filename);
                 else if (resize == Resize.Height)
-                    b = skinner.getBitmapFromAssets(-1 , (int) ((float) h * factor), themeDir + config.get(category).get(name));
+                    b = skinner.getBitmapFromAssets(-1 , (int) ((float) h * factor), themeDir + filename);
                 else
                     b = skinner.getBitmapFromAssets(w , h, themeDir + config.get(category).get(name));
                 setBounds(0, 0, w, h);
@@ -1814,7 +1844,11 @@ public class SkinEngine {
     }
 
     void getUriFileList (Uri uri) {
-        DocumentFile root = DocumentFile.fromTreeUri(mainActivity, uri);
+        DocumentFile root = null ;
+        if (uri.getScheme().equals("file"))
+            root = DocumentFile.fromFile(new File(uri.getPath()));
+        else
+            root = DocumentFile.fromTreeUri(mainActivity, uri);
         DocumentFile [] files = root.listFiles() ;
         for (DocumentFile file: files) {
             Log.d(TAG, "getUriFileList: " + String.format(
@@ -1838,5 +1872,57 @@ public class SkinEngine {
                 }
             }
         }
+    }
+
+    private static final int BUFFER_SIZE = 4096;
+    /**
+     * Extracts a zip file specified by the zipFilePath to a directory specified by
+     * destDirectory (will be created if does not exists)
+     * @param zipFilePath
+     * @param destDirectory
+     * @throws IOException
+     */
+    public static String unzip(InputStream zipFilePath, String destDirectory) throws IOException {
+        File destDir = new File(destDirectory);
+        String dirname = null ;
+        if (!destDir.exists()) {
+            destDir.mkdir();
+        }
+        ZipInputStream zipIn = new ZipInputStream(zipFilePath);
+        ZipEntry entry = zipIn.getNextEntry();
+        // iterates over entries in the zip file
+        while (entry != null) {
+            String filePath = destDirectory + File.separator + entry.getName();
+            if (dirname == null)
+                dirname = entry.getName();
+            if (!entry.isDirectory()) {
+                // if the entry is a file, extracts it
+                extractFile(zipIn, filePath);
+            } else {
+                // if the entry is a directory, make the directory
+                File dir = new File(filePath);
+                dir.mkdirs();
+            }
+            zipIn.closeEntry();
+            entry = zipIn.getNextEntry();
+        }
+        zipIn.close();
+        return dirname;
+    }
+
+    /**
+     * Extracts a zip entry (file entry)
+     * @param zipIn
+     * @param filePath
+     * @throws IOException
+     */
+    private static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+        byte[] bytesIn = new byte[BUFFER_SIZE];
+        int read = 0;
+        while ((read = zipIn.read(bytesIn)) != -1) {
+            bos.write(bytesIn, 0, read);
+        }
+        bos.close();
     }
 }

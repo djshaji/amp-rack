@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     PurchasesResponseListener purchasesResponseListener;
     public static boolean proVersion = false;
     File dir;
+    static File localThemeDir ;
     HashCommands hashCommands;
     JSONObject rdf;
     JSONObject ampModels;
@@ -738,6 +739,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         notification = builder.build();
         dir = context.getExternalFilesDir(
                 Environment.DIRECTORY_MUSIC);
+        localThemeDir = context.getExternalFilesDir(
+                Environment.DIRECTORY_DOWNLOADS);
         if (dir == null || !dir.mkdirs()) {
             Log.e(TAG, "Directory not created: " + dir.toString());
         } else {
@@ -1491,6 +1494,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         LayoutInflater inflater = getLayoutInflater();
 
         linearLayoutPluginDialog = (ConstraintLayout) inflater.inflate(R.layout.load_plugin_dialog, null);
+        /*
+        if (useTheme) {
+            Log.d(TAG, "createPluginDialog: skinning background");
+            skinEngine.view(linearLayoutPluginDialog, "wallpaper", "bg", SkinEngine.Resize.Width, 1);
+        }
+
+         */
 
         EditText editText = (EditText) linearLayoutPluginDialog.findViewById(R.id.pl_search);
         editText.addTextChangedListener(new TextWatcher() {
