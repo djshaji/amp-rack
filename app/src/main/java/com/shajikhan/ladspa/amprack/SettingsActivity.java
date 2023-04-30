@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity implements
@@ -209,13 +210,21 @@ public class SettingsActivity extends AppCompatActivity implements
             if (customThemes != null) {
                 ListPreference preference = findPreference("theme") ;
                 CharSequence[] values = preference.getEntryValues();
-                ArrayList<String> strings = new ArrayList<>(customThemes);
+                List<CharSequence> strings = new ArrayList<>();
+                int i = 0 ;
                 for (CharSequence s: values) {
-                    strings.add(String.valueOf(s)) ;
+                    strings.add(s);
                 }
 
-                preference.setEntries((CharSequence[]) strings);
-                preference.setEntryValues((CharSequence[]) strings);
+                for (String s: customThemes) {
+                    strings.add(s);
+                }
+
+                CharSequence[] charSequenceArray = strings.toArray(new
+                        CharSequence[strings.size()]);
+
+                preference.setEntries((CharSequence[]) charSequenceArray);
+                preference.setEntryValues((CharSequence[]) charSequenceArray);
             }
 
             Preference themeFile = findPreference("theme_file");
@@ -401,6 +410,13 @@ public class SettingsActivity extends AppCompatActivity implements
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPreferences.edit().putString("theme", selectedImage.toString()).commit();
+            Set<String> customThemes = sharedPreferences.getStringSet("customThemes", null);
+            if (customThemes == null)
+                customThemes = new ArraySet<>();
+            if (customThemes != null && ! customThemes.contains(selectedImage.toString())) {
+                customThemes.add(selectedImage.toString());
+                sharedPreferences.edit().putStringSet("customThemes", customThemes).commit();
+            }
             Log.d(TITLE_TAG, "onActivityResult: setting custom theme from folder: " + selectedImage.toString());
         } else if (resultCode == RESULT_OK && requestCode == 3) {
             Uri selectedImage = imageReturnedIntent.getData();
