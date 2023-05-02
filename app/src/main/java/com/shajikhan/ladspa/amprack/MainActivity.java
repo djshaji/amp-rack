@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -70,6 +71,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -118,6 +120,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -2520,4 +2524,123 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, String.format("printPluginsAll [%d]: %s", sharedLibraries.length + i, sharedLibrariesLV2 [i]));
         }
     }
+
+    public void saveCollection () {
+        ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        List<CharSequence> strings = new ArrayList<>();
+        if (presets.fragmentStateAdapter.myPresets.myPresetsAdapter == null) {
+            alert("Load presets first", "To save preset collection to file, switch to the Presets tab from the bottom navigation menu");
+            return;
+        }
+        for (int i = 0 ; i < presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.size() ; i ++) {
+            strings.add(presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.get(i).get("name").toString());
+        }
+
+        builder.setTitle("Select presets for collection")
+                .setMultiChoiceItems((strings.toArray(new
+                                CharSequence[strings.size()])), null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checked the item, add it to the selected items
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which)) {
+                                    // Else, if the item is already in the array, remove it
+                                    if (which < selectedItems.size())
+                                        selectedItems.remove(which);
+                                }
+                            }
+                        })
+                // Set the action buttons
+                .setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the selectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        Log.d(TAG, "onClick: " + selectedItems.toString());
+                        JSONObject collection = new JSONObject();
+                        for (int i = 0 ; i < presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.size() ; i ++) {
+                            if (selectedItems.contains(i)) {
+                                try {
+                                    collection.put(String.valueOf(i), presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.get(i));
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "onClick: ", e);
+                                }
+                            }
+                        }
+
+                        AlertDialog.Builder _Builder1 = new AlertDialog.Builder(mainActivity);
+                        _Builder1.setTitle("Enter file name for preset collection");
+                        LinearLayout linearLayout = new LinearLayout(context);
+                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                        TextView textView = new TextView(context);
+                        textView.setText("File will be saved to " + context.getExternalFilesDir(
+                                Environment.DIRECTORY_DOWNLOADS));
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                        layoutParams.setMargins(10,10,10,10);
+                        linearLayout.setLayoutParams(layoutParams);
+                        linearLayout.setPadding(50,50,50,50);
+                        linearLayout.addView(textView);
+
+                        EditText editText = new EditText(context);
+                        linearLayout.addView(editText);
+                        _Builder1.setView(linearLayout).
+                                setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String filename = String.valueOf(editText.getText());
+
+                                        if (filename != null) {
+                                            File file = new File(context.getExternalFilesDir(
+                                                    Environment.DIRECTORY_DOWNLOADS) + "/" + filename +".json");
+                                            FileOutputStream stream = null;
+                                            try {
+                                                stream = new FileOutputStream(file);
+                                            } catch (FileNotFoundException e) {
+                                                alert("Cannot write file", e.getMessage());
+                                                throw new RuntimeException(e);
+                                            }
+
+                                            if (stream != null) {
+                                                try {
+                                                    String data = collection.toString(4);
+                                                    stream.write(data.getBytes());
+                                                    Log.d(TAG, "onClick: " + data);
+                                                    stream.close();
+                                                } catch (IOException e) {
+                                                    alert ("Cannot write file", e.getMessage());
+                                                    Log.e(TAG, "onClick: ", e);
+                                                } catch (JSONException e) {
+                                                    alert ("Cannot write file", e.getMessage());
+                                                    Log.e(TAG, "onClick: ", e);
+                                                }
+
+                                                alert("Wrote file succesfully",
+                                                        String.format(
+                                                                "Collection saved to file:\n%s",
+                                                                file.getName()
+                                                        ));
+                                            }
+
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null);
+                        Log.d(TAG, "onClick: show dilog");
+                        _Builder1.create().show();
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        Dialog dialog = builder.create() ;
+        dialog.show();
+    }
+
 }

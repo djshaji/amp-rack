@@ -23,6 +23,12 @@
     <item android:id="@+id/how_to_use"
         android:title="How to use"/>
 
+    <item android:id="@+id/save_collection"
+        android:title="Save presets to file"/>
+
+    <item android:id="@+id/load_collection"
+        android:title="Load presets from file"/>
+
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>

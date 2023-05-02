@@ -458,7 +458,16 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(8);
+        MenuItem saveCollection = optionsMenu.getMenu().getItem(8);
+        saveCollection.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mainActivity.saveCollection();
+                return false;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(9);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
