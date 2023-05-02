@@ -1326,12 +1326,17 @@ public class SkinEngine {
         String wallpaper = PreferenceManager.getDefaultSharedPreferences(mainActivity).getString("background", null);
         if (wallpaper == null)
             wallpaper = config.get("wallpaper").get("bg") ;
+
+        Log.d(TAG, "wallpaper: " + wallpaper);
+
         if (wallpaper.startsWith("#")) {
             wall.setImageBitmap(null);
             wall.setBackgroundColor(Color.parseColor(wallpaper));
         } else {
             String customBg = mainActivity.defaultSharedPreferences.getString("background", null);
-            Bitmap bg = skinner.getBitmapFromAssets( skinner.displayMetrics.widthPixels, -1, themeDir + wallpaper);
+            Bitmap bg = null ;
+            if (!wallpaper.startsWith("content://"))
+                bg = skinner.getBitmapFromAssets( skinner.displayMetrics.widthPixels, -1, themeDir + wallpaper);
             if (customBg == null)
                 wall.setImageBitmap(bg);
             else {
