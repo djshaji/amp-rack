@@ -467,7 +467,21 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(9);
+        MenuItem loadCollection = optionsMenu.getMenu().getItem(9);
+        loadCollection.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent_upload = new Intent();
+                intent_upload.setType("application/json");
+                intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getActivity().startActivityForResult(intent_upload,100);
+                return true;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(10);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

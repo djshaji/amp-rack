@@ -1,9 +1,5 @@
 package com.shajikhan.ladspa.amprack;
 
-import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
-
-import static java.security.AccessController.getContext;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,9 +29,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -47,33 +41,25 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.BoringLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.ArraySet;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -97,18 +83,11 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.slider.Slider;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -119,9 +98,12 @@ import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -134,8 +116,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -1382,6 +1362,43 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
         }
+
+        if (resultCode == RESULT_OK && requestCode == 100) {
+            Uri selectedImage = data.getData();
+            getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
+            Log.d(TAG, "onActivityResult: " + selectedImage.getPath());
+
+            try (InputStream in = new FileInputStream(getContentResolver().openInputStream(selectedImage))
+            {
+                String contents = IOUtils.toString(in, StandardCharsets.UTF_8);
+                System.out.println(contents);
+            } catch (IOException e) {
+
+            }
+
+            JSONObject jsonObject = null ;
+            try {
+                jsonObject = new JSONObject(responce);
+            } catch (JSONException e) {
+                alert("Cannot load file", e.getMessage());
+                Log.e(TAG, "onActivityResult: ", e);
+            }
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (jsonObject != null) {
+                sharedPreferences.edit().putString(file.getName(), responce).commit();
+                Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
+                if (vals == null) {
+                    vals = new ArraySet<>();
+                }
+                vals.add(file.getName());
+                sharedPreferences.edit().putStringSet("collections", vals).commit();
+            }
+
+            Log.d(TAG, "onActivityResult: setting wallpaper: " + selectedImage.toString());
+        }
+
+
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

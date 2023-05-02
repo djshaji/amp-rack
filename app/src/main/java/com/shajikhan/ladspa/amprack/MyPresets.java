@@ -9,28 +9,37 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 public class MyPresets extends Fragment {
     MainActivity mainActivity;
+    Spinner quickSpinner = null ;
     String TAG = getClass().getSimpleName();
     RecyclerView recyclerView;
     public MyPresetsAdapter myPresetsAdapter ;
     FirestoreDB db ;
     ProgressBar progressBar = null;
+    LinearLayout quickHeader = null ;
     PopupMenu sortMenu = null;
     boolean shared = false;
     boolean quick = false ;
@@ -68,7 +77,8 @@ public class MyPresets extends Fragment {
         mainActivity = (MainActivity) getActivity();
         db = new FirestoreDB (mainActivity);
 
-        recyclerView = (RecyclerView) ((LinearLayout) view).getChildAt(1);
+        recyclerView = (RecyclerView) ((LinearLayout) view).getChildAt(2);
+        quickHeader = (LinearLayout) ((LinearLayout) view).getChildAt(0);
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         myPresetsAdapter = new MyPresetsAdapter();
         myPresetsAdapter.setMainActivity(mainActivity);
@@ -76,7 +86,7 @@ public class MyPresets extends Fragment {
         myPresetsAdapter.quickPatchProgress = mainActivity.rack.quickPatchProgress;
 
         LinearLayout layout = (LinearLayout) view ;
-        LinearLayout lx = (LinearLayout) ((LinearLayout) view).getChildAt(0);
+        LinearLayout lx = (LinearLayout) ((LinearLayout) view).getChildAt(1);
         if (! shared) {
             lx.setVisibility(View.GONE);
         } else {
@@ -152,6 +162,23 @@ public class MyPresets extends Fragment {
                 return true;
             }
         });
+
+        if (quick) {
+            quickHeader.setVisibility(View.VISIBLE);
+            quickSpinner = (Spinner) quickHeader.getChildAt(1);
+            List<String> labels = new ArrayList<String>();
+            labels.add("Factory Presets");
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
+            Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
+            if (vals != null) {
+                for (String v: vals) {
+                    labels.add(v);
+                }
+            }
+
+            ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
+            quickSpinner.setAdapter(categoriesDataAdapter);
+        }
 
         if (!shared) {
             sortByButton.setVisibility(View.GONE);
