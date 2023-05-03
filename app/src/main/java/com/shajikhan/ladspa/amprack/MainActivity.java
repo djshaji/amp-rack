@@ -25,6 +25,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -84,6 +85,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.util.IOUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -106,6 +108,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,6 +120,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
@@ -1368,17 +1373,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
             Log.d(TAG, "onActivityResult: " + selectedImage.getPath());
 
-            try (InputStream in = new FileInputStream(getContentResolver().openInputStream(selectedImage))
+            String contents = null ;
+            try
             {
-                String contents = IOUtils.toString(in, StandardCharsets.UTF_8);
-                System.out.println(contents);
-            } catch (IOException e) {
+                InputStream in =  mainActivity.getContentResolver().openInputStream(selectedImage) ;
+                contents = new BufferedReader(new InputStreamReader(in))
+                        .lines().collect(Collectors.joining("\n"));
 
+//                contents = IOUtils.toString(in, StandardCharsets.UTF_8);
+                System.out.println(contents);
+            } catch (FileNotFoundException e) {
+                toast(e.getMessage());
+                Log.e(TAG, "onActivityResult: ", e);
+                return;
+            } catch (IOException e) {
+                toast(e.getMessage());
+                Log.e(TAG, "onActivityResult: ", e);
+                return;
             }
 
             JSONObject jsonObject = null ;
             try {
-                jsonObject = new JSONObject(responce);
+                jsonObject = new JSONObject(contents);
             } catch (JSONException e) {
                 alert("Cannot load file", e.getMessage());
                 Log.e(TAG, "onActivityResult: ", e);
@@ -1386,12 +1402,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             if (jsonObject != null) {
-                sharedPreferences.edit().putString(file.getName(), responce).commit();
+                sharedPreferences.edit().putString(selectedImage.getLastPathSegment(), contents).commit();
                 Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
                 if (vals == null) {
                     vals = new ArraySet<>();
                 }
-                vals.add(file.getName());
+                vals.add(selectedImage.getLastPathSegment());
                 sharedPreferences.edit().putStringSet("collections", vals).commit();
             }
 

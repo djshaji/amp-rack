@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,8 +28,13 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MyPresets extends Fragment {
@@ -164,11 +170,46 @@ public class MyPresets extends Fragment {
         });
 
         if (quick) {
+            List<String> labels = new ArrayList<String>();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
             quickHeader.setVisibility(View.VISIBLE);
             quickSpinner = (Spinner) quickHeader.getChildAt(1);
-            List<String> labels = new ArrayList<String>();
+            quickSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        db.getFavorites(myPresetsAdapter, shared, quick);
+                        return;
+                    }
+
+                    String name = labels.get(position - 1);
+                    String s = sharedPreferences.getString(name, null);
+                    if (s == null) {
+                        MainActivity.toast("Cannot load collection " + name);
+                        return;
+                    }
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        Iterator<String> keys = jsonObject.keys();
+
+                        while(keys.hasNext()) {
+                            String key = keys.next();
+                            if (jsonObject.get(key) instanceof JSONObject) {
+                                Log.d(TAG, "onCreate: key " + key);
+                                JSONObject object = jsonObject.getJSONObject(key);
+                                myPresetsAdapter.addPreset((Map)object);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        MainActivity.toast("Cannot load collection " + name + "\n"+e.getLocalizedMessage());
+                        Log.e(TAG, "onItemClick: ", e);
+                        return;
+                    }
+
+                }
+            });
             labels.add("Factory Presets");
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
             Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
             if (vals != null) {
                 for (String v: vals) {
