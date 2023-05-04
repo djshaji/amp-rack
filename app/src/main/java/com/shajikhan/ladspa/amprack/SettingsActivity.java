@@ -232,7 +232,9 @@ public class SettingsActivity extends AppCompatActivity implements
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent_upload = new Intent();
-                    intent_upload.setType("application/zip");
+//                    intent_upload.setType("application/zip");
+                    intent_upload.setType("*/*");
+
                     intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
                     intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

@@ -1416,6 +1416,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 vals.add(name);
                 Log.d(TAG, "onActivityResult: adding collection to list: " + vals.toString());
                 sharedPreferences.edit().putStringSet("collections", vals).commit();
+                /*
+                MainActivity.alert("Loaded collection", String.format(
+                        "%s was loaded successfully. Restart the app and select the collection from the quick presets drop down menu."
+                ));
+
+                 */
+
+                List<String> labels = new ArrayList<String>();
+                labels.add("Factory Presets");
+                if (vals != null) {
+                    Log.d(TAG, "onViewCreated: adding collections " + vals);
+                    for (String v: vals) {
+                        labels.add(v);
+                    }
+                }
+
+                ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
+                quickPatch.quickSpinner.setAdapter(categoriesDataAdapter);
+                MainActivity.alert("Preset Collection Imported", "You can load presets from the collection from Quick Presets -> Collections");
             }
 
             Log.d(TAG, "onActivityResult: setting wallpaper: " + selectedImage.toString());

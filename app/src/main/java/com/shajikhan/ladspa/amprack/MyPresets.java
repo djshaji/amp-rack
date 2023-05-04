@@ -197,7 +197,9 @@ public class MyPresets extends Fragment {
                         return;
                     }
 
-                    String name = labels.get(position);
+                    Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
+                    Log.d(TAG, "onItemSelected: " + vals);
+                    String name = (String) vals.toArray() [position - 1];
                     String s = sharedPreferences.getString(name, null);
                     if (s == null) {
                         MainActivity.toast("Cannot load collection " + name);

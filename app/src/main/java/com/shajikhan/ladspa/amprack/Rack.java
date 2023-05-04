@@ -472,7 +472,8 @@ public class Rack extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent_upload = new Intent();
-                intent_upload.setType("application/json");
+//                intent_upload.setType("application/json");
+                intent_upload.setType("*/*");
                 intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
                 intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
