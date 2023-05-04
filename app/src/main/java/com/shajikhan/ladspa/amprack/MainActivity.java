@@ -1382,10 +1382,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 //                contents = IOUtils.toString(in, StandardCharsets.UTF_8);
                 System.out.println(contents);
-            } catch (FileNotFoundException e) {
-                toast(e.getMessage());
-                Log.e(TAG, "onActivityResult: ", e);
-                return;
             } catch (IOException e) {
                 toast(e.getMessage());
                 Log.e(TAG, "onActivityResult: ", e);
@@ -1402,12 +1398,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             if (jsonObject != null) {
-                sharedPreferences.edit().putString(selectedImage.getLastPathSegment(), contents).commit();
-                Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
+                Log.d(TAG, "onActivityResult: adding collection json " + contents);
+                String name = selectedImage.getLastPathSegment();
+                if (name.contains(":"))
+                    name = name.substring(name.lastIndexOf(":") + 1);
+                try {
+                    sharedPreferences.edit().putString(name, jsonObject.toString(4)).commit();
+                } catch (JSONException e) {
+                    MainActivity.alert("Cannot load collection", e.getMessage());
+                    Log.e(TAG, "onActivityResult: ", e);
+                }
+                Set<String> _vals = sharedPreferences.getStringSet("collections", null) ;
+                Set<String> vals = new ArraySet<>(_vals);
                 if (vals == null) {
                     vals = new ArraySet<>();
                 }
-                vals.add(selectedImage.getLastPathSegment());
+                vals.add(name);
+                Log.d(TAG, "onActivityResult: adding collection to list: " + vals.toString());
                 sharedPreferences.edit().putStringSet("collections", vals).commit();
             }
 
@@ -2598,7 +2605,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         for (int i = 0 ; i < presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.size() ; i ++) {
                             if (selectedItems.contains(i)) {
                                 try {
-                                    collection.put(String.valueOf(i), presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.get(i));
+                                    JSONObject jsonObject = new JSONObject(presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.get(i)) ;
+                                    collection.put(String.valueOf(i), jsonObject);
                                 } catch (JSONException e) {
                                     Log.e(TAG, "onClick: ", e);
                                 }

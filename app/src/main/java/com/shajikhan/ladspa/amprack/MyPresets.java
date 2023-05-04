@@ -28,10 +28,13 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -174,20 +177,34 @@ public class MyPresets extends Fragment {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
             quickHeader.setVisibility(View.VISIBLE);
             quickSpinner = (Spinner) quickHeader.getChildAt(1);
-            quickSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            labels.add("Factory Presets");
+            Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
+            if (vals != null) {
+                Log.d(TAG, "onViewCreated: adding collections " + vals);
+                for (String v: vals) {
+                    labels.add(v);
+                }
+            }
+
+            ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
+            quickSpinner.setAdapter(categoriesDataAdapter);
+            quickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    myPresetsAdapter.removeAll();
                     if (position == 0) {
                         db.getFavorites(myPresetsAdapter, shared, quick);
                         return;
                     }
 
-                    String name = labels.get(position - 1);
+                    String name = labels.get(position);
                     String s = sharedPreferences.getString(name, null);
                     if (s == null) {
                         MainActivity.toast("Cannot load collection " + name);
                         return;
                     }
+
+                    Log.d(TAG, "onItemSelected: loading collection " + name + "\n" + s);
 
                     try {
                         JSONObject jsonObject = new JSONObject(s);
@@ -195,11 +212,11 @@ public class MyPresets extends Fragment {
 
                         while(keys.hasNext()) {
                             String key = keys.next();
-                            if (jsonObject.get(key) instanceof JSONObject) {
-                                Log.d(TAG, "onCreate: key " + key);
-                                JSONObject object = jsonObject.getJSONObject(key);
-                                myPresetsAdapter.addPreset((Map)object);
-                            }
+                            JSONObject preset = jsonObject.getJSONObject(key);
+                            Log.d(TAG, "onCreate: key " + key);
+                            HashMap<String, Object> yourHashMap = new Gson().fromJson(preset.toString(), HashMap.class);
+
+                            myPresetsAdapter.addPreset(yourHashMap);
                         }
                     } catch (JSONException e) {
                         MainActivity.toast("Cannot load collection " + name + "\n"+e.getLocalizedMessage());
@@ -208,17 +225,12 @@ public class MyPresets extends Fragment {
                     }
 
                 }
-            });
-            labels.add("Factory Presets");
-            Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
-            if (vals != null) {
-                for (String v: vals) {
-                    labels.add(v);
-                }
-            }
 
-            ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
-            quickSpinner.setAdapter(categoriesDataAdapter);
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
 
         if (!shared) {

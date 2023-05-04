@@ -48,6 +48,7 @@ public class FirestoreDB {
     private FirebaseFirestore db;
     Context context ;
     MainActivity mainActivity;
+    Task<QuerySnapshot> cachedTask = null ;
 
     FirestoreDB (MainActivity _mainActivity) {
         db = FirebaseFirestore.getInstance();
@@ -131,6 +132,7 @@ public class FirestoreDB {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    cachedTask = task ;
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         Map preset = (Map) document.getData();
@@ -176,11 +178,35 @@ public class FirestoreDB {
                     .addOnCompleteListener(onCompleteListener);
         } else if (quick){
             Log.d(TAG, "loadUserPresets: quick patches");
-            db.collection("presets")
-                    .whereEqualTo("uid", "lWDjT6ENhgV9Hs6JHIjFAcacpAo1")
-                    .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
-                    .get()
-                    .addOnCompleteListener(onCompleteListener);
+
+            if (cachedTask != null) {
+                for (QueryDocumentSnapshot document : cachedTask.getResult()) {
+                    Log.d(TAG, "loadUserPresets: using cached quick presets");
+                    Log.d(TAG, document.getId() + " => " + document.getData());
+                    Map preset = (Map) document.getData();
+//                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
+                    Log.d(TAG, "onComplete: " + String.format(
+                            "preset: %s",
+                            preset.toString()
+                    ));
+                    if (preset.get("uid") .equals(uid) && shared == true)
+                        continue;
+
+                    if (shared && preset.get("controls").toString().equals("{}")) {
+                        Log.d(TAG, "onComplete: skipping empty preset " + preset.get("name"));
+                        continue;
+                    }
+                    preset.put("path", document.getReference().getPath());
+                    presetsAdapter.addPreset(preset);
+                }
+            }
+            else {
+                db.collection("presets")
+                        .whereEqualTo("uid", "lWDjT6ENhgV9Hs6JHIjFAcacpAo1")
+                        .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
+                        .get()
+                        .addOnCompleteListener(onCompleteListener);
+            }
         }
     }
 
