@@ -43,6 +43,7 @@ public class Tracks extends Fragment {
     String TAG = getClass().getSimpleName();
     String filesDir ;
     ExoPlayer player ;
+    static int requestCode = 1001 ;
     LinearLayout playerWindow ;
     boolean isDrums = false ;
     BitmapDrawable play, pause, reset ;
@@ -267,10 +268,11 @@ public class Tracks extends Fragment {
                 intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
                 intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                if (finalD)
-                    getActivity().startActivityForResult(intent_upload,1001);
-                else
-                    getActivity().startActivityForResult(intent_upload,1002);
+//                if (finalD)
+//                    getActivity().startActivityForResult(intent_upload,1001);
+//                else
+                getActivity().startActivityForResult(intent_upload,requestCode);
+                requestCode ++ ;
             }
         });
     }
