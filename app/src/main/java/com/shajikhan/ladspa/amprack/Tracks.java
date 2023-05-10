@@ -2,9 +2,11 @@ package com.shajikhan.ladspa.amprack;
 
 import static com.shajikhan.ladspa.amprack.MainActivity.context;
 
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.audiofx.DynamicsProcessing;
 import android.media.audiofx.NoiseSuppressor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,10 +44,15 @@ public class Tracks extends Fragment {
     String filesDir ;
     ExoPlayer player ;
     LinearLayout playerWindow ;
+    boolean isDrums = false ;
     BitmapDrawable play, pause, reset ;
 
     public Tracks () {
         tracksAdapter = new TracksAdapter();
+    }
+    public Tracks (boolean _isDrums) {
+        tracksAdapter = new TracksAdapter();
+        isDrums = _isDrums;
     }
 
     @Nullable
@@ -226,7 +233,15 @@ public class Tracks extends Fragment {
 
          */
 
-        playerWindow = mainActivity.findViewById(R.id.tracks_player);
+        ToggleButton skipSilence = view.findViewById(R.id.skip_silence);
+        skipSilence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tracksAdapter.player.setSkipSilenceEnabled(isChecked);
+            }
+        });
+
+        playerWindow = view.findViewById(R.id.tracks_player);
         if (mainActivity.useTheme) {
             play = mainActivity.skinEngine.bitmapDrawable("icons", "play");
             pause = mainActivity.skinEngine.bitmapDrawable("icons", "pause");
@@ -241,6 +256,23 @@ public class Tracks extends Fragment {
             mainActivity.skinEngine.slider(slider);
             mainActivity.skinEngine.slider(bpm);
         }
+
+        Button loadFile = view.findViewById(R.id.load_file);
+        loadFile.setOnClickListener(new View.OnClickListener() {
+            boolean finalD = isDrums;
+            @Override
+            public void onClick(View v) {
+                Intent intent_upload = new Intent();
+                intent_upload.setType("audio/*");
+                intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (finalD)
+                    getActivity().startActivityForResult(intent_upload,1001);
+                else
+                    getActivity().startActivityForResult(intent_upload,1002);
+            }
+        });
     }
 
     public void load (String [] files) {
@@ -260,5 +292,9 @@ public class Tracks extends Fragment {
             Log.d(TAG, "load: adding file " + files[i].getAbsolutePath());
             tracksAdapter.add(files [i].getAbsolutePath());
         }
+    }
+
+    public void load (Uri filename) {
+        tracksAdapter.add(filename.toString());
     }
 }

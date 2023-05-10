@@ -140,6 +140,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static boolean introShown = false ;
     ToggleButton record;
     boolean triggerRecord = false ;
+    enum RequestCode {
+        TRACK_AUDIO_FILE (1001);
+
+        RequestCode(int i) {
+        }
+    }  ;
     boolean triggerRecordedSomething = false ;
     boolean recording = false ;
     PopupMenu addPluginMenu;
@@ -518,7 +524,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             rack = new Rack();
             tracks = new Tracks();
-            drums = new Tracks();
+            drums = new Tracks(true);
+            drums.isDrums = true ;
             presets = new Presets();
 //            quickPatch = new MyPresets(false, true);
             quickPatch = new QuickPatch();
@@ -737,12 +744,27 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         tracks.load(dir);
+        Set<String> _tracksCustom = defaultSharedPreferences.getStringSet("tracks", null) ;
+        if (_tracksCustom != null) {
+            for (String _d:
+                 _tracksCustom) {
+                tracks.load(Uri.parse(_d));
+            }
+        }
 
         try {
             drums.load(getAssets().list("drums"));
         } catch (IOException e) {
             MainActivity.toast("Cannot load drum loops: " + e.getMessage());
             e.printStackTrace();
+        }
+
+        Set<String> _drumsCustom = defaultSharedPreferences.getStringSet("drums", null) ;
+        if (_drumsCustom != null) {
+            for (String _d:
+                    _drumsCustom) {
+                drums.load(Uri.parse(_d));
+            }
         }
 
         applyWallpaper(context, getWindow(), getResources(), findViewById(R.id.wallpaper), getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight()); //finally
@@ -1355,6 +1377,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         if (resultCode == RESULT_OK && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE) {
             if (Environment.isExternalStorageManager()) {
                 // Permission granted. Now resume your workflow.
@@ -1368,6 +1391,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         }
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (resultCode == RESULT_OK && requestCode == 100) {
             Uri selectedImage = data.getData();
             getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
@@ -1396,7 +1420,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Log.e(TAG, "onActivityResult: ", e);
             }
 
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             if (jsonObject != null) {
                 Log.d(TAG, "onActivityResult: adding collection json " + contents);
                 String name = selectedImage.getLastPathSegment();
@@ -1430,6 +1453,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     for (String v: vals) {
                         labels.add(v);
                     }
+
+                    labels.add ("Load from file") ;
+                    labels.add ("More presets online") ;
                 }
 
                 ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
@@ -1440,7 +1466,34 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, "onActivityResult: setting wallpaper: " + selectedImage.toString());
         }
 
+        if (resultCode == RESULT_OK && (requestCode == 1001 || requestCode == 1002)) {
+            Uri selectedImage = data.getData();
+            Log.d(TAG, "onActivityResult: trying to add " + selectedImage.toString());
+            getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
 
+            if (requestCode == 1001) {
+                Set<String> _vals = sharedPreferences.getStringSet("tracks", null) ;
+                Set<String> vals = new ArraySet<>(_vals);
+                if (vals == null) {
+                    vals = new ArraySet<>();
+                }
+                vals.add(selectedImage.toString());
+                Log.d(TAG, "onActivityResult: adding collection to list: " + vals.toString());
+                tracks.load(selectedImage);
+                sharedPreferences.edit().putStringSet("tracks", vals).commit();
+            }
+            else {
+                Set<String> _vals = sharedPreferences.getStringSet("drums", null) ;
+                Set<String> vals = new ArraySet<>(_vals);
+                if (vals == null) {
+                    vals = new ArraySet<>();
+                }
+                vals.add(selectedImage.toString());
+                Log.d(TAG, "onActivityResult: adding collection to list: " + vals.toString());
+                drums.load(selectedImage);
+                sharedPreferences.edit().putStringSet("drums", vals).commit();
+            }
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

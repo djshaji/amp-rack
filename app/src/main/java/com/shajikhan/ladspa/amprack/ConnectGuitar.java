@@ -38,7 +38,7 @@ public class ConnectGuitar extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "https://amprack.acoustixaudio.org/connect.html";
+                String url = "https://amprack.acoustixaudio.org/connect.php";
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

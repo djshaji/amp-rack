@@ -1,6 +1,8 @@
 package com.shajikhan.ladspa.amprack;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -184,6 +186,9 @@ public class MyPresets extends Fragment {
                 for (String v: vals) {
                     labels.add(v);
                 }
+
+                labels.add ("Load from file") ;
+                labels.add ("More presets online") ;
             }
 
             ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
@@ -191,6 +196,22 @@ public class MyPresets extends Fragment {
             quickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == parent.getAdapter().getCount() - 1) {
+                        String url = "https://amprack.acoustixaudio.org/view.php?type=Presets";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        return;
+                    } else if (position == parent.getAdapter().getCount() - 2) {
+                        Intent intent_upload = new Intent();
+                        intent_upload.setType("*/*");
+                        intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                        intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                        intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        getActivity().startActivityForResult(intent_upload,100);
+                        return ;
+                    }
+
                     myPresetsAdapter.removeAll();
                     if (position == 0) {
                         db.getFavorites(myPresetsAdapter, shared, quick);

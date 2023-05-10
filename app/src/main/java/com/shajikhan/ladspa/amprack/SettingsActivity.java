@@ -205,6 +205,17 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.theme_settings, rootKey);
+            Preference moreThemes = findPreference("more_themes_online") ;
+            moreThemes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    String url = "https://amprack.acoustixaudio.org/view.php?type=Themes";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                    return false;
+                }
+            });
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             Set <String> customThemes = sharedPreferences.getStringSet("customThemes", null);
             if (customThemes != null) {
@@ -462,5 +473,7 @@ public class SettingsActivity extends AppCompatActivity implements
             }
             Log.d(TITLE_TAG, "onActivityResult: setting custom theme from folder: " + selectedImage.toString());
         }
+
+        MainActivity.alert("Resource loaded", "Restart the app for changes to take effect.");
     }
 }

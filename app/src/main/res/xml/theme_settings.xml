@@ -32,4 +32,9 @@
         android:defaultValue="Theme.AmpRack"
         android:entryValues="@array/mstyles"/>
 
+    <Preference
+        android:title="More themes online"
+        android:summary="Tap to download more themes from the web"
+        android:key="more_themes_online"/>
+
 </PreferenceScreen>
