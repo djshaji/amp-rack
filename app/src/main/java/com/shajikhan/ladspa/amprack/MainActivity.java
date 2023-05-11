@@ -2373,7 +2373,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static void shareFile(File file) {
         Intent intentShareFile = new Intent(Intent.ACTION_SEND);
-        Uri contentUri = FileProvider.getUriForFile(context, "com.shajikhan.ladspa.amprack.fileprovider", file);
+        Uri contentUri = null;
+        try {
+            contentUri = FileProvider.getUriForFile(context, "com.shajikhan.ladspa.amprack.fileprovider", file);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.e(TAG, "shareFile: ", illegalArgumentException);
+            return;
+        }
+
         intentShareFile.setType("audio/*");
         intentShareFile.putExtra(Intent.EXTRA_STREAM, contentUri);
 
@@ -2708,7 +2715,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                                         if (filename != null) {
                                             File file = new File(context.getExternalFilesDir(
-                                                    Environment.DIRECTORY_DOWNLOADS) + "/" + filename +".json");
+                                                    Environment.DIRECTORY_DOWNLOADS) + "/" + filename +".txt");
                                             FileOutputStream stream = null;
                                             try {
                                                 stream = new FileOutputStream(file);

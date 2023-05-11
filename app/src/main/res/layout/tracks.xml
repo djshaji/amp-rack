@@ -149,6 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skip Silence"
+                android:id="@+id/skip_silence_label"
                 android:fontFamily="@font/comfortaa"
                 android:layout_marginLeft="10dp"/>
             <ToggleButton

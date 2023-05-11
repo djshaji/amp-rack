@@ -234,6 +234,9 @@ public class Tracks extends Fragment {
 
          */
 
+        Button loadFile = view.findViewById(R.id.load_file);
+        loadFile.setPadding(10,10,10,10);
+
         ToggleButton skipSilence = view.findViewById(R.id.skip_silence);
         skipSilence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -256,9 +259,23 @@ public class Tracks extends Fragment {
 
             mainActivity.skinEngine.slider(slider);
             mainActivity.skinEngine.slider(bpm);
+
+            mainActivity.skinEngine.button(loadFile, SkinEngine.Resize.Width, 1);
+            mainActivity.skinEngine.card (view.findViewById(R.id.skip_silence_label));
+
+            /*
+            LinearLayout loadTrack = view.findViewById(R.id.add_track_ll);
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.skinEngine.card(loadTrack);
+                }
+            });
+
+             */
+//            mainActivity.skinEngine.toggle(skipSilence, skipSilence.isChecked());
         }
 
-        Button loadFile = view.findViewById(R.id.load_file);
         loadFile.setOnClickListener(new View.OnClickListener() {
             boolean finalD = isDrums;
             @Override
