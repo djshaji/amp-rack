@@ -43,4 +43,9 @@
         app:key="version_header"
         app:title="Version Information" />
 
+    <Preference
+        app:key="privacy_policy"
+        app:title="Privacy Policy"
+        app:summary="View Privacy Policy and License (Apache License 2.0) Information"/>
+
 </PreferenceScreen>
