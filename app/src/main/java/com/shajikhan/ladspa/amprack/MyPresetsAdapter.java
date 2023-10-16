@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,12 +31,13 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     ArrayList<Map> presets = new ArrayList<>();
     MainActivity mainActivity = null;
     FirestoreDB db ;
-    ProgressBar progressBar ;
+    ProgressBar progressBar , loadProgress;
     LinearProgressIndicator quickPatchProgress ;
     boolean quick = false ;
     MyPresetsAdapter myPresetsAdapter ;
     String sortBy = "timestamp";
     String uid = null;
+    DocumentSnapshot last = null;
     Map<String, Object> favoritePresets = null;
     ArrayList <Map> allPresets = new ArrayList<>() ;
 

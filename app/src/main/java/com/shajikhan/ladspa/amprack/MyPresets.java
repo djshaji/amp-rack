@@ -89,10 +89,33 @@ public class MyPresets extends Fragment {
         db = new FirestoreDB (mainActivity);
 
         recyclerView = (RecyclerView) ((LinearLayout) view).getChildAt(2);
-        quickHeader = (LinearLayout) ((LinearLayout) view).getChildAt(0);
+        Button loadMore = view.findViewById(R.id.load_more);
+        ProgressBar loadProgress = view.findViewById(R.id.load_progress);
+        loadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadProgress.setVisibility(View.VISIBLE);
+                loadMore.setVisibility(View.INVISIBLE);
+                db.loadUserPresets(myPresetsAdapter,shared, quick);
+
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == myPresetsAdapter.presets.size() - 1) {
+                    loadMore.setVisibility(View.VISIBLE);
+                    loadProgress.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        quickHeader = (LinearLayout) ((LinearLayout) view).getChildAt(0);
         myPresetsAdapter = new MyPresetsAdapter();
         myPresetsAdapter.setMainActivity(mainActivity);
+        myPresetsAdapter.loadProgress = loadProgress;
         recyclerView.setAdapter(myPresetsAdapter);
         myPresetsAdapter.quickPatchProgress = mainActivity.rack.quickPatchProgress;
 

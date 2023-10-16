@@ -48,7 +48,11 @@ public class FirestoreDB {
     private FirebaseFirestore db;
     Context context ;
     MainActivity mainActivity;
+    int loaded = 0 ;
+    DocumentSnapshot last = null;
+    String lastStamp = "" ;
     Task<QuerySnapshot> cachedTask = null ;
+    QuerySnapshot cachedSnapshot = null ;
 
     FirestoreDB (MainActivity _mainActivity) {
         db = FirebaseFirestore.getInstance();
@@ -114,6 +118,10 @@ public class FirestoreDB {
             presetsAdapter.progressBar.setVisibility(View.VISIBLE);
         }
 
+        if (presetsAdapter.loadProgress != null) {
+            presetsAdapter.loadProgress.setVisibility(View.VISIBLE);
+        }
+
         if (quick && mainActivity.rack.quickPatchProgress != null)
             mainActivity.rack.quickPatchProgress.setVisibility(View.GONE);
 
@@ -133,7 +141,9 @@ public class FirestoreDB {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     cachedTask = task ;
+                    loaded = loaded + 30 ;
                     for (QueryDocumentSnapshot document : task.getResult()) {
+                        last = document ;
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         Map preset = (Map) document.getData();
 //                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
@@ -150,6 +160,7 @@ public class FirestoreDB {
                         }
                         preset.put("path", document.getReference().getPath());
                         presetsAdapter.addPreset(preset);
+//                        lastStamp = (String) preset.get(presetsAdapter.sortBy);
                     }
 
                     if (presetsAdapter.progressBar != null) {
@@ -159,23 +170,46 @@ public class FirestoreDB {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                     MainActivity.toast("Error getting presets: " + task.getException().getMessage());
                 }
+
+                if (presetsAdapter.loadProgress != null) {
+                    presetsAdapter.loadProgress.setVisibility(View.INVISIBLE);
+                }
             }
         } ;
 
+        OnSuccessListener onSuccessListener = new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                cachedSnapshot = (QuerySnapshot) o;
+            }
+        };
+
+        Query query = null ;
+
         if (shared == false && quick == false) {
             Log.d(TAG, "loadUserPresets: user presets");
-            db.collection("presets")
+            query = db.collection("presets")
                     .whereEqualTo("uid", uid)
-                    .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
-                    .get()
-                    .addOnCompleteListener(onCompleteListener);
+                    .limit(30)
+                    .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING);
+            if (last != null)
+                    query = query.startAfter(last);
+
+            query.get()
+            .addOnSuccessListener(onSuccessListener)
+            .addOnCompleteListener(onCompleteListener);
         } else if (shared){
             Log.d(TAG, "loadUserPresets: shared presets");
-            db.collection("presets")
+            query = db.collection("presets")
                     .whereEqualTo("public", true)
-                    .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING)
-                    .get()
-                    .addOnCompleteListener(onCompleteListener);
+                    .limit(30)
+                    .orderBy(presetsAdapter.sortBy, Query.Direction.DESCENDING);
+            if (last != null)
+                    query = query.startAfter(last);
+
+            query.get()
+            .addOnSuccessListener(onSuccessListener)
+            .addOnCompleteListener(onCompleteListener);
         } else if (quick){
             Log.d(TAG, "loadUserPresets: quick patches");
 
