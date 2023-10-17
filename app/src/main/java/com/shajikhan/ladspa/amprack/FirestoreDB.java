@@ -118,9 +118,9 @@ public class FirestoreDB {
             presetsAdapter.progressBar.setVisibility(View.VISIBLE);
         }
 
-        if (presetsAdapter.loadProgress != null) {
-            presetsAdapter.loadProgress.setVisibility(View.VISIBLE);
-        }
+//        if (presetsAdapter.loadProgress != null) {
+//            presetsAdapter.loadProgress.setVisibility(View.VISIBLE);
+//        }
 
         if (quick && mainActivity.rack.quickPatchProgress != null)
             mainActivity.rack.quickPatchProgress.setVisibility(View.GONE);
@@ -171,9 +171,9 @@ public class FirestoreDB {
                     MainActivity.toast("Error getting presets: " + task.getException().getMessage());
                 }
 
-                if (presetsAdapter.loadProgress != null) {
-                    presetsAdapter.loadProgress.setVisibility(View.INVISIBLE);
-                }
+//                if (presetsAdapter.loadProgress != null) {
+//                    presetsAdapter.loadProgress.setVisibility(View.INVISIBLE);
+//                }
             }
         } ;
 

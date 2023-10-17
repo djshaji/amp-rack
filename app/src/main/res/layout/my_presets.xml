@@ -63,6 +63,7 @@
 
     </androidx.recyclerview.widget.RecyclerView>
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="left"

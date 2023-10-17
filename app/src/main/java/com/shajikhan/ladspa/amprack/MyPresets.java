@@ -107,8 +107,11 @@ public class MyPresets extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == myPresetsAdapter.presets.size() - 1) {
-                    loadMore.setVisibility(View.VISIBLE);
-                    loadProgress.setVisibility(View.INVISIBLE);
+//                    loadMore.setVisibility(View.VISIBLE);
+//                    loadProgress.setVisibility(View.INVISIBLE);
+//                    loadProgress.setVisibility(View.VISIBLE);
+//                    loadMore.setVisibility(View.INVISIBLE);
+                    db.loadUserPresets(myPresetsAdapter,shared, quick);
                 }
             }
         });
@@ -204,15 +207,18 @@ public class MyPresets extends Fragment {
             quickSpinner = (Spinner) quickHeader.getChildAt(1);
             labels.add("Factory Presets");
             Set<String> vals = sharedPreferences.getStringSet("collections", null) ;
+            Log.d(TAG, "onViewCreated: vals: " + vals);
             if (vals != null) {
                 Log.d(TAG, "onViewCreated: adding collections " + vals);
                 for (String v: vals) {
                     labels.add(v);
                 }
-
-                labels.add ("Load from file") ;
-                labels.add ("More presets online") ;
             }
+
+            labels.add ("Load from file") ;
+            labels.add ("More presets online") ;
+
+            Log.d(TAG, "onViewCreated: labels: " + labels);
 
             ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, labels);
             quickSpinner.setAdapter(categoriesDataAdapter);
