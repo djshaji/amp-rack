@@ -61,6 +61,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -1298,6 +1299,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void startEffect() {
         Log.d(TAG, "Attempting to start");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (!isRecordPermissionGranted()) {
             requestRecordPermission();
@@ -1310,6 +1312,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void stopEffect() {
         if (! running) return;
         Log.d(TAG, "Playing, attempting to stop, state: " + running);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AudioEngine.setEffectOn(false);
         if (bootFinish > 0 && !AudioEngine.wasLowLatency() && defaultSharedPreferences.getBoolean("warnLowLatency", true)) {
             Log.d(TAG, "stopEffect() called: Low Latency Warning");

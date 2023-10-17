@@ -61,6 +61,7 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
 
         if (name.startsWith("asset://")) {
             holder.deleteButton.setVisibility(View.GONE);
+            Log.d(TAG, "onBindViewHolder: hiding delete button for track: " + name);
         } else {
             holder.fileButton.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -78,11 +79,16 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
                     builder.setMessage("Are you sure you want to delete this file? This action cannot be undone.")
                             .setPositiveButton("Delete file", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                    Log.d(TAG, "onClick: deleting file " + name);
                                     File file = new File(name);
-                                    if (file.delete())
+                                    if (name.startsWith("content://")) {
                                         delete(holder.getAdapterPosition());
-                                    else
+                                    } else if (file.delete())
+                                        delete(holder.getAdapterPosition());
+                                    else {
                                         MainActivity.toast("Unable to delete file");
+                                        Log.e(TAG, "onClick: delete track: " + name, null);
+                                    }
                                 }
                             })
                             .setNegativeButton("Cancel", null)
