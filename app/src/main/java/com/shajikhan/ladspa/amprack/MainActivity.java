@@ -2523,16 +2523,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return lv2Plugins.contains(pluginName);
     }
 
+    static ArrayList <Float> tunerBuffer = new ArrayList<>();
+    static Pitch pitch = new Pitch();
     static void setMixerMeter (float inputValue, float outputValue) {
         inputMeter.setProgress((int) (inputValue * 100));
         outputMeter.setProgress((int) (outputValue * 100));
     }
+
     static void setMixerMeterSwitch (float inputValue, boolean isInput) {
         if (inputValue < 0.001)
             return;
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
-        if (isInput)
+        if (isInput) {
             inputMeter.setProgress((int) (inputValue * 100));
+            if (tunerBuffer.size() < 30) {
+//                Log.d(TAG, "setMixerMeter: " + inputValue);
+                tunerBuffer.add(inputValue);
+            } else {
+                double freq = pitch.computePitchFrequency(tunerBuffer);
+                Log.d(TAG, "setMixerMeter: detected pitch " + freq);
+                tunerBuffer.clear();
+            }
+        }
         else {
             outputMeter.setProgress((int) (inputValue * 100));
 //            Log.d(TAG, "setMixerMeterSwitch: " + inputValue);
