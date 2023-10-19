@@ -14,7 +14,7 @@ Meter::staticBuffer_t Meter::buffersOutput [1024] ;
 Meter::staticBuffer_t Meter::buffers [1024] ;
 int Meter::jack_samplerate = 48000 ;
 int Meter::block_size = 384 ;
-int Meter::MAX_STATIC_BUFFER  = 32;
+int Meter::MAX_STATIC_BUFFER  = 16;
 jmethodID Meter::setMixerMeter ;
 jclass Meter::mainActivity ;
 jmethodID Meter::setMixerMeterOutput ;

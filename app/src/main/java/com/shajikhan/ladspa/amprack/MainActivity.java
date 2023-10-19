@@ -2533,8 +2533,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput) {
             inputMeter.setProgress((int) (inputValue * 100));
-            if (tunerBuffer.size() < 48) {
-//                Log.d(TAG, "setMixerMeter: " + inputValue);
+            if (tunerBuffer.size() < 32) {
+//                Log.d(TAG, tunerBuffer.size() + ": setMixerMeter: " + inputValue);
                 tunerBuffer.add(inputValue);
             } else {
                 double freq = pitch.computePitchFrequency(tunerBuffer);
