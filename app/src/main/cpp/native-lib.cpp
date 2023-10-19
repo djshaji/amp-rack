@@ -749,3 +749,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setFileName(JNIEnv *env, jclass cl
     LOGD("file name set to %s", nativeString);
     env->ReleaseStringUTFChars(file_name, nativeString);
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getSampleRate(JNIEnv *env, jclass clazz) {
+    // TODO: implement getSampleRate()
+    // TODO: implement setSampleRate()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return 48000;
+    }
+
+    return engine->mSampleRate ;
+
+}

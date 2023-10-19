@@ -105,4 +105,6 @@ public class AudioEngine {
     static void warnLowLatency (Context context) {
         MainActivity.toast(context.getResources().getString(R.string.lowLatencyWarning));
     }
+
+    static native int getSampleRate () ;
 }

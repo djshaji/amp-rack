@@ -1,5 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
+import static java.lang.Math.abs;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +27,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -86,7 +87,6 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.util.IOUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -103,14 +103,11 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2524,7 +2521,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     static ArrayList <Float> tunerBuffer = new ArrayList<>();
-    static Pitch pitch = new Pitch();
+    static Pitch pitch = new Pitch(AudioEngine.getSampleRate());
     static void setMixerMeter (float inputValue, float outputValue) {
         inputMeter.setProgress((int) (inputValue * 100));
         outputMeter.setProgress((int) (outputValue * 100));
@@ -2536,12 +2533,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput) {
             inputMeter.setProgress((int) (inputValue * 100));
-            if (tunerBuffer.size() < 30) {
+            if (tunerBuffer.size() < 48) {
 //                Log.d(TAG, "setMixerMeter: " + inputValue);
                 tunerBuffer.add(inputValue);
             } else {
                 double freq = pitch.computePitchFrequency(tunerBuffer);
-                Log.d(TAG, "setMixerMeter: detected pitch " + freq);
+                String note = " - " ;
+                double diff = 0 ;
+                for (int i = 0 ; i < pitch.notes.length ; i ++) {
+                    double _diff = Float.valueOf(pitch.notes [i][1]) - freq ;
+                    if (abs (_diff) < 31) {
+                        diff = _diff;
+                        note = pitch.notes [i][0];
+                        break ;
+                    }
+                }
+
+                Log.d(TAG, String.format(
+                        "%s %f %f",
+                        note, freq, diff
+                        )) ;
                 tunerBuffer.clear();
             }
         }
