@@ -282,7 +282,7 @@
                 <LinearLayout
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -328,6 +328,31 @@
                         android:fontFamily="@font/start"
                         android:textSize="10dp"
                         android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:padding="10dp"
+                        android:layout_margin="5dp"
+                        android:id="@+id/tuner"
+                        android:background="@drawable/semi_trans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        android:drawableTop="@drawable/ic_baseline_keyboard_arrow_up_24"
+                        android:fontFamily="@font/start"
+                        android:textSize="16dp"
+                        android:text="G#"/>
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_gravity="center"

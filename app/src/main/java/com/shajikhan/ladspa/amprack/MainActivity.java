@@ -51,6 +51,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     AlertDialog pluginDialog;
     ImageView pluginDialogWallpaper;
     AudioManager audioManager;
+    TextView tuner ;
     boolean running = false ;
     long bootFinish = 0 ;
     static boolean showIntro = false ;
@@ -2553,6 +2556,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         "%s %f %f",
                         note, freq, diff
                         )) ;
+                String finalNote = note;
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // write your code here
+                        mainActivity.tuner.setText(finalNote);
+                        if (diff < 0) {
+                            mainActivity.tuner.setCompoundDrawables(mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_up_24), null,null,null);
+                        } else {
+                            mainActivity.tuner.setCompoundDrawables(null,null,null, mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_down_24));
+                        }
+                    }
+                });
+
                 tunerBuffer.clear();
             }
         }
