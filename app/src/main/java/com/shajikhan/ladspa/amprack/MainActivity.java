@@ -45,8 +45,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -124,6 +128,7 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "Amp Rack MainActivity";
+
     private static final String CHANNEL_ID = "default";
     static Context context;
     static MainActivity mainActivity;
@@ -288,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
+        hashCommands.add (this, "AudioRecordTest");
         hashCommands.add(this, "saveActivePreset");
         hashCommands.add(this, "printActivePreset");
         hashCommands.add(this, "proDialog");
@@ -2530,14 +2536,50 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
 
+    static void setTuner (float [] data) {
+        double freq = pitch.computePitchFrequency(data);
+        String note = " - " ;
+        double diff = 0 ;
+        for (int i = 0 ; i < pitch.notes.length ; i ++) {
+            double _diff = Float.valueOf(pitch.notes [i][1]) - freq ;
+            if (abs (_diff) < 31) {
+                diff = _diff;
+                note = pitch.notes [i][0];
+                break ;
+            }
+        }
+
+        Log.d(TAG, String.format(
+                "%s %f %f",
+                note, freq, diff
+        )) ;
+        String finalNote = note;
+        double finalDiff = diff;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // write your code here
+                mainActivity.tuner.setText(finalNote);
+                if (finalDiff < 0) {
+                    mainActivity.tuner.setCompoundDrawables(mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_up_24), null,null,null);
+                } else {
+                    mainActivity.tuner.setCompoundDrawables(null,null,null, mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_down_24));
+                }
+            }
+        });
+
+        tunerBuffer.clear();
+    }
+
     static void setMixerMeterSwitch (float inputValue, boolean isInput) {
         if (inputValue < 0.001)
             return;
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput) {
             inputMeter.setProgress((int) (inputValue * 100));
+            /*
             if (tunerBuffer.size() < 32) {
-//                Log.d(TAG, tunerBuffer.size() + ": setMixerMeter: " + inputValue);
+                Log.d(TAG, tunerBuffer.size() + ": setMixerMeter: " + inputValue);
                 tunerBuffer.add(inputValue);
             } else {
                 double freq = pitch.computePitchFrequency(tunerBuffer);
@@ -2557,12 +2599,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         note, freq, diff
                         )) ;
                 String finalNote = note;
+                double finalDiff = diff;
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         // write your code here
                         mainActivity.tuner.setText(finalNote);
-                        if (diff < 0) {
+                        if (finalDiff < 0) {
                             mainActivity.tuner.setCompoundDrawables(mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_up_24), null,null,null);
                         } else {
                             mainActivity.tuner.setCompoundDrawables(null,null,null, mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_down_24));
@@ -2572,6 +2615,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 tunerBuffer.clear();
             }
+             */
         }
         else {
             outputMeter.setProgress((int) (inputValue * 100));
@@ -2806,4 +2850,53 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         dialog.show();
     }
 
+    public void AudioRecordTest () {
+        Log.d(TAG, "AudioRecordTest: ");
+        int min = AudioRecord.getMinBufferSize(8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        AudioRecord aRecord = null;
+
+        aRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, 48000,
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_FLOAT, 1024*4);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Audio Record Test");
+        builder.setPositiveButton("Close", null);
+
+        LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        TextView textView = new TextView(getApplicationContext());
+        textView.setText("Toggle record");
+        ToggleButton toggleButton = new ToggleButton(getApplicationContext());
+        linearLayout.addView(textView);
+        linearLayout.addView(toggleButton);
+        builder.setView(linearLayout);
+        int maxJitter = AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+
+        AudioTrack track = new AudioTrack(AudioManager.MODE_IN_COMMUNICATION, 8000, AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT, maxJitter, AudioTrack.MODE_STREAM);
+
+        Dialog dialog = builder.create();
+        Pitch p = new Pitch(48000);
+        AudioRecord finalARecord = aRecord;
+        CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    finalARecord.startRecording();
+                    float[] lin = new float[1024*4];
+                    while (finalARecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+                        int num = finalARecord.read(lin, 0, 1024 *4, AudioRecord.READ_NON_BLOCKING);
+                        double pitchFrequency = p.computePitchFrequency (lin);
+
+                        Log.d(TAG, "onCheckedChanged: " + pitchFrequency);
+                    }
+                } else {
+                    finalARecord.stop();
+                }
+            }
+        } ;
+
+        toggleButton.setOnCheckedChangeListener(listener);
+        dialog.show();
+    }
 }

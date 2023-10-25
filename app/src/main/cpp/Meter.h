@@ -59,6 +59,7 @@ public:
     static jclass mainActivity ;
     static JNIEnv *env;
     static jmethodID setMixerMeterOutput ;
+    static jmethodID setTuner ;
     static jclass mainActivityOutput ;
     static JNIEnv *envOutput;
     static bool enabled ;
@@ -99,10 +100,16 @@ public:
 
             setMixerMeterOutput = envOutput->GetStaticMethodID(mainActivityOutput, "setMixerMeterSwitch",
                                                                "(FZ)V");
+
+            setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
+                                                               "([F)V");
             if (setMixerMeterOutput == nullptr) {
                 LOGF("cannot find method!");
             }
 
+            if (setTuner == nullptr) {
+                LOGF("cannot find setTuner method!");
+            }
         }
 
         if (first_time==true) {
@@ -115,8 +122,18 @@ public:
 
         for (int i = 0; i < bufferUsedOutput; i++) {
             for (int j = 0; j < sbuffer[i].pos; j++) {
-                if (sbuffer[i].data[j] > max && sbuffer[i].data[j] > 0.01 && sbuffer[i].data[j] < 1.01)
+                if (sbuffer[i].data[j] > max && sbuffer[i].data[j] > 0.01 && sbuffer[i].data[j] < 1.01) {
                     max = sbuffer[i].data[j];
+                    if (tunerIndex < 1024 * 4) {
+                        tunerBuffer [tunerIndex] = sbuffer [i].data [j] ;
+                    } else {
+                        tunerIndex = 0 ;
+                        jfloatArray jfloatArray1 = envOutput->NewFloatArray(1024*4);
+
+                        envOutput->SetFloatArrayRegion(jfloatArray1, 0, 1024*4, tunerBuffer);
+                        envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
+                    }
+                }
             }
         }
 
@@ -178,6 +195,9 @@ public:
     static jclass findClass(const char *name);
 
     static jclass findClassWithEnv(JNIEnv *env, const char *name);
+
+    static float tunerBuffer [1024*4];
+    static int tunerIndex;
 };
 
 #endif //AMP_RACK_METER_H
