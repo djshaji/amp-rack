@@ -342,6 +342,7 @@
                         android:padding="10dp"
                         android:layout_margin="5dp"
                         android:id="@+id/tuner"
+                        android:visibility="gone"
                         android:background="@drawable/semi_trans"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

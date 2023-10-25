@@ -170,7 +170,7 @@ public class Rack extends Fragment {
                 }
             });
 
-        mainActivity.tuner = mainActivity.findViewById(R.id.tuner);
+        mainActivity.tuner = mainActivity.findViewById(R.id.patch_label);
 
         RecyclerView recyclerView1 = (RecyclerView) mainActivity.linearLayoutPluginDialog.findViewById(R.id.plugin_dialog_recycler_view);
         recyclerView1.setLayoutManager(new LinearLayoutManager(mainActivity));

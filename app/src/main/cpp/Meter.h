@@ -124,15 +124,6 @@ public:
             for (int j = 0; j < sbuffer[i].pos; j++) {
                 if (sbuffer[i].data[j] > max && sbuffer[i].data[j] > 0.01 && sbuffer[i].data[j] < 1.01) {
                     max = sbuffer[i].data[j];
-                    if (tunerIndex < 1024 * 4) {
-                        tunerBuffer [tunerIndex] = sbuffer [i].data [j] ;
-                    } else {
-                        tunerIndex = 0 ;
-                        jfloatArray jfloatArray1 = envOutput->NewFloatArray(1024*4);
-
-                        envOutput->SetFloatArrayRegion(jfloatArray1, 0, 1024*4, tunerBuffer);
-                        envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
-                    }
                 }
             }
         }
@@ -169,6 +160,13 @@ public:
 
         if (first_time==true) {
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
+        }
+
+        if (tunerIndex >= 1024 * 4) {
+            jfloatArray jfloatArray1 = env->NewFloatArray(1024*4);
+            env->SetFloatArrayRegion(jfloatArray1, 0, 1024*4, tunerBuffer);
+            env->CallStaticVoidMethod(mainActivity, setTuner, jfloatArray1, false);
+            tunerIndex = 0 ;
         }
 
         staticBuffer_t * sbuffer = (staticBuffer_t * ) element ;

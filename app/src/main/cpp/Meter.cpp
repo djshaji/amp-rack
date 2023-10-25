@@ -207,6 +207,12 @@ void Meter::process (int nframes, const float * data, bool isInput) {
         if (bufferUsed < MAX_STATIC_BUFFER) {
             for (int i = 0; i < nframes; i++) {
                 buffers[bufferUsed].data[i] = data[i];
+                if (tunerIndex < 1024 * 4) {
+                    tunerBuffer [tunerIndex] = data [i];
+                    tunerIndex ++ ;
+                } else {
+                    vringbuffer_return_writing(vringbuffer, buffers);
+                }
             }
 
             buffers[bufferUsed].pos = nframes;

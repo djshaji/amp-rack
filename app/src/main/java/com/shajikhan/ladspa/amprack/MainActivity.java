@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static boolean introShown = false ;
     ToggleButton record;
     boolean triggerRecord = false ;
+    private Handler handler;
+
     enum RequestCode {
         TRACK_AUDIO_FILE (1001);
 
@@ -250,6 +252,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
         activityManager.getMemoryInfo(memoryInfo);
         lowMemoryMode = memoryInfo.lowMemory ;
+
+        handler = new Handler(Looper.getMainLooper()) ;
 
         if (savedInstanceState != null) {
             // to remove duplicate fragments
@@ -2539,32 +2543,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static void setTuner (float [] data) {
         double freq = pitch.computePitchFrequency(data);
         String note = " - " ;
-        double diff = 0 ;
+        double cents = 0 ;
         for (int i = 0 ; i < pitch.notes.length ; i ++) {
-            double _diff = Float.valueOf(pitch.notes [i][1]) - freq ;
-            if (abs (_diff) < 31) {
-                diff = _diff;
+            float targetFrequency = Float.valueOf(pitch.notes [i][1]) ;
+            cents = 1200 * Math.log(freq / targetFrequency) / Math.log(2);
+            if (abs (cents) < 50) {
                 note = pitch.notes [i][0];
                 break ;
             }
         }
 
-        Log.d(TAG, String.format(
-                "%s %f %f",
-                note, freq, diff
-        )) ;
+//        Log.d(TAG, String.format(
+//                "%f %s %f",
+//                data [0], note, freq
+//        )) ;
         String finalNote = note;
-        double finalDiff = diff;
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                // write your code here
-                mainActivity.tuner.setText(finalNote);
-                if (finalDiff < 0) {
-                    mainActivity.tuner.setCompoundDrawables(mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_up_24), null,null,null);
-                } else {
-                    mainActivity.tuner.setCompoundDrawables(null,null,null, mainActivity.getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_down_24));
-                }
+        double finalCents = cents;
+        mainActivity.handler.post(() -> {
+            // write your code here
+            if (finalCents > 0) {
+                mainActivity.tuner.setText("↑ " + finalNote);
+            } else {
+                mainActivity.tuner.setText("↓ " + finalNote);
             }
         });
 
@@ -2887,8 +2887,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     while (finalARecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
                         int num = finalARecord.read(lin, 0, 1024 *4, AudioRecord.READ_NON_BLOCKING);
                         double pitchFrequency = p.computePitchFrequency (lin);
+                        Log.d(TAG, "onCheckedChanged: " + lin [0] + " " + pitchFrequency);
+//                        break ;
 
-                        Log.d(TAG, "onCheckedChanged: " + pitchFrequency);
                     }
                 } else {
                     finalARecord.stop();

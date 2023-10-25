@@ -1719,7 +1719,7 @@ public class SkinEngine {
                     }
                 }
 
-                Log.d(TAG, "draw: " + String.format("topright %d x %d", topRight.getWidth(), topRight.getHeight()));
+//                Log.d(TAG, "draw: " + String.format("topright %d x %d", topRight.getWidth(), topRight.getHeight()));
 
                 int painted = 0 ;
                 int tWidth = top.getWidth();
