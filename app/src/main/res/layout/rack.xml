@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/gruppo"
                         android:id="@+id/patch_label"
-                        android:text="Patch"
+                        android:text="Tap to activate Tuner"
                         android:textSize="25dp" />
 
 

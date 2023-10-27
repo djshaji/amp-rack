@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     ToggleButton record;
     boolean triggerRecord = false ;
     private Handler handler;
+    public boolean tunerEnabled = true;
 
     enum RequestCode {
         TRACK_AUDIO_FILE (1001);
@@ -2541,14 +2542,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     static void setTuner (float [] data) {
+        if (! mainActivity.tunerEnabled)
+            return ;
         double freq = pitch.computePitchFrequency(data);
         String note = " - " ;
         double cents = 0 ;
+        double diff = 0 ;
+        float targetFrequency = 0;
         for (int i = 0 ; i < pitch.notes.length ; i ++) {
-            float targetFrequency = Float.valueOf(pitch.notes [i][1]) ;
+            targetFrequency = Float.valueOf(pitch.notes [i][1]) ;
             cents = 1200 * Math.log(freq / targetFrequency) / Math.log(2);
             if (abs (cents) < 50) {
                 note = pitch.notes [i][0];
+                diff = freq - targetFrequency ;
                 break ;
             }
         }
@@ -2559,12 +2565,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        )) ;
         String finalNote = note;
         double finalCents = cents;
+        float finalTargetFrequency = targetFrequency;
+        double finalDiff = diff;
         mainActivity.handler.post(() -> {
+//            Log.d(TAG, "setTuner: " + String.format("%s %f [%f] %f", finalNote,freq, finalTargetFrequency, finalCents));
             // write your code here
-            if (finalCents > 0) {
-                mainActivity.tuner.setText("↑ " + finalNote);
+            if (abs (finalDiff) < 1){
+                mainActivity.tuner.setText("✓ " + finalNote);
+            } else if (finalDiff < 0) {
+                mainActivity.tuner.setText("↑ " +  + Math.round(finalDiff) + "  " + finalNote );
             } else {
-                mainActivity.tuner.setText("↓ " + finalNote);
+                mainActivity.tuner.setText("↓ " + Math.round(finalDiff) + "  " + finalNote );
             }
         });
 

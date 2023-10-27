@@ -55,6 +55,7 @@ class Meter {
 
 public:
     Meter(JavaVM *pVm);
+    static bool tunerEnabled ;
     static jmethodID setMixerMeter ;
     static jclass mainActivity ;
     static JNIEnv *env;
@@ -162,7 +163,7 @@ public:
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
-        if (tunerIndex >= 1024 * 4) {
+        if (tunerEnabled && (tunerIndex >= 1024 * 4)) {
             jfloatArray jfloatArray1 = env->NewFloatArray(1024*4);
             env->SetFloatArrayRegion(jfloatArray1, 0, 1024*4, tunerBuffer);
             env->CallStaticVoidMethod(mainActivity, setTuner, jfloatArray1, false);

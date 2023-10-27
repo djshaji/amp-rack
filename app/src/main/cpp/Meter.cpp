@@ -9,6 +9,7 @@ vringbuffer_t * Meter::vringbuffer ;
 vringbuffer_t * Meter::vringbufferOutput ;
 Meter::buffer_t *Meter::current_buffer;
 int Meter::bufferUsed  = 0;
+bool Meter::tunerEnabled = true;
 int Meter::bufferUsedOutput  = 0;
 float Meter::tunerBuffer [1024 * 4] ;
 int Meter::tunerIndex = 0;
@@ -207,11 +208,14 @@ void Meter::process (int nframes, const float * data, bool isInput) {
         if (bufferUsed < MAX_STATIC_BUFFER) {
             for (int i = 0; i < nframes; i++) {
                 buffers[bufferUsed].data[i] = data[i];
-                if (tunerIndex < 1024 * 4) {
-                    tunerBuffer [tunerIndex] = data [i];
-                    tunerIndex ++ ;
-                } else {
-                    vringbuffer_return_writing(vringbuffer, buffers);
+
+                if (tunerEnabled) {
+                    if (tunerIndex < 1024 * 4) {
+                        tunerBuffer[tunerIndex] = data[i];
+                        tunerIndex++;
+                    } else {
+                        vringbuffer_return_writing(vringbuffer, buffers);
+                    }
                 }
             }
 

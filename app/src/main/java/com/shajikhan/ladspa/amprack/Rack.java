@@ -171,6 +171,18 @@ public class Rack extends Fragment {
             });
 
         mainActivity.tuner = mainActivity.findViewById(R.id.patch_label);
+        mainActivity.tuner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.tunerEnabled = ! AudioEngine.getTunerEnabled() ;
+                if (!mainActivity.tunerEnabled) {
+                    AudioEngine.setTunerEnabled(false);
+                    mainActivity.tuner.setText("Tap to activate Tuner");
+                } else {
+                    AudioEngine.setTunerEnabled(true);
+                }
+            }
+        });
 
         RecyclerView recyclerView1 = (RecyclerView) mainActivity.linearLayoutPluginDialog.findViewById(R.id.plugin_dialog_recycler_view);
         recyclerView1.setLayoutManager(new LinearLayoutManager(mainActivity));

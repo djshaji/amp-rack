@@ -50,6 +50,8 @@ public class AudioEngine {
     static native void setExportFormat (int format);
 
     static native void debugInfo ();
+    static native boolean getTunerEnabled () ;
+    static native void setTunerEnabled (boolean enabled) ;
     static native void setExternalStoragePath (String path) ;
     static native void setRecordingActive (boolean active) ;
     static native void setOpusBitRate (int bitrate);

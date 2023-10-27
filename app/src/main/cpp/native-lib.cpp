@@ -762,3 +762,26 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getSampleRate(JNIEnv *env, jclass 
     return engine->mSampleRate ;
 
 }
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getTunerEnabled(JNIEnv *env, jclass clazz) {
+    // TODO: implement getTunerEnabled()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return false;
+    }
+
+    return engine->meter->tunerEnabled ;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setTunerEnabled(JNIEnv *env, jclass clazz,
+                                                              jboolean enabled) {
+    // TODO: implement setTunerEnabled()
+        if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return ;
+    }
+
+    engine -> meter -> tunerEnabled = enabled;
+}
