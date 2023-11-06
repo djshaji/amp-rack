@@ -160,6 +160,7 @@ public class Rack extends Fragment {
             }
         });
 
+        patchDown = mainActivity.findViewById(R.id.patch_down);
         mainActivity.pluginDialog = mainActivity.createPluginDialog();
         if (mainActivity.useTheme)
             mainActivity.linearLayoutPluginDialog.post(new Runnable() {
@@ -179,6 +180,7 @@ public class Rack extends Fragment {
                     AudioEngine.setTunerEnabled(false);
                     mainActivity.tuner.setText("Tap to activate Tuner");
                 } else {
+                    patchDown.performClick();
                     AudioEngine.setTunerEnabled(true);
                 }
             }
@@ -679,7 +681,6 @@ public class Rack extends Fragment {
 
         ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
         patchUp = mainActivity.findViewById(R.id.patch_up);
-        patchDown = mainActivity.findViewById(R.id.patch_down);
         TextView patchName = mainActivity.findViewById(R.id.patch_name),
                 patchNo = mainActivity.findViewById(R.id.patch_no);
 

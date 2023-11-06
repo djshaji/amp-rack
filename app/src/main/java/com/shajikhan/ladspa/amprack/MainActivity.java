@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add (this, "AudioRecordTest");
+        hashCommands.add (this, "cameraPreview");
         hashCommands.add(this, "saveActivePreset");
         hashCommands.add(this, "printActivePreset");
         hashCommands.add(this, "proDialog");
@@ -2910,5 +2911,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         toggleButton.setOnCheckedChangeListener(listener);
         dialog.show();
+    }
+
+    public void cameraPreview() {
+        Intent intent = new Intent(context, Camera.class);
+        startActivity(intent);
+
     }
 }
