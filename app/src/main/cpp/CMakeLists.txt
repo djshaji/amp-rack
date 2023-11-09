@@ -108,3 +108,15 @@ target_link_libraries( # Specifies the target library.
 
 target_include_directories(amprack PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
+add_library(camera_textureview SHARED
+        android_main.cpp
+        camera_manager.cpp
+        camera_engine.cpp
+        camera_listeners.cpp
+        camera_utils.cpp)
+
+# add include path
+target_include_directories(camera_textureview PRIVATE ${COMMON_SOURCE_DIR})
+
+# add lib dependencies
+target_link_libraries(camera_textureview dl android log m camera2ndk)

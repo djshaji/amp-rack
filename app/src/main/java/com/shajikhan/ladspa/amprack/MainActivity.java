@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static boolean darkMode = false ;
     boolean safeMode = false;
     static boolean introShown = false ;
+    public Camera camera ;
     ToggleButton record;
     boolean triggerRecord = false ;
     private Handler handler;

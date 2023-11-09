@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.shajikhan.ladspa.amprack"
-        minSdk 23
+        minSdk 24
         targetSdk 33
         versionCode 68
         versionName '3.78'
