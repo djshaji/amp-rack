@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String TAG = "Amp Rack MainActivity";
 
     private static final String CHANNEL_ID = "default";
+    public boolean headphoneWarning = true;
     static Context context;
     static MainActivity mainActivity;
     SwitchMaterial onOff = null ;
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public Camera camera ;
     ToggleButton record;
     boolean triggerRecord = false ;
-    private Handler handler;
+    public Handler handler;
     public boolean tunerEnabled = true;
 
     enum RequestCode {
@@ -313,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "resetOnboard");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
 
         Log.d(TAG, "onCreate: " + String.format("" +
                 "%d: %d", BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)));
@@ -1302,6 +1304,34 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             notificationManager.cancelAll();
             running = false ;
         } else {
+            if (! isHeadphonesPlugged() && headphoneWarning) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("No headphones or audio interface detected: you may hear feedback if you run the app on device speakers. Do you wish to continue?")
+                        .setPositiveButton("Start audio", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                headphoneWarning = false;
+                                toggleEffect(isPlaying);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                onOff.setChecked(false);
+                            }
+                        })
+                        .setNeutralButton("Do not show again", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // The 'which' argument contains the index position of the selected item.
+                                defaultSharedPreferences.edit().putBoolean("headphone-warning", false).apply();
+                                headphoneWarning = false;
+                                toggleEffect(isPlaying);
+                            }
+                        })
+                        .setTitle("Feedback Noise Warning") ;
+                builder.create().show();
+                return;
+            }
             // apply settings
             applyPreferencesDevices();
             applyPreferencesExport();
@@ -2918,5 +2948,37 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Intent intent = new Intent(context, Camera.class);
         startActivity(intent);
 
+    }
+
+    public int [] safeAudioDevices = {
+            AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+            AudioDeviceInfo.TYPE_AUX_LINE,
+            AudioDeviceInfo.TYPE_BLE_HEADSET,
+            AudioDeviceInfo.TYPE_BLE_SPEAKER,
+            AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+            AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
+            AudioDeviceInfo.TYPE_HDMI_ARC,
+            AudioDeviceInfo.TYPE_HDMI_EARC,
+            AudioDeviceInfo.TYPE_HEARING_AID,
+            AudioDeviceInfo.TYPE_IP,
+            AudioDeviceInfo.TYPE_LINE_ANALOG,
+            AudioDeviceInfo.TYPE_LINE_DIGITAL,
+            AudioDeviceInfo.TYPE_REMOTE_SUBMIX,
+            AudioDeviceInfo.TYPE_USB_DEVICE,
+            AudioDeviceInfo.TYPE_USB_HEADSET,
+            AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+            AudioDeviceInfo.TYPE_WIRED_HEADSET
+    } ;
+
+    public boolean isHeadphonesPlugged(){
+        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+        for(AudioDeviceInfo deviceInfo : audioDevices){
+            if(Arrays.stream(safeAudioDevices).anyMatch(x -> x == deviceInfo.getType())){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

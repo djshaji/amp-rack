@@ -65,6 +65,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -175,12 +176,17 @@ public class Rack extends Fragment {
         mainActivity.tuner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TextView _v = (TextView) v ;
+                _v.setText("Please wait ...");
                 mainActivity.tunerEnabled = ! AudioEngine.getTunerEnabled() ;
                 if (!mainActivity.tunerEnabled) {
                     AudioEngine.setTunerEnabled(false);
                     mainActivity.tuner.setText("Tap to activate Tuner");
                 } else {
-                    patchDown.performClick();
+                    if (! mainActivity.onOff.isChecked()) {
+                        mainActivity.toast ("Starting audio engine");
+                        patchDown.performClick();
+                    }
                     AudioEngine.setTunerEnabled(true);
                 }
             }

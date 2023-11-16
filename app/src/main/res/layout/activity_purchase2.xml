@@ -49,10 +49,58 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/comfortaa"
                     android:text="Purchase Pro"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                        android:text="$2"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/comfortaa"
+                        android:layout_gravity="center"
+                        android:textSize="30dp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$20 "
+                        android:layout_gravity="center"
+                        android:textStyle="italic"
+                        android:textSize="24dp"
+                        android:id="@+id/old_price"
+                        android:layout_marginLeft="20dp"
+                        android:fontFamily="@font/gruppo"
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Save 90%"
+                        android:layout_gravity="center"
+                        android:textStyle="italic"
+                        android:textSize="24dp"
+                        android:layout_marginLeft="20dp"
+                        android:fontFamily="@font/gruppo"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Limited time deal"
+                    android:layout_gravity="center"
+                    android:textStyle="italic"
+                    android:textSize="24dp"
+                    android:fontFamily="@font/gruppo"
+                    android:textColor="@color/white"/>
+
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Buy Now"
+                    android:text="Tap to Buy Now"
                     android:id="@+id/buy"
                     android:textColor="@color/white"
                     android:textStyle="bold"
@@ -85,6 +133,7 @@
                     android:layout_gravity="center"
                     android:shadowColor="@color/white"
                     android:textColor="@color/white"
+                    android:visibility="gone"
                     android:id="@+id/source"
                     android:drawableLeft="@drawable/fui_ic_github_white_24dp"
                     android:background="@color/fui_transparent"
