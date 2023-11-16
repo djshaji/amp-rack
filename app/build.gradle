@@ -13,8 +13,8 @@ android {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 24
         targetSdk 33
-        versionCode 69
-        versionName '3.90'
+        versionCode 70
+        versionName '3.91'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -109,7 +109,7 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.0.0-alpha01'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
-    def billing_version = "4.1.0"
+    def billing_version = "5.0.0"
     implementation "com.android.billingclient:billing:$billing_version"
 
     // Google Ad Mob
