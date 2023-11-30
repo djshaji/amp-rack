@@ -46,13 +46,18 @@
         app:layout_constraintTop_toTopOf="@id/presets_pager"
         app:layout_constraintLeft_toLeftOf="@id/presets_pager">
         <ProgressBar
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:background="@color/fui_transparent"
+            android:backgroundTintMode="add"
+            android:backgroundTint="@color/fui_transparent"
+            android:progressBackgroundTint="@color/fui_transparent"
+            android:progressBackgroundTintMode="add"
             android:foregroundGravity="center"
             android:visibility="visible"
-            android:indeterminateTint="@color/colorPrimary"/>
+            android:indeterminateTint="@color/white"/>
 
     </LinearLayout>
 
