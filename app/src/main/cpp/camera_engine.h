@@ -20,6 +20,11 @@
 #include <android/native_activity.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
+#include "media/NdkMediaCodec.h"
+#include "media/NdkMediaError.h"
+#include "media/NdkMediaFormat.h"
+#include "media/NdkMediaMuxer.h"
+
 #include <jni.h>
 
 #include <functional>
@@ -41,8 +46,20 @@ class CameraAppEngine {
   const ImageFormat& GetCompatibleCameraRes() const;
   int32_t GetCameraSensorOrientation(int32_t facing);
   jobject GetSurfaceObject();
+  AMediaFormat* format = NULL ;
+  AMediaCodec* mEncoder;
+  AMediaMuxer* mMuxer;
+  AMediaCodecBufferInfo mBufferInfo;
+  int mTrackIndex;
+  bool mMuxerStarted;
+  const static int TIMEOUT_USEC = 10000;
+  int mFPS = 30;
+  int mFrameCounter = 0;
+  std::string filename ;
+  bool isRunning = false;
+  int fd = -1 ;
 
- private:
+private:
   JNIEnv* env_;
   jobject javaInstance_;
   int32_t requestWidth_;
@@ -50,5 +67,19 @@ class CameraAppEngine {
   jobject surface_;
   NDKCamera* camera_;
   ImageFormat compatibleCameraRes_;
+
+    void createEncoder();
+
+    long long int computePresentationTimeNsec();
+
+    int64_t frame2Time(int64_t frameNo);
+
+    void drainEncoder(bool endOfStream);
+
+    bool writeFrame(int *data, const long long int timestamp);
+
+    void writeEnd();
+
+    void releaseEncoder();
 };
 #endif  // __CAMERA_ENGINE_H__
