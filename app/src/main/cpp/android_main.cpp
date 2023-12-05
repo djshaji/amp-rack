@@ -164,3 +164,16 @@ Java_com_shajikhan_ladspa_amprack_Camera_onPreviewSurfaceDestroyed(
 
   pApp->StartPreview(false);
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_Camera_startEncoder(JNIEnv *env, jobject thiz, jstring filename) {
+  if (pEngineObj == NULL) {
+    LOGE("start encoder: Camera engine is null") ;
+    return ;
+  }
+
+  const char *nativeString = env->GetStringUTFChars(filename, 0);
+  pEngineObj->createEncoder(std::string (nativeString));
+  env->ReleaseStringUTFChars(filename, nativeString);
+}

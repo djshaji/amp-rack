@@ -87,7 +87,8 @@ int CameraAppEngine::GetCameraSensorOrientation(int32_t requestFacing) {
   return 0;
 }
 
-void CameraAppEngine::createEncoder () {
+void CameraAppEngine::createEncoder (std::string _filename) {
+  filename = _filename ;
   format = AMediaFormat_new() ;
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_WIDTH,requestWidth_);
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_HEIGHT,requestHeight_);
@@ -125,7 +126,6 @@ void CameraAppEngine::createEncoder () {
   mFrameCounter = 0;
   isRunning = true;
   LOGD ("Encoder ready!");
-
 }
 
 

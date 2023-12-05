@@ -58,6 +58,7 @@ class CameraAppEngine {
   std::string filename ;
   bool isRunning = false;
   int fd = -1 ;
+  void createEncoder(std::string _filename);
 
 private:
   JNIEnv* env_;
@@ -67,8 +68,6 @@ private:
   jobject surface_;
   NDKCamera* camera_;
   ImageFormat compatibleCameraRes_;
-
-    void createEncoder();
 
     long long int computePresentationTimeNsec();
 

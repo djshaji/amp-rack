@@ -11,6 +11,8 @@ import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+
+import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -22,6 +24,10 @@ import android.widget.FrameLayout;
 
 import static android.hardware.camera2.CameraMetadata.LENS_FACING_BACK;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Camera extends Activity
         implements TextureView.SurfaceTextureListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -30,6 +36,10 @@ public class Camera extends Activity
     Surface surface_ = null;
     private Size cameraPreviewSize_;
     public MainActivity mainActivity ;
+    String filename ;
+    File dir ;
+
+    Context context ;
 
     public Camera () {
 
@@ -44,6 +54,8 @@ public class Camera extends Activity
         super.onCreate(savedInstanceState);
         onWindowFocusChanged(true);
         setContentView(R.layout.activity_camera);
+        context = this ;
+
         if (isCamera2Device()) {
             RequestCamera();
         } else {
@@ -221,6 +233,16 @@ public class Camera extends Activity
         }
     }
 
+    void startRecording () {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
+        Date date = new Date();
+        filename = formatter.format(date);
+        dir = context.getExternalFilesDir(
+                Environment.DIRECTORY_MUSIC);
+        filename = dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
+
+    }
+
     private void createNativeCamera() {
         Display display = getWindowManager().getDefaultDisplay();
         int height = display.getMode().getPhysicalHeight();
@@ -247,6 +269,8 @@ public class Camera extends Activity
     private native void onPreviewSurfaceDestroyed(long ndkCamera, Surface surface);
 
     private native void deleteCamera(long ndkCamera, Surface surface);
+
+    native void startEncoder (String filename);
 
     static {
         System.loadLibrary("camera_textureview");
