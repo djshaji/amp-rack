@@ -18,6 +18,7 @@
 
 #include <camera/NdkCameraError.h>
 #include <camera/NdkCameraManager.h>
+#include "logging_macros.h"
 
 /*
  * A set of macros to call into Camera APIs. The API is grouped with a few
@@ -26,6 +27,7 @@
 #define CALL_CAMERA(func)                                             \
   {                                                                   \
     camera_status_t status = func;                                    \
+    LOGD ("%s\n", __FUNCTION__);\
     ASSERT(status == ACAMERA_OK, "%s call failed with code: %#x, %s", \
            __FUNCTION__, status, GetErrorStr(status));                \
   }

@@ -84,7 +84,7 @@ add_library( # Sets the name of the library.
 
 find_library( # Sets the name of the path variable.
         log-lib
-
+        mediandk
         # Specifies the name of the NDK library that
         # you want CMake to locate.
         log)
@@ -101,6 +101,9 @@ target_link_libraries( # Specifies the target library.
         libopusenc
         libopus
         libmp3lame
+        mediandk
+        android
+        OpenMAXAL
 
         # Links the target library to the log library
         # included in the NDK.
@@ -119,4 +122,4 @@ add_library(camera_textureview SHARED
 target_include_directories(camera_textureview PRIVATE ${COMMON_SOURCE_DIR})
 
 # add lib dependencies
-target_link_libraries(camera_textureview dl android log m camera2ndk)
+target_link_libraries(camera_textureview dl android log m camera2ndk mediandk)

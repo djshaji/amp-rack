@@ -38,7 +38,6 @@ CameraAppEngine::CameraAppEngine(JNIEnv* env, jobject instance, jint w, jint h)
   ASSERT(camera_, "Failed to Create CameraObject");
   camera_->MatchCaptureSizeRequest(requestWidth_, requestHeight_,
                                    &compatibleCameraRes_);
-  createEncoder();
 }
 
 CameraAppEngine::~CameraAppEngine() {
@@ -213,7 +212,7 @@ bool CameraAppEngine::writeFrame(int * data, const long long timestamp){
   //int64_t presentationTimeNs = timestamp;
   int64_t presentationTimeNs = computePresentationTimeNsec();
 
-  media_status_t status = AMediaCodec_queueInputBuffer(mEncoder, inBufferIdx, 0, out_size, presentationTimeNs, mat.empty() ? AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM : 0);
+  media_status_t status = AMediaCodec_queueInputBuffer(mEncoder, inBufferIdx, 0, out_size, presentationTimeNs, data == NULL ? AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM : 0);
 
   if(status == AMEDIA_OK){
     //qDebug() << "Successfully pushed frame to input buffer";
