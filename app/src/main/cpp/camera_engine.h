@@ -24,6 +24,7 @@
 #include "media/NdkMediaError.h"
 #include "media/NdkMediaFormat.h"
 #include "media/NdkMediaMuxer.h"
+#include <media/NdkImageReader.h>
 
 #include <jni.h>
 
@@ -68,6 +69,7 @@ private:
   jobject surface_;
   NDKCamera* camera_;
   ImageFormat compatibleCameraRes_;
+  AImageReader * imageReader  = nullptr;
 
     long long int computePresentationTimeNsec();
 

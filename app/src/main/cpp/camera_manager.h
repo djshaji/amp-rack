@@ -20,6 +20,7 @@
 #include <camera/NdkCameraError.h>
 #include <camera/NdkCameraManager.h>
 #include <camera/NdkCameraMetadataTags.h>
+#include <media/NdkImageReader.h>
 
 #include <map>
 #include <string>
@@ -63,6 +64,7 @@ class RangeValue {
 enum PREVIEW_INDICES {
   PREVIEW_REQUEST_IDX = 0,
   JPG_CAPTURE_REQUEST_IDX,
+  VIDEO_CAPTURE_REQUEST_IDX,
   CAPTURE_REQUEST_COUNT,
 };
 

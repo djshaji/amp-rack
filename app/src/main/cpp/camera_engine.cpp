@@ -38,6 +38,7 @@ CameraAppEngine::CameraAppEngine(JNIEnv* env, jobject instance, jint w, jint h)
   ASSERT(camera_, "Failed to Create CameraObject");
   camera_->MatchCaptureSizeRequest(requestWidth_, requestHeight_,
                                    &compatibleCameraRes_);
+  imageReader = new ImageReader(&compatibleCameraRes_, AIMAGE_FORMAT_YUV_420_888);
 }
 
 CameraAppEngine::~CameraAppEngine() {
@@ -57,8 +58,12 @@ CameraAppEngine::~CameraAppEngine() {
  * @param surface a {@link Surface} object.
  */
 void CameraAppEngine::CreateCameraSession(jobject surface) {
-  surface_ = env_->NewGlobalRef(surface);
-  camera_->CreateSession(ANativeWindow_fromSurface(env_, surface));
+  if (surface == nullptr) {
+    camera_->CreateSession(imageReader->GetNativeWindow ());
+  } else {
+    surface_ = env_->NewGlobalRef(surface);
+    camera_->CreateSession(ANativeWindow_fromSurface(env_, surface));
+  }
 }
 
 /**

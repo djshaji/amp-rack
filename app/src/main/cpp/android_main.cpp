@@ -129,6 +129,7 @@ Java_com_shajikhan_ladspa_amprack_Camera_onPreviewSurfaceCreated(
   ASSERT(ndkCameraObj && (jlong)pEngineObj == ndkCameraObj,
          "NativeObject should not be null Pointer");
   CameraAppEngine *pApp = reinterpret_cast<CameraAppEngine *>(ndkCameraObj);
+  pApp->CreateCameraSession(nullptr);
   pApp->CreateCameraSession(surface);
   pApp->StartPreview(true);
 }

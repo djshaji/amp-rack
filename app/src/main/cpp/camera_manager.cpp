@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "camera_manager.h"
-
 #include <camera/NdkCameraManager.h>
 #include <media/NdkImage.h>
 #include <unistd.h>
@@ -231,6 +230,13 @@ bool NDKCamera::MatchCaptureSizeRequest(int32_t requestWidth,
   resView->format = AIMAGE_FORMAT_YUV_420_888;
   if (resCap) resCap->format = AIMAGE_FORMAT_JPEG;
   return foundIt;
+}
+
+void NDKCamera::CreateSession(AImageReader * _reader) ;
+
+void NDKCamera::CreateSession(AImageReader * _reader) {
+    requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = _reader ->GetNativeWindow ();
+    requests_[VIDEO_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_RECORD ;
 }
 
 void NDKCamera::CreateSession(ANativeWindow* previewWindow,
