@@ -232,16 +232,19 @@ bool NDKCamera::MatchCaptureSizeRequest(int32_t requestWidth,
   return foundIt;
 }
 
-void NDKCamera::CreateSession(AImageReader * _reader) ;
 
-void NDKCamera::CreateSession(AImageReader * _reader) {
-    requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = _reader ->GetNativeWindow ();
+void NDKCamera::CreateSessionVideoCapture(ANativeWindow * window) {
+    IN
+    requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = window;
     requests_[VIDEO_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_RECORD ;
+    OUT
 }
+
 
 void NDKCamera::CreateSession(ANativeWindow* previewWindow,
                               ANativeWindow* jpgWindow, bool manualPreview,
                               int32_t imageRotation) {
+    IN
   // Create output from this app's ANativeWindow, and add into output container
   requests_[PREVIEW_REQUEST_IDX].outputNativeWindow_ = previewWindow;
   requests_[PREVIEW_REQUEST_IDX].template_ = TEMPLATE_PREVIEW;
@@ -273,6 +276,7 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
   }
 
   if (!manualPreview) {
+      OUT
     return;
   }
   /*
@@ -288,6 +292,7 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
                             ACAMERA_SENSOR_SENSITIVITY, 1, &sensitivity_));
   CALL_REQUEST(setEntry_i64(requests_[PREVIEW_REQUEST_IDX].request_,
                             ACAMERA_SENSOR_EXPOSURE_TIME, 1, &exposureTime_));
+    OUT
 }
 
 void NDKCamera::CreateSession(ANativeWindow* previewWindow) {
@@ -505,3 +510,5 @@ bool NDKCamera::GetSensitivityRange(int64_t* min, int64_t* max,
   *curVal = sensitivity_;
   return true;
 }
+
+//void NDKCamera::CreateSession(AImageReader * _reader) ;

@@ -178,3 +178,8 @@ Java_com_shajikhan_ladspa_amprack_Camera_startEncoder(JNIEnv *env, jobject thiz,
   pEngineObj->createEncoder(std::string (nativeString));
   env->ReleaseStringUTFChars(filename, nativeString);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_Camera_testButton(JNIEnv *env, jobject thiz) {
+  pEngineObj ->  test () ;
+}

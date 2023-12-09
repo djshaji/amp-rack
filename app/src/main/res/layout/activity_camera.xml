@@ -38,12 +38,14 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/camera_up"
                     android:drawableLeft="@drawable/ic_baseline_keyboard_arrow_up_24"
                     android:text="Up"/>
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/camera_down"
                     android:drawableLeft="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:text="Down"/>
 

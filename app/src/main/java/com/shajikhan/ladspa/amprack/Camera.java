@@ -20,6 +20,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.util.Size;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import static android.hardware.camera2.CameraMetadata.LENS_FACING_BACK;
@@ -55,6 +56,14 @@ public class Camera extends Activity
         onWindowFocusChanged(true);
         setContentView(R.layout.activity_camera);
         context = this ;
+
+        Button  up = findViewById(R.id.camera_up);
+        up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                testButton();
+            }
+        });
 
         if (isCamera2Device()) {
             RequestCamera();
@@ -271,6 +280,7 @@ public class Camera extends Activity
     private native void deleteCamera(long ndkCamera, Surface surface);
 
     native void startEncoder (String filename);
+    native void testButton () ;
 
     static {
         System.loadLibrary("camera_textureview");

@@ -32,6 +32,7 @@
 #include <thread>
 
 #include "camera_manager.h"
+#include "image_reader.h"
 
 /**
  * CameraAppEngine
@@ -60,7 +61,9 @@ class CameraAppEngine {
   bool isRunning = false;
   int fd = -1 ;
   void createEncoder(std::string _filename);
+    void test();
 
+    ImageReader * imageReader  = nullptr;
 private:
   JNIEnv* env_;
   jobject javaInstance_;
@@ -69,7 +72,6 @@ private:
   jobject surface_;
   NDKCamera* camera_;
   ImageFormat compatibleCameraRes_;
-  AImageReader * imageReader  = nullptr;
 
     long long int computePresentationTimeNsec();
 
@@ -82,5 +84,6 @@ private:
     void writeEnd();
 
     void releaseEncoder();
+
 };
 #endif  // __CAMERA_ENGINE_H__

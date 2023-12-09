@@ -132,6 +132,12 @@ class NDKCamera {
   bool GetSensitivityRange(int64_t* min, int64_t* max, int64_t* curVal);
 
   void UpdateCameraRequestParameter(int32_t code, int64_t val);
+
+    void CreateSession(AImageReader *_reader);
+
+    void CreateSessionVideoCapture(AImageReader *_reader);
+
+    void CreateSessionVideoCapture(ANativeWindow *window);
 };
 
 // helper classes to hold enumerated camera

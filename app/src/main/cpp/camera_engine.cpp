@@ -23,6 +23,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "image_reader.h"
 #include "native_debug.h"
 #include "logging_macros.h"
 
@@ -59,7 +60,7 @@ CameraAppEngine::~CameraAppEngine() {
  */
 void CameraAppEngine::CreateCameraSession(jobject surface) {
   if (surface == nullptr) {
-    camera_->CreateSession(imageReader->GetNativeWindow ());
+    camera_->CreateSessionVideoCapture(imageReader->GetNativeWindow ());
   } else {
     surface_ = env_->NewGlobalRef(surface);
     camera_->CreateSession(ANativeWindow_fromSurface(env_, surface));
@@ -343,6 +344,13 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
       }
     }
   }
+}
+
+void CameraAppEngine::test () {
+    IN
+    AImage * i = imageReader -> GetLatestImage() ;
+    imageReader ->WriteFile(i);
+    OUT
 }
 
 /**

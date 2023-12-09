@@ -104,6 +104,7 @@ target_link_libraries( # Specifies the target library.
         mediandk
         android
         OpenMAXAL
+        log
 
         # Links the target library to the log library
         # included in the NDK.
@@ -112,6 +113,7 @@ target_link_libraries( # Specifies the target library.
 target_include_directories(amprack PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
 add_library(camera_textureview SHARED
+        image_reader.cpp
         android_main.cpp
         camera_manager.cpp
         camera_engine.cpp
