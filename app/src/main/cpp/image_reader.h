@@ -17,6 +17,7 @@
 #ifndef CAMERA_IMAGE_READER_H
 #define CAMERA_IMAGE_READER_H
 #include <media/NdkImageReader.h>
+#include "media/NdkMediaFormat.h"
 
 #include <functional>
 #include "camera_manager.h"

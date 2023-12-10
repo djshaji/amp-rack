@@ -235,6 +235,10 @@ bool NDKCamera::MatchCaptureSizeRequest(int32_t requestWidth,
 
 void NDKCamera::CreateSessionVideoCapture(ANativeWindow * window) {
     IN
+    if (window == NULL) {
+      HERE LOGE("native window is null\n") ;
+    }
+
     requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = window;
     requests_[VIDEO_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_RECORD ;
     OUT
@@ -251,11 +255,24 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
   requests_[JPG_CAPTURE_REQUEST_IDX].outputNativeWindow_ = jpgWindow;
   requests_[JPG_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_STILL_CAPTURE;
 
+  requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = videoRecordWindow;
+  requests_[VIDEO_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_RECORD ;
+
   CALL_CONTAINER(create(&outputContainer_));
   for (auto& req : requests_) {
-    if (!req.outputNativeWindow_) continue;
+    if (!req.outputNativeWindow_) {
+      if (req.outputNativeWindow_ == nullptr) {
+        HERE
+        LOGE( "OUTPUT NATIVE WINDOW is NULL\n");
+      }
+
+      LOGW("skip capture request %d\n", req.template_);
+      continue;
+    }
 
     ANativeWindow_acquire(req.outputNativeWindow_);
+    LOGD("setting up %d\n", req.template_);
+    /* below is unnecessarily complicated, i think */
     CALL_OUTPUT(create(req.outputNativeWindow_, &req.sessionOutput_));
     CALL_CONTAINER(add(outputContainer_, req.sessionOutput_));
     CALL_TARGET(create(req.outputNativeWindow_, &req.target_));

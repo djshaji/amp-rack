@@ -34,12 +34,18 @@ CameraAppEngine::CameraAppEngine(JNIEnv* env, jobject instance, jint w, jint h)
       requestHeight_(h),
       surface_(nullptr),
       camera_(nullptr) {
+  IN
   memset(&compatibleCameraRes_, 0, sizeof(compatibleCameraRes_));
   camera_ = new NDKCamera();
   ASSERT(camera_, "Failed to Create CameraObject");
   camera_->MatchCaptureSizeRequest(requestWidth_, requestHeight_,
                                    &compatibleCameraRes_);
   imageReader = new ImageReader(&compatibleCameraRes_, AIMAGE_FORMAT_YUV_420_888);
+  camera_ -> videoRecordWindow = imageReader -> GetNativeWindow();
+  if (camera_ -> videoRecordWindow == nullptr) {
+    HERE LOGE("video record  native window nulL!\n");
+  }
+  OUT
 }
 
 CameraAppEngine::~CameraAppEngine() {

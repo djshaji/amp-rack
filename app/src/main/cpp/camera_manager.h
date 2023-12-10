@@ -105,7 +105,9 @@ class NDKCamera {
   ACameraCaptureSession_captureCallbacks* GetCaptureCallback();
 
  public:
-  NDKCamera();
+    ANativeWindow * videoRecordWindow = nullptr ;
+
+    NDKCamera();
   ~NDKCamera();
   void EnumerateCamera(void);
   bool MatchCaptureSizeRequest(int32_t requestWidth, int32_t requestHeight,
