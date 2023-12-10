@@ -29,6 +29,7 @@
 
 #include "camera_engine.h"
 #include "camera_manager.h"
+#include "logging_macros.h"
 
 /**
  * Application object:
@@ -130,7 +131,14 @@ Java_com_shajikhan_ladspa_amprack_Camera_onPreviewSurfaceCreated(
          "NativeObject should not be null Pointer");
   CameraAppEngine *pApp = reinterpret_cast<CameraAppEngine *>(ndkCameraObj);
 //  pApp->CreateCameraSession(nullptr);
-  pApp->CreateCameraSession(surface);
+  HERE
+    LOGD( "Creating camera session ...\n");
+  if (pApp->imageReader->GetNativeWindow() == NULL) {
+      LOGE("uhoh, image reader native window is null!");
+  } else {
+      LOGD("image reader native window [ok]!");
+  }
+  pApp->CreateCameraSession(surface, pApp->imageReader->GetNativeWindow());
   pApp->StartPreview(true);
 }
 

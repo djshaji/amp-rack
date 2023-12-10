@@ -246,7 +246,7 @@ void NDKCamera::CreateSessionVideoCapture(ANativeWindow * window) {
 
 
 void NDKCamera::CreateSession(ANativeWindow* previewWindow,
-                              ANativeWindow* jpgWindow, bool manualPreview,
+                              ANativeWindow* jpgWindow, ANativeWindow  * videoCaptureWindow, bool manualPreview,
                               int32_t imageRotation) {
     IN
   // Create output from this app's ANativeWindow, and add into output container
@@ -255,7 +255,10 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
   requests_[JPG_CAPTURE_REQUEST_IDX].outputNativeWindow_ = jpgWindow;
   requests_[JPG_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_STILL_CAPTURE;
 
-  requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = videoRecordWindow;
+  if (videoCaptureWindow == nullptr) {
+    HERE LOGF("video capture window is null!");
+  }
+  requests_[VIDEO_CAPTURE_REQUEST_IDX].outputNativeWindow_ = videoCaptureWindow;
   requests_[VIDEO_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_RECORD ;
 
   CALL_CONTAINER(create(&outputContainer_));
@@ -313,7 +316,7 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
 }
 
 void NDKCamera::CreateSession(ANativeWindow* previewWindow) {
-  CreateSession(previewWindow, nullptr, false, 0);
+  CreateSession(previewWindow, nullptr, nullptr, false, 0);
 }
 
 NDKCamera::~NDKCamera() {

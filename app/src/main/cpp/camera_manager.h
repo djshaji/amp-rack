@@ -115,7 +115,7 @@ class NDKCamera {
   bool MatchCaptureSizeRequest(int32_t requestWidth, int32_t requestHeight,
                                ImageFormat* view, ImageFormat* capture);
   void CreateSession(ANativeWindow* previewWindow, ANativeWindow* jpgWindow,
-                     bool manaulPreview, int32_t imageRotation);
+                     ANativeWindow  * videoCaptureWindow, bool manaulPreview, int32_t imageRotation);
   void CreateSession(ANativeWindow* previewWindow);
 
   bool GetSensorOrientation(int32_t* facing, int32_t* angle);

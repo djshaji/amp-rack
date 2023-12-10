@@ -43,7 +43,7 @@ class CameraAppEngine {
   ~CameraAppEngine();
 
   // Manage NDKCamera Object
-  void CreateCameraSession(jobject surface);
+  void CreateCameraSession(jobject surface, ANativeWindow * window);
   void StartPreview(bool start);
   const ImageFormat& GetCompatibleCameraRes() const;
   int32_t GetCameraSensorOrientation(int32_t facing);

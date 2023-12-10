@@ -98,6 +98,8 @@ void ImageReader::ImageCallback(AImageReader *reader) {
     std::thread writeFileHandler(&ImageReader::WriteFile, this, image);
     writeFileHandler.detach();
   }
+
+    HERE
 }
 
 ANativeWindow *ImageReader::GetNativeWindow(void) {

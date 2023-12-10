@@ -64,12 +64,12 @@ CameraAppEngine::~CameraAppEngine() {
  * Create a capture session with given Java Surface Object
  * @param surface a {@link Surface} object.
  */
-void CameraAppEngine::CreateCameraSession(jobject surface) {
+void CameraAppEngine::CreateCameraSession(jobject surface, ANativeWindow * window) {
   if (surface == nullptr) {
     camera_->CreateSessionVideoCapture(imageReader->GetNativeWindow ());
   } else {
     surface_ = env_->NewGlobalRef(surface);
-    camera_->CreateSession(ANativeWindow_fromSurface(env_, surface));
+    camera_->CreateSession(ANativeWindow_fromSurface(env_, surface), nullptr, window, false, 0);
   }
 }
 
