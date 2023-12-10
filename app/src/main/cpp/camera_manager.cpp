@@ -366,7 +366,7 @@ void NDKCamera::EnumerateCamera() {
         cam.owner_ = false;
         cam.device_ = nullptr;
         cameras_[cam.id_] = cam;
-        if (cam.facing_ == ACAMERA_LENS_FACING_BACK) {
+        if (cam.facing_ != ACAMERA_LENS_FACING_BACK) {
           activeCameraId_ = cam.id_;
         }
         break;
