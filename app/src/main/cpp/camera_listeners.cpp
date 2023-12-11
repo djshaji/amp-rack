@@ -22,7 +22,8 @@
 
 #include "camera_manager.h"
 #include "camera_utils.h"
-#include "native_debug.h"
+//#include "native_debug.h"
+#include "logging_macros.h"
 
 /*
  * Camera Manager Listener object
@@ -190,12 +191,17 @@ void SessionCaptureCallback_OnSequenceAborted(void* context,
   sequenceThread.detach();
 }
 
+void NDKCamera::OnCaptureCompleted(void* context, ACameraCaptureSession* session,
+                                   ACaptureRequest *, const ACameraMetadata *) {
+  HERE
+}
+
 ACameraCaptureSession_captureCallbacks* NDKCamera::GetCaptureCallback() {
   static ACameraCaptureSession_captureCallbacks captureListener{
       .context = this,
       .onCaptureStarted = nullptr,
       .onCaptureProgressed = nullptr,
-      .onCaptureCompleted = nullptr,
+      .onCaptureCompleted = OnCaptureCompleted,
       .onCaptureFailed = SessionCaptureCallback_OnFailed,
       .onCaptureSequenceCompleted = SessionCaptureCallback_OnSequenceEnd,
       .onCaptureSequenceAborted = SessionCaptureCallback_OnSequenceAborted,
@@ -203,6 +209,7 @@ ACameraCaptureSession_captureCallbacks* NDKCamera::GetCaptureCallback() {
   };
   return &captureListener;
 }
+
 
 /**
  * Process JPG capture SessionCaptureCallback_OnFailed event
@@ -221,7 +228,6 @@ void NDKCamera::OnCaptureFailed(ACameraCaptureSession* session,
     StartPreview(true);
   }
 }
-
 /**
  * Process event from JPEG capture
  *    SessionCaptureCallback_OnSequenceEnd()
