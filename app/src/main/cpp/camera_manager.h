@@ -135,7 +135,7 @@ class NDKCamera {
 
   void UpdateCameraRequestParameter(int32_t code, int64_t val);
 
-    void CreateSession(AImageReader *_reader);
+//    void CreateSession(AImageReader *_reader);
 
     void CreateSessionVideoCapture(AImageReader *_reader);
 

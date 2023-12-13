@@ -69,6 +69,7 @@ void CameraAppEngine::CreateCameraSession(jobject surface, ANativeWindow * windo
     camera_->CreateSessionVideoCapture(imageReader->GetNativeWindow ());
   } else {
     surface_ = env_->NewGlobalRef(surface);
+    camera_->CreateSession(nullptr);
     camera_->CreateSession(ANativeWindow_fromSurface(env_, surface), nullptr, window, false, 0);
   }
 }
@@ -354,8 +355,9 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
 
 void CameraAppEngine::test () {
     IN
-    AImage * i = imageReader -> GetLatestImage() ;
-    imageReader ->WriteFile(i);
+    camera_ -> TakePhoto();
+//    AImage * i = imageReader -> GetLatestImage() ;
+//    imageReader ->WriteFile(i);
     OUT
 }
 
