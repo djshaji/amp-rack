@@ -103,6 +103,8 @@ class NDKCamera {
   ACameraDevice_stateCallbacks* GetDeviceListener();
   ACameraCaptureSession_stateCallbacks* GetSessionListener();
   ACameraCaptureSession_captureCallbacks* GetCaptureCallback();
+    static void OnCaptureCompleted(void* context, ACameraCaptureSession* session,
+                                   ACaptureRequest *, const ACameraMetadata *) ;
 
  public:
     ANativeWindow * videoRecordWindow = nullptr ;
