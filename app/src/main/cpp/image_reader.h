@@ -18,6 +18,11 @@
 #define CAMERA_IMAGE_READER_H
 #include <media/NdkImageReader.h>
 #include "media/NdkMediaFormat.h"
+#include "media/NdkMediaCodec.h"
+#include "media/NdkMediaError.h"
+#include "media/NdkMediaFormat.h"
+#include "media/NdkMediaMuxer.h"
+#include <media/NdkImageReader.h>
 
 #include <functional>
 #include "camera_manager.h"
@@ -105,8 +110,12 @@ class ImageReader {
  private:
   int32_t presentRotation_;
   AImageReader* reader_;
+  AMediaCodec* mediaCodec;
+  int tidx = -1 ;
+  AMediaMuxer* mediaMuxer;
 
-  std::function<void(void* ctx, const char* fileName)> callback_;
+
+    std::function<void(void* ctx, const char* fileName)> callback_;
   void* callbackCtx_;
 
   void PresentImage(ANativeWindow_Buffer* buf, AImage* image);

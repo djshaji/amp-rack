@@ -258,6 +258,7 @@ public class Camera extends Activity
         int width = display.getMode().getPhysicalWidth();
 
         ndkCamera_ = createCamera(width, height);
+        startEncoder(filename);
 
         cameraPreviewSize_ = getMinimumCompatiblePreviewSize(ndkCamera_);
 

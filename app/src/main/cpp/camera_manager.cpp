@@ -255,6 +255,7 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
   requests_[JPG_CAPTURE_REQUEST_IDX].outputNativeWindow_ = jpgWindow;
   requests_[JPG_CAPTURE_REQUEST_IDX].template_ = TEMPLATE_STILL_CAPTURE;
 
+  ASSERT (jpgWindow == nullptr, "JPG Window is null");
   if (videoCaptureWindow == nullptr) {
     HERE LOGF("video capture window is null!");
   }
@@ -462,8 +463,9 @@ bool NDKCamera::TakePhoto(void) {
   HERE
   ASSERT(captureSession_ != nullptr, "capture session is null");
   CALL_SESSION(capture(captureSession_, GetCaptureCallback(), 1,
-                       &requests_[JPG_CAPTURE_REQUEST_IDX].request_,
-                       &requests_[JPG_CAPTURE_REQUEST_IDX].sessionSequenceId_));
+                       &requests_[VIDEO_CAPTURE_REQUEST_IDX].request_,
+                       &requests_[VIDEO_CAPTURE_REQUEST_IDX].sessionSequenceId_));
+//  StartPreview(true);
   return true;
 }
 

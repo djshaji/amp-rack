@@ -69,7 +69,7 @@ void CameraAppEngine::CreateCameraSession(jobject surface, ANativeWindow * windo
     camera_->CreateSessionVideoCapture(imageReader->GetNativeWindow ());
   } else {
     surface_ = env_->NewGlobalRef(surface);
-    camera_->CreateSession(nullptr);
+//    camera_->CreateSession(nullptr);
     camera_->CreateSession(ANativeWindow_fromSurface(env_, surface), nullptr, window, false, 0);
   }
 }
@@ -138,6 +138,8 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   mFrameCounter = 0;
   isRunning = true;
   LOGD ("Encoder ready!");
+  imageReader -> mediaMuxer = mMuxer ;
+  imageReader -> mediaCodec = mEncoder ;
 }
 
 

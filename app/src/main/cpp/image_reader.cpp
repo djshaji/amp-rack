@@ -86,20 +86,73 @@ void ImageReader::RegisterCallback(
 }
 
 void ImageReader::ImageCallback(AImageReader *reader) {
+  IN
   int32_t format;
   media_status_t status = AImageReader_getFormat(reader, &format);
   ASSERT(status == AMEDIA_OK, "Failed to get the media format");
-  if (format == AIMAGE_FORMAT_JPEG) {
+//  if (format == AIMAGE_FORMAT_JPEG)
+  {
     AImage *image = nullptr;
     media_status_t status = AImageReader_acquireNextImage(reader, &image);
     ASSERT(status == AMEDIA_OK && image, "Image is not available");
 
+    size_t bufferSize = 0;
+    int inputBufferIdx = AMediaCodec_dequeueInputBuffer(mediaCodec, -1);
+    uint8_t *inputBuffer = AMediaCodec_getInputBuffer(mediaCodec, inputBufferIdx, &bufferSize);
+
+    if (inputBufferIdx >= 0) {
+      LOGI("dequeue input buffer (size: %u)", bufferSize);
+      int dataSize = 0;
+      AImage_getPlaneData(image, 0, &inputBuffer, &dataSize);
+      LOGI("copying image buffer (size: %d)", dataSize);
+
+      int64_t timestamp = 0;
+      AImage_getTimestamp(image, &timestamp);
+
+      AMediaCodec_queueInputBuffer(mediaCodec, inputBufferIdx, 0, bufferSize, timestamp, 0);
+    }
+
+    AMediaCodecBufferInfo bufferInfo;
+    int idx = AMediaCodec_dequeueOutputBuffer(mediaCodec, &bufferInfo, -1);
+
+    LOGI("dequeue output buffer idx: %d", idx);
+
+    if (idx == AMEDIACODEC_INFO_OUTPUT_FORMAT_CHANGED) {
+      AMediaFormat *format = AMediaCodec_getOutputFormat(mediaCodec);
+
+      tidx = AMediaMuxer_addTrack(mediaMuxer, format);
+      LOGI("added track tidx: %d (format: %s)", tidx, AMediaFormat_toString(format));
+
+      AMediaMuxer_start(mediaMuxer);
+      AMediaFormat_delete(format);
+
+    } else if (idx >= 0) {
+
+      uint8_t *outputBuffer = AMediaCodec_getOutputBuffer(mediaCodec, idx, &bufferSize);
+
+      if (tidx >= 0 && bufferInfo.size > 0) {
+        pthread_mutex_lock(&lock);
+
+        LOGI("sending buffer to tidx: %d ptr: %p (info->offset: %d, info->size: %d)", tidx, outputBuffer, bufferInfo.offset, bufferInfo.size);
+        AMediaMuxer_writeSampleData(mediaMuxer, tidx, outputBuffer, &bufferInfo);
+
+        pthread_mutex_unlock(&lock);
+      }
+
+      AMediaCodec_releaseOutputBuffer(mediaCodec, idx, false);
+    }
+
     // Create a thread and write out the jpeg files
-    std::thread writeFileHandler(&ImageReader::WriteFile, this, image);
-    writeFileHandler.detach();
+//    std::thread writeFileHandler(&ImageReader::WriteFile, this, image);
+//    writeFileHandler.detach();
+  }
+//  else
+  {
+    LOGW("format %04x", format);
   }
 
     HERE
+    OUT
 }
 
 ANativeWindow *ImageReader::GetNativeWindow(void) {
@@ -416,6 +469,7 @@ void ImageReader::SetPresentRotation(int32_t angle) {
  * @param image point capture jpg image
  */
 void ImageReader::WriteFile(AImage *image) {
+  IN
   int planeCount;
   media_status_t status = AImage_getNumberOfPlanes(image, &planeCount);
   ASSERT(status == AMEDIA_OK && planeCount == 1,
@@ -459,4 +513,6 @@ void ImageReader::WriteFile(AImage *image) {
     if (file) fclose(file);
   }
   AImage_delete(image);
+  LOGD("Wrote file %s", fileName.c_str ());
+  OUT
 }
