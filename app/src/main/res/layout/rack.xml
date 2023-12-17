@@ -47,6 +47,8 @@
                 android:shadowColor="@color/white"
                 android:shadowRadius="5"
                 android:text="Amp"
+                android:maxLines="1"
+                android:breakStrategy="high_quality"
                 android:ellipsize="end"
                 android:id="@+id/app_main_title"
                 android:textColor="@color/white"

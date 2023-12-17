@@ -242,13 +242,13 @@ public class Camera extends Activity
         }
     }
 
-    void startRecording () {
+    void populateFilename () {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
         Date date = new Date();
         filename = formatter.format(date);
         dir = context.getExternalFilesDir(
-                Environment.DIRECTORY_MUSIC);
-        filename = dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
+                Environment.DIRECTORY_MOVIES);
+        filename = dir.getAbsolutePath() + "/" + filename + ".mp4" ;
 
     }
 
@@ -258,6 +258,7 @@ public class Camera extends Activity
         int width = display.getMode().getPhysicalWidth();
 
         ndkCamera_ = createCamera(width, height);
+        populateFilename();
         startEncoder(filename);
 
         cameraPreviewSize_ = getMinimumCompatiblePreviewSize(ndkCamera_);

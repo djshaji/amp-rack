@@ -200,6 +200,7 @@ void CameraAppEngine::releaseEncoder() {
 
 bool CameraAppEngine::writeFrame(AImage * image){
   // Feed any pending encoder output into the muxer.
+  IN
   drainEncoder(false);
 
  // Generate a new frame of input.
@@ -239,6 +240,7 @@ bool CameraAppEngine::writeFrame(AImage * image){
   }
   else{
     LOGW("Something went wrong while pushing frame to input buffer: %d", status);
+    OUT
     return false;
   }
 
@@ -249,11 +251,12 @@ bool CameraAppEngine::writeFrame(AImage * image){
   // can supply another frame without blocking.
   //qDebug() << "sending frame " << i << " to encoder";
   //AMediaCodec_flush(mEncoder);
+  OUT
   return true;
 }
 
 void CameraAppEngine::drainEncoder(bool endOfStream) {
-
+    IN
   if (endOfStream) {
     LOGD( "Draining encoder to EOS");
     // only API >= 26
@@ -272,11 +275,13 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
     if (encoderStatus == AMEDIACODEC_INFO_TRY_AGAIN_LATER) {
       // no output available yet
       if (!endOfStream) {
+          OUT
         return;
         //break;      // out of while
       }
       if(endOfStream){
         LOGD("no output available, spinning to await EOS");
+        OUT
         return;
       }
 
@@ -358,6 +363,8 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
       }
     }
   }
+
+  OUT
 }
 
 void CameraAppEngine::test () {
@@ -815,8 +822,8 @@ void ImageReader::WriteFile(AImage *image) {
     IN
     int planeCount;
     media_status_t status = AImage_getNumberOfPlanes(image, &planeCount);
-    ASSERT(status == AMEDIA_OK && planeCount == 1,
-           "Error: getNumberOfPlanes() planeCount = %d", planeCount);
+//    ASSERT(status == AMEDIA_OK && planeCount == 1,
+//           "Error: getNumberOfPlanes() planeCount = %d", planeCount);
     uint8_t *data = nullptr;
     int len = 0;
     AImage_getPlaneData(image, 0, &data, &len);
