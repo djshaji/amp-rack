@@ -91,11 +91,12 @@ void ImageReader::ImageCallback(AImageReader *reader) {
   media_status_t status = AImageReader_getFormat(reader, &format);
   ASSERT(status == AMEDIA_OK, "Failed to get the media format");
 //  if (format == AIMAGE_FORMAT_JPEG)
-  {
+//  {
     AImage *image = nullptr;
-    media_status_t status = AImageReader_acquireNextImage(reader, &image);
+    status = AImageReader_acquireNextImage(reader, &image);
     ASSERT(status == AMEDIA_OK && image, "Image is not available");
-
+    app -> writeFrame (image);
+    /*
     size_t bufferSize = 0;
     int inputBufferIdx = AMediaCodec_dequeueInputBuffer(mediaCodec, -1);
     uint8_t *inputBuffer = AMediaCodec_getInputBuffer(mediaCodec, inputBufferIdx, &bufferSize);
@@ -141,15 +142,16 @@ void ImageReader::ImageCallback(AImageReader *reader) {
 
       AMediaCodec_releaseOutputBuffer(mediaCodec, idx, false);
     }
+     */
 
     // Create a thread and write out the jpeg files
 //    std::thread writeFileHandler(&ImageReader::WriteFile, this, image);
 //    writeFileHandler.detach();
-  }
+//  }
 //  else
-  {
-    LOGW("format %04x", format);
-  }
+//  {
+//    LOGW("format %04x", format);
+//  }
 
     HERE
     OUT

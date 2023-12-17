@@ -25,6 +25,7 @@
 #include <media/NdkImageReader.h>
 
 #include <functional>
+#include "camera_engine.h"
 #include "camera_manager.h"
 /*
  * ImageFormat:
@@ -113,7 +114,7 @@ class ImageReader {
   AMediaCodec* mediaCodec;
   int tidx = -1 ;
   AMediaMuxer* mediaMuxer;
-
+  CameraAppEngine * app = nullptr;
 
     std::function<void(void* ctx, const char* fileName)> callback_;
   void* callbackCtx_;

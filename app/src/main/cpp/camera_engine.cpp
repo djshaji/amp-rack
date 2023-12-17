@@ -198,7 +198,7 @@ void CameraAppEngine::releaseEncoder() {
   LOGD("recording finished");
 }
 
-bool CameraAppEngine::writeFrame(int * data, const long long timestamp){
+bool CameraAppEngine::writeFrame(AImage * image){
   // Feed any pending encoder output into the muxer.
   drainEncoder(false);
 
@@ -217,9 +217,14 @@ bool CameraAppEngine::writeFrame(int * data, const long long timestamp){
                 */
   size_t out_size;
   uint8_t* inBuffer = AMediaCodec_getInputBuffer(mEncoder, inBufferIdx, &out_size);
+    int dataSize = 0;
+    AImage_getPlaneData(image, 0, &inBuffer, &dataSize);
+
+    int64_t timestamp = 0;
+    AImage_getTimestamp(image, &timestamp);
 
   // here we actually copy the data.
-  memcpy(inBuffer, data, out_size);
+//  memcpy(inBuffer, data, out_size);
 
   /**
         * Send the specified buffer to the codec for processing.
@@ -227,7 +232,7 @@ bool CameraAppEngine::writeFrame(int * data, const long long timestamp){
   //int64_t presentationTimeNs = timestamp;
   int64_t presentationTimeNs = computePresentationTimeNsec();
 
-  media_status_t status = AMediaCodec_queueInputBuffer(mEncoder, inBufferIdx, 0, out_size, presentationTimeNs, data == NULL ? AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM : 0);
+  media_status_t status = AMediaCodec_queueInputBuffer(mEncoder, inBufferIdx, 0, timestamp, presentationTimeNs, data == NULL ? AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM : 0);
 
   if(status == AMEDIA_OK){
     //qDebug() << "Successfully pushed frame to input buffer";

@@ -79,7 +79,7 @@ private:
 
     void drainEncoder(bool endOfStream);
 
-    bool writeFrame(int *data, const long long int timestamp);
+    bool writeFrame(AImage * image);
 
     void writeEnd();
 
