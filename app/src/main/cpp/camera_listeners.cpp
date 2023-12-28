@@ -127,9 +127,10 @@ void OnSessionClosed(void* ctx, ACameraCaptureSession* ses) {
       ses, CaptureSessionState::CLOSED);
 }
 void OnSessionReady(void* ctx, ACameraCaptureSession* ses) {
-  LOGW("session %p ready", ses);
+  IN LOGW("session %p ready", ses);
   reinterpret_cast<NDKCamera*>(ctx)->OnSessionState(ses,
                                                     CaptureSessionState::READY);
+  OUT
 }
 void OnSessionActive(void* ctx, ACameraCaptureSession* ses) {
   LOGW("session %p active", ses);
@@ -193,7 +194,7 @@ void SessionCaptureCallback_OnSequenceAborted(void* context,
 
 void NDKCamera::OnCaptureCompleted(void* context, ACameraCaptureSession* session,
                                    ACaptureRequest *, const ACameraMetadata *) {
-  HERE
+  IN HERE OUT
 }
 
 ACameraCaptureSession_captureCallbacks* NDKCamera::GetCaptureCallback() {

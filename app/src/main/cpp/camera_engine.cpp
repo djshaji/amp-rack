@@ -100,14 +100,18 @@ int CameraAppEngine::GetCameraSensorOrientation(int32_t requestFacing) {
 }
 
 void CameraAppEngine::createEncoder (std::string _filename) {
+    IN
+    LOGD("creating encoder with filename %s", _filename.c_str ());
   filename = _filename ;
   format = AMediaFormat_new() ;
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_WIDTH,requestWidth_);
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_HEIGHT,requestHeight_);
 
   AMediaFormat_setString(format,AMEDIAFORMAT_KEY_MIME,"video/avc"); // H.264 Advanced Video Coding
-  AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 21); // #21 COLOR_FormatYUV420SemiPlanar (NV12)
-  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_BIT_RATE,500000);
+//  AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 21); // #21 COLOR_FormatYUV420SemiPlanar (NV12)
+    AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 0x7f420888 /*COLOR_FormatYUV420Flexible*/);
+
+    AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_BIT_RATE,500000);
   AMediaFormat_setFloat(format,AMEDIAFORMAT_KEY_FRAME_RATE,mFPS);
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_I_FRAME_INTERVAL,5);
 
@@ -140,6 +144,7 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   LOGD ("Encoder ready!");
   imageReader -> mediaMuxer = mMuxer ;
   imageReader -> mediaCodec = mEncoder ;
+  OUT
 }
 
 
@@ -257,6 +262,7 @@ bool CameraAppEngine::writeFrame(AImage * image){
 
 void CameraAppEngine::drainEncoder(bool endOfStream) {
     IN
+    LOGD("end of stream: %d", endOfStream);
   if (endOfStream) {
     LOGD( "Draining encoder to EOS");
     // only API >= 26
@@ -269,8 +275,11 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
 
 
   while (true) {
-    ssize_t encoderStatus = AMediaCodec_dequeueOutputBuffer(mEncoder, &mBufferInfo, TIMEOUT_USEC);
+      LOGD("dequeue output buffer...");
+      if (mEncoder != nullptr) LOGE("mEncoder is NULL");
 
+    ssize_t encoderStatus = AMediaCodec_dequeueOutputBuffer(mEncoder, &mBufferInfo, TIMEOUT_USEC);
+      LOGD("encoder status: %d", encoderStatus);
 
     if (encoderStatus == AMEDIACODEC_INFO_TRY_AGAIN_LATER) {
       // no output available yet
@@ -292,6 +301,7 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
       if (mMuxerStarted) {
         LOGW( "ERROR: format changed twice");
       }
+
       AMediaFormat* newFormat = AMediaCodec_getOutputFormat(mEncoder);
 
       if(newFormat == nullptr){
