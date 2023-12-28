@@ -77,7 +77,7 @@ public class Skinner {
     }
 
     public Bitmap getBitmapFromAssets (int width, int height, String filename) {
-        Log.d(TAG, "getBitmapFromAssets() called with: width = [" + width + "], height = [" + height + "], filename = [" + filename + "]");
+//        Log.d(TAG, "getBitmapFromAssets() called with: width = [" + width + "], height = [" + height + "], filename = [" + filename + "]");
 //        UsefulStuff.printBackTrace();
         InputStream assetFilename = null;
         Bitmap mBitmap = null;

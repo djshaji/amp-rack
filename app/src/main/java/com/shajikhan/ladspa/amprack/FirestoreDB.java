@@ -132,8 +132,9 @@ public class FirestoreDB {
         } else if (auth.getUid() == null && !quick) {
             Log.e(TAG, "loadUserPresets: uid is null", null);
             return ;
-        } else
-            Log.d(TAG, "loadUserPresets: [uid] "+ auth.getUid());
+        }
+//        else
+//            Log.d(TAG, "loadUserPresets: [uid] "+ auth.getUid());
 
         String uid = auth.getUid();
         OnCompleteListener onCompleteListener = new OnCompleteListener<QuerySnapshot>() {
@@ -144,13 +145,13 @@ public class FirestoreDB {
                     loaded = loaded + 30 ;
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         last = document ;
-                        Log.d(TAG, document.getId() + " => " + document.getData());
+//                        Log.d(TAG, document.getId() + " => " + document.getData());
                         Map preset = (Map) document.getData();
 //                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
-                        Log.d(TAG, "onComplete: " + String.format(
-                                "preset: %s",
-                                preset.toString()
-                        ));
+//                        Log.d(TAG, "onComplete: " + String.format(
+//                                "preset: %s",
+//                                preset.toString()
+//                        ));
                         if (preset.get("uid") .equals(uid) && shared == true)
                             continue;
 

@@ -128,6 +128,7 @@ void OnSessionClosed(void* ctx, ACameraCaptureSession* ses) {
 }
 void OnSessionReady(void* ctx, ACameraCaptureSession* ses) {
   IN LOGW("session %p ready", ses);
+//  reinterpret_cast<NDKCamera*>(ctx)->StartPreview(false);
   reinterpret_cast<NDKCamera*>(ctx)->OnSessionState(ses,
                                                     CaptureSessionState::READY);
   OUT

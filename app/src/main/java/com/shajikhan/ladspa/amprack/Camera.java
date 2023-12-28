@@ -8,6 +8,10 @@ import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
+import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
+import android.media.MediaFormat;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -26,8 +30,10 @@ import android.widget.FrameLayout;
 import static android.hardware.camera2.CameraMetadata.LENS_FACING_BACK;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 public class Camera extends Activity
         implements TextureView.SurfaceTextureListener,
@@ -56,6 +62,23 @@ public class Camera extends Activity
         onWindowFocusChanged(true);
         setContentView(R.layout.activity_camera);
         context = this ;
+//        MediaCodec codec = null;
+//        try {
+//            codec = MediaCodec.createEncoderByType("video/avc");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        MediaCodecInfo info = codec.getCodecInfo();
+//        MediaCodecInfo.CodecCapabilities caps = info.getCapabilitiesForType("video/avc");
+//        MediaFormat format = caps.getDefaultFormat();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            Set<String> features = format.getKeys();
+//            for (String s:
+//                 features) {
+//                Log.d("encoder", s);
+//            }
+//        }
 
         Button  up = findViewById(R.id.camera_up);
         up.setOnClickListener(new View.OnClickListener() {

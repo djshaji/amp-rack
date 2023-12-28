@@ -101,32 +101,36 @@ int CameraAppEngine::GetCameraSensorOrientation(int32_t requestFacing) {
 
 void CameraAppEngine::createEncoder (std::string _filename) {
     IN
-    LOGD("creating encoder with filename %s", _filename.c_str ());
+    LOGD("creating encoder with filename %s [%d x %d] %d fps", _filename.c_str (), requestWidth_, requestHeight_, mFPS);
   filename = _filename ;
   format = AMediaFormat_new() ;
-  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_WIDTH,requestWidth_);
-  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_HEIGHT,requestHeight_);
+  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_WIDTH,1920);
+  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_HEIGHT,1080);
 
   AMediaFormat_setString(format,AMEDIAFORMAT_KEY_MIME,"video/avc"); // H.264 Advanced Video Coding
 //  AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 21); // #21 COLOR_FormatYUV420SemiPlanar (NV12)
-    AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 0x7f420888 /*COLOR_FormatYUV420Flexible*/);
+//    AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 0x7f420888 /*COLOR_FormatYUV420Flexible*/);
+    AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, 19);
 
     AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_BIT_RATE,500000);
-  AMediaFormat_setFloat(format,AMEDIAFORMAT_KEY_FRAME_RATE,mFPS);
-  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_I_FRAME_INTERVAL,5);
+  AMediaFormat_setFloat(format,AMEDIAFORMAT_KEY_FRAME_RATE,30);
+  AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_I_FRAME_INTERVAL,1);
 
   mEncoder = AMediaCodec_createEncoderByType("video/avc");
   if(mEncoder == nullptr){
     LOGE("Unable to create encoder");
   }
 
+  bool exitStatus = true;
   media_status_t err = AMediaCodec_configure(mEncoder, format, NULL, NULL, AMEDIACODEC_CONFIGURE_FLAG_ENCODE);
   if(err != AMEDIA_OK){
+      exitStatus = false;
     LOGE( "Error occurred: %d", err );
   }
 
   err = AMediaCodec_start(mEncoder);
   if(err != AMEDIA_OK){
+      exitStatus = false;
     LOGE( "Error occurred: %d", err);
   }
 
@@ -134,6 +138,7 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   mMuxer = AMediaMuxer_new(fd, AMEDIAMUXER_OUTPUT_FORMAT_MPEG_4);
 
   if(mMuxer == nullptr){
+      exitStatus = false;
     LOGE("Unable to create Muxer");
   }
 
@@ -142,6 +147,7 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   mFrameCounter = 0;
   isRunning = true;
   LOGD ("Encoder ready!");
+  if (! exitStatus) LOGF("[danger] something has gone wrong!");
   imageReader -> mediaMuxer = mMuxer ;
   imageReader -> mediaCodec = mEncoder ;
   OUT
@@ -206,7 +212,7 @@ void CameraAppEngine::releaseEncoder() {
 bool CameraAppEngine::writeFrame(AImage * image){
   // Feed any pending encoder output into the muxer.
   IN
-  drainEncoder(false);
+//  drainEncoder(false);
 
  // Generate a new frame of input.
 
@@ -215,6 +221,7 @@ bool CameraAppEngine::writeFrame(AImage * image){
                 * getInputBuffer() to get a pointer to the buffer, then copy the data to be encoded or decoded
                 * into the buffer before passing it to the codec.
                 */
+    LOGD("dequeue buffer ...");
   ssize_t inBufferIdx = AMediaCodec_dequeueInputBuffer(mEncoder, TIMEOUT_USEC);
 
   /**
@@ -256,6 +263,8 @@ bool CameraAppEngine::writeFrame(AImage * image){
   // can supply another frame without blocking.
   //qDebug() << "sending frame " << i << " to encoder";
   //AMediaCodec_flush(mEncoder);
+    drainEncoder(false);
+    AMediaCodec_flush(mEncoder);
   OUT
   return true;
 }
