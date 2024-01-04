@@ -3,6 +3,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -280,7 +281,7 @@ public class Camera extends Activity
         int height = display.getMode().getPhysicalHeight();
         int width = display.getMode().getPhysicalWidth();
 
-        ndkCamera_ = createCamera(width, height);
+        ndkCamera_ = createCamera(width, height, getAssets());
         populateFilename();
         startEncoder(filename);
 
@@ -294,7 +295,7 @@ public class Camera extends Activity
      *     Start/Stop Preview
      *     Pulling Camera Parameters
      */
-    private native long createCamera(int width, int height);
+    private native long createCamera(int width, int height, AssetManager assetManager);
 
     private native Size getMinimumCompatiblePreviewSize(long ndkCamera);
 

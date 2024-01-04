@@ -53,8 +53,10 @@ CameraAppEngine *pEngineObj = nullptr;
 extern "C" JNIEXPORT jlong JNICALL
 Java_com_shajikhan_ladspa_amprack_Camera_createCamera(JNIEnv *env,
                                                       jobject instance,
-                                                      jint width, jint height) {
+                                                      jint width, jint height, jobject assetMgr) {
   pEngineObj = new CameraAppEngine(env, instance, width, height);
+  pEngineObj -> env  = env ;
+  pEngineObj -> assetManager = assetMgr ;
   return reinterpret_cast<jlong>(pEngineObj);
 }
 
@@ -183,6 +185,7 @@ Java_com_shajikhan_ladspa_amprack_Camera_startEncoder(JNIEnv *env, jobject thiz,
   }
 
   const char *nativeString = env->GetStringUTFChars(filename, 0);
+  pEngineObj -> filename = std::string (nativeString);
   pEngineObj->createEncoder(std::string (nativeString));
   env->ReleaseStringUTFChars(filename, nativeString);
 }

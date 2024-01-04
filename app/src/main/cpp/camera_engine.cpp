@@ -102,7 +102,7 @@ int CameraAppEngine::GetCameraSensorOrientation(int32_t requestFacing) {
 void CameraAppEngine::createEncoder (std::string _filename) {
     IN
     LOGD("creating encoder with filename %s [%d x %d] %d fps", _filename.c_str (), requestWidth_, requestHeight_, mFPS);
-  filename = _filename ;
+  filename = std::string (_filename) ;
   format = AMediaFormat_new() ;
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_WIDTH,1920);
   AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_HEIGHT,1080);
@@ -125,13 +125,17 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   media_status_t err = AMediaCodec_configure(mEncoder, format, NULL, NULL, AMEDIACODEC_CONFIGURE_FLAG_ENCODE);
   if(err != AMEDIA_OK){
       exitStatus = false;
-    LOGE( "Error occurred: %d", err );
+    LOGE( "Error occurred creating encoder: %d", err );
+  } else {
+      LOGD("Encoder created [ok]");
   }
 
   err = AMediaCodec_start(mEncoder);
   if(err != AMEDIA_OK){
       exitStatus = false;
     LOGE( "Error occurred: %d", err);
+  } else {
+      LOGD("encoder started [ok]");
   }
 
   fd = fileno (fopen (filename.c_str(), "w"));
@@ -140,10 +144,28 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   if(mMuxer == nullptr){
       exitStatus = false;
     LOGE("Unable to create Muxer");
+  } else {
+      LOGD("Muxer created [ok]");
   }
 
   mTrackIndex = -1;
-  mMuxerStarted = false;
+    AMediaFormat* newFormat = AMediaCodec_getOutputFormat(mEncoder);
+
+    if(newFormat == nullptr){
+        LOGE ("Unable to set new format.");
+    }
+
+    LOGD( "encoder output format changed: %s",  AMediaFormat_toString(newFormat));
+
+    // now that we have the Magic Goodies, start the muxer
+    mTrackIndex = AMediaMuxer_addTrack(mMuxer, newFormat);
+    err = AMediaMuxer_start(mMuxer);
+
+    if(err != AMEDIA_OK){
+        LOGE( "Muxer cannot be started: %s" , err);
+    }
+
+    mMuxerStarted = true;
   mFrameCounter = 0;
   isRunning = true;
   LOGD ("Encoder ready!");
@@ -212,7 +234,12 @@ void CameraAppEngine::releaseEncoder() {
 bool CameraAppEngine::writeFrame(AImage * image){
   // Feed any pending encoder output into the muxer.
   IN
-//  drainEncoder(false);
+//  if (mEncoder == nullptr) {
+//      LOGD("first time running, trying to create encoder ...");
+//      createEncoder(filename);
+//  }
+
+  drainEncoder(false);
 
  // Generate a new frame of input.
 
@@ -888,5 +915,60 @@ void ImageReader::WriteFile(AImage *image) {
     }
     AImage_delete(image);
     LOGD("Wrote file %s", fileName.c_str ());
+    OUT
+}
+
+void CameraAppEngine::createDecoder () {
+    IN
+    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+
+    int fd = AAsset_openFileDescriptor(
+            AAssetManager_open(mgr, "clips/testfile.mp4", 0),
+            0, 0);
+    if (fd < 0) {
+        LOGE("failed to open file: clips/testfile.mp4 %d (%s)",  fd, strerror(errno));
+        OUT
+        return;
+    } else {
+        LOGV("opened fd %d", fd);
+    }
+
+    AMediaExtractor *ex = AMediaExtractor_new();
+    media_status_t err = AMediaExtractor_setDataSourceFd(
+            ex, fd, 0, 0);
+
+    if (err != AMEDIA_OK) {
+        LOGV("setDataSource error: %d", err);
+        OUT
+        return ;
+    } else {
+        LOGV("media extractor [ok]");
+    }
+
+    int numtracks = AMediaExtractor_getTrackCount(ex);
+    AMediaCodec *codec = NULL;
+
+    LOGV("input has %d tracks", numtracks);
+    for (int i = 0; i < numtracks; i++) {
+        AMediaFormat *format = AMediaExtractor_getTrackFormat(ex, i);
+        const char *s = AMediaFormat_toString(format);
+        LOGV("track %d format: %s", i, s);
+        const char *mime;
+        if (!AMediaFormat_getString(format, AMEDIAFORMAT_KEY_MIME, &mime)) {
+            LOGV("no mime type");
+            OUT
+            return ;
+        } else if (!strncmp(mime, "video/", 6)) {
+            // Omitting most error handling for clarity.
+            // Production code should check for errors.
+            AMediaExtractor_selectTrack(ex, i);
+            codec = AMediaCodec_createDecoderByType(mime);
+            AMediaCodec_configure(codec, format, NULL, NULL, 0);
+            AMediaCodec_start(codec);
+        }
+
+        AMediaFormat_delete(format);
+    }
+
     OUT
 }

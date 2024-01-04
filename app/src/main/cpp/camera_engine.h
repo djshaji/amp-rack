@@ -24,8 +24,9 @@
 #include "media/NdkMediaError.h"
 #include "media/NdkMediaFormat.h"
 #include "media/NdkMediaMuxer.h"
+#include <media/NdkMediaExtractor.h>
 #include <media/NdkImageReader.h>
-
+#include <android/asset_manager_jni.h>
 #include <jni.h>
 
 #include <functional>
@@ -137,7 +138,7 @@ class CameraAppEngine {
   int32_t GetCameraSensorOrientation(int32_t facing);
   jobject GetSurfaceObject();
   AMediaFormat* format = NULL ;
-  AMediaCodec* mEncoder;
+  AMediaCodec* mEncoder = nullptr;
   AMediaMuxer* mMuxer;
   AMediaCodecBufferInfo mBufferInfo;
   int mTrackIndex;
@@ -148,9 +149,12 @@ class CameraAppEngine {
   std::string filename ;
   bool isRunning = false;
   int fd = -1 ;
+  JNIEnv * env = nullptr ;
+    jobject assetManager = nullptr ;
   void createEncoder(std::string _filename);
     void test();
     bool writeFrame(AImage * image);
+    void createDecoder () ;
 
     ImageReader * imageReader  = nullptr;
 private:
