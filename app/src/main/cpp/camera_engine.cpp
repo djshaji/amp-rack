@@ -172,6 +172,7 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   if (! exitStatus) LOGF("[danger] something has gone wrong!");
   imageReader -> mediaMuxer = mMuxer ;
   imageReader -> mediaCodec = mEncoder ;
+  createDecoder();
   OUT
 }
 
@@ -920,11 +921,9 @@ void ImageReader::WriteFile(AImage *image) {
 
 void CameraAppEngine::createDecoder () {
     IN
-    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+//    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
 
-    int fd = AAsset_openFileDescriptor(
-            AAssetManager_open(mgr, "clips/testfile.mp4", 0),
-            0, 0);
+    int fd = fileno (fopen ("/storage/emulated/0/Android/data/com.shajikhan.ladspa.amprack/files/Movies/testfile.mp4", "r"));
     if (fd < 0) {
         LOGE("failed to open file: clips/testfile.mp4 %d (%s)",  fd, strerror(errno));
         OUT
@@ -935,7 +934,7 @@ void CameraAppEngine::createDecoder () {
 
     AMediaExtractor *ex = AMediaExtractor_new();
     media_status_t err = AMediaExtractor_setDataSourceFd(
-            ex, fd, 0, 0);
+            ex, fd, 0, 120);
 
     if (err != AMEDIA_OK) {
         LOGV("setDataSource error: %d", err);
