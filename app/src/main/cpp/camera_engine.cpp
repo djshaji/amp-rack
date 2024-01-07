@@ -934,7 +934,7 @@ void CameraAppEngine::createDecoder () {
 
     AMediaExtractor *ex = AMediaExtractor_new();
     media_status_t err = AMediaExtractor_setDataSourceFd(
-            ex, fd, 0, 120);
+            ex, fd, 0, 120000);
 
     if (err != AMEDIA_OK) {
         LOGV("setDataSource error: %d", err);
@@ -970,4 +970,8 @@ void CameraAppEngine::createDecoder () {
     }
 
     OUT
+}
+
+void CameraAppEngine::testEncode () {
+
 }
