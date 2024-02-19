@@ -899,6 +899,11 @@
         "id": 8099,
         "index": 0,
         "library": "libgnuitar-distort2.lv2.so"
+    },
+    "32900": {
+        "name": "Looper",
+        "id": 8100,
+        "index": 0,
+        "library": "liblooper.so"
     }
-
 }

@@ -971,7 +971,3 @@ void CameraAppEngine::createDecoder () {
 
     OUT
 }
-
-void CameraAppEngine::testEncode () {
-
-}

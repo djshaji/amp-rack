@@ -479,6 +479,7 @@
         <item>libgxmetal_head.lv2.so</item>
         <item>libgnuitar-distort.lv2.so</item>
         <item>libgnuitar-distort2.lv2.so</item>
+        <item>liblooper.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
