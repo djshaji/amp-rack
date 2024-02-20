@@ -177,6 +177,12 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getPluginControls(JNIEnv *env, jcl
         LOGF ("engine is NULL");
         return 0;
     }
+
+    if (plugin > engine ->activePlugins.size()) {
+        HERE LOGE("%d plugin controls requested but only %d plugins in active queue!", plugin, engine->activePlugins.size());
+        return 0 ;
+    }
+
     return engine->activePlugins.at(plugin)->pluginControls.size();
 }
 extern "C"
