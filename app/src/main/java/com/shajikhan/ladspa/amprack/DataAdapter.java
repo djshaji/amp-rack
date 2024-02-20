@@ -133,7 +133,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             if (string != null) {
                 Log.d(TAG, "onBindViewHolder: control name: " + string +
                         " -> " + string.equalsIgnoreCase("bypass"));
-                isBypass = string.equalsIgnoreCase("bypass");
+                isBypass = string.equalsIgnoreCase("bypass") || string.contains("oggle");
             }
 
             if (mainActivity.useTheme) {

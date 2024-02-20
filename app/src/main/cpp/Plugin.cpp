@@ -135,6 +135,9 @@ void Plugin::load () {
     else
         LOGD("[LV2] Handle instantiated ok! Congratulations");
 
+    if (lv2Descriptor->activate) {
+        lv2Descriptor->activate(handle);
+    }
 
     std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
