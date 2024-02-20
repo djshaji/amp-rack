@@ -80,6 +80,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         });
 
         String pluginName = AudioEngine.getActivePluginName(position) ;
+        if (pluginName == null) {
+            Log.e(TAG, "onBindViewHolder: plugin name returned null, what are we even doing?", null);
+//            notifyItemRemoved(position);
+            return;
+        }
+
         holder.getTextView().setText(pluginName);
         if (mainActivity.useTheme)
             mainActivity.skinEngine.cardText(holder.getTextView());

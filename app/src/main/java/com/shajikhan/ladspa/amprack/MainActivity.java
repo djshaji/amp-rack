@@ -1966,10 +1966,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
 
-
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
         AudioEngine.toggleMixer(sharedPreferences.getBoolean("toggleMixer", true));
+        Log.i(TAG, "loadActivePreset: loading preset:\n" + preset);
 
         if (preset != null) {
             Log.d(TAG, "loadActivePreset: " + preset);

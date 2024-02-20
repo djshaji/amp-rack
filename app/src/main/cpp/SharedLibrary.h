@@ -78,7 +78,6 @@ public:
 
     LV2Features  features ;
     const LV2_Feature** feature_list;
-
     int total_plugins = 0 ;
     void * dl_handle = NULL;
     unsigned long sampleRate ;
