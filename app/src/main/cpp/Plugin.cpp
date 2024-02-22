@@ -285,24 +285,7 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
     IN
     // dangerous non standard stuff
     // dont try this at home
-    float * bf = NULL;
-    float *buffer_size = (float *) malloc (sizeof (float )) ;
-
-    lv2Descriptor->connect_port(handle, 100, bf);
-    lv2Descriptor->connect(handle, 101, &buffer_size);
-
-    LOGI("got buffer size %d from plugin", *buffer_size);
-    for (int i = 0 ; i < read_bytes ; i ++) {
-        bf [i] = buffer [i];
-        if (read_bytes == *buffer_size)
-            break;
-    }
-
-    if (read_bytes < *buffer_size) {
-        for (int i = read_bytes ; i < *buffer_size ; i ++) {
-            bf [i] = - 1 ;
-        }
-    }
-
+    lv2Descriptor->connect_port(handle, 4, & read_bytes);
+    lv2Descriptor->connect_port(handle, 2, buffer);
     OUT
 }

@@ -805,11 +805,9 @@ jint plugin
     if (engine == nullptr) return ;
     jsize len = env->GetArrayLength( data);
     jfloat *body = env->GetFloatArrayElements( data, 0);
-    float * buffer = (float *) malloc (sizeof (float) * len);
-    for (int i = 0 ; i < len ; i ++) {
-        buffer [i] = body [i];
-    }
 
-    engine -> setPluginBuffer (buffer, len, plugin);
+    body [len - 1] = -1 ;
+    LOGI ("array of size %d", len);
+    int retval = engine -> setPluginBuffer (body, len, plugin);
     env->ReleaseFloatArrayElements(data, body, 0);
 }

@@ -19,6 +19,7 @@ import java.util.Arrays;
 public class AudioDecoder {
     MainActivity mainActivity ;
     String TAG = "Moffin Decoder yeah" ;
+    int sampleRate = 48000 ;
     AudioDecoder (MainActivity _MainActivity) {
         mainActivity = _MainActivity;
     }
@@ -61,6 +62,8 @@ public class AudioDecoder {
 
         Log.i(TAG, "decode: detected format " + mime);
         codec = MediaCodec.createDecoderByType(mime);
+        format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
+
         codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
         codec.start();
         codecInputBuffers = codec.getInputBuffers();
@@ -72,6 +75,7 @@ public class AudioDecoder {
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
         int noOutputCounter = 0;
+        boolean reconfigure = true ;
         while (!sawOutputEOS && noOutputCounter < 50) {
             noOutputCounter++;
             if (!sawInputEOS) {
@@ -105,13 +109,27 @@ public class AudioDecoder {
                 if (info.size > 0) {
                     noOutputCounter = 0;
                 }
+
+                if (info.size > 0 && reconfigure) {
+                    // once we've gotten some data out of the decoder, reconfigure it again
+                    reconfigure = false;
+                    extractor.seekTo(0, MediaExtractor.SEEK_TO_NEXT_SYNC);
+                    sawInputEOS = false;
+                    codec.stop();
+                    codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
+                    codec.start();
+                    codecInputBuffers = codec.getInputBuffers();
+                    codecOutputBuffers = codec.getOutputBuffers();
+                    continue;
+                }
+
                 int outputBufIndex = res;
                 ByteBuffer buf = codecOutputBuffers[outputBufIndex];
                 if (decodedIdx + (info.size / 2) >= decoded.length) {
                     decoded = Arrays.copyOf(decoded, decodedIdx + (info.size / 2));
                 }
                 for (int i = 0; i < info.size; i += 2) {
-                    decoded[decodedIdx++] = buf.getShort(i);
+                    decoded[decodedIdx++] = (float) (buf.getShort(i) / 32768.0);
                 }
                 codec.releaseOutputBuffer(outputBufIndex, false /* render */);
                 if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
@@ -124,6 +142,9 @@ public class AudioDecoder {
             } else if (res == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                 MediaFormat oformat = codec.getOutputFormat();
                 Log.d(TAG, "output format has changed to " + oformat);
+//                codec.stop();
+//                codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
+//                codec.start();
             } else {
                 Log.d(TAG, "dequeueOutputBuffer returned " + res);
             }
