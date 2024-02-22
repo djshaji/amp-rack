@@ -73,6 +73,7 @@ public class AudioEngine {
     static native void printActiveChain ();
 
     static native void testLV2 ();
+    static native void setPluginBuffer (float  [] data, int plugin);
 
     static void setDefaultStreamValues(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){

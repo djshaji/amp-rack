@@ -16,6 +16,7 @@ public:
     Engine() ;
     JavaVM * vm ;
     bool              mIsEffectOn = false;
+    bool setPluginBuffer (float * buffer, int buffer_size, int plugin) ;
 
     int deletePluginFromRack(int pIndex);
     void setRecordingDeviceId(int32_t deviceId);

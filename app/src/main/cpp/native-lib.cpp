@@ -4,6 +4,8 @@
 #include "ladspa.h"
 
 #include "Engine.h"
+#include <jni.h>
+#include <jni.h>
 
 static const int kOboeApiAAudio = 0;
 static const int kOboeApiOpenSLES = 1;
@@ -790,4 +792,24 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setTunerEnabled(JNIEnv *env, jclas
     }
 
     engine -> meter -> tunerEnabled = enabled;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginBuffer(JNIEnv
+* env,
+jclass clazz, jfloatArray
+data,
+jint plugin
+) {
+    if (engine == nullptr) return ;
+    jsize len = env->GetArrayLength( data);
+    jfloat *body = env->GetFloatArrayElements( data, 0);
+    float * buffer = (float *) malloc (sizeof (float) * len);
+    for (int i = 0 ; i < len ; i ++) {
+        buffer [i] = body [i];
+    }
+
+    engine -> setPluginBuffer (buffer, len, plugin);
+    env->ReleaseFloatArrayElements(data, body, 0);
 }

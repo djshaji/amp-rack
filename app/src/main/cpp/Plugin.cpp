@@ -29,10 +29,6 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
         LOGD("Creating plugin: %s", _descriptor->Name);
 
         handle = (LADSPA_Handle *) descriptor->instantiate(descriptor, sampleRate);
-        if (descriptor->activate) {
-            descriptor->activate(handle);
-        }
-
         LOGD("[%s] loaded plugin %s [%d: %s] at %u", __PRETTY_FUNCTION__, descriptor->Name,
              descriptor->UniqueID, descriptor->Label, sampleRate);
         print();
@@ -103,6 +99,12 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
                 }
             }
         }
+
+        //> WARNING: Moving this here because ports have to be connected first
+        //  before activating a plugin
+        if (descriptor->activate) {
+            descriptor->activate(handle);
+        }
     } else if (type == SharedLibrary::LV2) {
         LOGD("[LV2] waiting for shared library pointer ...") ;
         lv2Descriptor = (LV2_Descriptor *) descriptor ;
@@ -134,10 +136,6 @@ void Plugin::load () {
         LOGF("[LV2] plugin handle is NULL, we will probably crash ...!") ;
     else
         LOGD("[LV2] Handle instantiated ok! Congratulations");
-
-    if (lv2Descriptor->activate) {
-        lv2Descriptor->activate(handle);
-    }
 
     std::string json_ = getLV2JSON(lv2Descriptor -> URI);
     json j = json::parse(json_);
@@ -188,6 +186,11 @@ void Plugin::load () {
         }
 
 //        std::cout << "key: " << el.key() << ", value:" << el.value() << '\n';
+    }
+
+    // this is here because activate may use "ports" which are allocated above
+    if (lv2Descriptor->activate) {
+        lv2Descriptor->activate(handle);
     }
 
     /*
@@ -276,4 +279,30 @@ int Plugin::addPluginControl (const LV2_Descriptor * _descriptor, nlohmann::json
     pluginControls.push_back(pluginControl);
     OUT ;
     return pluginControls.size();
+}
+
+void Plugin::setBuffer (float * buffer, int read_bytes) {
+    IN
+    // dangerous non standard stuff
+    // dont try this at home
+    float * bf = NULL;
+    float *buffer_size = (float *) malloc (sizeof (float )) ;
+
+    lv2Descriptor->connect_port(handle, 100, bf);
+    lv2Descriptor->connect(handle, 101, &buffer_size);
+
+    LOGI("got buffer size %d from plugin", *buffer_size);
+    for (int i = 0 ; i < read_bytes ; i ++) {
+        bf [i] = buffer [i];
+        if (read_bytes == *buffer_size)
+            break;
+    }
+
+    if (read_bytes < *buffer_size) {
+        for (int i = read_bytes ; i < *buffer_size ; i ++) {
+            bf [i] = - 1 ;
+        }
+    }
+
+    OUT
 }

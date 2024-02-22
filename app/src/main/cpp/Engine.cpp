@@ -490,3 +490,13 @@ int Engine::addPlugintoRackByName (std::string pluginName) {
 
     return  0 ;
 }
+
+bool Engine::setPluginBuffer (float * buffer, int buffer_size, int plugin) {
+    IN
+    LOGD("plugins in queue %d requested %d", activePlugins.size(), plugin);
+    activePlugins.at (plugin)->active = false ;
+    activePlugins.at (plugin)->setBuffer (buffer, buffer_size);
+    activePlugins.at (plugin)->active = true ;
+
+    OUT
+}

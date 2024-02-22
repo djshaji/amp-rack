@@ -1423,6 +1423,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         if (resultCode == RESULT_OK && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE) {
             if (Environment.isExternalStorageManager()) {
@@ -1538,6 +1539,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Log.d(TAG, "onActivityResult: adding collection to list: " + vals.toString());
                 drums.load(selectedImage);
                 sharedPreferences.edit().putStringSet("drums", vals).commit();
+            }
+        }
+
+        if (resultCode == RESULT_OK && requestCode > 4999) {
+            int plugin = requestCode - 5000 ;
+            AudioDecoder audioDecoder = new AudioDecoder(this);
+            try {
+                float [] samples = audioDecoder.decode(data.getData());
+                AudioEngine.setPluginBuffer(samples, plugin);
+            } catch (IOException e) {
+                toast(e.getMessage());
             }
         }
     }

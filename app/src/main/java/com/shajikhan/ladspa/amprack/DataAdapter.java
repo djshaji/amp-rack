@@ -1,6 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -84,6 +86,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             Log.e(TAG, "onBindViewHolder: plugin name returned null, what are we even doing?", null);
 //            notifyItemRemoved(position);
             return;
+        } else {
+            Log.d(TAG, "onBindViewHolder: creating UI for " + pluginName);
         }
 
         holder.getTextView().setText(pluginName);
@@ -540,6 +544,36 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                 }
             }
+        }
+
+        Button fileChooser = null;
+        if (pluginName .equals( "Looper")) {
+            fileChooser = new Button(mainActivity);
+            fileChooser.setText("Load file");
+            if (mainActivity.useTheme)
+                mainActivity.skinEngine.button(fileChooser, SkinEngine.Resize.None, 0);
+
+            LinearLayout layout = new LinearLayout(mainActivity);
+            linearLayout.addView(layout);
+            layout.addView(fileChooser);
+            layout.setOrientation(LinearLayout.VERTICAL);
+            layout.setGravity(Gravity.CENTER);
+            fileChooser.setGravity(Gravity.CENTER);
+            layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            fileChooser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent_upload = new Intent();
+                    intent_upload.setType("audio/*");
+                    intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                    intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                    intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                    int requestCode = 5000 + holder.getLayoutPosition();
+                    mainActivity.startActivityForResult(intent_upload,requestCode);
+                }
+            });
         }
 
         if (mainActivity.useTheme) {

@@ -19,6 +19,7 @@ class Plugin {
     LADSPA_Data ** portControls ;
     unsigned long sampleRate ;
 public:
+    void setBuffer (float * buffer, int read_bytes) ;
     bool active = true ;
     SharedLibrary::PluginType type ;
     std::string lv2_name ;

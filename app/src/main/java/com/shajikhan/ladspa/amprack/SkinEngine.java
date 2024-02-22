@@ -1412,6 +1412,7 @@ public class SkinEngine {
     void button (Button button, Resize resize, float factor) {
         view (button, "button", "bg", Resize.Width, 1);
         button.setTextColor(Color.parseColor(config.get("button").get("text-color")));
+        button.setPadding(20,10,20,10);
     }
 
     void view (View _view, String category, String name, Resize resize, float factor) {
