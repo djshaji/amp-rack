@@ -45,140 +45,18 @@ public class AudioDecoder {
         }
     }
 
-    float[] decode (Uri uri) throws IOException {
-        MediaExtractor extractor;
-        float [] decoded = new float[0];
-        int decodedIdx = 0;
-
-        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-
-        MediaCodec codec;
-        ByteBuffer[] codecInputBuffers;
-        ByteBuffer[] codecOutputBuffers;
-        extractor = new MediaExtractor();
+    float [] decode (Uri uri, String mime, int _sampleRate) throws IOException {
         ParcelFileDescriptor pfd =
                 mainActivity.getContentResolver().
                         openFileDescriptor(uri, "r");
 
         FileDescriptor fileDescriptor = pfd.getFileDescriptor();
-        metadataRetriever.setDataSource(fileDescriptor);
-
-        HashMap <Integer, String> metadata = new HashMap();
-        int dataKeys [] = {
-                MediaMetadataRetriever.METADATA_KEY_MIMETYPE,
-                MediaMetadataRetriever.METADATA_KEY_NUM_TRACKS,
-                MediaMetadataRetriever.METADATA_KEY_BITS_PER_SAMPLE,
-                MediaMetadataRetriever.METADATA_KEY_BITRATE,
-                MediaMetadataRetriever.METADATA_KEY_SAMPLERATE
-        } ;
-
-        for (int key: dataKeys) {
-            metadata.put(key, metadataRetriever.extractMetadata(key));
-            Log.d(TAG, "decode: metadata" +
-                    String.format("%d: %s", key, metadataRetriever.extractMetadata(key)));
-        }
-
-        sampleRate = Integer.parseInt(metadata.get(MediaMetadataRetriever.METADATA_KEY_SAMPLERATE));
-        extractor.setDataSource(pfd.getFileDescriptor());
-        float scaleFactor = 48000 / sampleRate ;
-        MediaFormat format = extractor.getTrackFormat(0);
-        String mime = format.getString(MediaFormat.KEY_MIME);
-
-        Log.i(TAG, "decode: detected format " + mime);
-        codec = MediaCodec.createDecoderByType(mime);
-        format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
-
-        codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
-        codec.start();
-        codecInputBuffers = codec.getInputBuffers();
-        codecOutputBuffers = codec.getOutputBuffers();
-        extractor.selectTrack(0);
-        // start decoding
-        final long kTimeOutUs = 5000;
-        MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
-        boolean sawInputEOS = false;
-        boolean sawOutputEOS = false;
-        int noOutputCounter = 0;
-        boolean reconfigure = true ;
-        while (!sawOutputEOS && noOutputCounter < 50) {
-            noOutputCounter++;
-            if (!sawInputEOS) {
-                int inputBufIndex = codec.dequeueInputBuffer(kTimeOutUs);
-                if (inputBufIndex >= 0) {
-                    ByteBuffer dstBuf = codecInputBuffers[inputBufIndex];
-                    int sampleSize =
-                            extractor.readSampleData(dstBuf, 0 /* offset */);
-                    long presentationTimeUs = 0;
-                    if (sampleSize < 0) {
-                        Log.d(TAG, "saw input EOS.");
-                        sawInputEOS = true;
-                        sampleSize = 0;
-                    } else {
-                        presentationTimeUs = extractor.getSampleTime();
-                    }
-                    codec.queueInputBuffer(
-                            inputBufIndex,
-                            0 /* offset */,
-                            sampleSize,
-                            presentationTimeUs,
-                            sawInputEOS ? MediaCodec.BUFFER_FLAG_END_OF_STREAM : 0);
-                    if (!sawInputEOS) {
-                        extractor.advance();
-                    }
-                }
-            }
-            int res = codec.dequeueOutputBuffer(info, kTimeOutUs);
-            if (res >= 0) {
-                //Log.d(TAG, "got frame, size " + info.size + "/" + info.presentationTimeUs);
-                if (info.size > 0) {
-                    noOutputCounter = 0;
-                }
-
-                if (info.size > 0 && reconfigure) {
-                    // once we've gotten some data out of the decoder, reconfigure it again
-                    reconfigure = false;
-                    extractor.seekTo(0, MediaExtractor.SEEK_TO_NEXT_SYNC);
-                    sawInputEOS = false;
-                    codec.stop();
-                    codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
-                    codec.start();
-                    codecInputBuffers = codec.getInputBuffers();
-                    codecOutputBuffers = codec.getOutputBuffers();
-                    continue;
-                }
-
-                int outputBufIndex = res;
-                ByteBuffer buf = codecOutputBuffers[outputBufIndex];
-                if (decodedIdx + (info.size / 2) >= decoded.length) {
-                    decoded = Arrays.copyOf(decoded, decodedIdx + (info.size / 2));
-                }
-                for (int i = 0; i < info.size; i += 2) {
-                    decoded[decodedIdx++] = (float) (buf.getShort(i) / 32768.0);
-                }
-                codec.releaseOutputBuffer(outputBufIndex, false /* render */);
-                if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                    Log.d(TAG, "saw output EOS.");
-                    sawOutputEOS = true;
-                }
-            } else if (res == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
-                codecOutputBuffers = codec.getOutputBuffers();
-                Log.d(TAG, "output buffers have changed.");
-            } else if (res == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                MediaFormat oformat = codec.getOutputFormat();
-                Log.d(TAG, "output format has changed to " + oformat);
-//                codec.stop();
-//                codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
-//                codec.start();
-            } else {
-                Log.d(TAG, "dequeueOutputBuffer returned " + res);
-            }
-        }
-        codec.stop();
-        codec.release();
-        return decoded;
+        float [] samples = decode(fileDescriptor, mime, _sampleRate);
+        pfd.close();
+        return samples;
     }
 
-    float [] resample (Uri uri) throws IOException {
+    float[] decode (FileDescriptor fileDescriptor, String mimeType, int _sampleRate) throws IOException {
         MediaExtractor extractor;
         float [] decoded = new float[0];
         int decodedIdx = 0;
@@ -189,11 +67,6 @@ public class AudioDecoder {
         ByteBuffer[] codecInputBuffers;
         ByteBuffer[] codecOutputBuffers;
         extractor = new MediaExtractor();
-        ParcelFileDescriptor pfd =
-                mainActivity.getContentResolver().
-                        openFileDescriptor(uri, "r");
-
-        FileDescriptor fileDescriptor = pfd.getFileDescriptor();
         metadataRetriever.setDataSource(fileDescriptor);
 
         HashMap <Integer, String> metadata = new HashMap();
@@ -212,14 +85,22 @@ public class AudioDecoder {
         }
 
         sampleRate = Integer.parseInt(metadata.get(MediaMetadataRetriever.METADATA_KEY_SAMPLERATE));
-        extractor.setDataSource(pfd.getFileDescriptor());
+        extractor.setDataSource(fileDescriptor);
         float scaleFactor = 48000 / sampleRate ;
         MediaFormat format = extractor.getTrackFormat(0);
         String mime = format.getString(MediaFormat.KEY_MIME);
+        Log.d(TAG, String.format ("mimetype: %s", mimeType));
+        if (_sampleRate != -1) {
+            codec = MediaCodec.createEncoderByType(mimeType);
+            Log.d(TAG, String.format ("converting to: %s [%d]", mimeType, sampleRate));
+        } else {
+            codec = MediaCodec.createDecoderByType(mime);
+            Log.d(TAG, String.format ("converting to: %s [%d]", mime, sampleRate));
+        }
 
         Log.i(TAG, "decode: detected format " + mime);
-        codec = MediaCodec.createEncoderByType(mime);
-        format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
+        if (_sampleRate != -1)
+            format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
 
         codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
         codec.start();
@@ -308,6 +189,8 @@ public class AudioDecoder {
         }
         codec.stop();
         codec.release();
+        Log.i(TAG, "decode: returning " +
+                String.format("%d audio samples", decoded.length));
         return decoded;
     }
 }

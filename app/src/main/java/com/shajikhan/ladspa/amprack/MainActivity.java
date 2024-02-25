@@ -49,6 +49,9 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
+import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -108,12 +111,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1545,11 +1555,48 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (resultCode == RESULT_OK && requestCode > 4999) {
             int plugin = requestCode - 5000 ;
             AudioDecoder audioDecoder = new AudioDecoder(this);
+            MediaCodecList supported = new MediaCodecList(MediaCodecList.ALL_CODECS);
+            int numCodecs = MediaCodecList.getCodecCount();
+            for (int i = 0; i < numCodecs; i++) {
+                MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
+
+//                if (!codecInfo.isEncoder()) {
+//                    continue;
+//                }
+
+                String[] types = codecInfo.getSupportedTypes();
+                String feature = "decoder" ;
+                if (codecInfo.isEncoder())
+                    feature = "encoder" ;
+                if (codecInfo.isHardwareAccelerated())
+                    feature += " hwaccel";
+                String typ = "" ;
+                for (String s: types)
+                    typ += s + " ";
+                Log.d(TAG, String.format ("found supported codec: %s [%s]", typ, feature));
+            }
+
             try {
-                float [] samples = audioDecoder.decode(data.getData());
-                AudioEngine.setPluginBuffer(samples, plugin);
+                float [] samples = audioDecoder.decode(data.getData(), null, -1);
+
+                ByteBuffer bb = ByteBuffer.allocateDirect(samples.length * 4);
+                ByteBuffer bb2 = ByteBuffer.allocateDirect(samples.length * 10);
+                FloatBuffer floatBuffer = bb.asFloatBuffer(), resampled = bb2.asFloatBuffer();
+                floatBuffer.put(samples);
+                floatBuffer.position(0);
+
+                Resampler resampler = new Resampler(true,0.1,30);
+                boolean result = resampler.process((double)48000.0/22050.0,floatBuffer,true,resampled);
+                float [] res = new float[resampled.limit()];
+//                resampled.position(0);
+                for (int i = 0 ; i < resampled.limit(); i ++) {
+                    res [i] = resampled.get(i);
+                }
+
+                AudioEngine.setPluginBuffer(res, plugin);
             } catch (IOException e) {
                 toast(e.getMessage());
+                Log.e(TAG, "onActivityResult: ", e);
             }
         }
     }
