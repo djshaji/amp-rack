@@ -1578,22 +1578,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             try {
                 float [] samples = audioDecoder.decode(data.getData(), null, -1);
-
-                ByteBuffer bb = ByteBuffer.allocateDirect(samples.length * 4);
-                ByteBuffer bb2 = ByteBuffer.allocateDirect(samples.length * 10);
-                FloatBuffer floatBuffer = bb.asFloatBuffer(), resampled = bb2.asFloatBuffer();
-                floatBuffer.put(samples);
-                floatBuffer.position(0);
-
-                Resampler resampler = new Resampler(true,0.1,30);
-                boolean result = resampler.process((double)48000.0/22050.0,floatBuffer,true,resampled);
-                float [] res = new float[resampled.limit()];
-//                resampled.position(0);
-                for (int i = 0 ; i < resampled.limit(); i ++) {
-                    res [i] = resampled.get(i);
-                }
-
-                AudioEngine.setPluginBuffer(res, plugin);
+                AudioEngine.setPluginBuffer(samples, plugin);
             } catch (IOException e) {
                 toast(e.getMessage());
                 Log.e(TAG, "onActivityResult: ", e);

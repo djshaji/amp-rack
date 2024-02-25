@@ -16,11 +16,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class AudioDecoder {
     MainActivity mainActivity ;
+    long MAX_BUFFER = 512 ;
     String TAG = "Moffin Decoder yeah" ;
     int sampleRate = 48000 ;
     AudioDecoder (MainActivity _MainActivity) {
@@ -114,7 +116,16 @@ public class AudioDecoder {
         boolean sawOutputEOS = false;
         int noOutputCounter = 0;
         boolean reconfigure = true ;
+        long bufferCount = 0 ;
         while (!sawOutputEOS && noOutputCounter < 50) {
+            bufferCount ++ ;
+//            Log.d(TAG, String.format ("buffer count %d: maxBuffer %d", bufferCount, MAX_BUFFER));
+            if (bufferCount > MAX_BUFFER) {
+                sawInputEOS = true ;
+                sawOutputEOS = true ;
+                break ;
+            }
+
             noOutputCounter++;
             if (!sawInputEOS) {
                 int inputBufIndex = codec.dequeueInputBuffer(kTimeOutUs);
@@ -191,6 +202,24 @@ public class AudioDecoder {
         codec.release();
         Log.i(TAG, "decode: returning " +
                 String.format("%d audio samples", decoded.length));
-        return decoded;
+
+        if (sampleRate == 48000)
+            return decoded;
+
+        ByteBuffer bb = ByteBuffer.allocateDirect(decoded.length * 4);
+        ByteBuffer bb2 = ByteBuffer.allocateDirect(decoded.length * 10);
+        FloatBuffer floatBuffer = bb.asFloatBuffer(), resampled = bb2.asFloatBuffer();
+        floatBuffer.put(decoded);
+        floatBuffer.position(0);
+
+        Resampler resampler = new Resampler(true,0.1,30);
+        boolean result = resampler.process((double)48000.0/sampleRate,floatBuffer,true,resampled);
+        float [] res = new float[resampled.limit()];
+//                resampled.position(0);
+        for (int i = 0 ; i < resampled.limit(); i ++) {
+            res [i] = resampled.get(i);
+        }
+
+        return res;
     }
 }
