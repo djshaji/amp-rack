@@ -14,6 +14,7 @@ class Engine : public oboe::AudioStreamCallback {
 public:
     std::string LIBRARY_PATH ;
     Engine() ;
+    std::string tuneLatency();
     JavaVM * vm ;
     bool              mIsEffectOn = false;
     bool setPluginBuffer (float * buffer, int buffer_size, int plugin) ;
@@ -75,6 +76,7 @@ private:
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;
+    oboe::LatencyTuner *latencyTuner;
     oboe::Result openStreams();
 
     void closeStreams();

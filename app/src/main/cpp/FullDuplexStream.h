@@ -21,11 +21,11 @@
 #include <sys/types.h>
 
 #include "oboe/Oboe.h"
+#include <oboe/LatencyTuner.h>
 
 class FullDuplexStream : public oboe::AudioStreamCallback {
 public:
 
-    FullDuplexStream() {}
     virtual ~FullDuplexStream() = default;
 
     void setInputStream(std::shared_ptr<oboe::AudioStream> stream) {

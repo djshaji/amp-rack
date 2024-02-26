@@ -811,3 +811,9 @@ jint plugin
     int retval = engine -> setPluginBuffer (body, len, plugin);
     env->ReleaseFloatArrayElements(data, body, 0);
 }
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_tuneLatency(JNIEnv *env, jclass clazz) {
+    if (engine == NULL) return NULL ;
+    return env->NewStringUTF (engine -> tuneLatency ().c_str());
+}

@@ -63,6 +63,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.checkerframework.checker.units.qual.A;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -504,7 +505,16 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(10);
+        MenuItem tuneLatency = optionsMenu.getMenu().getItem(10);
+        tuneLatency.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                MainActivity.toast(AudioEngine.tuneLatency());
+                return false;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().getItem(11);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

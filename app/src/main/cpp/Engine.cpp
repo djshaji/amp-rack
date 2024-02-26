@@ -42,6 +42,7 @@ bool Engine::setEffectOn(bool isOn) {
                 }
                 */
                 mFullDuplexPass.start();
+
                 fileWriter->setSampleRate (mSampleRate);
 
 //                char buffer [80];
@@ -132,7 +133,7 @@ oboe::Result  Engine::openStreams() {
 
     result = inBuilder.openStream(mRecordingStream);
 
-    oboe::LatencyTuner *latencyTuner = new oboe::LatencyTuner ( *mRecordingStream, 160);
+    latencyTuner = new oboe::LatencyTuner ( *mRecordingStream, 160);
     latencyTuner->setMinimumBufferSize(160);
     mRecordingStream->setBufferSizeInFrames(80);
     latencyTuner->tune();
@@ -501,4 +502,24 @@ bool Engine::setPluginBuffer (float * buffer, int buffer_size, int plugin) {
     mFullDuplexPass.bypass = false ;
     OUT
     return true ;
+}
+
+std::string Engine::tuneLatency () {
+    IN
+    if (! mIsEffectOn)
+        return std::string ("Turn on audio engine first") ;
+
+    latencyTuner->requestReset();
+    oboe::Result result = latencyTuner->tune() ;
+    char tmp [10];
+    // hello, old friend
+    sprintf (tmp, "%f", mRecordingStream->getXRunCount());
+    std::string str = std::string ("Tuner: " +
+                                   std::to_string(static_cast<double>(result)) +
+                                   ", Buffer: " + std::to_string(mRecordingStream->getBufferSizeInFrames())
+            + ", Xruns: " +  std::string (tmp));
+
+    LOGD ("%s",str.c_str());
+    OUT
+    return str ;
 }

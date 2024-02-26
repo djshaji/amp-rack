@@ -29,6 +29,9 @@
     <item android:id="@+id/load_collection"
         android:title="Load presets from file"/>
 
+    <item android:id="@+id/menu_tune"
+        android:title="Latency Tuner"
+        android:icon="@drawable/baseline_tune_24"/>
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>
