@@ -285,7 +285,7 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
     IN
     // dangerous non standard stuff
     // dont try this at home
-    lv2Descriptor->connect_port(handle, 4, & read_bytes);
+    lv2Descriptor->connect_port(handle, 9, & read_bytes);
     lv2Descriptor->connect_port(handle, 2, buffer);
     OUT
 }
