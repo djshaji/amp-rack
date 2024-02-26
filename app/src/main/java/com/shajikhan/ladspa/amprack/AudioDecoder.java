@@ -90,6 +90,7 @@ public class AudioDecoder {
         extractor.setDataSource(fileDescriptor);
         float scaleFactor = 48000 / sampleRate ;
         MediaFormat format = extractor.getTrackFormat(0);
+        int channels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
         String mime = format.getString(MediaFormat.KEY_MIME);
         Log.d(TAG, String.format ("mimetype: %s", mimeType));
         if (_sampleRate != -1) {
@@ -202,6 +203,16 @@ public class AudioDecoder {
         codec.release();
         Log.i(TAG, "decode: returning " +
                 String.format("%d audio samples", decoded.length));
+
+        if (channels > 1) {
+            Log.d(TAG, String.format ("channels: %d, converting to mono", channels));
+            float[] mono = new float [(decoded.length/channels) + 1];
+            for (int i = 0, k = 0 ; i < decoded.length ; i += channels, k ++) {
+                mono [k] = decoded [i];
+            }
+
+            decoded = mono;
+        }
 
         if (sampleRate == 48000)
             return decoded;
