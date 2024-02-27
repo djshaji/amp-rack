@@ -36,6 +36,7 @@ android {
             // Add this extension
             firebaseCrashlytics {
                 // Enable processing and uploading of native symbols to Firebase servers.
+
                 // By default, this is disabled to improve build speeds.
                 // This flag must be enabled to see properly-symbolicated native
                 // stack traces in the Crashlytics dashboard.

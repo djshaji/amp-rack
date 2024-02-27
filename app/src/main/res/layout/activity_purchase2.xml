@@ -72,6 +72,7 @@
                         android:textStyle="italic"
                         android:textSize="24dp"
                         android:id="@+id/old_price"
+                        android:visibility="gone"
                         android:layout_marginLeft="20dp"
                         android:fontFamily="@font/gruppo"
                         android:textColor="@color/white"/>
@@ -79,6 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Save 90%"
+                        android:visibility="gone"
                         android:layout_gravity="center"
                         android:textStyle="italic"
                         android:textSize="24dp"
@@ -93,6 +95,7 @@
                     android:text="Limited time deal"
                     android:layout_gravity="center"
                     android:textStyle="italic"
+                    android:visibility="gone"
                     android:textSize="24dp"
                     android:fontFamily="@font/gruppo"
                     android:textColor="@color/white"/>
