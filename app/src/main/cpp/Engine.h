@@ -76,7 +76,7 @@ private:
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;
-    oboe::LatencyTuner *latencyTuner;
+    oboe::LatencyTuner *latencyTuner, *latencyTunerOut;
     oboe::Result openStreams();
 
     void closeStreams();

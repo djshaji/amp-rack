@@ -144,6 +144,9 @@ oboe::Result  Engine::openStreams() {
         OUT ;
         return result;
     }
+
+    latencyTunerOut = new oboe::LatencyTuner ( *mPlayStream);
+    latencyTunerOut->tune();
     warnIfNotLowLatency(mRecordingStream);
 
     mFullDuplexPass.setInputStream(mRecordingStream);
@@ -511,15 +514,14 @@ std::string Engine::tuneLatency () {
 
     latencyTuner->requestReset();
     oboe::Result result = latencyTuner->tune() ;
-    char tmp [10];
+    latencyTunerOut->requestReset();
+    oboe::Result resultOut = latencyTunerOut->tune() ;
+    char tmp [400];
     // hello, old friend
-    sprintf (tmp, "%f", mRecordingStream->getXRunCount());
-    std::string str = std::string ("Tuner: " +
-                                   std::to_string(static_cast<double>(result)) +
-                                   ", Buffer: " + std::to_string(mRecordingStream->getBufferSizeInFrames())
-            + ", Xruns: " +  std::string (tmp));
-
-    LOGD ("%s",str.c_str());
+    sprintf (tmp, "Tuner: %d/%d, Xruns: %d/%d, Buffer size in frames: %d/%d", result, resultOut,
+             mRecordingStream->getXRunCount(),mPlayStream->getXRunCount(),
+             mRecordingStream->getBufferSizeInFrames(), mPlayStream->getBufferSizeInFrames());
+    LOGD ("%s",tmp);
     OUT
-    return str ;
+    return std::string (tmp) ;
 }
