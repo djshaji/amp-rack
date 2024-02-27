@@ -7,14 +7,14 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 24
         targetSdk 33
-        versionCode 70
-        versionName '3.91'
+        versionCode 71
+        versionName '3.92'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -39,7 +39,7 @@ android {
                 // By default, this is disabled to improve build speeds.
                 // This flag must be enabled to see properly-symbolicated native
                 // stack traces in the Crashlytics dashboard.
-                nativeSymbolUploadEnabled true
+                nativeSymbolUploadEnabled false
             }
         }
     }
