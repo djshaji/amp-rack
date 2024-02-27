@@ -563,7 +563,10 @@ public class Rack extends Fragment {
 
                         mainActivity.presets.loginNotice.setVisibility(View.VISIBLE);
                         mainActivity.presets.tabLayout.setVisibility(View.INVISIBLE);
+                        if (mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter != null)
+                            mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.removeAll();
                         logout.setVisible(false);
+                        mainActivity.presets.progressPreset.setVisibility(View.INVISIBLE);
 
                         Toast.makeText(mainActivity.getApplicationContext(),
                                 "You have been logged out",

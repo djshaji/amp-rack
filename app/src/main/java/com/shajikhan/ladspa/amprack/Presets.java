@@ -225,7 +225,7 @@ public class Presets extends Fragment {
     }
 
     public class PresetAdapter extends FragmentStateAdapter {
-        private ArrayList<Fragment> arrayList = new ArrayList<>();
+        public ArrayList<Fragment> arrayList = new ArrayList<>();
         public MyPresets libraryPresets ;
         public MyPresets myPresets;
 
@@ -333,7 +333,7 @@ public class Presets extends Fragment {
     }
 
     private void updateUI(FirebaseUser user) {
-
+        fragmentStateAdapter.myPresets.db.loadUserPresets(fragmentStateAdapter.myPresets.myPresetsAdapter, false, false);
     }
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
@@ -347,6 +347,8 @@ public class Presets extends Fragment {
                     .show();
             loginNotice.setVisibility(View.GONE);
             tabLayout.setVisibility(View.VISIBLE);
+            progressPreset.setVisibility(View.VISIBLE);
+            updateUI(user);
             // ...
         } else {
             // Sign in failed. If response is null the user canceled the

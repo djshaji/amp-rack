@@ -1552,7 +1552,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
-        if (resultCode == RESULT_OK && requestCode > 4999) {
+        if (resultCode == RESULT_OK && requestCode > 4999 && requestCode < 5020) {
             int plugin = requestCode - 5000 ;
             AudioDecoder audioDecoder = new AudioDecoder(this);
             MediaCodecList supported = new MediaCodecList(MediaCodecList.ALL_CODECS);

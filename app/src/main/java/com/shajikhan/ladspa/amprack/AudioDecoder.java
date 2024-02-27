@@ -48,6 +48,9 @@ public class AudioDecoder {
     }
 
     float [] decode (Uri uri, String mime, int _sampleRate) throws IOException {
+        if (uri == null) {
+            Log.e(TAG, "decode: null uri passed", null);
+        }
         ParcelFileDescriptor pfd =
                 mainActivity.getContentResolver().
                         openFileDescriptor(uri, "r");
