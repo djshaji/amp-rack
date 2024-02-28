@@ -86,6 +86,7 @@ public class Rack extends Fragment {
     LinearProgressIndicator quickPatchProgress ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
+    LinearLayout mixer ;
     Button patchUp, patchDown ;
     JSONObject jsonObject = new JSONObject();
     boolean mixerInit = false ;
@@ -306,6 +307,15 @@ public class Rack extends Fragment {
         });
 
         mainActivity.recyclerView = view.findViewById(R.id.recyclerView);
+        mainActivity.recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (mixer.getVisibility() == View.VISIBLE)
+                    mainActivity.hidePanel.performClick();
+                return false;
+            }
+        });
+
         mainActivity.recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         mainActivity.dataAdapter = new DataAdapter();
         mainActivity.dataAdapter.mainActivity = mainActivity ;
@@ -642,7 +652,7 @@ public class Rack extends Fragment {
 
         LinearLayout inputMixer = mainActivity.findViewById(R.id.mixer_input);
         LinearLayout outputMixer = mainActivity.findViewById(R.id.mixer_output);
-        LinearLayout mixer = mainActivity.findViewById(R.id.mixer);
+        mixer = mainActivity.findViewById(R.id.mixer);
 
         mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
 
