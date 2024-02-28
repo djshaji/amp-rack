@@ -135,8 +135,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             boolean isSpinner = false ;
             boolean isBypass = false ;
             if (string != null) {
+                /*
                 Log.d(TAG, "onBindViewHolder: control name: " + string +
                         " -> " + string.equalsIgnoreCase("bypass"));
+
+                 */
+
                 isBypass = string.equalsIgnoreCase("bypass") || string.contains("oggle");
             }
 
@@ -157,25 +161,26 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
             }
 
-            Log.d(TAG, "onBindViewHolder: loading plugin -> " + pluginName );
+//            Log.d(TAG, "onBindViewHolder: loading plugin -> " + pluginName );
             if (mainActivity.ampModels.has(pluginName)) {
-                Log.d(TAG, "onBindViewHolder: found amp model " + pluginName);
+//                Log.d(TAG, "onBindViewHolder: found amp model " + pluginName);
                 JSONObject control ;
                 ArrayList <String> models = new ArrayList<>();
                 try {
                     control = mainActivity.ampModels.getJSONObject(pluginName) ;
                     if (control.has(String.valueOf(i))) {
-                        Log.d(TAG, "onBindViewHolder: found control " + i);
+//                        Log.d(TAG, "onBindViewHolder: found control " + i);
                         isSpinner = true ;
                         JSONArray modelsData = control.getJSONArray(String.valueOf(i));
                         for (int x_ = 0 ; x_ < modelsData.length() ; x_++) {
-                            Log.d(TAG, "onBindViewHolder: " + modelsData.getString(x_));
+//                            Log.d(TAG, "onBindViewHolder: " + modelsData.getString(x_));
                             models.add(modelsData.getString(x_));
                         }
 
-                    } else {
+                    }/* else {
                         Log.d(TAG, "onBindViewHolder: no control for " + i);
-                    }
+                    }*/
+
                 } catch (JSONException e) {
                     Log.e(TAG, "onBindViewHolder: error parsing amp model " + pluginName, e);
                 }
@@ -196,7 +201,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
             ToggleButton bypass = new ToggleButton(mainActivity);
             if (isBypass) {
-                Log.d(TAG, "onBindViewHolder: turning on bypass switch");
+//                Log.d(TAG, "onBindViewHolder: turning on bypass switch");
                 bypass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -321,10 +326,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             spinner.setLayoutParams(spinnerLayoutParams);
             spinner.setSelection((int) slider.getValue());
 
+            /*
             Log.d(TAG, "onBindViewHolder: " +
                     String.format("[%s] %f",
                             string,
                             slider.getValue()));
+
+             */
             if (slider.getValue() == 1f) {
                 bypass.setChecked(true);
             } else
@@ -390,7 +398,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     float value = Float.parseFloat (charSequence.toString()) ;
                     final int _position = holder.getAdapterPosition(); ;
                     final int _i = finalI;
-                    Log.d(TAG, "Changing plugin control " + string + " [" + _position + " : " + _i + "] to " + value) ;
+//                    Log.d(TAG, "Changing plugin control " + string + " [" + _position + " : " + _i + "] to " + value) ;
                     AudioEngine.setPluginControl(_position, _i, value);
                     mainActivity.saveActivePreset();
                 }
@@ -414,18 +422,24 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                             break ;
                         }
 
+                        /*
                         Log.d(TAG, "onBindViewHolder: " + String.format (
                                 "row %s: %s", key, arrayList.toString()
                         ));
 
+                         */
+
                         if (knobPos >= arrayList.length()) {
                             row ++ ;
+                            /*
                             Log.d(TAG, "onBindViewHolder: " + String.format(
                                     "knobpos %d > row length %d = %d",
                                     knobPos, arrayList.length(), knobPos - arrayList.length()
                             ));
+
+                             */
                             knobPos = knobPos - arrayList.length() ;
-                            Log.d(TAG, "onBindViewHolder: knobpos truncated to " + knobPos);
+//                            Log.d(TAG, "onBindViewHolder: knobpos truncated to " + knobPos);
                             continue;
                         }
 
@@ -480,9 +494,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     mainActivity.skinEngine.rotary(rotarySeekbar, knobType, slider.getValueFrom(), slider.getValueTo(), slider.getValue());
                     knobsLayout.addView(layoutRotary);
+                    /*
                     Log.d(TAG, "onBindViewHolder: " + String.format(
                             "Setting size for knob type %d", knobType
                     ));
+
+                     */
 
                     LinearLayout.LayoutParams layoutParams ;
                     int w = 0;

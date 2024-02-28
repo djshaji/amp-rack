@@ -92,7 +92,7 @@ public class FirestoreDB {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+//                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                         dialog.dismiss();
                         Toast.makeText(context,
                                 "Patch saved successfully",
@@ -220,10 +220,13 @@ public class FirestoreDB {
                     Log.d(TAG, document.getId() + " => " + document.getData());
                     Map preset = (Map) document.getData();
 //                        Log.d(TAG, "onComplete: " + String.format("%s | %s", uid, preset.get("uid")));
+                    /*
                     Log.d(TAG, "onComplete: " + String.format(
                             "preset: %s",
                             preset.toString()
                     ));
+
+                     */
                     if (preset.get("uid") .equals(uid) && shared == true)
                         continue;
 

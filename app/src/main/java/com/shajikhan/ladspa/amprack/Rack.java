@@ -405,7 +405,7 @@ public class Rack extends Fragment {
                         // do something with jsonObject here
                         String name = object.getString("name");
                         String id = object.getString("id");
-                        Log.d(TAG, "[LV2 plugin]: " + name + ": " + id);
+//                        Log.d(TAG, "[LV2 plugin]: " + name + ": " + id);
                         mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id));
                     }
                 } catch (JSONException e) {

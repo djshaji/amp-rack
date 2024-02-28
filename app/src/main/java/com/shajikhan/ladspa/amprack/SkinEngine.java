@@ -1417,7 +1417,7 @@ public class SkinEngine {
 
     void view (View _view, String category, String name, Resize resize, float factor) {
         String filename = config.get(category).get(name) ;
-        Log.d(TAG, "view: " + String.format("setting background to %s", filename));
+//        Log.d(TAG, "view: " + String.format("setting background to %s", filename));
         /*
         if (filename .startsWith("#")) {
             _view.setBackground(null);
@@ -1670,8 +1670,12 @@ public class SkinEngine {
 
     void card (View layout) {
         int w = layout.getWidth(), h = layout.getHeight() ;
-//        Log.d(TAG, "card() called with: layout = [" + layout + "]" +
-//                String.format("\n%d x %d", w, h));
+        /*
+        Log.d(TAG, "card() called with: layout = [" + layout + "]" +
+                String.format("\n%d x %d", w, h));
+
+         */
+
         Bitmap topLeft = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top-left"));
         Bitmap topRight = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top-right"));
         Bitmap bottomLeft = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("bottom-left"));
@@ -1844,9 +1848,12 @@ public class SkinEngine {
         seekBar.setMinValue(min);
         seekBar.setValue(value);
         seekBar.setRotation((float) value/max);
-//        Log.d(TAG, "rotary: " + String.format(
-//                "[%f %f]: %f (%f)", min, max, value, seekBar.valueToRotation()
+        /*
+        Log.d(TAG, "rotary: " + String.format(
+                "[%f %f]: %f (%f)", min, max, value, seekBar.valueToRotation()
         ));
+
+         */
     }
 
     void getUriFileList (Uri uri) {
@@ -1857,21 +1864,27 @@ public class SkinEngine {
             root = DocumentFile.fromTreeUri(mainActivity, uri);
         DocumentFile [] files = root.listFiles() ;
         for (DocumentFile file: files) {
-//            Log.d(TAG, "getUriFileList: " + String.format(
-//                    "\t%s:\t%s",
-//                    file.getName(),
-//                    file.getUri()
-//            ));
+            /*
+            Log.d(TAG, "getUriFileList: " + String.format(
+                    "\t%s:\t%s",
+                    file.getName(),
+                    file.getUri()
+            ));
+
+             */
             themeFiles.put(file.getName(), file.getUri());
             bitmaps.put(file.getName(), skinner.getBitmap(file.getUri()));
             if (file.isDirectory()) {
                 DocumentFile [] _files = file.listFiles() ;
                 for (DocumentFile _file: _files) {
-//                    Log.d(TAG, "getUriFileList: " + String.format(
-//                            "\t%s:\t%s",
-//                            _file.getName(),
-//                            _file.getUri()
-//                    ));
+                    /*
+                    Log.d(TAG, "getUriFileList: " + String.format(
+                            "\t%s:\t%s",
+                            _file.getName(),
+                            _file.getUri()
+                    ));
+
+                     */
                     themeFiles.put(file.getName() + "/" + _file.getName(), _file.getUri());
                     bitmaps.put(file.getName() + "/" + _file.getName(), skinner.getBitmap(_file.getUri()));
 

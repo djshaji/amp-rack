@@ -25,11 +25,14 @@ public class Skinner {
     void init () {
         mainActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         density = displayMetrics.scaledDensity;
+        /*
         Log.d(TAG, "Skinner: "+ String.format(
                 "density: %f upscale factor: %f",
                 density,
                 UPSCALE_FACTOR
         ));
+
+         */
 
     }
 
@@ -44,9 +47,9 @@ public class Skinner {
     }
 
     public Bitmap getBitmap (float x, float y, float width, float height, int resource) {
-        Log.d(TAG, String.format("getBitmap:  %f , %f => %f x %f", x,y,width,height) );
+//        Log.d(TAG, String.format("getBitmap:  %f , %f => %f x %f", x,y,width,height) );
         Bitmap mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), resource) ;
-        Log.d(TAG, String.format("getBitmap: image dimensions: %d x %d", mBitmap.getWidth(), mBitmap.getHeight()));
+//        Log.d(TAG, String.format("getBitmap: image dimensions: %d x %d", mBitmap.getWidth(), mBitmap.getHeight()));
         if (x + width > mBitmap.getWidth())
             x = mBitmap.getWidth() - width ;
         try {
@@ -104,9 +107,12 @@ public class Skinner {
         }
 
         if (width == 0 || height == 0) {
+            /*
             Log.d(TAG, "getBitmapFromAssets: returning " +
                     String.format ("[%s: %dx%d]",
                             filename, mBitmap.getWidth(), mBitmap.getHeight()));
+
+             */
             try {
                 if (assetFilename != null)
                     assetFilename.close();
@@ -140,7 +146,7 @@ public class Skinner {
     }
 
     public Bitmap getBitmapFromAssets1 (float x, float y, float width, float height, String filename) {
-        Log.d(TAG, String.format("getBitmap:  %f , %f => %f x %f", x,y,width,height) );
+//        Log.d(TAG, String.format("getBitmap:  %f , %f => %f x %f", x,y,width,height) );
         InputStream assetFilename ;
         Bitmap mBitmap ;
 
@@ -155,7 +161,7 @@ public class Skinner {
         if (width == -1) width = height * (mBitmap.getWidth() / mBitmap.getHeight());
         if (height == -1) height = width * (mBitmap.getHeight() / mBitmap.getWidth());
 
-        Log.d(TAG, String.format("getBitmap: image dimensions: %d x %d", mBitmap.getWidth(), mBitmap.getHeight()));
+//        Log.d(TAG, String.format("getBitmap: image dimensions: %d x %d", mBitmap.getWidth(), mBitmap.getHeight()));
         if (x + width > mBitmap.getWidth())
             x = mBitmap.getWidth() - width ;
         try {
