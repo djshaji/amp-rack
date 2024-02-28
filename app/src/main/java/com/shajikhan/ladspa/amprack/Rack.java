@@ -90,6 +90,7 @@ public class Rack extends Fragment {
     Button patchUp, patchDown ;
     JSONObject jsonObject = new JSONObject();
     boolean mixerInit = false ;
+    boolean autoHideMixer = true ;
     /*
     Rack () {
         mainActivity = (MainActivity) getActivity();
@@ -310,8 +311,10 @@ public class Rack extends Fragment {
         mainActivity.recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (mixer.getVisibility() == View.VISIBLE)
+                if (autoHideMixer && mixer.getVisibility() == View.VISIBLE) {
                     mainActivity.hidePanel.performClick();
+                    autoHideMixer = false;
+                }
                 return false;
             }
         });

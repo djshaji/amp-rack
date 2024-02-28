@@ -1460,7 +1460,7 @@ public class SkinEngine {
     }
 
     BitmapDrawable bitmapDrawable (String category, String name) {
-        Log.d(TAG, "bitmapDrawable() called with: category = [" + category + "], name = [" + name + "]");
+//        Log.d(TAG, "bitmapDrawable() called with: category = [" + category + "], name = [" + name + "]");
         return new BitmapDrawable(skinner.getBitmapFromAssets(0 , 0, themeDir + config.get(category).get(name)));
     }
 
@@ -1514,7 +1514,7 @@ public class SkinEngine {
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
-                Log.d(TAG, "toggle: draw() called with: canvas = [" + canvas + "]");
+//                Log.d(TAG, "toggle: draw() called with: canvas = [" + canvas + "]");
                 final int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
                 Bitmap b ;
                 b = skinner.getBitmapFromAssets(w, -1, themeDir + finalOn);
@@ -1546,7 +1546,7 @@ public class SkinEngine {
 
     void toggleWithKey (ToggleButton toggleButton, String key, String onState, String offState, boolean state) {
 //        UsefulStuff.printBackTrace();
-        Log.d(TAG, "toggleWithKey() called with: toggleButton = [" + toggleButton + "], key = [" + key + "], onState = [" + onState + "], offState = [" + offState + "], state = [" + state + "]");
+//        Log.d(TAG, "toggleWithKey() called with: toggleButton = [" + toggleButton + "], key = [" + key + "], onState = [" + onState + "], offState = [" + offState + "], state = [" + state + "]");
         if (config.get(key).get(onState) == null)
             return;
         String on = config.get(key).get(onState) ;
@@ -1558,7 +1558,7 @@ public class SkinEngine {
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
-                Log.d(TAG, "toggle with key draw() called with: canvas = [" + canvas + "]");
+//                Log.d(TAG, "toggle with key draw() called with: canvas = [" + canvas + "]");
 //                apparently this causes an infinite loop of redraw
 //                setBounds(0, 0, w, h);
                 final int w = toggleButton.getWidth(), h = toggleButton.getHeight() ;
@@ -1670,8 +1670,8 @@ public class SkinEngine {
 
     void card (View layout) {
         int w = layout.getWidth(), h = layout.getHeight() ;
-        Log.d(TAG, "card() called with: layout = [" + layout + "]" +
-                String.format("\n%d x %d", w, h));
+//        Log.d(TAG, "card() called with: layout = [" + layout + "]" +
+//                String.format("\n%d x %d", w, h));
         Bitmap topLeft = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top-left"));
         Bitmap topRight = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("top-right"));
         Bitmap bottomLeft = skinner.getBitmapFromAssets(0, -1, themeDir + config.get("card").get("bottom-left"));
@@ -1844,8 +1844,8 @@ public class SkinEngine {
         seekBar.setMinValue(min);
         seekBar.setValue(value);
         seekBar.setRotation((float) value/max);
-        Log.d(TAG, "rotary: " + String.format(
-                "[%f %f]: %f (%f)", min, max, value, seekBar.valueToRotation()
+//        Log.d(TAG, "rotary: " + String.format(
+//                "[%f %f]: %f (%f)", min, max, value, seekBar.valueToRotation()
         ));
     }
 
@@ -1857,21 +1857,21 @@ public class SkinEngine {
             root = DocumentFile.fromTreeUri(mainActivity, uri);
         DocumentFile [] files = root.listFiles() ;
         for (DocumentFile file: files) {
-            Log.d(TAG, "getUriFileList: " + String.format(
-                    "\t%s:\t%s",
-                    file.getName(),
-                    file.getUri()
-            ));
+//            Log.d(TAG, "getUriFileList: " + String.format(
+//                    "\t%s:\t%s",
+//                    file.getName(),
+//                    file.getUri()
+//            ));
             themeFiles.put(file.getName(), file.getUri());
             bitmaps.put(file.getName(), skinner.getBitmap(file.getUri()));
             if (file.isDirectory()) {
                 DocumentFile [] _files = file.listFiles() ;
                 for (DocumentFile _file: _files) {
-                    Log.d(TAG, "getUriFileList: " + String.format(
-                            "\t%s:\t%s",
-                            _file.getName(),
-                            _file.getUri()
-                    ));
+//                    Log.d(TAG, "getUriFileList: " + String.format(
+//                            "\t%s:\t%s",
+//                            _file.getName(),
+//                            _file.getUri()
+//                    ));
                     themeFiles.put(file.getName() + "/" + _file.getName(), _file.getUri());
                     bitmaps.put(file.getName() + "/" + _file.getName(), skinner.getBitmap(_file.getUri()));
 
