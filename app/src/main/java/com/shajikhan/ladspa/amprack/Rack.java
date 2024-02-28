@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -236,41 +237,46 @@ public class Rack extends Fragment {
                 }
 
                 if (b) {
-                    if (!mainActivity.isStoragePermissionGranted()) {
-//                        requestReadStoragePermission();
-                        mainActivity.requestWriteStoragePermission();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (!mainActivity.isStoragePermissionGranted()) {
+    //                        requestReadStoragePermission();
+                            mainActivity.requestWriteStoragePermission();
 
-                        /*
-                        if (!isStoragePermissionGranted()) {
-                            Toast.makeText(getApplicationContext(),
-                                    "Permission denied. Recording features are disabled.",
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                            return ;
+                            /*
+                            if (!isStoragePermissionGranted()) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Permission denied. Recording features are disabled.",
+                                        Toast.LENGTH_LONG)
+                                        .show();
+                                return ;
+                            }
+                            */
+                        } else {
+    //                        AudioEngine.setRecordingActive(b);
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
+                            Date date = new Date();
+                            mainActivity.lastRecordedFileName = formatter.format(date);
+                            mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
+                            AudioEngine.setFileName(mainActivity.lastRecordedFileName);
+                            switch (mainActivity.exportFormat) {
+                                case "0":
+                                default:
+                                    mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".wav" ;
+                                    break ;
+                                case "1":
+                                    mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".ogg" ;
+                                    break ;
+                                case "2":
+                                    mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".mp3" ;
+                                    break ;
+                            }
+
+                            AudioEngine.toggleRecording(b);
+                            mainActivity.recording = b ;
                         }
-                        */
                     } else {
-//                        AudioEngine.setRecordingActive(b);
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
-                        Date date = new Date();
-                        mainActivity.lastRecordedFileName = formatter.format(date);
-                        mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
-                        AudioEngine.setFileName(mainActivity.lastRecordedFileName);
-                        switch (mainActivity.exportFormat) {
-                            case "0":
-                            default:
-                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".wav" ;
-                                break ;
-                            case "1":
-                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".ogg" ;
-                                break ;
-                            case "2":
-                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".mp3" ;
-                                break ;
-                        }
-
-                        AudioEngine.toggleRecording(b);
-                        mainActivity.recording = b ;
+                        MainActivity.alert("Feature not supported", "Your device is too old to support this feature. Sorry.");
+                        return ;
                     }
                 } else {
 //                    mainActivity.lastRecordedFileName = AudioEngine.getRecordingFileName();
@@ -282,8 +288,8 @@ public class Rack extends Fragment {
             }
         });
 
-        ExtendedFloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mainActivity.fab = view.findViewById(R.id.fab);
+        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mainActivity.dataAdapter.plugins.size() > 1 && MainActivity.proVersion == false) {
@@ -640,8 +646,8 @@ public class Rack extends Fragment {
 
         mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
 
-        Button hidePanel = mainActivity.findViewById(R.id.hide_panel);
-        hidePanel.setOnClickListener(new View.OnClickListener() {
+        mainActivity.hidePanel = mainActivity.findViewById(R.id.hide_panel);
+        mainActivity.hidePanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.toggleMixer.setChecked(!mainActivity.toggleMixer.isChecked());
@@ -788,7 +794,7 @@ public class Rack extends Fragment {
 
         if (mainActivity.useTheme) {
             mainActivity.skinEngine.cardText(mainActivity.patchDesc);
-            mainActivity.skinEngine.cardText(hidePanel);
+            mainActivity.skinEngine.cardText(mainActivity.hidePanel);
             mainActivity.skinEngine.cardText(mainActivity.triggerRecordToggle);
             mainActivity.toggleMixer.setCompoundDrawables(null,null,null,null);
 
@@ -841,7 +847,7 @@ public class Rack extends Fragment {
             optionsBtn.setCompoundDrawables(null, null, null, null);
             mainActivity.skinEngine.setLogo(mainActivity.findViewById(R.id.logo_img));
 
-            mainActivity.skinEngine.fab(fab,  SkinEngine.Resize.Width, 1);
+            mainActivity.skinEngine.fab(mainActivity.fab,  SkinEngine.Resize.Width, 1);
 
             mainActivity.skinEngine.slider(mainActivity.inputVolume);
             mainActivity.skinEngine.slider(mainActivity.outputVolume);

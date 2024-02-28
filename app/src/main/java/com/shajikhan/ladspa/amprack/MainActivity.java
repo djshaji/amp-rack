@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean headphoneWarning = true;
     static Context context;
     static MainActivity mainActivity;
+    ExtendedFloatingActionButton fab ;
+    Button hidePanel;
     SwitchMaterial onOff = null ;
     String exportFormat ;
     TextView patchName, patchNo, patchDesc ;

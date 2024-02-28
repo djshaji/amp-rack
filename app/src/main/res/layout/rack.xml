@@ -476,7 +476,7 @@
                     android:drawableLeft="@drawable/ic_baseline_keyboard_double_arrow_up_24"
                     android:layout_marginRight="10dp"
                     android:background="@color/fui_transparent"
-                    android:text="Hide Panel"/>
+                    android:text="Hide Mixer"/>
             </LinearLayout>
         </LinearLayout>
 

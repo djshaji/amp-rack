@@ -62,6 +62,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
                 final int pluginID = plugins.get(holder.getAdapterPosition());
                 Log.d(TAG, "Adding plugin ID: " + pluginID) ;
                 mainActivity.addPluginToRack(pluginID);
+                mainActivity.hidePanel.performClick();
             }
         });
 
