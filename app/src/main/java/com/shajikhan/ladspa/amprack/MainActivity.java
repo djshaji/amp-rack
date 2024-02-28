@@ -1579,7 +1579,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
             try {
-                float [] samples = audioDecoder.decode(data.getData(), null, -1);
+                float [] samples = audioDecoder.decode(data.getData(), null, AudioEngine.getSampleRate());
                 AudioEngine.setPluginBuffer(samples, plugin);
             } catch (IOException e) {
                 toast(e.getMessage());

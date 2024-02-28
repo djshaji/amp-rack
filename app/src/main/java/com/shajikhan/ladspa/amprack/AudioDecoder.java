@@ -96,6 +96,8 @@ public class AudioDecoder {
         int channels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
         String mime = format.getString(MediaFormat.KEY_MIME);
         Log.d(TAG, String.format ("mimetype: %s", mimeType));
+        codec = MediaCodec.createDecoderByType(mime);
+        /*
         if (_sampleRate != -1) {
             codec = MediaCodec.createEncoderByType(mimeType);
             Log.d(TAG, String.format ("converting to: %s [%d]", mimeType, sampleRate));
@@ -104,9 +106,11 @@ public class AudioDecoder {
             Log.d(TAG, String.format ("converting to: %s [%d]", mime, sampleRate));
         }
 
+         */
+
         Log.i(TAG, "decode: detected format " + mime);
-        if (_sampleRate != -1)
-            format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
+//        if (_sampleRate != -1)
+//            format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
 
         codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
         codec.start();
@@ -217,7 +221,7 @@ public class AudioDecoder {
             decoded = mono;
         }
 
-        if (sampleRate == 48000)
+        if (sampleRate == _sampleRate)
             return decoded;
 
         ByteBuffer bb = ByteBuffer.allocateDirect(decoded.length * 4);
@@ -227,7 +231,7 @@ public class AudioDecoder {
         floatBuffer.position(0);
 
         Resampler resampler = new Resampler(true,0.1,30);
-        boolean result = resampler.process((double)48000.0/sampleRate,floatBuffer,true,resampled);
+        boolean result = resampler.process((double)_sampleRate/sampleRate,floatBuffer,true,resampled);
         float [] res = new float[resampled.limit()];
 //                resampled.position(0);
         for (int i = 0 ; i < resampled.limit(); i ++) {
