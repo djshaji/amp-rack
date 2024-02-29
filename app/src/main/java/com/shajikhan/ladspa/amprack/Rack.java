@@ -647,7 +647,7 @@ public class Rack extends Fragment {
             @Override
             public void onClick(View v) {
 //                mainActivity.drummer ();
-                mainActivity.cameraPreview();
+//                mainActivity.cameraPreview();
                 return;
             }
         });
