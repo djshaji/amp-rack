@@ -347,7 +347,7 @@ void *vringbuffer_get_writing(vringbuffer_t *vrb) {
 }
 
 void vringbuffer_return_writing(vringbuffer_t *vrb, void *data) {
-    jack_ringbuffer_write(vrb->for_reader, (char *) &data, sizeof(void *));
+    jack_ringbuffer_write(vrb->for_reader, (float *) &data, sizeof(void *));
     upwaker_wake_up(vrb->receiver_trigger);
 }
 

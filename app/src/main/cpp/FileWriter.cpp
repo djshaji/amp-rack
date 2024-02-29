@@ -116,6 +116,7 @@ void FileWriter::openFile () {
                   sf_strerror(NULL));
         } else {
             LOGD("[%s] Opened file %s", __PRETTY_FUNCTION__, filename.c_str());
+            sf_command (soundfile, SFC_SET_CLIPPING, NULL, SF_TRUE) ;
         }
     }
 
@@ -322,7 +323,7 @@ void FileWriter::setBufferSize (int bufferSize) {
     IN
     block_size = bufferSize ;
     buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ));
-    buffer_size_in_bytes = buffer_size_in_bytes * 4 ;
+//    buffer_size_in_bytes = buffer_size_in_bytes * 4 ;
 
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
 
@@ -470,8 +471,8 @@ int FileWriter::process(int nframes, const float *arg) {
 //        bg_buffer->data = (float *) arg;
 
 //        LOGD("frames: %d", nframes);
-        if (bg_buffer->pos >= buffer_size_in_bytes - 1)
-            bg_buffer->pos = 0 ;
+//        if (bg_buffer->pos >= buffer_size_in_bytes - 1)
+//            bg_buffer->pos = 0 ;
 
         for (int i = 0 ; i < nframes ; i ++) {
             if (i >= block_size) {
@@ -479,17 +480,18 @@ int FileWriter::process(int nframes, const float *arg) {
                 break ;
             }
 
-            if (arg [i] < -10.0)
-                bg_buffer->data[bg_buffer->pos] = -10.0 ;
-            else if (arg [i] > 10.0)
-                bg_buffer->data[bg_buffer->pos] = 10.0 ;
-            else
-                bg_buffer->data[bg_buffer->pos] = arg [i] ;
+//            if (arg [i] < -1.0)
+//                bg_buffer->data[bg_buffer->pos] = -.95 ;
+//            else if (arg [i] > 1.0)
+//                bg_buffer->data[bg_buffer->pos] = .95 ;
+//            else
+//            LOGD("%f", arg [i]);
+            bg_buffer->data[i] = arg [i] ;
 
-            bg_buffer->pos ++ ;
+//            bg_buffer->pos ++ ;
         }
 
-//        bg_buffer->pos = nframes;
+        bg_buffer->pos = nframes;
 //        bg_buffer->pos = nframes;
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
