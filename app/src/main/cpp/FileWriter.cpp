@@ -314,6 +314,7 @@ void FileWriter::stopRecording () {
     closeFile();
     ready = false ;
     LOGD("recording stopped: %d buffer underruns", total_overruns);
+    bg_buffer->pos = 0 ;
     OUT
 }
 
@@ -321,6 +322,7 @@ void FileWriter::setBufferSize (int bufferSize) {
     IN
     block_size = bufferSize ;
     buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ));
+    buffer_size_in_bytes = buffer_size_in_bytes * 4 ;
 
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
 
@@ -335,6 +337,7 @@ void FileWriter::setBufferSize (int bufferSize) {
         bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
 //    HERE LOGD("using buffer size %d", bufferSize);
         bg_buffer->data = static_cast<float *>(malloc(buffer_size_in_bytes));
+        bg_buffer->pos = 0 ;
         empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
 
     }
@@ -467,6 +470,8 @@ int FileWriter::process(int nframes, const float *arg) {
 //        bg_buffer->data = (float *) arg;
 
 //        LOGD("frames: %d", nframes);
+        if (bg_buffer->pos >= buffer_size_in_bytes - 1)
+            bg_buffer->pos = 0 ;
 
         for (int i = 0 ; i < nframes ; i ++) {
             if (i >= block_size) {
@@ -475,14 +480,16 @@ int FileWriter::process(int nframes, const float *arg) {
             }
 
             if (arg [i] < -10.0)
-                bg_buffer->data[i] = -10.0 ;
+                bg_buffer->data[bg_buffer->pos] = -10.0 ;
             else if (arg [i] > 10.0)
-                bg_buffer->data[i] = 10.0 ;
+                bg_buffer->data[bg_buffer->pos] = 10.0 ;
             else
-                bg_buffer->data[i] = arg [i] ;
+                bg_buffer->data[bg_buffer->pos] = arg [i] ;
+
+            bg_buffer->pos ++ ;
         }
 
-        bg_buffer->pos = nframes;
+//        bg_buffer->pos = nframes;
 //        bg_buffer->pos = nframes;
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;

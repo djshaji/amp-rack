@@ -925,6 +925,8 @@ public class Rack extends Fragment {
                 mainActivity.outputVolume.setVisibility(View.GONE);
             }
         }
+
+        mainActivity.audioEncoder = new AudioEncoder(mainActivity);
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

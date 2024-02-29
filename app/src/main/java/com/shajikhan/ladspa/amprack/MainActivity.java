@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     ExtendedFloatingActionButton fab ;
     Button hidePanel;
     SwitchMaterial onOff = null ;
+    AudioEncoder audioEncoder ;
     String exportFormat ;
     TextView patchName, patchNo, patchDesc ;
     ToggleButton triggerRecordToggle ;

@@ -27,9 +27,10 @@ extern "C" {
 
 typedef struct buffer_t{
     int overruns;
-    float pos;
+    int pos;
 //    float data[];
     float *data;
+    int size ;
 } buffer_t;
 
 typedef struct staticBuffer_t{
@@ -101,6 +102,7 @@ public:
     int disk_write_callback(float *data, size_t frames);
 
     static void * mp3_buffer ;
+    int buffer_index = 0 ;
     std::string filename ;
     void setBufferSize(int bufferSize);
 
