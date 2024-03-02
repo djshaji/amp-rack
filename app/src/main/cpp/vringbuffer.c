@@ -323,7 +323,7 @@ int vringbuffer_reading_size(vringbuffer_t *vrb) {
 static void *receiver_func(void *arg) {
     IN
     vringbuffer_t *vrb = arg;
-    LOGD("[ringbuffer id] %d", gettid ());
+//    LOGD("[ringbuffer id] %d", gettid ());
 
     vrb->receiver_callback(vrb, true, NULL);
     SEM_SIGNAL(vrb->receiver_started);
@@ -332,7 +332,7 @@ static void *receiver_func(void *arg) {
 
     while (vrb->please_stop == false) {
         upwaker_sleep(vrb->receiver_trigger);
-        LOGD("[ringbuffer id] %d", gettid ());
+//        LOGD("[ringbuffer id] %d", gettid ());
 
         while (vringbuffer_reading_size(vrb) > 0) {
 

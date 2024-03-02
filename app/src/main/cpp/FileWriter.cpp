@@ -19,7 +19,7 @@ buffer_t *FileWriter::current_buffer;
 buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
-float FileWriter::min_buffer_time = -1.0f,
+float FileWriter::min_buffer_time = 4.0f,
         FileWriter::max_buffer_time = 40.0f ;
 int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
@@ -42,7 +42,10 @@ static char * extensions [] = {
 } ;
 
 int FileWriter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size) {
+    HERE
+    LOGD("first call: %d, reading size: %d, writing size: %d", first_call, reading_size, writing_size);
     if(buffers_to_seconds(writing_size) < min_buffer_time) {
+        LOGD("return 2");
         return 2; // autoincrease_callback is called approx. at every block. So it should not be necessary to return a value higher than 2. Returning a very low number might also theoretically put a lower constant strain on the memory bus, thus theoretically lower the chance of xruns.
     }
 
@@ -334,7 +337,7 @@ void FileWriter::setBufferSize (int bufferSize) {
                                          JC_MAX(4, seconds_to_buffers(max_buffer_time)),
                                          (size_t) buffer_size_in_bytes);
         vringbuffer_set_receiver_callback(vringbuffer, disk_callback);
-        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
+//        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,500);
         /// TODO: Free this memory!
         current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
         bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
@@ -476,12 +479,22 @@ int FileWriter::process(int nframes, const float *arg) {
 //        if (bg_buffer->pos >= buffer_size_in_bytes - 1)
 //            bg_buffer->pos = 0 ;
 
-        if (buffer_write_index > 19) {
+        if (false && buffer_write_index > 19 ) {
             buffer_write_index = 0 ;
-            LOGD("[realtime id] %d", gettid ());
-            vringbuffer_return_writing(vringbuffer,bg_buffer);
+//            LOGD("[realtime id] %d", gettid ());
+            process_new_current_buffer(nframes);
+            vringbuffer_return_writing(vringbuffer,current_buffer);
+//            if (current_buffer != nullptr)
+//                LOGD("current buffer %d", current_buffer->pos);
             bg_buffer->pos = 0 ;
         }
+
+        process_new_current_buffer(nframes) ;
+        if (current_buffer == NULL) {
+            LOGE("no new buffer");
+            return 0 ;
+        }
+//        vringbuffer_return_writing(vringbuffer,current_buffer);
 
         for (int i = 0 ; i < nframes ; i ++) {
             if (i >= block_size) {
@@ -495,12 +508,17 @@ int FileWriter::process(int nframes, const float *arg) {
 //                bg_buffer->data[bg_buffer->pos] = .95 ;
 //            else
 //            LOGD("%f", arg [i]);
-            bg_buffer->data[i] = arg [i] ;
-            buffer_write_index ++ ;
+
+//            bg_buffer->data[i] = arg [i] ;
+//            buffer_write_index ++ ;
 //            bg_buffer->pos ++ ;
+            current_buffer -> data [i] = arg [i];
         }
 
-        bg_buffer->pos += nframes;
+        current_buffer->pos = nframes;
+        vringbuffer_return_writing(vringbuffer,current_buffer);
+
+//        bg_buffer->pos += nframes;
 //        bg_buffer->pos = nframes;
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
