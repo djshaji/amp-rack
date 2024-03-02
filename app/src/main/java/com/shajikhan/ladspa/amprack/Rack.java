@@ -926,7 +926,7 @@ public class Rack extends Fragment {
             }
         }
 
-        mainActivity.audioEncoder = new AudioEncoder(mainActivity);
+//        mainActivity.audioEncoder = new AudioEncoder(mainActivity);
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

@@ -39,26 +39,30 @@ extern "C" {
 
 jack_ringbuffer_t *
 jack_ringbuffer_create(size_t sz) {
+    IN
 	int power_of_two;
 	jack_ringbuffer_t *rb;
 
 	if ((rb = malloc(sizeof(jack_ringbuffer_t))) == NULL) {
+        OUT
 		return NULL;
 	}
 
 	for (power_of_two = 1; 1 << power_of_two < sz; power_of_two++);
 
-	rb->size = 1 << power_of_two;
+	rb->size = 1 << power_of_two; // equivalent to 2 raised to the power 🐱
 	rb->size_mask = rb->size;
 	rb->size_mask -= 1;
 	rb->write_ptr = 0;
 	rb->read_ptr = 0;
 	if ((rb->buf = malloc(rb->size)) == NULL) {
 		free(rb);
+        OUT
 		return NULL;
 	}
 	rb->mlocked = 0;
 
+    OUT
 	return rb;
 }
 
@@ -103,11 +107,13 @@ jack_ringbuffer_reset(jack_ringbuffer_t *rb) {
 
 size_t
 jack_ringbuffer_read_space(const jack_ringbuffer_t *rb) {
+    IN
 	size_t w, r;
 
 	w = rb->write_ptr;
 	r = rb->read_ptr;
 
+    OUT
 	if (w > r) {
 		return w - r;
 	} else {
@@ -121,11 +127,13 @@ jack_ringbuffer_read_space(const jack_ringbuffer_t *rb) {
 
 size_t
 jack_ringbuffer_write_space(const jack_ringbuffer_t *rb) {
+    IN
 	size_t w, r;
 
 	w = rb->write_ptr;
 	r = rb->read_ptr;
 
+    OUT
 	if (w > r) {
 		return ((r - w + rb->size) & rb->size_mask) - 1;
 	} else if (w < r) {
@@ -140,12 +148,14 @@ jack_ringbuffer_write_space(const jack_ringbuffer_t *rb) {
 
 size_t
 jack_ringbuffer_read(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
+    IN
 	size_t free_cnt;
 	size_t cnt2;
 	size_t to_read;
 	size_t n1, n2;
 
 	if ((free_cnt = jack_ringbuffer_read_space(rb)) == 0) {
+        OUT
 		return 0;
 	}
 
@@ -169,6 +179,7 @@ jack_ringbuffer_read(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
 		rb->read_ptr = (rb->read_ptr + n2) & rb->size_mask;
 	}
 
+    OUT
 	return to_read;
 }
 
@@ -178,6 +189,7 @@ jack_ringbuffer_read(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
 
 size_t
 jack_ringbuffer_peek(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
+    IN
 	size_t free_cnt;
 	size_t cnt2;
 	size_t to_read;
@@ -187,6 +199,7 @@ jack_ringbuffer_peek(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
 	tmp_read_ptr = rb->read_ptr;
 
 	if ((free_cnt = jack_ringbuffer_read_space(rb)) == 0) {
+        OUT
 		return 0;
 	}
 
@@ -209,6 +222,7 @@ jack_ringbuffer_peek(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
 		memcpy(dest + n1, &(rb->buf[tmp_read_ptr]), n2);
 	}
 
+    OUT
 	return to_read;
 }
 
@@ -218,12 +232,14 @@ jack_ringbuffer_peek(jack_ringbuffer_t *rb, char *dest, size_t cnt) {
 
 size_t
 jack_ringbuffer_write(jack_ringbuffer_t *rb, const char *src, size_t cnt) {
+    IN
 	size_t free_cnt;
 	size_t cnt2;
 	size_t to_write;
 	size_t n1, n2;
 
 	if ((free_cnt = jack_ringbuffer_write_space(rb)) == 0) {
+        OUT
 		return 0;
 	}
 
@@ -247,6 +263,7 @@ jack_ringbuffer_write(jack_ringbuffer_t *rb, const char *src, size_t cnt) {
 		rb->write_ptr = (rb->write_ptr + n2) & rb->size_mask;
 	}
 
+    OUT
 	return to_write;
 }
 
@@ -254,18 +271,22 @@ jack_ringbuffer_write(jack_ringbuffer_t *rb, const char *src, size_t cnt) {
 
 void
 jack_ringbuffer_read_advance(jack_ringbuffer_t *rb, size_t cnt) {
+    IN
 	size_t tmp = (rb->read_ptr + cnt) & rb->size_mask;
 
 	rb->read_ptr = tmp;
+    OUT
 }
 
 /* Advance the write pointer `cnt' places. */
 
 void
 jack_ringbuffer_write_advance(jack_ringbuffer_t *rb, size_t cnt) {
+    IN
 	size_t tmp = (rb->write_ptr + cnt) & rb->size_mask;
 
 	rb->write_ptr = tmp;
+    OUT
 }
 
 /* The non-copying data reader.  `vec' is an array of two places.  Set
@@ -276,6 +297,7 @@ jack_ringbuffer_write_advance(jack_ringbuffer_t *rb, size_t cnt) {
 void
 jack_ringbuffer_get_read_vector(const jack_ringbuffer_t *rb,
 								jack_ringbuffer_data_t *vec) {
+    IN
 	size_t free_cnt;
 	size_t cnt2;
 	size_t w, r;
@@ -309,6 +331,8 @@ jack_ringbuffer_get_read_vector(const jack_ringbuffer_t *rb,
 		vec[0].len = free_cnt;
 		vec[1].len = 0;
 	}
+
+    OUT
 }
 
 /* The non-copying data writer.  `vec' is an array of two places.  Set
@@ -319,6 +343,7 @@ jack_ringbuffer_get_read_vector(const jack_ringbuffer_t *rb,
 void
 jack_ringbuffer_get_write_vector(const jack_ringbuffer_t *rb,
 								 jack_ringbuffer_data_t *vec) {
+    IN
 	size_t free_cnt;
 	size_t cnt2;
 	size_t w, r;
@@ -350,6 +375,8 @@ jack_ringbuffer_get_write_vector(const jack_ringbuffer_t *rb,
 		vec[0].len = free_cnt;
 		vec[1].len = 0;
 	}
+
+    OUT
 }
 
 #ifdef __cplusplus

@@ -34,6 +34,7 @@ extern "C" {
 #include <string.h>
 #include "logging_macros.h"
 #include "ringbuffer.h"
+#include <unistd.h>
 
 
 
@@ -170,6 +171,7 @@ static bool vringbuffer_increase_writer1(vringbuffer_t *vrb, int num_elements, b
 
 vringbuffer_t *
 vringbuffer_create(int num_elements_during_startup, int max_num_elements, size_t element_size) {
+    IN LOGD("vringbuffer_create(int num_elements_during_startup, int max_num_elements, size_t element_size) %d, %d, %d", num_elements_during_startup, max_num_elements, element_size);
     //fprintf(stderr,"Creating %d %d %d\n",num_elements_during_startup,max_num_elements,element_size);
     vringbuffer_t *vrb = calloc(1, sizeof(struct vringbuffer_t));
 
@@ -190,10 +192,12 @@ vringbuffer_create(int num_elements_during_startup, int max_num_elements, size_t
     vrb->receiver_trigger = create_upwaker();
     vrb->autoincrease_trigger = create_upwaker();
 
+    OUT
     return vrb;
 }
 
 void vringbuffer_stop_callbacks(vringbuffer_t *vrb) {
+    IN
     vrb->please_stop = true;
 
     if (vrb->autoincrease_callback != NULL) {
@@ -207,9 +211,12 @@ void vringbuffer_stop_callbacks(vringbuffer_t *vrb) {
         pthread_join(vrb->receiver_thread, NULL);
         vrb->receiver_callback = NULL;
     }
+
+    OUT
 }
 
 void vringbuffer_delete(vringbuffer_t *vrb) {
+
     vringbuffer_stop_callbacks(vrb);
 
     while (vrb->allocated_mem != NULL) {
@@ -227,6 +234,7 @@ void vringbuffer_delete(vringbuffer_t *vrb) {
 
 
 static void *autoincrease_func(void *arg) {
+    IN
     vringbuffer_t *vrb = arg;
     vrb->autoincrease_callback(vrb, true, 0, 0);
     SEM_SIGNAL(vrb->autoincrease_started);
@@ -244,17 +252,21 @@ static void *autoincrease_func(void *arg) {
             usleep(vrb->autoincrease_interval);
     }
 
+    OUT
     return NULL;
 }
 
 
 void vringbuffer_trigger_autoincrease_callback(vringbuffer_t *vrb) {
+    IN
     upwaker_wake_up(vrb->autoincrease_trigger);
+    OUT
 }
 
 void vringbuffer_set_autoincrease_callback(vringbuffer_t *vrb,
                                            Vringbuffer_autoincrease_callback callback,
                                            useconds_t interval) {
+    IN
     vrb->autoincrease_callback = callback;
     vrb->autoincrease_interval = interval;
 
@@ -263,14 +275,18 @@ void vringbuffer_set_autoincrease_callback(vringbuffer_t *vrb,
     pthread_create(&vrb->autoincrease_thread, NULL, autoincrease_func, vrb);
 
     SEM_WAIT(vrb->autoincrease_started);
+    OUT
 }
 
 void vringbuffer_increase(vringbuffer_t *vrb, int num_elements, void **elements) {
+    IN
     if (num_elements + vrb->curr_num_elements > vrb->max_num_elements)
         num_elements = vrb->max_num_elements - vrb->curr_num_elements;
 
-    if (num_elements == 0)
+    if (num_elements == 0) {
+        OUT
         return;
+    }
 
     pthread_mutex_lock(&vrb->increase_lock);
     {
@@ -278,6 +294,7 @@ void vringbuffer_increase(vringbuffer_t *vrb, int num_elements, void **elements)
         vrb->curr_num_elements += num_elements;
     }
     pthread_mutex_unlock(&vrb->increase_lock);
+    OUT
 }
 
 
@@ -285,21 +302,29 @@ void vringbuffer_increase(vringbuffer_t *vrb, int num_elements, void **elements)
 
 void *vringbuffer_get_reading(vringbuffer_t *vrb) {
     void *ret = NULL;
+    IN
     jack_ringbuffer_read(vrb->for_reader, (char *) &ret, sizeof(void *));
+    OUT
     return ret;
 }
 
 void vringbuffer_return_reading(vringbuffer_t *vrb, void *data) {
+    IN
     jack_ringbuffer_write(vrb->for_writer2, (char *) &data, sizeof(void *));
+    OUT
 }
 
 int vringbuffer_reading_size(vringbuffer_t *vrb) {
+    IN OUT
     return (jack_ringbuffer_read_space(vrb->for_reader) / sizeof(void *));
 }
 
 
 static void *receiver_func(void *arg) {
+    IN
     vringbuffer_t *vrb = arg;
+    LOGD("[ringbuffer id] %d", gettid ());
+
     vrb->receiver_callback(vrb, true, NULL);
     SEM_SIGNAL(vrb->receiver_started);
 
@@ -307,6 +332,7 @@ static void *receiver_func(void *arg) {
 
     while (vrb->please_stop == false) {
         upwaker_sleep(vrb->receiver_trigger);
+        LOGD("[ringbuffer id] %d", gettid ());
 
         while (vringbuffer_reading_size(vrb) > 0) {
 
@@ -321,11 +347,13 @@ static void *receiver_func(void *arg) {
         }
     }
 
+    OUT
     return NULL;
 }
 
 void vringbuffer_set_receiver_callback(vringbuffer_t *vrb,
                                        Vringbuffer_receiver_callback receiver_callback) {
+    IN
     vrb->receiver_callback = receiver_callback;
 
     SEM_INIT(vrb->receiver_started);
@@ -333,25 +361,33 @@ void vringbuffer_set_receiver_callback(vringbuffer_t *vrb,
     pthread_create(&vrb->receiver_thread, NULL, receiver_func, vrb);
 
     SEM_INIT(vrb->receiver_started);
+    OUT
 }
 
 
 /* Realtime */
 
 void *vringbuffer_get_writing(vringbuffer_t *vrb) {
+    IN
     void *ret = NULL;
     if (jack_ringbuffer_read(vrb->for_writer2, (char *) &ret, sizeof(void *)) ==
         0) // Checking writer2 first since that memory is more likely to already be in the cache.
         jack_ringbuffer_read(vrb->for_writer1, (char *) &ret, sizeof(void *));
+    OUT
     return ret;
 }
 
 void vringbuffer_return_writing(vringbuffer_t *vrb, void *data) {
-    jack_ringbuffer_write(vrb->for_reader, (float *) &data, sizeof(void *));
+    IN
+//    vrb->receiver_callback(vrb, false, data) ;
+//    return;
+    jack_ringbuffer_write(vrb->for_reader, (char *) &data, sizeof(void *));
     upwaker_wake_up(vrb->receiver_trigger);
+    OUT
 }
 
 int vringbuffer_writing_size(vringbuffer_t *vrb) {
+    IN OUT
     return
             ((jack_ringbuffer_read_space(vrb->for_writer1) +
               jack_ringbuffer_read_space(vrb->for_writer2))

@@ -3,6 +3,7 @@
 #include <chrono>
 #include "FileWriter.h"
 
+int FileWriter::buffer_write_index = 0 ;
 void * FileWriter::mp3_buffer = NULL;
 bool FileWriter:: useStaticBuffer = false ;
 staticBuffer_t FileWriter::buffers [1025] ;
@@ -116,7 +117,7 @@ void FileWriter::openFile () {
                   sf_strerror(NULL));
         } else {
             LOGD("[%s] Opened file %s", __PRETTY_FUNCTION__, filename.c_str());
-            sf_command (soundfile, SFC_SET_CLIPPING, NULL, SF_TRUE) ;
+//            sf_command (soundfile, SFC_SET_CLIPPING, NULL, SF_TRUE) ;
         }
     }
 
@@ -229,7 +230,7 @@ int FileWriter::disk_write_callback(float *arg,size_t nframes) {
 
 int FileWriter::disk_write(float *data,size_t frames) {
 
-    /*
+   /*
     LOGD("----------| %d  |-----------", std::chrono::system_clock::now()) ;
     for (int i = 0 ; i < frames ; i ++) {
         LOGD("%f\t", data [i]) ;
@@ -238,6 +239,7 @@ int FileWriter::disk_write(float *data,size_t frames) {
      */
 
 
+//    LOGD("[ringbuffer id] %d", getpid ());
 
 //    IN
     if (fileType == MP3) {
@@ -322,7 +324,7 @@ void FileWriter::stopRecording () {
 void FileWriter::setBufferSize (int bufferSize) {
     IN
     block_size = bufferSize ;
-    buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ));
+    buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ) * 20);
 //    buffer_size_in_bytes = buffer_size_in_bytes * 4 ;
 
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
@@ -474,6 +476,13 @@ int FileWriter::process(int nframes, const float *arg) {
 //        if (bg_buffer->pos >= buffer_size_in_bytes - 1)
 //            bg_buffer->pos = 0 ;
 
+        if (buffer_write_index > 19) {
+            buffer_write_index = 0 ;
+            LOGD("[realtime id] %d", gettid ());
+            vringbuffer_return_writing(vringbuffer,bg_buffer);
+            bg_buffer->pos = 0 ;
+        }
+
         for (int i = 0 ; i < nframes ; i ++) {
             if (i >= block_size) {
                 HERE LOGF("more samples than we can handle! [%d]", nframes) ;
@@ -487,21 +496,20 @@ int FileWriter::process(int nframes, const float *arg) {
 //            else
 //            LOGD("%f", arg [i]);
             bg_buffer->data[i] = arg [i] ;
-
+            buffer_write_index ++ ;
 //            bg_buffer->pos ++ ;
         }
 
-        bg_buffer->pos = nframes;
+        bg_buffer->pos += nframes;
 //        bg_buffer->pos = nframes;
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
-        vringbuffer_return_writing(vringbuffer,bg_buffer);
+//        disk_write(bg_buffer->data, nframes);
+//        vringbuffer_return_writing(vringbuffer,bg_buffer);
     }
 
-
-
     /// does the following do ANYTHING?
-    vringbuffer_trigger_autoincrease_callback(vringbuffer);
+//    vringbuffer_trigger_autoincrease_callback(vringbuffer);
 //    OUT
     return 0 ;
 }

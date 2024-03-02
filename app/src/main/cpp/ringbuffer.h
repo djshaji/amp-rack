@@ -28,6 +28,9 @@ extern "C"
 
 #include <sys/types.h>
 
+//#include "logging_macros.h"
+#define IN
+#define OUT
 /** @file ringbuffer.h
  *
  * A set of library functions to make lock-free ringbuffers available

@@ -30,7 +30,7 @@ bool Engine::setAudioApi(oboe::AudioApi api) {
 }
 
 bool Engine::setEffectOn(bool isOn) {
-//    IN ;
+    IN ;
     bool success = true;
     if (isOn != mIsEffectOn) {
         if (isOn) {
@@ -85,6 +85,7 @@ bool Engine::setEffectOn(bool isOn) {
         }
     }
 
+    OUT
     return success;
 }
 

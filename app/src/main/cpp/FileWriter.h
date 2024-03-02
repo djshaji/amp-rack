@@ -52,6 +52,7 @@ class FileWriter {
     // for removing pops and clicks
     static int total_overruns;
     int total_xruns = 0;
+    static int buffer_write_index  ;
     static int unreported_overruns;
 
     SF_INFO sf_info ;
