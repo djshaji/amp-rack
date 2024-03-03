@@ -19,8 +19,8 @@ buffer_t *FileWriter::current_buffer;
 buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
-float FileWriter::min_buffer_time = -1.0f,
-        FileWriter::max_buffer_time = 2.0f ;
+float FileWriter::min_buffer_time = 1.0f,
+        FileWriter::max_buffer_time = 100.0f ;
 int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
