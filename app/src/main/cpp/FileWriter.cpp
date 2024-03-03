@@ -42,10 +42,10 @@ static char * extensions [] = {
 } ;
 
 int FileWriter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int reading_size, int writing_size) {
-    HERE
-    LOGD("first call: %d, reading size: %d, writing size: %d", first_call, reading_size, writing_size);
+//    HERE
+//    LOGD("first call: %d, reading size: %d, writing size: %d", first_call, reading_size, writing_size);
     if(buffers_to_seconds(writing_size) < min_buffer_time) {
-        LOGD("return 2");
+//        LOGD("return 2");
         return 2; // autoincrease_callback is called approx. at every block. So it should not be necessary to return a value higher than 2. Returning a very low number might also theoretically put a lower constant strain on the memory bus, thus theoretically lower the chance of xruns.
     }
 

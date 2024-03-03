@@ -2650,11 +2650,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //            Log.d(TAG, "setTuner: " + String.format("%s %f [%f] %f", finalNote,freq, finalTargetFrequency, finalCents));
             // write your code here
             if (abs (finalDiff) < 1){
-                mainActivity.tuner.setText("✓ " + finalNote);
+                mainActivity.tuner.setText("✔ " + finalNote);
             } else if (finalDiff < 0) {
-                mainActivity.tuner.setText("↑ " +  + Math.round(finalDiff) + "  " + finalNote );
+                mainActivity.tuner.setText("⬆ " +  + Math.round(finalDiff) + "  " + finalNote );
             } else {
-                mainActivity.tuner.setText("↓ " + Math.round(finalDiff) + "  " + finalNote );
+                mainActivity.tuner.setText("⬇ " + Math.round(finalDiff) + "  " + finalNote );
             }
         });
 

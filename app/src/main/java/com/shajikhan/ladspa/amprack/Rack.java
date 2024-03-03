@@ -314,6 +314,7 @@ public class Rack extends Fragment {
                 if (autoHideMixer && mixer.getVisibility() == View.VISIBLE) {
                     mainActivity.hidePanel.performClick();
                     autoHideMixer = false;
+                    mainActivity.recyclerView.getLayoutManager().scrollToPosition(0);
                 }
                 return false;
             }
