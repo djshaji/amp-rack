@@ -19,8 +19,8 @@ buffer_t *FileWriter::current_buffer;
 buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
-float FileWriter::min_buffer_time = 4.0f,
-        FileWriter::max_buffer_time = 40.0f ;
+float FileWriter::min_buffer_time = -1.0f,
+        FileWriter::max_buffer_time = 2.0f ;
 int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
@@ -327,7 +327,7 @@ void FileWriter::stopRecording () {
 void FileWriter::setBufferSize (int bufferSize) {
     IN
     block_size = bufferSize ;
-    buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ) * 20);
+    buffer_size_in_bytes = ALIGN_UP_DOUBLE(sizeof(buffer_t) + block_size*num_channels*sizeof(float ));
 //    buffer_size_in_bytes = buffer_size_in_bytes * 4 ;
 
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
@@ -337,7 +337,7 @@ void FileWriter::setBufferSize (int bufferSize) {
                                          JC_MAX(4, seconds_to_buffers(max_buffer_time)),
                                          (size_t) buffer_size_in_bytes);
         vringbuffer_set_receiver_callback(vringbuffer, disk_callback);
-//        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,500);
+        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
         /// TODO: Free this memory!
         current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
         bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
@@ -385,14 +385,18 @@ void FileWriter::process_fill_buffer(float *in[], buffer_t *buffer, int i, int e
 }
 
 bool FileWriter::process_new_current_buffer(int frames_left){
+    IN
     current_buffer=(buffer_t*)vringbuffer_get_writing(vringbuffer);
+//    current_buffer = vringbuffer->for_writer1 ;
     if(current_buffer==NULL){
         total_overruns++;
         unreported_overruns += frames_left;
+        OUT
         return false;
     }
 
     current_buffer->pos=0;
+    OUT
     return true;
 }
 
@@ -479,22 +483,31 @@ int FileWriter::process(int nframes, const float *arg) {
 //        if (bg_buffer->pos >= buffer_size_in_bytes - 1)
 //            bg_buffer->pos = 0 ;
 
-        if (false && buffer_write_index > 19 ) {
+//        if (false && buffer_write_index > 19 ) {
             buffer_write_index = 0 ;
 //            LOGD("[realtime id] %d", gettid ());
-            process_new_current_buffer(nframes);
-            vringbuffer_return_writing(vringbuffer,current_buffer);
+//            process_new_current_buffer(nframes);
+            vringbuffer_return_writing(vringbuffer,bg_buffer);
 //            if (current_buffer != nullptr)
 //                LOGD("current buffer %d", current_buffer->pos);
             bg_buffer->pos = 0 ;
-        }
+//        }
 
-        process_new_current_buffer(nframes) ;
-        if (current_buffer == NULL) {
-            LOGE("no new buffer");
-            return 0 ;
-        }
+//        process_new_current_buffer(nframes) ;
+//        if (current_buffer == NULL) {
+//            LOGE("no new buffer");
+//            return 0 ;
+//        }
+
+//        LOGD("testmest %d", current_buffer->data [0]);
 //        vringbuffer_return_writing(vringbuffer,current_buffer);
+        while (vringbuffer_writing_size(vringbuffer)==0)
+                usleep(2);
+        while(vringbuffer_reading_size(vringbuffer) > 0)
+            usleep(2);
+
+//        jack_ringbuffer_read(vringbuffer->for_writer2,(char*)&current_buffer,sizeof(void*)); // Checking writer2 first since that memory is more likely to already be in the cache.
+//        jack_ringbuffer_read(vringbuffer->for_writer1,(char*)&current_buffer,sizeof(void*));
 
         for (int i = 0 ; i < nframes ; i ++) {
             if (i >= block_size) {
@@ -509,25 +522,27 @@ int FileWriter::process(int nframes, const float *arg) {
 //            else
 //            LOGD("%f", arg [i]);
 
-//            bg_buffer->data[i] = arg [i] ;
+            bg_buffer->data[i] = arg [i] ;
 //            buffer_write_index ++ ;
 //            bg_buffer->pos ++ ;
-            current_buffer -> data [i] = arg [i];
+//            HERE
+//            current_buffer -> data [i] = arg [i];
+//            HERE
         }
 
-        current_buffer->pos = nframes;
-        vringbuffer_return_writing(vringbuffer,current_buffer);
+//        current_buffer->pos = nframes;
+//        vringbuffer_return_writing(vringbuffer,current_buffer);
 
 //        bg_buffer->pos += nframes;
-//        bg_buffer->pos = nframes;
+        bg_buffer->pos = nframes;
+        vringbuffer_return_writing(vringbuffer,bg_buffer);
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
 //        disk_write(bg_buffer->data, nframes);
-//        vringbuffer_return_writing(vringbuffer,bg_buffer);
     }
 
     /// does the following do ANYTHING?
-//    vringbuffer_trigger_autoincrease_callback(vringbuffer);
+    vringbuffer_trigger_autoincrease_callback(vringbuffer);
 //    OUT
     return 0 ;
 }
