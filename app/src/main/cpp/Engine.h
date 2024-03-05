@@ -12,7 +12,13 @@
 
 class Engine : public oboe::AudioStreamCallback {
 public:
-    std::string LIBRARY_PATH ;
+    virtual oboe::DataCallbackResult outputCapture (
+            std::shared_ptr<oboe::AudioStream> inputStream,
+            const void *inputData,
+            int   numOutputFrames) {
+    }
+
+std::string LIBRARY_PATH ;
     Engine() ;
     std::string tuneLatency();
     JavaVM * vm ;

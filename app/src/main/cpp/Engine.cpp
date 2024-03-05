@@ -58,7 +58,7 @@ bool Engine::setEffectOn(bool isOn) {
 //                fileWriter->setFileName(externalStoragePath + "/" + std::string (buffer)) ;
 //                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
                 int bufferSizeInFrames = mRecordingStream->getBufferSizeInFrames() ;
-                fileWriter->setBufferSize (bufferSizeInFrames);
+                fileWriter->setBufferSize (mPlayStream->getBufferSizeInFrames()/mPlayStream->getChannelCount());
 
                 if (mFullDuplexPass.inSamples != NULL)
                     free (static_cast<void *>(mFullDuplexPass.inSamples));
@@ -152,6 +152,7 @@ oboe::Result  Engine::openStreams() {
 
     mFullDuplexPass.setInputStream(mRecordingStream);
     mFullDuplexPass.setOutputStream(mPlayStream);
+    mPlayStream->getDataCallback()->onAudioReady(outputCapture);
 
     // Load LADSPA Plugin here
 

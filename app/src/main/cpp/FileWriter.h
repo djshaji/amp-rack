@@ -51,6 +51,8 @@ typedef enum  {
 class FileWriter {
     // for removing pops and clicks
     static int total_overruns;
+    static long disk_writes ;
+    static long processed ;
     int total_xruns = 0;
     static int buffer_write_index  ;
     static int unreported_overruns;

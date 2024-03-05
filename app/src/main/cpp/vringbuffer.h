@@ -11,6 +11,14 @@
 #ifndef VRINGBUFFER_H
 #define VRINGBUFFER_H
 
+typedef struct vbuffer_t{
+    int overruns;
+    int pos;
+//    float data[];
+    float *data;
+    int size ;
+} vringbuffer_buffer_t;
+
 enum vringbuffer_receiver_callback_return_t {
     VRB_CALLBACK_DIDNT_USE_BUFFER,
     VRB_CALLBACK_USED_BUFFER

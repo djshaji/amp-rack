@@ -11,6 +11,8 @@ staticBuffer_t FileWriter::buffers [1025] ;
  * why this worked at all on some devices amazes me
  */
 int FileWriter::MAX_STATIC_BUFFER  = 1024;
+long FileWriter::disk_writes = 0 ;
+long FileWriter::processed = 0 ;
 int FileWriter::bufferUsed = 0;
 int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
@@ -19,8 +21,8 @@ buffer_t *FileWriter::current_buffer;
 buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
-float FileWriter::min_buffer_time = 1.0f,
-        FileWriter::max_buffer_time = 100.0f ;
+float FileWriter::min_buffer_time = 0.01f,
+        FileWriter::max_buffer_time = 40.0f ;
 int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
@@ -245,6 +247,12 @@ int FileWriter::disk_write(float *data,size_t frames) {
 //    LOGD("[ringbuffer id] %d", getpid ());
 
 //    IN
+    if (frames == 0 || disk_writes > processed) {
+        return 0;
+    }
+
+//    LOGD("disk write [%d] %d frames", disk_writes, frames);
+    disk_writes ++ ;
     if (fileType == MP3) {
         int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (block_size * 1.25) + 7200);
         if (write < 0) {
@@ -331,13 +339,23 @@ void FileWriter::setBufferSize (int bufferSize) {
 //    buffer_size_in_bytes = buffer_size_in_bytes * 4 ;
 
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
+    disk_writes = 0 ;
+    processed = 0 ;
+    if (vringbuffer != NULL) {
+        ///| @attention: this *must* be freed
+        free (bg_buffer->data);
+        free (bg_buffer) ;
+        free (empty_buffer);
+        vringbuffer_delete(vringbuffer);
+        vringbuffer = NULL ;
+    }
 
     if (vringbuffer == NULL) {
         vringbuffer = vringbuffer_create(JC_MAX(4, seconds_to_buffers(min_buffer_time)),
                                          JC_MAX(4, seconds_to_buffers(max_buffer_time)),
                                          (size_t) buffer_size_in_bytes);
         vringbuffer_set_receiver_callback(vringbuffer, disk_callback);
-        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
+//        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
         /// TODO: Free this memory!
         current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
         bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
@@ -535,6 +553,8 @@ int FileWriter::process(int nframes, const float *arg) {
 
 //        bg_buffer->pos += nframes;
         bg_buffer->pos = nframes;
+//        LOGD("return writing [%d] %d", processed, nframes);
+        processed++;
         vringbuffer_return_writing(vringbuffer,bg_buffer);
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
@@ -542,7 +562,7 @@ int FileWriter::process(int nframes, const float *arg) {
     }
 
     /// does the following do ANYTHING?
-    vringbuffer_trigger_autoincrease_callback(vringbuffer);
+//    vringbuffer_trigger_autoincrease_callback(vringbuffer);
 //    OUT
     return 0 ;
 }

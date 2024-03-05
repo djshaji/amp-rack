@@ -335,12 +335,16 @@ static void *receiver_func(void *arg) {
 //        LOGD("[ringbuffer id] %d", gettid ());
 
         while (vringbuffer_reading_size(vrb) > 0) {
+//            LOGD("looping reciever");
 
             if (buffer == NULL)
                 buffer = vringbuffer_get_reading(vrb);
 
-            if (vrb->receiver_callback(vrb, false, buffer) == VRB_CALLBACK_DIDNT_USE_BUFFER)
+            if (vrb->receiver_callback(vrb, false, buffer) == VRB_CALLBACK_DIDNT_USE_BUFFER) {
+//                LOGD("reciever break");
                 break;
+            }
+
             vringbuffer_return_reading(vrb, buffer);
             buffer = NULL;
         }
@@ -378,6 +382,7 @@ void *vringbuffer_get_writing(vringbuffer_t *vrb) {
 
 void vringbuffer_return_writing(vringbuffer_t *vrb, void *data) {
     IN
+    vringbuffer_buffer_t  * bf = (vringbuffer_buffer_t *) data ;
 //    vrb->receiver_callback(vrb, false, data) ;
 //    return;
     jack_ringbuffer_write(vrb->for_reader, (char *) &data, sizeof(void *));
