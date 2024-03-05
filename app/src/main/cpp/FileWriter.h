@@ -16,6 +16,7 @@
 #include "opus_projection.h"
 #include "opusenc.h"
 #include "lame.h"
+#include "LockFreeQueue.h"
 
 // TIL you can do this here also
 #ifdef __cplusplus
@@ -61,6 +62,8 @@ class FileWriter {
     public: int bitRate = 64000 ;
     static OggOpusComments *comments;
     static lame_t lame ;
+
+    static LockFreeQueue<buffer_t *, 1024> lockFreeQueue ;
 
     static int num_channels;
     static OpusEncoder *encoder;

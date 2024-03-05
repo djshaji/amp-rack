@@ -649,11 +649,13 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_testLV2(JNIEnv *env, jclass clazz)
 //    engine ->addPluginToRack(0,0);
 
 //    engine->addPluginToRackLazy("rkrlv2.so", 0, SharedLibrary::LV2);
-    engine ->meter->env->CallStaticVoidMethod(
-            engine->meter->mainActivity,
-            engine->meter->setMixerMeter, 1.0f, true);
+//    engine ->meter->env->CallStaticVoidMethod(
+//            engine->meter->mainActivity,
+//            engine->meter->setMixerMeter, 1.0f, true);
 
+    engine->test () ;
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_setLibraryPath(JNIEnv *env, jclass clazz,

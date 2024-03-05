@@ -128,9 +128,9 @@ oboe::Result  Engine::openStreams() {
     warnIfNotLowLatency(mPlayStream);
 
     setupRecordingStreamParameters(&inBuilder, mSampleRate);
-    inBuilder.setBufferCapacityInFrames(160);
-    inBuilder.setFramesPerDataCallback(160);
-    inBuilder.setFramesPerCallback(160);
+//    inBuilder.setBufferCapacityInFrames(160);
+//    inBuilder.setFramesPerDataCallback(160);
+//    inBuilder.setFramesPerCallback(160);
 
     result = inBuilder.openStream(mRecordingStream);
 
@@ -152,7 +152,6 @@ oboe::Result  Engine::openStreams() {
 
     mFullDuplexPass.setInputStream(mRecordingStream);
     mFullDuplexPass.setOutputStream(mPlayStream);
-    mPlayStream->getDataCallback()->onAudioReady(outputCapture);
 
     // Load LADSPA Plugin here
 
@@ -526,4 +525,14 @@ std::string Engine::tuneLatency () {
     LOGD ("%s",tmp);
     OUT
     return std::string (tmp) ;
+}
+
+void Engine::test () {
+    float * sampleData ;
+
+    oboe::Result result ;
+    while (mIsEffectOn) {
+        result = mPlayStream->read(&sampleData, 192, 0) ;
+        LOGD("read %d result", result);
+    }
 }

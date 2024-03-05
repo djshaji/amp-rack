@@ -4,6 +4,7 @@
 #include "FileWriter.h"
 
 int FileWriter::buffer_write_index = 0 ;
+LockFreeQueue<buffer_t*, 1024> FileWriter::lockFreeQueue;
 void * FileWriter::mp3_buffer = NULL;
 bool FileWriter:: useStaticBuffer = false ;
 staticBuffer_t FileWriter::buffers [1025] ;
@@ -553,9 +554,10 @@ int FileWriter::process(int nframes, const float *arg) {
 
 //        bg_buffer->pos += nframes;
         bg_buffer->pos = nframes;
+        lockFreeQueue.push(bg_buffer);
 //        LOGD("return writing [%d] %d", processed, nframes);
         processed++;
-        vringbuffer_return_writing(vringbuffer,bg_buffer);
+//        vringbuffer_return_writing(vringbuffer,bg_buffer);
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
 //        disk_write(bg_buffer->data, nframes);

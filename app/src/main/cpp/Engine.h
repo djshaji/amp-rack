@@ -12,7 +12,7 @@
 
 class Engine : public oboe::AudioStreamCallback {
 public:
-    virtual oboe::DataCallbackResult outputCapture (
+    static oboe::DataCallbackResult outputCapture (
             std::shared_ptr<oboe::AudioStream> inputStream,
             const void *inputData,
             int   numOutputFrames) {
@@ -77,6 +77,8 @@ std::string LIBRARY_PATH ;
     std::shared_ptr<oboe::AudioStream> mRecordingStream;
     std::shared_ptr<oboe::AudioStream> mPlayStream;
 
+
+    void test();
 
 private:
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
