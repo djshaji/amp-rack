@@ -78,7 +78,7 @@ class FileWriter {
     static bool ready  ;
     static FileType fileType;
     bool buffer_interleaved = true ;
-//    static vringbuffer_t * vringbuffer ;
+    static vringbuffer_t * vringbuffer ;
     static int jack_samplerate ;
     static int buffer_size_in_bytes ;
     static float  min_buffer_time ,

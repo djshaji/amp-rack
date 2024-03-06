@@ -20,7 +20,7 @@ int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
 SNDFILE * FileWriter::soundfile = NULL;
 buffer_t *FileWriter::current_buffer;
-buffer_t *FileWriter::bg_buffer = nullptr;
+buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
 int FileWriter::block_size = 384 ;
 float FileWriter::min_buffer_time = 0.01f,
@@ -28,7 +28,7 @@ float FileWriter::min_buffer_time = 0.01f,
 int FileWriter::jack_samplerate ;
 int FileWriter::buffer_size_in_bytes;
 bool FileWriter::ready = false ;
-//vringbuffer_t * FileWriter::vringbuffer = NULL;
+vringbuffer_t * FileWriter::vringbuffer = NULL;
 FileType FileWriter::fileType = MP3 ;
 OpusEncoder *FileWriter::encoder ;
 opus_int16 FileWriter::opusIn[960 * 2];
@@ -86,7 +86,7 @@ int FileWriter::seconds_to_buffers(float seconds){
 }
 
 FileWriter::~FileWriter () {
-//    free (empty_buffer);
+    free (empty_buffer);
 //    vringbuffer_delete(vringbuffer);
 }
 FileWriter::FileWriter () {
@@ -249,12 +249,12 @@ int FileWriter::disk_write(float *data,size_t frames) {
 //    LOGD("[ringbuffer id] %d", getpid ());
 
 //    IN
-//    if (frames == 0 || disk_writes > processed) {
-//        return 0;
-//    }
+    if (frames == 0 || disk_writes > processed) {
+        return 0;
+    }
 
 //    LOGD("disk write [%d] %d frames", disk_writes, frames);
-//    disk_writes ++ ;
+    disk_writes ++ ;
     if (fileType == MP3) {
         int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (block_size * 1.25) + 7200);
         if (write < 0) {
@@ -327,7 +327,6 @@ void FileWriter::writeLoop () {
         lockFreeQueue.pop(buffer) ;
         disk_write(buffer->data, buffer->pos);
     }
-
 }
 
 void FileWriter::stopRecording () {
@@ -337,9 +336,9 @@ void FileWriter::stopRecording () {
 //        vringbuffer_return_writing(vringbuffer,buffers);
 
 //    vringbuffer_stop_callbacks(vringbuffer);
+    closeFile();
     ready = false ;
     fileWriteThread.join();
-    closeFile();
     LOGD("recording stopped: %d buffer underruns", total_overruns);
     bg_buffer->pos = 0 ;
     OUT
@@ -354,38 +353,47 @@ void FileWriter::setBufferSize (int bufferSize) {
     LOGD("setting buffer size: %d from block size: %d", buffer_size_in_bytes, block_size);
     disk_writes = 0 ;
     processed = 0 ;
-    if (bg_buffer != nullptr) {
+    if (vringbuffer != NULL) {
         ///| @attention: this *must* be freed
         free (bg_buffer->data);
         free (bg_buffer) ;
+        free (empty_buffer);
+        vringbuffer_delete(vringbuffer);
+        vringbuffer = NULL ;
+    }
+
+    if (bg_buffer != nullptr) {
+        free (bg_buffer->data);
+        free (bg_buffer) ;
+
     }
 
     bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
 //    HERE LOGD("using buffer size %d", bufferSize);
     bg_buffer->data = static_cast<float *>(malloc(buffer_size_in_bytes));
     bg_buffer->pos = 0 ;
-    /*
-    if (vringbuffer == NULL) {
-        vringbuffer = vringbuffer_create(JC_MAX(4, seconds_to_buffers(min_buffer_time)),
-                                         JC_MAX(4, seconds_to_buffers(max_buffer_time)),
-                                         (size_t) buffer_size_in_bytes);
-        vringbuffer_set_receiver_callback(vringbuffer, disk_callback);
+
+
+    if (false &&vringbuffer == NULL) {
+//        vringbuffer = vringbuffer_create(JC_MAX(4, seconds_to_buffers(min_buffer_time)),
+//                                         JC_MAX(4, seconds_to_buffers(max_buffer_time)),
+//                                         (size_t) buffer_size_in_bytes);
+//        vringbuffer_set_receiver_callback(vringbuffer, disk_callback);
 //        vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
         /// TODO: Free this memory!
-        current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
+//        current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
         bg_buffer = static_cast<buffer_t *>(calloc(1, sizeof(buffer_t)));
 //    HERE LOGD("using buffer size %d", bufferSize);
         bg_buffer->data = static_cast<float *>(malloc(buffer_size_in_bytes));
         bg_buffer->pos = 0 ;
-        empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
+//        empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * num_channels));
 
     }
-    if(vringbuffer == NULL){
-        HERE LOGF ("Unable to create ringbuffer!") ;
-        OUT
-        return ;
-    }
-     */
+//    if(vringbuffer == NULL){
+//        HERE LOGF ("Unable to create ringbuffer!") ;
+//        OUT
+//        return ;
+//    }
 
 //    for (int i = 0 ; i < 32 ; i ++) {
 //        buffers[i] = static_cast<buffer_t *>(malloc(sizeof(buffer_t)));
@@ -420,7 +428,7 @@ void FileWriter::process_fill_buffer(float *in[], buffer_t *buffer, int i, int e
 
 bool FileWriter::process_new_current_buffer(int frames_left){
     IN
-//    current_buffer=(buffer_t*)vringbuffer_get_writing(vringbuffer);
+    current_buffer=(buffer_t*)vringbuffer_get_writing(vringbuffer);
 //    current_buffer = vringbuffer->for_writer1 ;
     if(current_buffer==NULL){
         total_overruns++;
@@ -436,7 +444,7 @@ bool FileWriter::process_new_current_buffer(int frames_left){
 
 void FileWriter::send_buffer_to_disk_thread(buffer_t *buffer){
     buffer->overruns = unreported_overruns;
-//    vringbuffer_return_writing(vringbuffer,buffer);
+    vringbuffer_return_writing(vringbuffer,buffer);
     unreported_overruns = 0;
 }
 
@@ -518,13 +526,13 @@ int FileWriter::process(int nframes, const float *arg) {
 //            bg_buffer->pos = 0 ;
 
 //        if (false && buffer_write_index > 19 ) {
-//            buffer_write_index = 0 ;
+            buffer_write_index = 0 ;
 //            LOGD("[realtime id] %d", gettid ());
 //            process_new_current_buffer(nframes);
 //            vringbuffer_return_writing(vringbuffer,bg_buffer);
 //            if (current_buffer != nullptr)
 //                LOGD("current buffer %d", current_buffer->pos);
-//            bg_buffer->pos = 0 ;
+            bg_buffer->pos = 0 ;
 //        }
 
 //        process_new_current_buffer(nframes) ;
@@ -571,7 +579,7 @@ int FileWriter::process(int nframes, const float *arg) {
         bg_buffer->pos = nframes;
         lockFreeQueue.push(bg_buffer);
 //        LOGD("return writing [%d] %d", processed, nframes);
-//        processed++;
+        processed++;
 //        vringbuffer_return_writing(vringbuffer,bg_buffer);
 //        current_buffer->data = (float *) arg;
 //        current_buffer->pos = nframes;
