@@ -64,7 +64,8 @@ class FileWriter {
     static OggOpusComments *comments;
     static lame_t lame ;
 
-    static LockFreeQueue<buffer_t *, 1024> lockFreeQueue ;
+#define LOCK_FREE_SIZE 4096
+    static LockFreeQueue<buffer_t *, LOCK_FREE_SIZE> lockFreeQueue ;
 
     static int num_channels;
     static OpusEncoder *encoder;

@@ -5,7 +5,7 @@
 
 std::thread FileWriter::fileWriteThread  ;
 int FileWriter::buffer_write_index = 0 ;
-LockFreeQueue<buffer_t*, 1024> FileWriter::lockFreeQueue;
+LockFreeQueue<buffer_t*, LOCK_FREE_SIZE> FileWriter::lockFreeQueue;
 void * FileWriter::mp3_buffer = NULL;
 bool FileWriter:: useStaticBuffer = false ;
 staticBuffer_t FileWriter::buffers [1025] ;
@@ -249,11 +249,11 @@ int FileWriter::disk_write(float *data,size_t frames) {
 //    LOGD("[ringbuffer id] %d", getpid ());
 
 //    IN
-//    if (frames == 0 ) {
-//        return 0;
-//    }
+    if (frames == 0 ) {
+        return 0;
+    }
 
-    LOGD("disk write [%d] %d frames", disk_writes, frames);
+//    LOGD("disk write [%d] %d frames", disk_writes, frames);
     disk_writes ++ ;
     if (fileType == MP3) {
         int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (block_size * 1.25) + 7200);
@@ -580,7 +580,7 @@ int FileWriter::process(int nframes, const float *arg) {
 //        bg_buffer->pos += nframes;
         bg_buffer->pos = nframes;
         lockFreeQueue.push(bg_buffer);
-        LOGD("lock free queue push [%d] %d", processed, nframes);
+//        LOGD("lock free queue push [%d] %d", processed, nframes);
         processed++;
 //        vringbuffer_return_writing(vringbuffer,bg_buffer);
 //        current_buffer->data = (float *) arg;
