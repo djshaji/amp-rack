@@ -249,9 +249,9 @@ int FileWriter::disk_write(float *data,size_t frames) {
 //    LOGD("[ringbuffer id] %d", getpid ());
 
 //    IN
-    if (frames == 0 ) {
-        return 0;
-    }
+//    if (frames == 0 ) {
+//        return 0;
+//    }
 
     LOGD("disk write [%d] %d frames", disk_writes, frames);
     disk_writes ++ ;
