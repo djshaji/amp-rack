@@ -1580,7 +1580,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
             try {
-                float [] samples = audioDecoder.decode(data.getData(), null, AudioEngine.getSampleRate());
+                int samplerate = AudioEngine.getSampleRate() ;
+                if (samplerate < 44100 /*aaaaaaaarghhh*/)
+                    samplerate = 48000 ;
+                float [] samples = audioDecoder.decode(data.getData(), null, samplerate);
                 AudioEngine.setPluginBuffer(samples, plugin);
             } catch (IOException e) {
                 toast(e.getMessage());

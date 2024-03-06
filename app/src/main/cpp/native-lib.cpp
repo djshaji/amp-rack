@@ -765,7 +765,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getSampleRate(JNIEnv *env, jclass 
     // TODO: implement getSampleRate()
     // TODO: implement setSampleRate()
     if (engine == NULL) {
-        LOGF ("engine is NULL");
+        LOGE ("engine is NULL");
         return 48000;
     }
 

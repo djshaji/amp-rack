@@ -324,10 +324,11 @@ void FileWriter::startRecording () {
 void FileWriter::writeLoop () {
     buffer_t *buffer ;
     while (ready) {
-        if (lockFreeQueue.pop(buffer))
+        if (lockFreeQueue.pop(buffer)) {
             disk_write(buffer->data, buffer->pos);
-//        else
-//            std::this_thread::sleep_for(std::chrono::milliseconds (10));
+        }
+
+//        std::this_thread::sleep_for(std::chrono::microseconds (10));
     }
 }
 

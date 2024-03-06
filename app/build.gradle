@@ -13,8 +13,8 @@ android {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 24
         targetSdk 33
-        versionCode 74
-        versionName '3.95'
+        versionCode 75
+        versionName '3.96'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -43,6 +43,11 @@ android {
                 nativeSymbolUploadEnabled false
             }
         }
+
+        debug {
+            debuggable true
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

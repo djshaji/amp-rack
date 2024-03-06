@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 3 Nighthawk</string>
-    <string name="build_id">468</string>
+    <string name="build_id">477</string>
     <string name="onboard_theme_chooser">
         Choose a theme for the UI. Choose Material Theme for Native
         Android Material Design, or Tube Amp theme based on the new
