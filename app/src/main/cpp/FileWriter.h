@@ -9,6 +9,7 @@
 
 #include <string>
 #include <ctime>
+#include <thread>
 #include "logging_macros.h"
 #include "sndfile.h"
 #include "opus.h"
@@ -77,13 +78,14 @@ class FileWriter {
     static bool ready  ;
     static FileType fileType;
     bool buffer_interleaved = true ;
-    static vringbuffer_t * vringbuffer ;
+//    static vringbuffer_t * vringbuffer ;
     static int jack_samplerate ;
     static int buffer_size_in_bytes ;
     static float  min_buffer_time ,
         max_buffer_time ;
 
     float *empty_buffer;
+    static std::thread fileWriteThread ;
 
     static int block_size;
     int default_block_size = 384 ;
@@ -196,6 +198,7 @@ public:
 
     void setChannels(int channels);
 
+    void writeLoop();
 };
 
 
