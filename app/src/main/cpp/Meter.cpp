@@ -8,6 +8,7 @@
 vringbuffer_t * Meter::vringbuffer ;
 vringbuffer_t * Meter::vringbufferOutput ;
 Meter::buffer_t *Meter::current_buffer;
+LockFreeQueue<Meter::buffer_t*, LOCK_FREE_SIZE> Meter::lockFreeQueue;
 int Meter::bufferUsed  = 0;
 bool Meter::tunerEnabled = true;
 int Meter::bufferUsedOutput  = 0;
@@ -114,6 +115,33 @@ Meter::Meter(JavaVM *pVm) {
     vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
     vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
 
+    envOutput = getEnv();
+    if (envOutput == nullptr)
+        LOGF("envOutput is null");
+    mainActivityOutput = findClassWithEnv(envOutput, "com/shajikhan/ladspa/amprack/MainActivity");
+    if (mainActivityOutput == nullptr) {
+        HERE
+        LOGF("cannot find class mainactivityOutput!");
+    }
+
+    setMixerMeterOutput = envOutput->GetStaticMethodID(mainActivityOutput, "setMixerMeterSwitch",
+                                                       "(FZ)V");
+
+    setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
+                                            "([F)V");
+    if (setMixerMeterOutput == nullptr) {
+        LOGF("cannot find method!");
+    }
+
+    if (setTuner == nullptr) {
+        LOGF("cannot find setTuner method!");
+    }
+
+    setMixerMeter = env->GetStaticMethodID(mainActivity, "setMixerMeterSwitch",
+                                           "(FZ)V");
+    if (setMixerMeter == nullptr) {
+        LOGF("cannot find method!");
+    }
     OUT
 }
 
@@ -249,3 +277,13 @@ void Meter::process (int nframes, const float * data, bool isInput) {
     }
 }
 
+void Meter::writeLoop () {
+    buffer_t *buffer ;
+    while (enabled) {
+        if (lockFreeQueue.pop(buffer)) {
+            disk_write(buffer->data, buffer->pos);
+        }
+
+//        std::this_thread::sleep_for(std::chrono::microseconds (10));
+    }
+}

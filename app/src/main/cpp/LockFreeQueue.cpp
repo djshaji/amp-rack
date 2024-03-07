@@ -3,3 +3,8 @@
 //
 
 #include "LockFreeQueue.h"
+
+LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> LockFreeQueueManager::lockFreeQueue;
+
+
+

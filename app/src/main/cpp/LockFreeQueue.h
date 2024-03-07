@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <atomic>
+#include "Engine.h"
 
 /**
  * A lock-free queue for single consumer, single producer. Not thread-safe when using multiple
@@ -153,4 +154,24 @@ private:
 
 };
 
+typedef struct audio_buffer {
+    int overruns;
+    int pos;
+//    float data[];
+    float *data;
+    int size ;
+} AudioBuffer;
+
+#define LOCK_FREE_SIZE 4096
+
+class LockFreeQueueManager {
+    static LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> lockFreeQueue ;
+    AudioBuffer ** pAudioBuffer ;
+    Engine * engine ;
+    int buffer_size ;
+
+    LockFreeQueueManager (Engine * _engine) {
+        engine = _engine ;
+    }
+};
 #endif //AMP_RACK_LOCKFREEQUEUE_H

@@ -19,9 +19,11 @@ extern "C" {
 #include "vringbuffer.h"
 }
 #endif
+#include "LockFreeQueue.h"
 
 //#include "FileWriter.h"
 JNIEnv* getEnv() ;
+#define LOCK_FREE_SIZE 4096
 
 class Meter {
     typedef struct buffer_t{
@@ -52,6 +54,7 @@ class Meter {
     static staticBuffer_t buffers [1024] ;
     static int MAX_STATIC_BUFFER  ;
     static JavaVM *vm ;
+    static LockFreeQueue<buffer_t *, LOCK_FREE_SIZE> lockFreeQueue ;
 
 public:
     Meter(JavaVM *pVm);
