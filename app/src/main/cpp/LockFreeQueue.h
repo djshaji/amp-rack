@@ -23,7 +23,8 @@
 #include <cstdint>
 #include <atomic>
 #include <thread>
-#include "Engine.h"
+#include "logging_macros.h"
+//#include "Engine.h"
 
 /**
  * A lock-free queue for single consumer, single producer. Not thread-safe when using multiple
@@ -168,26 +169,25 @@ typedef struct audio_buffer {
 
 class LockFreeQueueManager {
     static LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> lockFreeQueue ;
-    AudioBuffer ** pAudioBuffer ;
-    Engine * engine ;
+    AudioBuffer * pAudioBuffer [SPARE_BUFFERS];
     int buffer_size ;
     int buffer_counter ;
     bool ready = false ;
 
     #define MAX_FUNCTIONS 10
-    void * functions [MAX_FUNCTIONS] ;
+    void (* functions [MAX_FUNCTIONS])(float *, int) ;
     int functions_count ;
 
     static std::thread fileWriteThread ;
 
-    LockFreeQueueManager (Engine * _engine) {
-        engine = _engine ;
-    }
+public:
+    void init (int _buffer_size) ;
+    void add_function(int (*f)(float *, unsigned long));
+    void process (float * data, int samplesToProcess) ;
+    void main () ;
+    void quit () ;
 
-    LockFreeQueueManager::init (int _buffer_size) ;
-    LockFreeQueueManager::add_function (void (* f) (float *, int)) ;
-    LockFreeQueueManager::process (float * data, int samplesToProcess) ;
-    LockFreeQueueManager::main () ;
-    LockFreeQueueManager::quit () ;
+    LockFreeQueueManager () {
+    }
 };
 #endif //AMP_RACK_LOCKFREEQUEUE_H

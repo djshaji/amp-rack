@@ -22,6 +22,7 @@
 #include "FullDuplexStream.h"
 #include "FileWriter.h"
 #include "Meter.h"
+#include "LockFreeQueue.h"
 
 class FullDuplexPass : public FullDuplexStream {
     //| TODO: Limit number of plugins active in free version?
@@ -33,6 +34,7 @@ public:
     
     // Lock Free Queue Manager
     void (queue)(float * data, int frames) ;
+    LockFreeQueueManager * lockFreeQueueManager;
 
     void (*connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
                          unsigned long Port,
@@ -104,7 +106,7 @@ public:
             Meter::process (samplesToProcess, inSamples, false);
         }
 
-        queue (inSamples, samplesToProcess) ;
+        lockFreeQueueManager->process(inSamples, samplesToProcess) ;
 
         //        for (int32_t i = 0; i < samplesToProcess; i++) {
 //            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing

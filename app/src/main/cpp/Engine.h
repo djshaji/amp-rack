@@ -9,10 +9,11 @@
 #include "Plugin.h"
 #include "FileWriter.h"
 #include "Meter.h"
+#include "LockFreeQueue.h"
 
 class Engine : public oboe::AudioStreamCallback {
 public:
-    static LockFreeQueueManager queueManager ;
+    LockFreeQueueManager queueManager ;
     static oboe::DataCallbackResult outputCapture (
             std::shared_ptr<oboe::AudioStream> inputStream,
             const void *inputData,
