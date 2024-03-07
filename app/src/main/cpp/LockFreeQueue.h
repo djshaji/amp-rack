@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <atomic>
+#include <thread>
 #include "Engine.h"
 
 /**
@@ -163,15 +164,29 @@ typedef struct audio_buffer {
 } AudioBuffer;
 
 #define LOCK_FREE_SIZE 4096
+#define SPARE_BUFFERS 16
 
 class LockFreeQueueManager {
     static LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> lockFreeQueue ;
     AudioBuffer ** pAudioBuffer ;
     Engine * engine ;
     int buffer_size ;
+    int buffer_counter ;
+
+    #define MAX_FUNCTIONS 10
+    void * functions [MAX_FUNCTIONS] ;
+    int functions_count ;
+
+    static std::thread fileWriteThread ;
 
     LockFreeQueueManager (Engine * _engine) {
         engine = _engine ;
     }
+
+    LockFreeQueueManager::init (int _buffer_size) ;
+    LockFreeQueueManager::add_function (void (* f) (float *, int)) ;
+    LockFreeQueueManager::process (AudioBuffer * buffer) ;
+    LockFreeQueueManager::main () ;
+    LockFreeQueueManager::quit () ;
 };
 #endif //AMP_RACK_LOCKFREEQUEUE_H
