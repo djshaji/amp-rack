@@ -12,6 +12,7 @@
 
 class Engine : public oboe::AudioStreamCallback {
 public:
+    static LockFreeQueueManager queueManager ;
     static oboe::DataCallbackResult outputCapture (
             std::shared_ptr<oboe::AudioStream> inputStream,
             const void *inputData,

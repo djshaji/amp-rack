@@ -54,7 +54,6 @@ class Meter {
     static staticBuffer_t buffers [1024] ;
     static int MAX_STATIC_BUFFER  ;
     static JavaVM *vm ;
-    static LockFreeQueue<buffer_t *, LOCK_FREE_SIZE> lockFreeQueue ;
 
 public:
     Meter(JavaVM *pVm);

@@ -317,7 +317,7 @@ void FileWriter::startRecording () {
     IN
     openFile();
     ready = true ;
-    fileWriteThread = std::thread (&FileWriter::writeLoop, this);
+    // fileWriteThread = std::thread (&FileWriter::writeLoop, this);
     OUT
 }
 
@@ -341,7 +341,7 @@ void FileWriter::stopRecording () {
 //    vringbuffer_stop_callbacks(vringbuffer);
     closeFile();
     ready = false ;
-    fileWriteThread.join();
+    // fileWriteThread.join();
     LOGD("recording stopped: %d buffer underruns", total_overruns);
     bg_buffer->pos = 0 ;
     OUT
@@ -580,7 +580,7 @@ int FileWriter::process(int nframes, const float *arg) {
 
 //        bg_buffer->pos += nframes;
         bg_buffer->pos = nframes;
-        lockFreeQueue.push(bg_buffer);
+        // lockFreeQueue.push(bg_buffer);
 //        LOGD("lock free queue push [%d] %d", processed, nframes);
         processed++;
 //        vringbuffer_return_writing(vringbuffer,bg_buffer);

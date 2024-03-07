@@ -30,6 +30,10 @@ public:
     float inputVolume = 1.0 ;
     float outputVolume = 1.0 ;
     bool meterEnabled = true ;
+    
+    // Lock Free Queue Manager
+    void (queue)(float * data, int frames) ;
+
     void (*connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
                          unsigned long Port,
                          LADSPA_Data * DataLocation);
@@ -99,6 +103,8 @@ public:
         if (meterEnabled) {
             Meter::process (samplesToProcess, inSamples, false);
         }
+
+        queue (inSamples, samplesToProcess) ;
 
         //        for (int32_t i = 0; i < samplesToProcess; i++) {
 //            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing

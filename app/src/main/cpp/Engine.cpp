@@ -5,8 +5,9 @@
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
+    queueManager = new LockFreeQueueManager (this);
     fileWriter = new FileWriter ();
-
+    queueManager.add_function (fileWriter.disk_write);
 //    discoverPlugins();
 //    loadPlugins();
 }
@@ -41,6 +42,8 @@ bool Engine::setEffectOn(bool isOn) {
                     activePlugins.at(i)->print();
                 }
                 */
+
+                (mFullDuplexPass.queue) (float *, int) = queueManager.process ;
                 mFullDuplexPass.start();
 
                 fileWriter->setSampleRate (mSampleRate);
@@ -59,6 +62,8 @@ bool Engine::setEffectOn(bool isOn) {
 //                fileWriter->setBufferSize(mFullDuplexPass.mBufferSize);
                 int bufferSizeInFrames = mRecordingStream->getBufferSizeInFrames() ;
                 fileWriter->setBufferSize (mPlayStream->getBufferSizeInFrames()/mPlayStream->getChannelCount());
+
+                queueManager.init (mPlayStream->getBufferSizeInFrames()/mPlayStream->getChannelCount());
 
                 if (mFullDuplexPass.inSamples != NULL)
                     free (static_cast<void *>(mFullDuplexPass.inSamples));
@@ -100,6 +105,9 @@ void Engine::closeStreams() {
     * which would cause the app to crash since the recording stream would be
     * null.
     */
+
+    queueManager.quit ();
+
     closeStream(mPlayStream);
     mFullDuplexPass.setOutputStream(nullptr);
 

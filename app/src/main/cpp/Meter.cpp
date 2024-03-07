@@ -276,14 +276,3 @@ void Meter::process (int nframes, const float * data, bool isInput) {
         vringbuffer_trigger_autoincrease_callback(vringbufferOutput);
     }
 }
-
-void Meter::writeLoop () {
-    buffer_t *buffer ;
-    while (enabled) {
-        if (lockFreeQueue.pop(buffer)) {
-            disk_write(buffer->data, buffer->pos);
-        }
-
-//        std::this_thread::sleep_for(std::chrono::microseconds (10));
-    }
-}

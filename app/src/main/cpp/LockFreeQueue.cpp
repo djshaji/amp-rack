@@ -18,11 +18,11 @@ LockFreeQueueManager::init (int _buffer_size) {
     buffer_counter = 0 ;
     functions_counter = 0 ;
 
+    ready = true ;
     fileWriteThread = std::thread (&LockFreeQueueManager::main, this);
-
 }
 
-LockFreeQueueManager::add_function (void (* f) (float *, int)) {
+LockFreeQueueManager::add_function (int (* f) (float *, int)) {
     if (functions_counter > MAX_FUNCTIONS) {
         HERE LOGE ("already have %d functions added to queue, cannot add any more!", MAX_FUNCTIONS);
         return ;
@@ -32,9 +32,12 @@ LockFreeQueueManager::add_function (void (* f) (float *, int)) {
     functions_counter ++ ;
 }
 
-LockFreeQueueManager::process (AudioBuffer * buffer) {
-    for (int i = 0 ; i < buffer -> pos ; i ++) {
-        pAudioBuffer [buffer_counter][i] = buffer [i] ;
+LockFreeQueueManager::process (float * data, int samplesToProcess) {
+    if (! ready)
+        return ;
+
+    for (int i = 0 ; i < samplesToProcess ; i ++) {
+        pAudioBuffer [buffer_counter][i] = data [i] ;
     }
 
     lockFreeQueue.push (pAudioBuffer [buffer_counter]);
@@ -61,4 +64,5 @@ LockFreeQueueManager::quit () {
     }
 
     free (pAudioBuffer) ;
+    ready = false ;
 }

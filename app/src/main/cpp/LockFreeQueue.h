@@ -172,6 +172,7 @@ class LockFreeQueueManager {
     Engine * engine ;
     int buffer_size ;
     int buffer_counter ;
+    bool ready = false ;
 
     #define MAX_FUNCTIONS 10
     void * functions [MAX_FUNCTIONS] ;
@@ -185,7 +186,7 @@ class LockFreeQueueManager {
 
     LockFreeQueueManager::init (int _buffer_size) ;
     LockFreeQueueManager::add_function (void (* f) (float *, int)) ;
-    LockFreeQueueManager::process (AudioBuffer * buffer) ;
+    LockFreeQueueManager::process (float * data, int samplesToProcess) ;
     LockFreeQueueManager::main () ;
     LockFreeQueueManager::quit () ;
 };
