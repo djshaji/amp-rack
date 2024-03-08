@@ -235,7 +235,7 @@ int FileWriter::disk_write_callback(float *arg,size_t nframes) {
     return 0 ;
 }
 
-int FileWriter::disk_write(float *data,size_t frames) {
+int FileWriter::disk_write(float *data,int frames) {
 
    /*
     LOGD("----------| %d  |-----------", std::chrono::system_clock::now()) ;

@@ -115,6 +115,7 @@ Meter::Meter(JavaVM *pVm) {
     vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
     vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
 
+    /*
     envOutput = getEnv();
     if (envOutput == nullptr)
         LOGF("envOutput is null");
@@ -142,6 +143,7 @@ Meter::Meter(JavaVM *pVm) {
     if (setMixerMeter == nullptr) {
         LOGF("cannot find method!");
     }
+     */
     OUT
 }
 

@@ -22,14 +22,16 @@ void LockFreeQueueManager::init (int _buffer_size) {
     fileWriteThread = std::thread (&LockFreeQueueManager::main, this);
 }
 
-void LockFreeQueueManager::add_function (int (* f) (float *, unsigned long)) {
+void LockFreeQueueManager::add_function (int (* f) (float *, int)) {
+    IN
     if (functions_count > MAX_FUNCTIONS) {
         HERE LOGE ("already have %d functions added to queue, cannot add any more!", MAX_FUNCTIONS);
-        return ;
+        OUT return ;
     }
 
     functions [functions_count] = reinterpret_cast<void (*)(float *, int)>(f);
     functions_count ++ ;
+    OUT
 }
 
 void LockFreeQueueManager::process (float * data, int samplesToProcess) {

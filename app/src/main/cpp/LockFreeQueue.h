@@ -182,7 +182,7 @@ class LockFreeQueueManager {
 
 public:
     void init (int _buffer_size) ;
-    void add_function(int (*f)(float *, unsigned long));
+    void add_function(int (*f)(float *, int));
     void process (float * data, int samplesToProcess) ;
     void main () ;
     void quit () ;

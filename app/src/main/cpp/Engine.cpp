@@ -7,8 +7,7 @@ Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
 //    queueManager = new LockFreeQueueManager ();
     fileWriter = new FileWriter ();
-    queueManager.add_function (
-            reinterpret_cast<int (*)(float *, unsigned long)>(fileWriter->disk_write));
+    queueManager.add_function (fileWriter->disk_write);
 //    discoverPlugins();
 //    loadPlugins();
 }

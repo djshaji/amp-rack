@@ -107,7 +107,7 @@ class FileWriter {
 public:
     FileWriter ();
     ~FileWriter ();
-    static int disk_write(float *data, size_t frames);
+    static int disk_write(float *data, int frames);
     int disk_write_callback(float *data, size_t frames);
 
     static void * mp3_buffer ;
