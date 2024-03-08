@@ -80,10 +80,53 @@ int Meter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int readin
     return 0 ;
 }
 
+int Meter::updateMeterOutput (float * data, int samples) {
+    if (! enabled)
+        return 0;
+
+    if (envOutput == nullptr) {
+        LOGD("MeterOutput thread id: %d", gettid ());
+        envOutput = getEnv();
+        if (envOutput == nullptr)
+            LOGF("envOutput is null");
+        mainActivityOutput = findClassWithEnv(envOutput, "com/shajikhan/ladspa/amprack/MainActivity");
+        if (mainActivityOutput == nullptr) {
+            HERE
+            LOGF("cannot find class mainactivityOutput!");
+        }
+
+        setMixerMeterOutput = envOutput->GetStaticMethodID(mainActivityOutput, "setMixerMeterSwitch",
+                                                           "(FZ)V");
+
+        setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
+                                                "([F)V");
+        if (setMixerMeterOutput == nullptr) {
+            LOGF("cannot find method!");
+        }
+
+        if (setTuner == nullptr) {
+            LOGF("cannot find setTuner method!");
+        }
+    }
+
+    float max = 0 ;
+    for (int i = 0 ; i < samples; i ++) {
+        if (data [i] > max)
+            max = data [i] ;
+    }
+
+    envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
+    return 0;
+}
+
+void Meter::stop () {
+    envOutput = nullptr ;
+}
 
 Meter::Meter(JavaVM *pVm) {
     IN
     vm = pVm;
+    envOutput = nullptr ;
     // sane defaults
     jack_samplerate = 48000 ;
     block_size = 384 ;
@@ -97,23 +140,23 @@ Meter::Meter(JavaVM *pVm) {
         return ;
     }
 
-    vringbufferOutput = vringbuffer_create(JC_MAX(4,seconds_to_buffers(1)),
-                                     JC_MAX(4,seconds_to_buffers(40)),
-                                     (size_t) buffer_size_in_bytes);
+//    vringbufferOutput = vringbuffer_create(JC_MAX(4,seconds_to_buffers(1)),
+//                                     JC_MAX(4,seconds_to_buffers(40)),
+//                                     (size_t) buffer_size_in_bytes);
 
-    if(vringbufferOutput == NULL){
-        HERE LOGF ("Unable to create ringbuffer output!") ;
-        OUT
-        return ;
-    }
+//    if(vringbufferOutput == NULL){
+//        HERE LOGF ("Unable to create ringbuffer output!") ;
+//        OUT
+//        return ;
+//    }
 
     /// TODO: Free this memory!
     vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
-    vringbuffer_set_autoincrease_callback(vringbufferOutput,autoincrease_callback,0);
+//    vringbuffer_set_autoincrease_callback(vringbufferOutput,autoincrease_callback,0);
     current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
     empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * 1));
     vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
-    vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
+//    vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
 
     /*
     envOutput = getEnv();
@@ -145,6 +188,10 @@ Meter::Meter(JavaVM *pVm) {
     }
      */
     OUT
+}
+
+void Meter::disable () {
+    enabled = false ;
 }
 
 void Meter::enable () {
@@ -260,6 +307,9 @@ void Meter::process (int nframes, const float * data, bool isInput) {
 
         vringbuffer_trigger_autoincrease_callback(vringbuffer);
     }
+
+    return;
+    /*
     else {
         if (bufferUsedOutput < MAX_STATIC_BUFFER) {
             for (int i = 0; i < nframes; i++) {
@@ -277,4 +327,5 @@ void Meter::process (int nframes, const float * data, bool isInput) {
 
         vringbuffer_trigger_autoincrease_callback(vringbufferOutput);
     }
+     */
 }

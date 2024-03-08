@@ -199,6 +199,12 @@ public:
 
     static float tunerBuffer [1024*4];
     static int tunerIndex;
+
+    static int updateMeterOutput(float *data, int samples);
+
+    void stop();
+
+    void disable();
 };
 
 #endif //AMP_RACK_METER_H

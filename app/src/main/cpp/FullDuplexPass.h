@@ -102,9 +102,9 @@ public:
             *outputFloats++ = inSamples [i];
         }
 
-        if (meterEnabled) {
-            Meter::process (samplesToProcess, inSamples, false);
-        }
+//        if (meterEnabled) {
+//            Meter::process (samplesToProcess, inSamples, false);
+//        }
 
         lockFreeQueueManager->process(inSamples, samplesToProcess) ;
 

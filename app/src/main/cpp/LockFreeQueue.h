@@ -24,6 +24,7 @@
 #include <atomic>
 #include <thread>
 #include "logging_macros.h"
+#include <unistd.h>
 //#include "Engine.h"
 
 /**

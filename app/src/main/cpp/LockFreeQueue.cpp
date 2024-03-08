@@ -21,6 +21,8 @@ void LockFreeQueueManager::init (int _buffer_size) {
 
     ready = true ;
     fileWriteThread = std::thread (&LockFreeQueueManager::main, this);
+    LOGD("[LockFreeQueue thread id] %d", gettid ());
+
     OUT
 }
 

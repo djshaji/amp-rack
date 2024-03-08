@@ -714,6 +714,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleMixer(JNIEnv *env, jclass cl
     // TODO: implement toggleMixer()
     if (engine == NULL) return ;
     engine->mFullDuplexPass.meterEnabled = toggle ;
+    if (toggle)
+        engine->meter->enable();
+    else
+        engine->meter->disable();
     LOGD("setting mixer to %d", toggle);
 }
 extern "C"

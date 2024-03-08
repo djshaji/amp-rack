@@ -8,6 +8,7 @@ Engine::Engine () {
 //    queueManager = new LockFreeQueueManager ();
     fileWriter = new FileWriter ();
     queueManager.add_function (fileWriter->disk_write);
+    queueManager.add_function (meter->updateMeterOutput);
 //    discoverPlugins();
 //    loadPlugins();
 }
@@ -84,6 +85,8 @@ bool Engine::setEffectOn(bool isOn) {
             if (mFullDuplexPass.recordingActive) {
                 fileWriter->stopRecording() ;
             }
+
+            meter->stop();
 
             mFullDuplexPass.stop();
             closeStreams();
