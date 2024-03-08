@@ -160,9 +160,9 @@ public:
         }
          */
 
-        if (recordingActive) {
-            FileWriter::process(samplesToProcess, data);
-        }
+//        if (recordingActive) {
+//            FileWriter::process(samplesToProcess, data);
+//        }
 
 
     }

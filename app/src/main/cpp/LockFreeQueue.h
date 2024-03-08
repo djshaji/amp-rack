@@ -188,6 +188,7 @@ public:
     void quit () ;
 
     LockFreeQueueManager () {
+        functions_count = 0 ;
     }
 };
 #endif //AMP_RACK_LOCKFREEQUEUE_H

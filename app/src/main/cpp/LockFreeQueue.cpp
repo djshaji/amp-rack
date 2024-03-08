@@ -8,18 +8,20 @@ LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> LockFreeQueueManager::lockFreeQueue
 std::thread LockFreeQueueManager::fileWriteThread  ;
 
 void LockFreeQueueManager::init (int _buffer_size) {
+    IN
     buffer_size = _buffer_size ;
 //    pAudioBuffer = static_cast<AudioBuffer *>(calloc(SPARE_BUFFERS, sizeof(AudioBuffer)));
     for (int i = 0; i < SPARE_BUFFERS; i ++) {
+        pAudioBuffer [i] = static_cast<AudioBuffer *>(malloc(sizeof(AudioBuffer)));
         pAudioBuffer [i] -> data = static_cast<float *>(malloc(buffer_size * sizeof(float)));
         pAudioBuffer [i] -> pos = 0 ;
     }
 
     buffer_counter = 0 ;
-    functions_count = 0 ;
 
     ready = true ;
     fileWriteThread = std::thread (&LockFreeQueueManager::main, this);
+    OUT
 }
 
 void LockFreeQueueManager::add_function (int (* f) (float *, int)) {
@@ -35,8 +37,12 @@ void LockFreeQueueManager::add_function (int (* f) (float *, int)) {
 }
 
 void LockFreeQueueManager::process (float * data, int samplesToProcess) {
-    if (! ready)
-        return ;
+//    IN
+    if (! ready) {
+        OUT
+//        HERE LOGD("not ready");
+        return;
+    }
 
     for (int i = 0 ; i < samplesToProcess ; i ++) {
         pAudioBuffer [buffer_counter]->data [i] = data [i] ;
@@ -46,26 +52,37 @@ void LockFreeQueueManager::process (float * data, int samplesToProcess) {
     lockFreeQueue.push (pAudioBuffer [buffer_counter]);
 
     buffer_counter ++ ;
-    if (buffer_counter > SPARE_BUFFERS) {
+    if (buffer_counter >= SPARE_BUFFERS) {
         buffer_counter = 0 ;
     }
+
+//    OUT
 }
 
 void LockFreeQueueManager::main () {
+    IN
     AudioBuffer * buffer ;
-    while (lockFreeQueue.pop (buffer)) {
-        for (int i = 0 ; i < MAX_FUNCTIONS ; i ++) {
-            (functions [i])(buffer -> data, buffer -> pos) ;
+    while (ready) {
+        if (lockFreeQueue.pop (buffer)) {
+            for (int i = 0; i < functions_count; i++) {
+                (functions[i])(buffer->data, buffer->pos);
+            }
         }
+
+//        std::this_thread::sleep_for(std::chrono::milliseconds (1));
+
     }
+    OUT
 }
 
 void LockFreeQueueManager::quit () {
+    IN
+    ready = false ;
     fileWriteThread.join();
     for (int i = 0; i < SPARE_BUFFERS; i ++) {
         free (pAudioBuffer [i] -> data) ;
+        free (pAudioBuffer [i]) ;
     }
 
-    free (pAudioBuffer) ;
-    ready = false ;
+    OUT
 }

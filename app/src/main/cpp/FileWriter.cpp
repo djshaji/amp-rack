@@ -91,7 +91,7 @@ FileWriter::~FileWriter () {
 }
 FileWriter::FileWriter () {
     IN
-
+    ready = false ;
     OUT
 }
 
@@ -249,7 +249,8 @@ int FileWriter::disk_write(float *data,int frames) {
 //    LOGD("[ringbuffer id] %d", getpid ());
 
 //    IN
-    if (frames == 0 ) {
+//    LOGD("ready: %d", ready);
+    if (! ready || frames == 0 ) {
         return 0;
     }
 
@@ -339,8 +340,8 @@ void FileWriter::stopRecording () {
 //        vringbuffer_return_writing(vringbuffer,buffers);
 
 //    vringbuffer_stop_callbacks(vringbuffer);
-    closeFile();
     ready = false ;
+    closeFile();
     // fileWriteThread.join();
     LOGD("recording stopped: %d buffer underruns", total_overruns);
     bg_buffer->pos = 0 ;
