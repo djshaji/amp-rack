@@ -159,7 +159,7 @@ private:
 };
 
 #define LOCK_FREE_SIZE 4096
-#define SPARE_BUFFERS 16
+#define SPARE_BUFFERS 128
 
 class LockFreeQueueManager {
     static LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> lockFreeQueue ;

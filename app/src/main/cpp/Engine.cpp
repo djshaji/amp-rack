@@ -69,7 +69,12 @@ bool Engine::setEffectOn(bool isOn) {
 
                 if (mFullDuplexPass.inSamples != NULL)
                     free (static_cast<void *>(mFullDuplexPass.inSamples));
+
+                if (mFullDuplexPass.raw != NULL)
+                    free (static_cast<void *>(mFullDuplexPass.raw));
+
                 mFullDuplexPass.inSamples = static_cast<float *>(malloc(mFullDuplexPass.mBufferSize));
+                mFullDuplexPass.raw = static_cast<float *>(malloc(mFullDuplexPass.mBufferSize));
                 fileWriter->setChannels(mOutputChannelCount);
                 /*
                 if (mFullDuplexPass.recordingActive) {

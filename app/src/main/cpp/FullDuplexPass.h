@@ -54,6 +54,7 @@ public:
     int outputPorts [MAX_PLUGINS] ;
     int outputPorts2 [MAX_PLUGINS] ;
     int activePlugins =  0 ;
+    float * raw = NULL; // this will never be greater than this(TM)
     bool recordingActive = false ;
     bool triggerRecord = false ;
     bool bypass = false ;
@@ -81,8 +82,7 @@ public:
 
 //        float inSamples [samplesToProcess];
         for (int i = 0 ; i < samplesToProcess ; i ++) {
-            outputFloats [i] = inputFloats [i];
-            inSamples [i] = inputFloats [i] * inputVolume ;
+            raw [i] = inSamples [i] = inputFloats [i] * inputVolume ;
         }
 
 //        if (meterEnabled) {
@@ -107,7 +107,7 @@ public:
 //            Meter::process (samplesToProcess, inSamples, false);
 //        }
 
-        lockFreeQueueManager->process(outputFloats, inSamples, samplesToProcess) ;
+        lockFreeQueueManager->process(raw, inSamples, samplesToProcess) ;
 
         //        for (int32_t i = 0; i < samplesToProcess; i++) {
 //            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing

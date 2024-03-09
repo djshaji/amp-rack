@@ -67,14 +67,13 @@ void LockFreeQueueManager::main () {
     IN
     AudioBuffer * buffer ;
     while (ready) {
-        if (lockFreeQueue.pop (buffer)) {
+        while (lockFreeQueue.pop (buffer)) {
             for (int i = 0; i < functions_count; i++) {
                 (functions[i])(buffer);
             }
         }
 
-//        std::this_thread::sleep_for(std::chrono::milliseconds (1));
-
+        std::this_thread::sleep_for(std::chrono::milliseconds (100));
     }
     OUT
 }
