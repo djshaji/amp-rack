@@ -17,10 +17,10 @@ void LockFreeQueueManager::init (int _buffer_size) {
         pAudioBuffer [i] -> raw = static_cast<float *>(malloc(buffer_size * sizeof(float)));
         pAudioBuffer [i] -> pos = 0 ;
 
-        for (int x = 0 ; x < buffer_size ; x ++) {
-            pAudioBuffer [i]->data [x] = 0.0f ;
-            pAudioBuffer [i]->raw [x] = 0.0f ;
-        }
+//        for (int x = 0 ; x < buffer_size ; x ++) {
+//            pAudioBuffer [i]->data [x] = 0.0f ;
+//            pAudioBuffer [i]->raw [x] = 0.0f ;
+//        }
     }
 
     buffer_counter = 0 ;
