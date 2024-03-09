@@ -14,6 +14,7 @@ void LockFreeQueueManager::init (int _buffer_size) {
     for (int i = 0; i < SPARE_BUFFERS; i ++) {
         pAudioBuffer [i] = static_cast<AudioBuffer *>(malloc(sizeof(AudioBuffer)));
         pAudioBuffer [i] -> data = static_cast<float *>(malloc(buffer_size * sizeof(float)));
+        pAudioBuffer [i] -> raw = static_cast<float *>(malloc(buffer_size * sizeof(float)));
         pAudioBuffer [i] -> pos = 0 ;
     }
 
@@ -26,19 +27,19 @@ void LockFreeQueueManager::init (int _buffer_size) {
     OUT
 }
 
-void LockFreeQueueManager::add_function (int (* f) (float *, int)) {
+void LockFreeQueueManager::add_function (int (* f) (AudioBuffer *)) {
     IN
     if (functions_count > MAX_FUNCTIONS) {
         HERE LOGE ("already have %d functions added to queue, cannot add any more!", MAX_FUNCTIONS);
         OUT return ;
     }
 
-    functions [functions_count] = reinterpret_cast<void (*)(float *, int)>(f);
+    functions [functions_count] = reinterpret_cast<void (*)(AudioBuffer *)>(f);
     functions_count ++ ;
     OUT
 }
 
-void LockFreeQueueManager::process (float * data, int samplesToProcess) {
+void LockFreeQueueManager::process (float * raw, float * data, int samplesToProcess) {
 //    IN
     if (! ready) {
         OUT
@@ -47,6 +48,7 @@ void LockFreeQueueManager::process (float * data, int samplesToProcess) {
     }
 
     for (int i = 0 ; i < samplesToProcess ; i ++) {
+        pAudioBuffer [buffer_counter]->raw [i] = raw [i] ;
         pAudioBuffer [buffer_counter]->data [i] = data [i] ;
     }
 
@@ -67,7 +69,7 @@ void LockFreeQueueManager::main () {
     while (ready) {
         if (lockFreeQueue.pop (buffer)) {
             for (int i = 0; i < functions_count; i++) {
-                (functions[i])(buffer->data, buffer->pos);
+                (functions[i])(buffer);
             }
         }
 
@@ -83,6 +85,7 @@ void LockFreeQueueManager::quit () {
     fileWriteThread.join();
     for (int i = 0; i < SPARE_BUFFERS; i ++) {
         free (pAudioBuffer [i] -> data) ;
+        free (pAudioBuffer [i] -> raw) ;
         free (pAudioBuffer [i]) ;
     }
 

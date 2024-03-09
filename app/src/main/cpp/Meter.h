@@ -200,7 +200,7 @@ public:
     static float tunerBuffer [1024*4];
     static int tunerIndex;
 
-    static int updateMeterOutput(float *data, int samples);
+    static int updateMeterOutput(AudioBuffer * buffer);
 
     void stop();
 

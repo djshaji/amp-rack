@@ -25,6 +25,7 @@
 #include <thread>
 #include "logging_macros.h"
 #include <unistd.h>
+#include "AudioBuffer.h"
 //#include "Engine.h"
 
 /**
@@ -157,14 +158,6 @@ private:
 
 };
 
-typedef struct audio_buffer {
-    int overruns;
-    int pos;
-//    float data[];
-    float *data;
-    int size ;
-} AudioBuffer;
-
 #define LOCK_FREE_SIZE 4096
 #define SPARE_BUFFERS 16
 
@@ -176,15 +169,15 @@ class LockFreeQueueManager {
     bool ready = false ;
 
     #define MAX_FUNCTIONS 10
-    void (* functions [MAX_FUNCTIONS])(float *, int) ;
+    void (* functions [MAX_FUNCTIONS])(AudioBuffer *) ;
     int functions_count ;
 
     static std::thread fileWriteThread ;
 
 public:
     void init (int _buffer_size) ;
-    void add_function(int (*f)(float *, int));
-    void process (float * data, int samplesToProcess) ;
+    void add_function(int (*f)(AudioBuffer *));
+    void process (float * raw, float * data, int samplesToProcess) ;
     void main () ;
     void quit () ;
 

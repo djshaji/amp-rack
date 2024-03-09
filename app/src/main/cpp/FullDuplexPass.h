@@ -81,12 +81,13 @@ public:
 
 //        float inSamples [samplesToProcess];
         for (int i = 0 ; i < samplesToProcess ; i ++) {
+            outputFloats [i] = inputFloats [i];
             inSamples [i] = inputFloats [i] * inputVolume ;
         }
 
-        if (meterEnabled) {
-            Meter::process (samplesToProcess, inSamples, true);
-        }
+//        if (meterEnabled) {
+//            Meter::process (samplesToProcess, inSamples, true);
+//        }
         // this
         // am I devloper yet?
 //        memcpy(outputData, inputData, samplesToProcess);
@@ -106,7 +107,7 @@ public:
 //            Meter::process (samplesToProcess, inSamples, false);
 //        }
 
-        lockFreeQueueManager->process(inSamples, samplesToProcess) ;
+        lockFreeQueueManager->process(outputFloats, inSamples, samplesToProcess) ;
 
         //        for (int32_t i = 0; i < samplesToProcess; i++) {
 //            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing

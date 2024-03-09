@@ -228,14 +228,16 @@ int FileWriter::disk_write_callback(float *arg,size_t nframes) {
         return 0;
 
     } else {
-        disk_write(arg, nframes);
+//        disk_write(arg, nframes);
         bufferUsed = 0;
     }
 
     return 0 ;
 }
 
-int FileWriter::disk_write(float *data,int frames) {
+int FileWriter::disk_write(AudioBuffer * buffer) {
+    float * data = buffer -> data ;
+    int frames = buffer -> pos ;
 
    /*
     LOGD("----------| %d  |-----------", std::chrono::system_clock::now()) ;
@@ -326,7 +328,7 @@ void FileWriter::writeLoop () {
     buffer_t *buffer ;
     while (ready) {
         if (lockFreeQueue.pop(buffer)) {
-            disk_write(buffer->data, buffer->pos);
+//            disk_write(buffer);
         }
 
 //        std::this_thread::sleep_for(std::chrono::microseconds (10));

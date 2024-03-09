@@ -80,7 +80,11 @@ int Meter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int readin
     return 0 ;
 }
 
-int Meter::updateMeterOutput (float * data, int samples) {
+int Meter::updateMeterOutput (AudioBuffer * buffer) {
+    float * data = buffer->data ;
+    float * raw = buffer -> raw ;
+    int samples = buffer -> pos ;
+
     if (! enabled)
         return 0;
 
@@ -116,6 +120,14 @@ int Meter::updateMeterOutput (float * data, int samples) {
     }
 
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
+
+    max = 0 ;
+    for (int i = 0 ; i < samples; i ++) {
+        if (raw [i] > max)
+            max = raw [i] ;
+    }
+
+    envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, true);
     return 0;
 }
 

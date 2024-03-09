@@ -107,7 +107,7 @@ class FileWriter {
 public:
     FileWriter ();
     ~FileWriter ();
-    static int disk_write(float *data, int frames);
+    static int disk_write(AudioBuffer * buffer);
     int disk_write_callback(float *data, size_t frames);
 
     static void * mp3_buffer ;
@@ -137,7 +137,7 @@ public:
             return static_cast<vringbuffer_receiver_callback_return_t>(true);
         }
 
-        disk_write(buffer->data, buffer->pos);
+//        disk_write(buffer->data, buffer->pos);
         return VRB_CALLBACK_USED_BUFFER;
         if (!useStaticBuffer) {
             if (bufferUsed < MAX_STATIC_BUFFER) {
@@ -157,9 +157,9 @@ public:
         }
         else {
 //            LOGD("buffer used: %d", bufferUsed);
-            for (int i = 0 ; i < bufferUsed; i ++) {
-                disk_write(doubleBuffer [i] -> data,doubleBuffer [i] -> pos);
-            }
+//            for (int i = 0 ; i < bufferUsed; i ++) {
+//                disk_write(doubleBuffer [i] -> data,doubleBuffer [i] -> pos);
+//            }
 
             bufferUsed = 0 ;
         }
