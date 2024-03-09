@@ -26,6 +26,7 @@
 #include "logging_macros.h"
 #include <unistd.h>
 #include "AudioBuffer.h"
+#include <jni.h>
 //#include "Engine.h"
 
 /**
@@ -175,6 +176,8 @@ class LockFreeQueueManager {
     static std::thread fileWriteThread ;
 
 public:
+    JavaVM * vm = NULL  ;
+
     void init (int _buffer_size) ;
     void add_function(int (*f)(AudioBuffer *));
     void process (float * raw, float * data, int samplesToProcess) ;
@@ -184,5 +187,8 @@ public:
     LockFreeQueueManager () {
         functions_count = 0 ;
     }
+
+    void attach();
+    void detach ();
 };
 #endif //AMP_RACK_LOCKFREEQUEUE_H

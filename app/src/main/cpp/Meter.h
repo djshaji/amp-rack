@@ -54,6 +54,8 @@ class Meter {
     static staticBuffer_t buffers [1024] ;
     static int MAX_STATIC_BUFFER  ;
     static JavaVM *vm ;
+    static int attached_thread ;
+    static bool engine_running ;
 
 public:
     Meter(JavaVM *pVm);
@@ -205,6 +207,8 @@ public:
     void stop();
 
     void disable();
+
+    void start();
 };
 
 #endif //AMP_RACK_METER_H

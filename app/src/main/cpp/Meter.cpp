@@ -8,6 +8,8 @@
 vringbuffer_t * Meter::vringbuffer ;
 vringbuffer_t * Meter::vringbufferOutput ;
 Meter::buffer_t *Meter::current_buffer;
+int Meter::attached_thread = 0 ;
+bool Meter::engine_running = false ;
 //LockFreeQueue<Meter::buffer_t*, LOCK_FREE_SIZE> Meter::lockFreeQueue;
 int Meter::bufferUsed  = 0;
 bool Meter::tunerEnabled = true;
@@ -44,6 +46,8 @@ JNIEnv* getEnv() {
             return nullptr;
         }
     }
+
+    LOGD("[getenv] attached thread id %d", gettid());
     return env;
 }
 
@@ -85,12 +89,31 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
     float * raw = buffer -> raw ;
     int samples = buffer -> pos ;
 
-    if (! enabled)
+    /*
+    if (! enabled) {
+        if (envOutput != nullptr) {
+            vm ->DetachCurrentThread();
+            envOutput = nullptr ;
+        }
+
         return 0;
+    }
+     */
+
+    if (! engine_running) {
+        return 0;
+    }
 
     if (envOutput == nullptr) {
         LOGD("MeterOutput thread id: %d", gettid ());
         envOutput = getEnv();
+//        int status = gJvm->GetEnv((void**)&envOutput, JNI_VERSION_1_6);
+//        if (status < 0) {
+//            LOGE("[meter] thread %d not attached", gettid()) ;
+//            return 0;
+//        }
+
+        attached_thread = gettid();
         if (envOutput == nullptr)
             LOGF("envOutput is null");
         mainActivityOutput = findClassWithEnv(envOutput, "com/shajikhan/ladspa/amprack/MainActivity");
@@ -111,7 +134,30 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         if (setTuner == nullptr) {
             LOGF("cannot find setTuner method!");
         }
+
+        return 0 ;
     }
+
+    if (envOutput == nullptr) {
+//        JNIEnv * _env = NULL;
+//
+//        int status = gJvm->GetEnv((void**)&_env, JNI_VERSION_1_6);
+//        if(status > 0) {
+//            LOGW("detaching thread %d", gettid());
+//            vm->DetachCurrentThread();
+//        }
+
+        return 0;
+    }
+
+    if (gettid() != attached_thread) {
+        LOGE("thread ID mismatch %d (attached %d)", attached_thread, gettid());
+        return 0;
+    }
+
+    ///> FIXME
+//    if (samples < 16 /* aaaargh */ or raw == 0 or data == 0)
+//        return 0;
 
     float max = 0 ;
     for (int i = 0 ; i < samples; i ++) {
@@ -119,20 +165,35 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             max = data [i] ;
     }
 
-    envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
-
-    max = 0 ;
+    float imax = 0 ;
     for (int i = 0 ; i < samples; i ++) {
-        if (raw [i] > max)
-            max = raw [i] ;
+        if (raw [i] > imax)
+            imax = raw [i] ;
     }
 
-    envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, true);
+    envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
+    envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) imax, true);
+
     return 0;
 }
 
+void Meter::start () {
+    engine_running = true ;
+}
+
 void Meter::stop () {
+    IN
+    engine_running = false ;
     envOutput = nullptr ;
+    JNIEnv * _env = NULL;
+
+    int status = gJvm->GetEnv((void**)&_env, JNI_VERSION_1_6);
+    if(status > 0) {
+        LOGW("detaching thread %d", gettid());
+        gJvm->DetachCurrentThread();
+    }
+
+    OUT
 }
 
 Meter::Meter(JavaVM *pVm) {
@@ -142,15 +203,15 @@ Meter::Meter(JavaVM *pVm) {
     // sane defaults
     jack_samplerate = 48000 ;
     block_size = 384 ;
-    vringbuffer = vringbuffer_create(JC_MAX(4,seconds_to_buffers(1)),
-                                     JC_MAX(4,seconds_to_buffers(40)),
-                                     (size_t) buffer_size_in_bytes);
-
-    if(vringbuffer == NULL){
-        HERE LOGF ("Unable to create ringbuffer!") ;
-        OUT
-        return ;
-    }
+//    vringbuffer = vringbuffer_create(JC_MAX(4,seconds_to_buffers(1)),
+//                                     JC_MAX(4,seconds_to_buffers(40)),
+//                                     (size_t) buffer_size_in_bytes);
+//
+//    if(vringbuffer == NULL){
+//        HERE LOGF ("Unable to create ringbuffer!") ;
+//        OUT
+//        return ;
+//    }
 
 //    vringbufferOutput = vringbuffer_create(JC_MAX(4,seconds_to_buffers(1)),
 //                                     JC_MAX(4,seconds_to_buffers(40)),
@@ -163,11 +224,11 @@ Meter::Meter(JavaVM *pVm) {
 //    }
 
     /// TODO: Free this memory!
-    vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
+//    vringbuffer_set_autoincrease_callback(vringbuffer,autoincrease_callback,0);
 //    vringbuffer_set_autoincrease_callback(vringbufferOutput,autoincrease_callback,0);
-    current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
-    empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * 1));
-    vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
+//    current_buffer = static_cast<buffer_t *>(vringbuffer_get_writing(vringbuffer));
+//    empty_buffer   = static_cast<float *>(my_calloc(sizeof(float), block_size * 1));
+//    vringbuffer_set_receiver_callback(vringbuffer,meter_callback);
 //    vringbuffer_set_receiver_callback(vringbufferOutput,meter_callback_output);
 
     /*

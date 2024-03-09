@@ -16,6 +16,11 @@ void LockFreeQueueManager::init (int _buffer_size) {
         pAudioBuffer [i] -> data = static_cast<float *>(malloc(buffer_size * sizeof(float)));
         pAudioBuffer [i] -> raw = static_cast<float *>(malloc(buffer_size * sizeof(float)));
         pAudioBuffer [i] -> pos = 0 ;
+
+        for (int x = 0 ; x < buffer_size ; x ++) {
+            pAudioBuffer [i]->data [x] = 0.0f ;
+            pAudioBuffer [i]->raw [x] = 0.0f ;
+        }
     }
 
     buffer_counter = 0 ;
@@ -24,6 +29,7 @@ void LockFreeQueueManager::init (int _buffer_size) {
     fileWriteThread = std::thread (&LockFreeQueueManager::main, this);
     LOGD("[LockFreeQueue thread id] %d", gettid ());
 
+//    attach();
     OUT
 }
 
@@ -69,6 +75,7 @@ void LockFreeQueueManager::main () {
     while (ready) {
         while (lockFreeQueue.pop (buffer)) {
             for (int i = 0; i < functions_count; i++) {
+//                if (ready)
                 (functions[i])(buffer);
             }
         }
@@ -81,12 +88,46 @@ void LockFreeQueueManager::main () {
 void LockFreeQueueManager::quit () {
     IN
     ready = false ;
+    AudioBuffer * buffer ;
+    while (lockFreeQueue.pop(buffer))
+        1 ; // TIL this can also be a statement
+
+    //    detach();
     fileWriteThread.join();
     for (int i = 0; i < SPARE_BUFFERS; i ++) {
         free (pAudioBuffer [i] -> data) ;
         free (pAudioBuffer [i] -> raw) ;
         free (pAudioBuffer [i]) ;
     }
+
+    OUT
+}
+
+void LockFreeQueueManager::detach () {
+    IN
+
+    JNIEnv * _env = NULL;
+    int status = vm->GetEnv((void**)&_env, JNI_VERSION_1_6);
+    if(status > 0) {
+        LOGW("detaching thread %d", gettid());
+        vm->DetachCurrentThread();
+    }
+
+    OUT
+}
+
+void LockFreeQueueManager::attach () {
+    IN
+
+    JNIEnv *env;
+    int status = vm->GetEnv((void**)&env, JNI_VERSION_1_6);
+    if(status < 0) {
+        status = vm->AttachCurrentThread(&env, NULL);
+        if(status < 0) {
+            LOGE("LockFreeQueueManager: failed to attach thread %d", gettid());
+        }
+    } else
+        LOGD("[getenv] attached thread id %d", gettid());
 
     OUT
 }

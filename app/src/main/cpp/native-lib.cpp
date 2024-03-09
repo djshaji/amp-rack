@@ -28,6 +28,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_create(JNIEnv *env, jclass clazz) 
     if (engine == nullptr) {
         engine = new Engine () ;
         env ->GetJavaVM(&engine -> vm);
+        engine->queueManager.vm = engine -> vm ;
         engine -> meter = new Meter (engine -> vm) ;
     }
 
@@ -689,22 +690,22 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_setInputVolume(JNIEnv *env, jclass clazz, jfloat volume) {
     // TODO: implement setVolume()
-    IN
+//    IN
     if (engine == NULL) {
         HERE LOGF ("engine is NULL"); OUT
     }
 
     engine -> mFullDuplexPass . inputVolume = volume ;
-    OUT
+//    OUT
 }
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_shajikhan_ladspa_amprack_AudioEngine_setOutputVolume(JNIEnv *env, jclass clazz,
                                                               jfloat volume) {
     // TODO: implement setOutputVolume()
-    IN
+//    IN
     engine -> mFullDuplexPass . outputVolume = volume ;
-    OUT
+//    OUT
 }
 
 extern "C"

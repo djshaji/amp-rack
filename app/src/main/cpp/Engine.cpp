@@ -1,7 +1,7 @@
 #include <cassert>
-#include "logging_macros.h"
 
 #include "Engine.h"
+#include "logging_macros.h"
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
@@ -74,7 +74,10 @@ bool Engine::setEffectOn(bool isOn) {
                     free (static_cast<void *>(mFullDuplexPass.raw));
 
                 mFullDuplexPass.inSamples = static_cast<float *>(malloc(mFullDuplexPass.mBufferSize));
+                LOGD("[engine] allocated %d bytes to raw samples", mFullDuplexPass.mBufferSize);
                 mFullDuplexPass.raw = static_cast<float *>(malloc(mFullDuplexPass.mBufferSize));
+//                for (int i = 0 ; i < mFullDuplexPass.mBufferSize; i ++)
+//                    mFullDuplexPass.raw [i] = 0.0f ;
                 fileWriter->setChannels(mOutputChannelCount);
                 /*
                 if (mFullDuplexPass.recordingActive) {
@@ -83,6 +86,7 @@ bool Engine::setEffectOn(bool isOn) {
                  */
 
                 meter->enable();
+                meter->start();
 //                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }
@@ -91,6 +95,7 @@ bool Engine::setEffectOn(bool isOn) {
                 fileWriter->stopRecording() ;
             }
 
+//            LOGD("stopping meter");
             meter->stop();
 
             mFullDuplexPass.stop();
