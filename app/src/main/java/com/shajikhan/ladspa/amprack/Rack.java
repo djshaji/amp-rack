@@ -649,6 +649,7 @@ public class Rack extends Fragment {
             public void onClick(View v) {
 //                mainActivity.drummer ();
 //                mainActivity.cameraPreview();
+                MainActivity.setAudioDevice();
                 return;
             }
         });

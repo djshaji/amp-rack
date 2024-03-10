@@ -159,7 +159,7 @@ private:
 
 };
 
-#define LOCK_FREE_SIZE 4096
+#define LOCK_FREE_SIZE 128
 #define SPARE_BUFFERS 128
 
 class LockFreeQueueManager {

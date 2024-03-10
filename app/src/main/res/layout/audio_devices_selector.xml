@@ -6,26 +6,60 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gruppo"
+        android:text="Audio Input / Output"
+        android:textSize="22dp"
+        android:textStyle="bold" />
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Input Device"
         android:layout_margin="10dp"
         android:fontFamily="@font/comfortaa"/>
-    <Spinner
-        android:layout_margin="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/input_devices"
-        android:layout_height="wrap_content"/>
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Spinner
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:id="@+id/input_devices"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:visibility="gone"
+            android:id="@+id/custom_input_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     <TextView
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Output Device"
         android:fontFamily="@font/comfortaa"/>
-    <Spinner
-        android:layout_margin="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/output_devices"
-        android:layout_height="wrap_content"/>
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Spinner
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:id="@+id/output_devices"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:visibility="gone"
+            android:id="@+id/custom_output_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>

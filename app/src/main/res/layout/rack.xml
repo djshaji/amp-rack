@@ -126,8 +126,6 @@
             android:background="@drawable/rounded_corners_transparent"
             android:layout_width="match_parent"
             android:id="@+id/mixer"
-            android:outlineAmbientShadowColor="@color/white"
-            android:outlineSpotShadowColor="@color/white"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 

@@ -65,7 +65,7 @@ void LockFreeQueueManager::add_function (int (* f) (AudioBuffer *)) {
 void LockFreeQueueManager::process (float * raw, float * data, int samplesToProcess) {
 //    IN
     if (! ready) {
-        OUT
+//        OUT
 //        HERE LOGD("not ready");
         return;
     }
@@ -89,10 +89,13 @@ void LockFreeQueueManager::process (float * raw, float * data, int samplesToProc
 void LockFreeQueueManager::main () {
     IN
     AudioBuffer * buffer ;
+//    int size = 0 ;
     while (ready) {
         while (lockFreeQueue.pop (buffer)) {
+//            if (size < lockFreeQueue.size())
+//                size = lockFreeQueue.size();
+//            LOGI("[lockfreequeue] peak size: %d", size);
             for (int i = 0; i < functions_count; i++) {
-//                if (ready)
                 (functions[i])(buffer);
             }
         }
@@ -104,7 +107,7 @@ void LockFreeQueueManager::main () {
 
 void LockFreeQueueManager::quit () {
     IN
-    ready = false ;
+//    ready = false ;
     AudioBuffer * buffer ;
     while (lockFreeQueue.pop(buffer))
         1 ; // TIL this can also be a statement

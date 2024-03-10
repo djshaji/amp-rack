@@ -325,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "drummer");
         hashCommands.add(this, "featured");
         hashCommands.add(this, "resetOnboard");
+        hashCommands.add(this, "setAudioDevice");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
@@ -2589,7 +2590,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void testLV2 () {
 //        Log.d(TAG, "testLV2: " + getLV2Info("eql"));
-        AudioEngine.testLV2();
+//        AudioEngine.testLV2();
+        AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput ;
+        audioDevicesInput = audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
+        audioDevicesOutput = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
+
+        for (AudioDeviceInfo audioDeviceInfo: audioDevicesInput)
+            Log.d(TAG, String.format ("[%s] %s: %s", audioDeviceInfo.getType(), audioDeviceInfo.getId(), audioDeviceInfo.getProductName()));
+        for (AudioDeviceInfo audioDeviceInfo: audioDevicesOutput)
+            Log.d(TAG, String.format ("[%s] %s: %s", audioDeviceInfo.getType(), audioDeviceInfo.getId(), audioDeviceInfo.getProductName()));
 //        Log.d(TAG, "testLV2: " + getLV2Info("mda-Limiter.so", "http://drobilla.net/plugins/mda/Limiter"));
     }
 
@@ -3030,5 +3039,166 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         return false;
+    }
+
+    public static void setAudioDevice () {
+        AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput ;
+        audioDevicesInput = mainActivity.audioManager.getDevices (AudioManager.GET_DEVICES_INPUTS) ;
+        audioDevicesOutput = mainActivity.audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) ;
+
+        String current_in = mainActivity.defaultSharedPreferences.getString("input", "");
+        String current_out = mainActivity.defaultSharedPreferences.getString("output", "");
+
+        if (current_out == "")
+            current_out = "0" ;
+        if (current_in == "")
+            current_in = "0";
+
+        Log.d(TAG, String.format ("%s: %s", current_in, current_out));
+        int cin = 0, cout = 0, counter = 0 ; ;
+
+        for (AudioDeviceInfo audioDeviceInfo: audioDevicesInput) {
+            Log.d(TAG, String.format("<%s> [%s] %s: %s", current_in, audioDeviceInfo.getType(), audioDeviceInfo.getId(), audioDeviceInfo.getProductName()));
+            if (Integer.parseInt(current_in) == audioDeviceInfo.getId())
+                cin = counter + 1;
+            counter ++ ;
+        }
+
+        counter = 0 ;
+        for (AudioDeviceInfo audioDeviceInfo: audioDevicesOutput) {
+            Log.d(TAG, String.format("%b <%s> [%s] %s: %s",
+                    Integer.valueOf(current_out) == Integer.valueOf(audioDeviceInfo.getId()),
+                    current_out, audioDeviceInfo.getType(),
+                    audioDeviceInfo.getId(), audioDeviceInfo.getProductName()));
+            if (Integer.parseInt(current_out) == audioDeviceInfo.getId())
+                cout = counter + 1;
+            counter ++ ;
+        }
+        Log.d(TAG, String.format ("[defaults] %d: %d", cin, cout));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        // Get the layout inflater
+        LayoutInflater inflater = mainActivity.getLayoutInflater();
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.audio_devices_selector, null);
+        builder.setView(linearLayout)
+                // Add action buttons
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        /*
+                        try {
+                            String in = ((EditText) linearLayout.findViewById(R.id.custom_input_device)).getText().toString() ;
+                            if (!in.isEmpty()) {
+                                int dev = Integer.parseInt(in) ;
+                                AudioEngine.setRecordingDeviceId(dev);
+                                Log.d(TAG, String.format ("set record dev: %d", dev));
+                                mainActivity.defaultSharedPreferences.edit().putString("input", String.valueOf(dev)).apply();
+                            }
+                            in = ((EditText) linearLayout.findViewById(R.id.custom_output_device)).getText().toString() ;
+                            if (!in.isEmpty()) {
+                                int dev = Integer.parseInt(in) ;
+                                mainActivity.defaultSharedPreferences.edit().putString("output", String.valueOf(dev)).apply();
+                                Log.d(TAG, String.format ("set playback dev: %d", dev));
+                                AudioEngine.setPlaybackDeviceId(dev);
+                            }
+                        } catch (NumberFormatException e) {
+                            Log.e(TAG, "onClick: ", e);
+                        }
+
+                         */
+                    }
+                });
+                /*
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+                 */
+
+        int i = 0;
+//                HashMap<CharSequence, Integer> inputs = new HashMap<>();
+//                HashMap <CharSequence, Integer> outputs = new HashMap<>();
+        ArrayList<String> input_s = new ArrayList<>();
+        ArrayList<String> output_s = new ArrayList<>();
+
+        input_s.add ("Default");
+        output_s.add ("Default");
+
+        for (i = 0; i < audioDevicesInput.length; i++) {
+            AudioDeviceInfo deviceInfo = audioDevicesInput[i] ;
+            String name = String.format("[%d] %s (%s)", deviceInfo.getId(), deviceInfo.getProductName(), typeToString(deviceInfo.getType()));
+//                    inputs.put(name, audioDevicesInput [i].getId()) ;
+            input_s.add(name);
+        }
+
+        for (i = 0; i < audioDevicesOutput.length; i++) {
+            AudioDeviceInfo deviceInfo = audioDevicesOutput[i] ;
+            String name = String.format("[%d] %s (%s)", deviceInfo.getId(), deviceInfo.getProductName(), typeToString(deviceInfo.getType()));
+//                    outputs.put(name, audioDevicesOutput [i].getId()) ;
+            output_s.add(name);
+        }
+
+        ArrayAdapter input_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item, input_s);
+        input_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter output_a = new ArrayAdapter(context, android.R.layout.simple_spinner_item, output_s);
+        output_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner in = (Spinner) linearLayout.findViewById(R.id.input_devices);
+        Spinner out = (Spinner) linearLayout.findViewById(R.id.output_devices);
+        in.setAdapter(input_a);
+        out.setAdapter(output_a);
+
+        in.setSelection(cin);
+        out.setSelection(cout);
+
+        in.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0) {
+                    mainActivity.defaultSharedPreferences.edit().putString("input", "-1").apply();
+                    return ;
+                }
+
+                i-- ;
+                mainActivity.defaultSharedPreferences.edit().putString("input", String.valueOf(audioDevicesInput[i].getId())).apply();
+//                AudioEngine.setRecordingDeviceId(audioDevicesInput[i].getId());
+                mainActivity.defaultInputDevice = i;
+                Log.d(TAG, String.format ("set recording device: %d", audioDevicesInput[i].getId()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        out.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0) {
+                    mainActivity.defaultSharedPreferences.edit().putString("output", "-1").apply();
+                    return ;
+                }
+
+                i-- ;
+                AudioEngine.setPlaybackDeviceId(audioDevicesOutput[i].getId());
+                mainActivity.defaultSharedPreferences.edit().putString("output", String.valueOf(audioDevicesOutput[i].getId())).apply();
+                mainActivity.defaultInputDevice = i;
+                Log.d(TAG, String.format ("set playback device: %d", audioDevicesOutput[i].getId()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        builder.show();
     }
 }
