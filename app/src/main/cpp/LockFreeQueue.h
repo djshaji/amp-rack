@@ -174,6 +174,7 @@ class LockFreeQueueManager {
     int functions_count ;
 
     static std::thread fileWriteThread ;
+    bool thread_started = false;
 
 public:
     JavaVM * vm = NULL  ;
@@ -186,6 +187,7 @@ public:
 
     LockFreeQueueManager () {
         functions_count = 0 ;
+        pAudioBuffer [0] = nullptr;
     }
 
     void attach();

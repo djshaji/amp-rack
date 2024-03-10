@@ -9,24 +9,41 @@ std::thread LockFreeQueueManager::fileWriteThread  ;
 
 void LockFreeQueueManager::init (int _buffer_size) {
     IN
-    buffer_size = _buffer_size ;
-//    pAudioBuffer = static_cast<AudioBuffer *>(calloc(SPARE_BUFFERS, sizeof(AudioBuffer)));
-    for (int i = 0; i < SPARE_BUFFERS; i ++) {
-        pAudioBuffer [i] = static_cast<AudioBuffer *>(malloc(sizeof(AudioBuffer)));
-        pAudioBuffer [i] -> data = static_cast<float *>(malloc(buffer_size * sizeof(float)));
-        pAudioBuffer [i] -> raw = static_cast<float *>(malloc(buffer_size * sizeof(float)));
-        pAudioBuffer [i] -> pos = 0 ;
+    if (buffer_size < _buffer_size) {
+        if (pAudioBuffer[0] != nullptr) {
+            for (int i = 0; i < SPARE_BUFFERS; i++) {
+                free(pAudioBuffer[i]->data);
+                free(pAudioBuffer[i]->raw);
+                free(pAudioBuffer[i]);
+            }
+        }
 
+        pAudioBuffer[0] = nullptr ;
+    }
+
+    buffer_size = _buffer_size ;
+    if (pAudioBuffer [0] == nullptr) {
+        //    pAudioBuffer = static_cast<AudioBuffer *>(calloc(SPARE_BUFFERS, sizeof(AudioBuffer)));
+        for (int i = 0; i < SPARE_BUFFERS; i++) {
+            pAudioBuffer[i] = static_cast<AudioBuffer *>(malloc(sizeof(AudioBuffer)));
+            pAudioBuffer[i]->data = static_cast<float *>(malloc(buffer_size * sizeof(float)));
+            pAudioBuffer[i]->raw = static_cast<float *>(malloc(buffer_size * sizeof(float)));
+            pAudioBuffer[i]->pos = 0;
+        }
+    }
 //        for (int x = 0 ; x < buffer_size ; x ++) {
 //            pAudioBuffer [i]->data [x] = 0.0f ;
 //            pAudioBuffer [i]->raw [x] = 0.0f ;
 //        }
-    }
 
     buffer_counter = 0 ;
 
     ready = true ;
-    fileWriteThread = std::thread (&LockFreeQueueManager::main, this);
+    if (! thread_started) {
+        fileWriteThread = std::thread(&LockFreeQueueManager::main, this);
+        thread_started = true;
+    }
+
     LOGD("[LockFreeQueue thread id] %d", gettid ());
 
 //    attach();
@@ -93,12 +110,12 @@ void LockFreeQueueManager::quit () {
         1 ; // TIL this can also be a statement
 
     //    detach();
-    fileWriteThread.join();
-    for (int i = 0; i < SPARE_BUFFERS; i ++) {
-        free (pAudioBuffer [i] -> data) ;
-        free (pAudioBuffer [i] -> raw) ;
-        free (pAudioBuffer [i]) ;
-    }
+//    fileWriteThread.join();
+//    for (int i = 0; i < SPARE_BUFFERS; i ++) {
+//        free (pAudioBuffer [i] -> data) ;
+//        free (pAudioBuffer [i] -> raw) ;
+//        free (pAudioBuffer [i]) ;
+//    }
 
     OUT
 }

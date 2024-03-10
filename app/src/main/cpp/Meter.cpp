@@ -150,10 +150,10 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         return 0;
     }
 
-    if (gettid() != attached_thread) {
-        LOGE("thread ID mismatch %d (attached %d)", attached_thread, gettid());
-        return 0;
-    }
+//    if (gettid() != attached_thread) {
+//        LOGE("thread ID mismatch %d (attached %d)", attached_thread, gettid());
+//        return 0;
+//    }
 
     ///> FIXME
 //    if (samples < 16 /* aaaargh */ or raw == 0 or data == 0)
@@ -184,14 +184,16 @@ void Meter::start () {
 void Meter::stop () {
     IN
     engine_running = false ;
+
+    /* we never detach
     envOutput = nullptr ;
     JNIEnv * _env = NULL;
-
     int status = gJvm->GetEnv((void**)&_env, JNI_VERSION_1_6);
     if(status > 0) {
         LOGW("detaching thread %d", gettid());
         gJvm->DetachCurrentThread();
     }
+     */
 
     OUT
 }
