@@ -20,10 +20,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySplash">
         <activity
-            android:name=".Camera"
-            android:label="Camera"
-            android:theme="@style/Theme.AmpRack"
+            android:name=".About"
             android:exported="false" />
+        <activity
+            android:name=".Camera"
+            android:exported="false"
+            android:label="Camera"
+            android:theme="@style/Theme.AmpRack" />
         <activity
             android:name=".FeaturedVideos"
             android:exported="false"

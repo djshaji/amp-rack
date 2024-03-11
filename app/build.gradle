@@ -113,6 +113,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'androidx.compose.material3:material3:1.0.0-alpha01'
+    implementation 'androidx.activity:activity:1.8.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     def billing_version = "5.0.0"
