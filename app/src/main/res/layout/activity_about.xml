@@ -65,7 +65,7 @@
                 android:src="@drawable/dev"/>
 
             <TextView
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:fontFamily="@font/comfortaa"
@@ -93,15 +93,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/comfortaa"
+                    android:id="@+id/music"
                     android:layout_margin="5dp"
-                    android:text="My Music"/>
+                    android:text="Music"/>
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:id="@+id/github"
                     android:fontFamily="@font/comfortaa"
                     android:text="Github"/>
             </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="@string/about_dev"
+                    android:fontFamily="@font/comfortaa"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
+                    android:textAlignment="center"
+                    android:layout_height="wrap_content"/>
+            </ScrollView>
 
         </LinearLayout>
     </LinearLayout>

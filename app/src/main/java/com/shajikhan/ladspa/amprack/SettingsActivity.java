@@ -396,6 +396,14 @@ public class SettingsActivity extends AppCompatActivity implements
                     return false;
                 }
             });
+
+            findPreference("build_name").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    MainActivity.about();
+                    return false;
+                }
+            });
             findPreference("build_name").setSummary(R.string.app_version);
 //            int plugins = AudioEngine.getTotalPlugins() ;
             int plugins = MainActivity.totalPlugins;

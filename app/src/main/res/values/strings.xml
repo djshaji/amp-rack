@@ -7,6 +7,10 @@
         Android Material Design, or Tube Amp theme based on the new
         skin engine.
     </string>
+    <string name="about_dev">
+        Open Source Audio Engineer. I love to write code, make music, travel and read.\n\n
+        shaji.in
+    </string>
     <string-array name="tap_plugins">
         <item>tap_autopan.so</item>
         <item>tap_chorusflanger.so</item>

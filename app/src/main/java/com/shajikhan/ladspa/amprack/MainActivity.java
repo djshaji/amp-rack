@@ -3201,4 +3201,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         builder.show();
     }
+
+    public static void about () {
+        Intent intent = new Intent(mainActivity, About.class);
+        mainActivity.startActivity(intent);
+
+    }
 }

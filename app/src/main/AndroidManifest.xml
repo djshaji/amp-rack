@@ -21,6 +21,7 @@
         android:theme="@style/Theme.MySplash">
         <activity
             android:name=".About"
+            android:theme="@style/Theme.AmpRack"
             android:exported="false" />
         <activity
             android:name=".Camera"
