@@ -385,7 +385,7 @@ public class Rack extends Fragment {
                 String key = keys.next();
                 try {
                     if (blacklist.has(key) && ! enableBlacklisted) {
-                        Log.d(TAG, String.format ("blacklisted: %s", key));
+                        Log.d(TAG, String.format ("[lv2] blacklisted: %s", key));
                         continue;
                     }
 
@@ -414,6 +414,10 @@ public class Rack extends Fragment {
                         // do something with jsonObject here
                         String name = object.getString("name");
                         String id = object.getString("id");
+                        if (blacklist.has(id) && ! enableBlacklisted) {
+                            Log.d(TAG, String.format ("[ladspa] blacklisted: %s", key));
+                            continue;
+                        }
 //                        Log.d(TAG, "[LV2 plugin]: " + name + ": " + id);
                         mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id));
                     }
