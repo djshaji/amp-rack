@@ -45,4 +45,8 @@
         app:defaultValue="true"
         app:key="lazyLoad"
         app:title="On demand plugin loading (recommended)"/>
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="enableBlacklisted"
+        app:title="Enable blacklisted plugins (not recommended)"/>
 </PreferenceScreen>

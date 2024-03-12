@@ -349,6 +349,9 @@ public class Rack extends Fragment {
             libraries = AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
 
+        JSONObject blacklist = ConnectGuitar.loadJSONFromAssetFile(mainActivity, "blacklist.json");
+        boolean enableBlacklisted = mainActivity.defaultSharedPreferences.getBoolean("enableBlacklisted", false);
+
         // run this only once
         if (mainActivity.pluginDialogAdapter.plugins.size() == 0 && mainActivity.lazyLoad == false) {
             for (int i = 0; i < libraries; i++) {
@@ -381,6 +384,11 @@ public class Rack extends Fragment {
             while (keys.hasNext()) {
                 String key = keys.next();
                 try {
+                    if (blacklist.has(key) && ! enableBlacklisted) {
+                        Log.d(TAG, String.format ("blacklisted: %s", key));
+                        continue;
+                    }
+
                     if (plugins.get(key) instanceof JSONObject) {
 //                        Log.d(TAG, "onCreate: key " + key);
                         JSONObject object = plugins.getJSONObject(key);

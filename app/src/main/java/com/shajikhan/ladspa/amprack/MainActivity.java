@@ -1064,6 +1064,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        JSONObject blacklist = ConnectGuitar.loadJSONFromAssetFile(this, "assets/blacklist.json");
+        Log.d(TAG, String.format ("blacklist: %s", blacklist.toString()));
 
         int libraries = AudioEngine.getSharedLibraries();
         Log.d(TAG, "Creating dialog for " + libraries + " libraries");
@@ -1075,7 +1077,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 MenuItem menuItem = subMenu.add(name);
                 int finalI = i;
                 int finalPlugin = plugin;
+                int pluginID = finalI * 100 + finalPlugin ;
+                if (blacklist.has(String.valueOf(pluginID)))
+                    continue;
+
                 pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name);
+
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
