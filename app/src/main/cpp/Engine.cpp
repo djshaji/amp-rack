@@ -558,3 +558,7 @@ void Engine::test () {
         LOGD("read %d result", result);
     }
 }
+
+int Engine::setTuner (buffer_t * buffer) {
+
+}

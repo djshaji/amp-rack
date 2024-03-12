@@ -5,6 +5,8 @@
 #include "logging_macros.h"
 #include "Meter.h"
 
+jfloatArray Meter::jfloatArray1 ;
+int Meter::jfloatArray1_Size = 0 ;
 vringbuffer_t * Meter::vringbuffer ;
 vringbuffer_t * Meter::vringbufferOutput ;
 Meter::buffer_t *Meter::current_buffer;
@@ -135,6 +137,9 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             LOGF("cannot find setTuner method!");
         }
 
+        // this should never be more than this
+        jfloatArray1 = envOutput->NewFloatArray(samples + 1);
+        jfloatArray1_Size = samples + 1 ;
         return 0 ;
     }
 
@@ -173,6 +178,20 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) imax, true);
+    if (tunerEnabled) {
+        if (samples > jfloatArray1_Size) {
+            LOGW("increased float array size from %d to %d", jfloatArray1_Size, samples);
+            jboolean copy = true ;
+            jfloat * elems = envOutput->GetFloatArrayElements( jfloatArray1, &copy);
+            envOutput->ReleaseFloatArrayElements(jfloatArray1, elems, 0);
+
+            jfloatArray1 = envOutput->NewFloatArray(samples + 1);
+            jfloatArray1_Size = samples + 1 ;
+        }
+
+        envOutput->SetFloatArrayRegion(jfloatArray1, 0, samples, raw);
+        envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
+    }
 
     return 0;
 }

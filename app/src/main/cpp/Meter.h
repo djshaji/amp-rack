@@ -209,6 +209,9 @@ public:
     void disable();
 
     void start();
+
+    static _jfloatArray *jfloatArray1;
+    static int jfloatArray1_Size;
 };
 
 #endif //AMP_RACK_METER_H
