@@ -177,15 +177,16 @@ public class Rack extends Fragment {
             });
 
         mainActivity.tuner = mainActivity.findViewById(R.id.patch_label);
-        mainActivity.tuner.setOnClickListener(new View.OnClickListener() {
+        Switch tunerSwitch = mainActivity.findViewById(R.id.tuner_switch);
+        tunerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                TextView _v = (TextView) v ;
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                TextView _v = (TextView) mainActivity.tuner ;
                 _v.setText("Please wait ...");
-                mainActivity.tunerEnabled = ! AudioEngine.getTunerEnabled() ;
+                mainActivity.tunerEnabled = isChecked;
                 if (!mainActivity.tunerEnabled) {
                     AudioEngine.setTunerEnabled(false);
-                    mainActivity.tuner.setText("Tap to activate Tuner");
+                    mainActivity.tuner.setText("Tuner");
                 } else {
                     if (! mainActivity.onOff.isChecked()) {
                         mainActivity.toast ("Starting audio engine");
@@ -193,6 +194,7 @@ public class Rack extends Fragment {
                     }
                     AudioEngine.setTunerEnabled(true);
                 }
+
             }
         });
 

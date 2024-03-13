@@ -16,7 +16,7 @@ int Meter::attached_thread = 0 ;
 bool Meter::engine_running = false ;
 //LockFreeQueue<Meter::buffer_t*, LOCK_FREE_SIZE> Meter::lockFreeQueue;
 int Meter::bufferUsed  = 0;
-bool Meter::tunerEnabled = true;
+bool Meter::tunerEnabled = false;
 int Meter::bufferUsedOutput  = 0;
 float Meter::tunerBuffer [1024 * 4] ;
 int Meter::tunerIndex = 0;
@@ -193,11 +193,11 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         }
          */
 
-        if (jfloatArray1_index >= TUNER_ARRAY_SIZE) {
+        if ((jfloatArray1_index + samples) >= TUNER_ARRAY_SIZE) {
             envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
             jfloatArray1_index = 0 ;
         } else {
-            envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, jfloatArray1_index + samples, raw);
+            envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
             jfloatArray1_index += samples;
         }
     }

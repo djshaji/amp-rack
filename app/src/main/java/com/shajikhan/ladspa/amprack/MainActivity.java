@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     ToggleButton record;
     boolean triggerRecord = false ;
     public Handler handler;
-    public boolean tunerEnabled = true;
+    public boolean tunerEnabled = false;
 
     enum RequestCode {
         TRACK_AUDIO_FILE (1001);
