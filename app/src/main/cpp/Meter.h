@@ -212,6 +212,7 @@ public:
 
     static _jfloatArray *jfloatArray1;
     static int jfloatArray1_Size;
+    static int jfloatArray1_index;
 };
 
 #endif //AMP_RACK_METER_H

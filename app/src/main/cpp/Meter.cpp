@@ -5,7 +5,9 @@
 #include "logging_macros.h"
 #include "Meter.h"
 
+#define TUNER_ARRAY_SIZE 4096
 jfloatArray Meter::jfloatArray1 ;
+int Meter::jfloatArray1_index = 0 ;
 int Meter::jfloatArray1_Size = 0 ;
 vringbuffer_t * Meter::vringbuffer ;
 vringbuffer_t * Meter::vringbufferOutput ;
@@ -138,8 +140,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         }
 
         // this should never be more than this
-        jfloatArray1 = envOutput->NewFloatArray(samples + 1);
-        jfloatArray1_Size = samples + 1 ;
+        jfloatArray1 = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
+        jfloatArray1_index = 0 ;
         return 0 ;
     }
 
@@ -179,6 +181,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) imax, true);
     if (tunerEnabled) {
+        /*
         if (samples > jfloatArray1_Size) {
             LOGW("increased float array size from %d to %d", jfloatArray1_Size, samples);
             jboolean copy = true ;
@@ -188,9 +191,15 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             jfloatArray1 = envOutput->NewFloatArray(samples + 1);
             jfloatArray1_Size = samples + 1 ;
         }
+         */
 
-        envOutput->SetFloatArrayRegion(jfloatArray1, 0, samples, raw);
-        envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
+        if (jfloatArray1_index >= TUNER_ARRAY_SIZE) {
+            envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
+            jfloatArray1_index = 0 ;
+        } else {
+            envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, jfloatArray1_index + samples, raw);
+            jfloatArray1_index += samples;
+        }
     }
 
     return 0;
