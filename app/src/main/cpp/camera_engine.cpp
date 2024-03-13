@@ -172,7 +172,7 @@ void CameraAppEngine::createEncoder (std::string _filename) {
   if (! exitStatus) LOGF("[danger] something has gone wrong!");
   imageReader -> mediaMuxer = mMuxer ;
   imageReader -> mediaCodec = mEncoder ;
-  createDecoder();
+//  createDecoder();
   OUT
 }
 

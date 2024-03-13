@@ -13,8 +13,8 @@ android {
         applicationId "com.shajikhan.ladspa.amprack"
         minSdk 24
         targetSdk 33
-        versionCode 77
-        versionName '3.98'
+        versionCode 78
+        versionName '3.99'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
