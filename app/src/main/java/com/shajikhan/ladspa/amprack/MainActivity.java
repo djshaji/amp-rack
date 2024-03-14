@@ -43,6 +43,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
@@ -68,6 +69,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -136,10 +139,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, TextureView.SurfaceTextureListener {
     private static final String TAG = "Amp Rack MainActivity";
 
     private static final String CHANNEL_ID = "default";
+    Surface surface_ = null;
     public boolean headphoneWarning = true;
     static Context context;
     static MainActivity mainActivity;
@@ -218,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int AUDIO_EFFECT_REQUEST = 0;
     private static final int READ_STORAGE_REQUEST = 1;
     private static final int WRITE_STORAGE_REQUEST = 2;
+    private static final int PERMISSION_REQUEST_CODE_CAMERA = 3;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501; // Any value
 
     // Firebase
@@ -1603,7 +1608,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (AUDIO_EFFECT_REQUEST != requestCode && requestCode != READ_STORAGE_REQUEST && requestCode != WRITE_STORAGE_REQUEST) {
+        if (AUDIO_EFFECT_REQUEST != requestCode && requestCode != READ_STORAGE_REQUEST && requestCode != WRITE_STORAGE_REQUEST &&
+                PERMISSION_REQUEST_CODE_CAMERA != requestCode) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
@@ -1637,6 +1643,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 // Permission was granted, start live effect
                 toggleEffect(false);
             }
+        }
+
+        if (PERMISSION_REQUEST_CODE_CAMERA == requestCode &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Thread initCamera = new Thread(new Runnable() {
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            createTextureView();
+                        }
+                    });
+                }
+            });
+            initCamera.start();
         }
     }
 
@@ -3214,4 +3235,52 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mainActivity.startActivity(intent);
 
     }
+
+    public void createTextureView() {
+        rack.videoTexture = (TextureView) findViewById(R.id.video_texture);
+        rack.videoTexture.setSurfaceTextureListener(this);
+        if (rack.videoTexture.isAvailable()) {
+            onSurfaceTextureAvailable(rack.videoTexture.getSurfaceTexture(),
+                    rack.videoTexture.getWidth(), rack.videoTexture.getHeight());
+        }
+    }
+
+    public void onSurfaceTextureAvailable(SurfaceTexture surface,
+                                          int width, int height) {
+//        createNativeCamera();
+
+//        resizeTextureView(width, height);
+//        surface.setDefaultBufferSize(cameraPreviewSize_.getWidth(),
+//                cameraPreviewSize_.getHeight());
+        surface_ = new Surface(surface);
+//        onPreviewSurfaceCreated(ndkCamera_, surface_);
+    }
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface,
+                                            int width, int height) {
+    }
+
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+//        onPreviewSurfaceDestroyed(ndkCamera_, surface_);
+//        deleteCamera(ndkCamera_, surface_);
+//        ndkCamera_ = 0;
+        surface_ = null;
+        return true;
+    }
+
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+    }
+
+
+    public void RequestCamera() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSION_REQUEST_CODE_CAMERA);
+            return;
+        }
+        createTextureView();
+    }
+
 }
