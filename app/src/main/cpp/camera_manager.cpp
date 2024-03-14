@@ -290,6 +290,9 @@ void NDKCamera::CreateSession(ANativeWindow* previewWindow,
   CALL_DEV(createCaptureSession(cameras_[activeCameraId_].device_,
                                 outputContainer_, GetSessionListener(),
                                 &captureSession_));
+  CALL_DEV(createCaptureSession(cameras_[activeCameraId_].device_,
+                                outputContainer_, GetSessionListener(),
+                                &captureSessionV));
 
   if (jpgWindow) {
     ACaptureRequest_setEntry_i32(requests_[JPG_CAPTURE_REQUEST_IDX].request_,
@@ -443,6 +446,9 @@ void NDKCamera::StartPreview(bool start) {
   if (start) {
     CALL_SESSION(setRepeatingRequest(captureSession_, nullptr, 1,
                                      &requests_[PREVIEW_REQUEST_IDX].request_,
+                                     nullptr));
+    CALL_SESSION(setRepeatingRequest(captureSessionV, nullptr, 1,
+                                     &requests_[VIDEO_CAPTURE_REQUEST_IDX].request_,
                                      nullptr));
   } else if (!start && captureSessionState_ == CaptureSessionState::ACTIVE) {
     ACameraCaptureSession_stopRepeating(captureSession_);

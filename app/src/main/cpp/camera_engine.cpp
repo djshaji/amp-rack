@@ -235,6 +235,8 @@ void CameraAppEngine::releaseEncoder() {
 bool CameraAppEngine::writeFrame(AImage * image){
   // Feed any pending encoder output into the muxer.
   IN
+  OUT
+    return true;
 //  if (mEncoder == nullptr) {
 //      LOGD("first time running, trying to create encoder ...");
 //      createEncoder(filename);
@@ -299,6 +301,8 @@ bool CameraAppEngine::writeFrame(AImage * image){
 
 void CameraAppEngine::drainEncoder(bool endOfStream) {
     IN
+    OUT
+    return;
     LOGD("end of stream: %d", endOfStream);
   if (endOfStream) {
     LOGD( "Draining encoder to EOS");
@@ -313,7 +317,7 @@ void CameraAppEngine::drainEncoder(bool endOfStream) {
 
   while (true) {
       LOGD("dequeue output buffer...");
-      if (mEncoder != nullptr) LOGE("mEncoder is NULL");
+      if (mEncoder == nullptr) LOGE("mEncoder is NULL");
 
     ssize_t encoderStatus = AMediaCodec_dequeueOutputBuffer(mEncoder, &mBufferInfo, TIMEOUT_USEC);
       LOGD("encoder status: %d", encoderStatus);
@@ -487,10 +491,11 @@ void ImageReader::ImageCallback(AImageReader *reader) {
 //  if (format == AIMAGE_FORMAT_JPEG)
 //  {
     AImage *image = nullptr;
-    status = AImageReader_acquireNextImage(reader, &image);
+    status = AImageReader_acquireLatestImage(reader, &image);
     ASSERT(status == AMEDIA_OK && image, "Image is not available");
     CameraAppEngine * _app = (CameraAppEngine *) app ;
     _app -> writeFrame (image);
+    AImage_delete(image);
     /*
     size_t bufferSize = 0;
     int inputBufferIdx = AMediaCodec_dequeueInputBuffer(mediaCodec, -1);
