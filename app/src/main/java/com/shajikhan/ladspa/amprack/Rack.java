@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SubMenu;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -86,6 +87,9 @@ public class Rack extends Fragment {
     LinearProgressIndicator quickPatchProgress ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
+    ToggleButton toggleVideo ;
+    LinearLayout videoPreview ;
+    TextureView videoTexture ;
     LinearLayout mixer ;
     Button patchUp, patchDown ;
     JSONObject jsonObject = new JSONObject();
@@ -175,6 +179,20 @@ public class Rack extends Fragment {
 
                 }
             });
+
+        toggleVideo = mainActivity.findViewById(R.id.video_button);
+        videoPreview = mainActivity.findViewById(R.id.video_preview);
+        videoTexture = mainActivity.findViewById(R.id.video_texture);
+
+        toggleVideo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked)
+                    videoPreview.setVisibility(View.GONE);
+                else
+                    videoPreview.setVisibility(View.VISIBLE);
+            }
+        });
 
         mainActivity.tuner = mainActivity.findViewById(R.id.patch_label);
         Switch tunerSwitch = mainActivity.findViewById(R.id.tuner_switch);
@@ -669,7 +687,6 @@ public class Rack extends Fragment {
                 return;
             }
         });
-
 
         LinearLayout inputMixer = mainActivity.findViewById(R.id.mixer_input);
         LinearLayout outputMixer = mainActivity.findViewById(R.id.mixer_output);
