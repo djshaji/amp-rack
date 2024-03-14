@@ -3261,8 +3261,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        resizeTextureView(width, height);
 //        surface.setDefaultBufferSize(cameraPreviewSize_.getWidth(),
 //                cameraPreviewSize_.getHeight());
-        surface_ = new Surface(surface);
-        surfaceTexture = surface;
+//        surface_ = new Surface(surface);
+//        surfaceTexture = surface;
 //        camera2.createCameraPreview();
 //        camera2.updatePreview();
 

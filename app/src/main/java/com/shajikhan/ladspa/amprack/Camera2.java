@@ -34,13 +34,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class Camera2 {
     final String TAG = getClass().getSimpleName();
     // parameters for the encoder
     private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
     private static final int FRAME_RATE = 30;               // 15fps
-    private static final int IFRAME_INTERVAL = 3;          // 10 seconds between I-frames
+    private static final int IFRAME_INTERVAL = 10;          // 10 seconds between I-frames
     private int mWidth = -1;
     private int mHeight = -1;
     // bit rate, in bits per second
@@ -108,6 +109,8 @@ public class Camera2 {
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
+            ///| fixme: get this from somewhere else
+            imageDimension = new Size(720, 1280);
             if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -177,6 +180,7 @@ public class Camera2 {
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
             texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
+            Log.d(TAG, "createCameraPreview: created surface with dimensions".format (" %d x %d", imageDimension.getWidth(), imageDimension.getHeight()));
             Surface surface = new Surface(texture);
             captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             videoBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
@@ -184,8 +188,11 @@ public class Camera2 {
 
             prepareEncoder();
             videoBuilder.addTarget(mInputSurface);
+            List<Surface> surfaceList = new ArrayList<>();
+            surfaceList.add(surface);
+            surfaceList.add(mInputSurface);
 
-            cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+            cameraDevice.createCaptureSession(surfaceList, new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     //The camera is already closed
@@ -199,7 +206,7 @@ public class Camera2 {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    MainActivity.toast("Configuration change");
+                    MainActivity.toast("Failed to start camera 😓");
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -234,8 +241,9 @@ public class Camera2 {
     private void prepareEncoder() {
         mBufferInfo = new MediaCodec.BufferInfo();
         ///| Todo: fixme: get width and height from camera
-        mWidth = 900 ;
-        mHeight = 1600 ;
+        mWidth = imageDimension.getWidth() ;
+        mHeight = imageDimension.getHeight() ;
+        mBitRate = 1000000 ;
         MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, mWidth, mHeight);
 
         // Set some properties.  Failing to specify some of these can cause the MediaCodec
