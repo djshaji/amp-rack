@@ -187,10 +187,16 @@ public class Rack extends Fragment {
         toggleVideo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked)
+                mainActivity.RequestCamera();
+                if (!isChecked) {
                     videoPreview.setVisibility(View.GONE);
-                else
+                    mainActivity.camera2.closeCamera();
+                }
+                else {
                     videoPreview.setVisibility(View.VISIBLE);
+                    mainActivity.camera2.openCamera();
+
+                }
             }
         });
 
@@ -962,6 +968,8 @@ public class Rack extends Fragment {
         }
 
 //        mainActivity.audioEncoder = new AudioEncoder(mainActivity);
+        mainActivity.camera2 = new Camera2 (mainActivity);
+
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

@@ -41,9 +41,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
@@ -66,6 +70,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.ArraySet;
 import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -147,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean headphoneWarning = true;
     static Context context;
     static MainActivity mainActivity;
+    Camera2 camera2 ;
     ExtendedFloatingActionButton fab ;
     Button hidePanel;
     SwitchMaterial onOff = null ;
@@ -3237,11 +3243,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void createTextureView() {
+        Log.d(TAG, "createTextureView: creating surface");
         rack.videoTexture = (TextureView) findViewById(R.id.video_texture);
         rack.videoTexture.setSurfaceTextureListener(this);
         if (rack.videoTexture.isAvailable()) {
             onSurfaceTextureAvailable(rack.videoTexture.getSurfaceTexture(),
                     rack.videoTexture.getWidth(), rack.videoTexture.getHeight());
+
         }
     }
 
@@ -3253,6 +3261,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        surface.setDefaultBufferSize(cameraPreviewSize_.getWidth(),
 //                cameraPreviewSize_.getHeight());
         surface_ = new Surface(surface);
+//        camera2.createCameraPreview();
+//        camera2.updatePreview();
+
 //        onPreviewSurfaceCreated(ndkCamera_, surface_);
     }
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface,
@@ -3281,6 +3292,84 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
         createTextureView();
+    }
+
+    void setTextureTransform(CameraCharacteristics characteristics) {
+        Size previewSize = getPreviewSize(characteristics);
+        int width = previewSize.getWidth();
+        int height = previewSize.getHeight();
+        int sensorOrientation = getCameraSensorOrientation(characteristics);
+        // Indicate the size of the buffer the texture should expect
+//        rack.videoTexture.getSurfaceTexture().setDefaultBufferSize(width, height);
+        // Save the texture dimensions in a rectangle
+        RectF viewRect = new RectF(0,0, rack.videoTexture.getWidth(), rack.videoTexture.getHeight());
+        // Determine the rotation of the display
+        float rotationDegrees = 0;
+        try {
+            rotationDegrees = (float)getDisplayRotation();
+        } catch (Exception ignored) {
+        }
+        float w, h;
+        if ((sensorOrientation - rotationDegrees) % 180 == 0) {
+            w = width;
+            h = height;
+        } else {
+            // Swap the width and height if the sensor orientation and display rotation don't match
+            w = height;
+            h = width;
+        }
+        float viewAspectRatio = viewRect.width()/viewRect.height();
+        float imageAspectRatio = w/h;
+        final PointF scale;
+        // This will make the camera frame fill the texture view, if you'd like to fit it into the view swap the "<" sign for ">"
+        if (viewAspectRatio < imageAspectRatio) {
+            // If the view is "thinner" than the image constrain the height and calculate the scale for the texture width
+            scale = new PointF((viewRect.height() / viewRect.width()) * ((float) height / (float) width), 1f);
+        } else {
+            scale = new PointF(1f, (viewRect.width() / viewRect.height()) * ((float) width / (float) height));
+        }
+        if (rotationDegrees % 180 != 0) {
+            // If we need to rotate the texture 90º we need to adjust the scale
+            float multiplier = viewAspectRatio < imageAspectRatio ? w/h : h/w;
+            scale.x *= multiplier;
+            scale.y *= multiplier;
+        }
+
+        Matrix matrix = new Matrix();
+        // Set the scale
+        matrix.setScale(scale.x, scale.y, viewRect.centerX(), viewRect.centerY());
+        if (rotationDegrees != 0) {
+            // Set rotation of the device isn't upright
+            matrix.postRotate(0 - rotationDegrees, viewRect.centerX(), viewRect.centerY());
+        }
+        // Transform the texture
+        rack.videoTexture.setTransform(matrix);
+    }
+
+    int getDisplayRotation() {
+        switch (rack.videoTexture.getDisplay().getRotation()) {
+            case Surface.ROTATION_0:
+            default:
+                return 0;
+            case Surface.ROTATION_90:
+                return  90;
+            case Surface.ROTATION_180:
+                return  180;
+            case Surface.ROTATION_270:
+                return 270;
+        }
+    }
+
+    Size getPreviewSize(CameraCharacteristics characteristics) {
+        StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+        Size[] previewSizes = map.getOutputSizes(SurfaceTexture.class);
+        // TODO: decide on which size fits your view size the best
+        return previewSizes[0];
+    }
+
+    int getCameraSensorOrientation(CameraCharacteristics characteristics) {
+        Integer cameraOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+        return (360 - (cameraOrientation != null ? cameraOrientation : 0)) % 360;
     }
 
 }
