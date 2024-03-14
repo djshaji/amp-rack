@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private static final String CHANNEL_ID = "default";
     Surface surface_ = null;
+    SurfaceTexture surfaceTexture;
     public boolean headphoneWarning = true;
     static Context context;
     static MainActivity mainActivity;
@@ -3261,6 +3262,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        surface.setDefaultBufferSize(cameraPreviewSize_.getWidth(),
 //                cameraPreviewSize_.getHeight());
         surface_ = new Surface(surface);
+        surfaceTexture = surface;
 //        camera2.createCameraPreview();
 //        camera2.updatePreview();
 
