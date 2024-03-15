@@ -10,6 +10,11 @@
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="vertical"
         app:layout_constraintLeft_toLeftOf="parent">
+        <SurfaceView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            android:id="@+id/tracks_video"/>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

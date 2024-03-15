@@ -75,6 +75,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -786,6 +788,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         tracks.load(dir);
+        tracks.load(context.getExternalFilesDir(Environment.DIRECTORY_MOVIES));
         Set<String> _tracksCustom = defaultSharedPreferences.getStringSet("tracks", null) ;
         if (_tracksCustom != null) {
             for (String _d:
@@ -856,6 +859,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         LayoutInflater inflater = getLayoutInflater();
 
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.media_player_dialog, null);
+        SurfaceView surface = constraintLayout.findViewById(R.id.video_player_dialog);
+
+        surface.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                mediaPlayer.setDisplay(holder);
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                                       int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+
+            }
+        });
+
         ToggleButton toggleButton = constraintLayout.findViewById(R.id.media_play);
         Button openFolder = constraintLayout.findViewById(R.id.open_folder);
         openFolder.setOnClickListener(new View.OnClickListener() {

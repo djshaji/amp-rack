@@ -17,6 +17,7 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
@@ -280,9 +281,12 @@ public class Camera2 {
         // hard-coded output directory.
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
         Date date = new Date();
-        mainActivity.lastRecordedFileName = formatter.format(date);
-        mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName + ".mp4";
+        mainActivity.lastRecordedFileName =
+                String.format("%s/%s.mp4",
+                        mainActivity.getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath(),
+                        formatter.format(date));
         String outputPath = mainActivity.lastRecordedFileName;
+        Log.d(TAG, String.format ("recording video to file: %s", mainActivity.lastRecordedFileName));
 
         // Create a MediaMuxer.  We can't add the video track and start() the muxer here,
         // because our MediaFormat doesn't have the Magic Goodies.  These can only be
@@ -426,7 +430,7 @@ public class Camera2 {
                 mMuxer.start();
                 mMuxerStarted = true;
             }
-            
+
             outPutByteBuffer = codec.getOutputBuffer(index);
 //            byte[] outDate = new byte[info.size];
 //            outPutByteBuffer.get(outDate);

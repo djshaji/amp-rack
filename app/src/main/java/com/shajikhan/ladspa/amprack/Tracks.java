@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +31,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.audio.AuxEffectInfo;
 import com.google.android.material.slider.Slider;
 
@@ -41,6 +44,7 @@ public class Tracks extends Fragment {
     ToggleButton playPause ;
     boolean themeInit = false;
     String TAG = getClass().getSimpleName();
+    SurfaceView surfaceView;
     String filesDir ;
     ExoPlayer player ;
     static int requestCode = 1001 ;
@@ -70,7 +74,26 @@ public class Tracks extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.tracks_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setAdapter(tracksAdapter);
+        surfaceView = view.findViewById(R.id.tracks_video);
 //        load (mainActivity.dir);
+
+        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(@NonNull SurfaceHolder holder) {
+                player.setVideoSurface(surfaceView.getHolder().getSurface());
+
+            }
+
+            @Override
+            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+
+            }
+        });
 
         LinearLayout shareTip = view.findViewById(R.id.share_tip);
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -100,6 +123,7 @@ public class Tracks extends Fragment {
                 if (!b) {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_play_arrow_24));
                     player.pause();
+                    surfaceView.setVisibility(View.GONE);
                     if (mainActivity.useTheme) {
                         if (pause != null)
                             playPause.setCompoundDrawables(pause, null, null, null);
@@ -107,6 +131,8 @@ public class Tracks extends Fragment {
                 } else {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_pause_24));
                     player.play();
+                    if (player.getVideoFormat() != null)
+                        surfaceView.setVisibility(View.VISIBLE);
                     if (mainActivity.useTheme) {
                         if (pause != null)
                             playPause.setCompoundDrawables(play, null, null, null);

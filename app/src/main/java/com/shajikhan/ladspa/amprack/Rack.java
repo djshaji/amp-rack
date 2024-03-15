@@ -191,6 +191,7 @@ public class Rack extends Fragment {
                 if (!isChecked) {
                     videoPreview.setVisibility(View.GONE);
                     mainActivity.camera2.closeCamera();
+                    mainActivity.showMediaPlayerDialog();
                 }
                 else {
                     videoPreview.setVisibility(View.VISIBLE);
