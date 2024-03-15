@@ -230,6 +230,7 @@ public class Camera2 {
     }
 
     public void closeCamera() {
+        releaseEncoder();
         if (null != cameraDevice) {
             cameraDevice.close();
             cameraDevice = null;
@@ -272,6 +273,7 @@ public class Camera2 {
 
         mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mInputSurface = mEncoder.createInputSurface();
+        mEncoder.setCallback(new EncoderCallback());
         mEncoder.start();
 
         // Output filename.  Ideally this would use Context.getFilesDir() rather than a
@@ -296,12 +298,22 @@ public class Camera2 {
 
         mTrackIndex = -1;
         mMuxerStarted = false;
+
+        MediaFormat newFormat = mEncoder.getOutputFormat();
+        Log.d(TAG, "encoder output format changed: " + newFormat);
+
+        // now that we have the Magic Goodies, start the muxer
+        mTrackIndex = mMuxer.addTrack(newFormat);
+        mMuxer.start();
+        mMuxerStarted = true;
     }
 
     /**
      * Releases encoder resources.  May be called after partial / failed initialization.
      */
     private void releaseEncoder() {
+        Log.d(TAG, "releaseEncoder: stopping encoder");
+        mEncoder.signalEndOfInputStream();
         if (mEncoder != null) {
             mEncoder.stop();
             mEncoder.release();
@@ -404,4 +416,31 @@ public class Camera2 {
         }
     }
 
+    class EncoderCallback extends MediaCodec.Callback {
+        ByteBuffer outPutByteBuffer;
+        @Override
+        public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+
+        }
+
+        @Override
+        public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
+            outPutByteBuffer = codec.getOutputBuffer(index);
+//            byte[] outDate = new byte[info.size];
+//            outPutByteBuffer.get(outDate);
+
+            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+            codec.releaseOutputBuffer(index, false);
+        }
+
+        @Override
+        public void onError(@NonNull MediaCodec codec, @NonNull MediaCodec.CodecException e) {
+            Log.e(TAG, "onError: encoder callback error", e);
+        }
+
+        @Override
+        public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
+            Log.d(TAG, String.format ("encoder format changed: %s", format.toString()));
+        }
+    }
 }
