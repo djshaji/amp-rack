@@ -880,6 +880,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         ToggleButton toggleButton = constraintLayout.findViewById(R.id.media_play);
+        surface.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleButton.setChecked(false);
+            }
+        });
         Button openFolder = constraintLayout.findViewById(R.id.open_folder);
         openFolder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -902,6 +908,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (b) {
                     Uri uri = Uri.parse(lastRecordedFileName);
                     try {
+                        surface.setVisibility(View.VISIBLE);
                         mediaPlayer.stop();
                         mediaPlayer.reset();
                         mediaPlayer.setDataSource(getApplicationContext(), uri);
@@ -911,11 +918,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         toast("Cannot load media file: " + e.getMessage());
                         return;
                     }
+
                     toggleButton.setButtonDrawable(R.drawable.ic_baseline_pause_24);
                     mediaPlayer.start();
                 } else {
                     mediaPlayer.pause();
                     toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
+                    surface.setVisibility(View.GONE);
                 }
             }
         });
@@ -926,6 +935,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void onCompletion(MediaPlayer mediaPlayer) {
                 toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
                 seekBar.setProgress(0);
+                surface.setVisibility(View.GONE);
             }
         });
 
@@ -2647,6 +2657,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void testLV2 () {
+        Log.d(TAG, "testLV2: " +
+                String.format("%d\t%d",
+                        getDisplayRotation(),getCameraSensorOrientation(camera2.cameraCharacteristicsHashMap.get(camera2.cameraId))));
 //        Log.d(TAG, "testLV2: " + getLV2Info("eql"));
 //        AudioEngine.testLV2();
         AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput ;

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
@@ -29,10 +30,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.audio.AuxEffectInfo;
+import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.material.slider.Slider;
 
 import java.io.File;
@@ -96,6 +99,7 @@ public class Tracks extends Fragment {
         });
 
         LinearLayout shareTip = view.findViewById(R.id.share_tip);
+        FrameLayout frameLayout = view.findViewById(R.id.vframe);
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -112,6 +116,12 @@ public class Tracks extends Fragment {
 
         playPause = view.findViewById(R.id.tracks_play);
         tracksAdapter.tracks = this;
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPause.setChecked(false);
+            }
+        });
         playPause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -123,7 +133,7 @@ public class Tracks extends Fragment {
                 if (!b) {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_play_arrow_24));
                     player.pause();
-                    surfaceView.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.GONE);
                     if (mainActivity.useTheme) {
                         if (pause != null)
                             playPause.setCompoundDrawables(pause, null, null, null);
@@ -131,8 +141,10 @@ public class Tracks extends Fragment {
                 } else {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_pause_24));
                     player.play();
-                    if (player.getVideoFormat() != null)
-                        surfaceView.setVisibility(View.VISIBLE);
+                    if (player.getVideoFormat() != null) {
+                        frameLayout.setVisibility(View.VISIBLE);
+                  }
+
                     if (mainActivity.useTheme) {
                         if (pause != null)
                             playPause.setCompoundDrawables(play, null, null, null);

@@ -12,7 +12,8 @@
         <SurfaceView
             android:layout_width="match_parent"
             android:id="@+id/video_player_dialog"
-            android:layout_height="200dp"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAlignment="viewStart"
                 android:id="@+id/share_file"
                 android:text="Share"
                 android:fontFamily="@font/comfortaa"
@@ -73,6 +75,14 @@
                 android:background="@color/fui_transparent"
                 android:drawableRight="@drawable/ic_baseline_delete_forever_24"/>
         </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFamily="@font/comfortaa"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Tap video to close"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

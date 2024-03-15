@@ -181,7 +181,7 @@ public class Camera2 {
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
             // fixme: change this!
-            imageDimension = new Size (320, 240);
+            imageDimension = new Size (1280, 720);
             texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
             Log.d(TAG, "createCameraPreview: created surface with dimensions" + ":".format (" %d x %d", imageDimension.getWidth(), imageDimension.getHeight()));
             Surface surface = new Surface(texture);
@@ -427,6 +427,7 @@ public class Camera2 {
 
                 // now that we have the Magic Goodies, start the muxer
                 mTrackIndex = mMuxer.addTrack(newFormat);
+                mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
                 mMuxer.start();
                 mMuxerStarted = true;
             }
