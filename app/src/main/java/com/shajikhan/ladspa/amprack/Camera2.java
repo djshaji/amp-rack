@@ -298,14 +298,6 @@ public class Camera2 {
 
         mTrackIndex = -1;
         mMuxerStarted = false;
-
-        MediaFormat newFormat = mEncoder.getOutputFormat();
-        Log.d(TAG, "encoder output format changed: " + newFormat);
-
-        // now that we have the Magic Goodies, start the muxer
-        mTrackIndex = mMuxer.addTrack(newFormat);
-        mMuxer.start();
-        mMuxerStarted = true;
     }
 
     /**
@@ -425,6 +417,16 @@ public class Camera2 {
 
         @Override
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
+            if (! mMuxerStarted) {
+                MediaFormat newFormat = mEncoder.getOutputFormat();
+                Log.d(TAG, "encoder output format changed: " + newFormat);
+
+                // now that we have the Magic Goodies, start the muxer
+                mTrackIndex = mMuxer.addTrack(newFormat);
+                mMuxer.start();
+                mMuxerStarted = true;
+            }
+            
             outPutByteBuffer = codec.getOutputBuffer(index);
 //            byte[] outDate = new byte[info.size];
 //            outPutByteBuffer.get(outDate);
