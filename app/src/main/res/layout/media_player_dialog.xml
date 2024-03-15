@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:textAlignment="viewStart"
                 android:id="@+id/share_file"
-                android:text="Share"
+                android:text="  Share"
                 android:fontFamily="@font/comfortaa"
                 android:drawableLeft="@drawable/ic_baseline_share_24"/>
             <Button
@@ -76,13 +76,15 @@
                 android:drawableRight="@drawable/ic_baseline_delete_forever_24"/>
         </LinearLayout>
         <TextView
-            android:layout_width="match_parent"
+            android:drawableLeft="@drawable/ic_baseline_info_24"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:fontFamily="@font/comfortaa"
             android:textColor="@color/white"
             android:layout_marginBottom="10dp"
-            android:text="Tap video to close"/>
+            android:text="  Tap video to close"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
