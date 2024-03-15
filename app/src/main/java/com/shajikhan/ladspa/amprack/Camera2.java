@@ -11,6 +11,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.CamcorderProfile;
 import android.media.ImageReader;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
@@ -41,7 +42,7 @@ public class Camera2 {
     // parameters for the encoder
     private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
     private static final int FRAME_RATE = 30;               // 15fps
-    private static final int IFRAME_INTERVAL = 10;          // 10 seconds between I-frames
+    private static final int IFRAME_INTERVAL = 1;          // 10 seconds between I-frames
     private int mWidth = -1;
     private int mHeight = -1;
     // bit rate, in bits per second
@@ -72,7 +73,6 @@ public class Camera2 {
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest captureRequest;
     protected CaptureRequest.Builder captureRequestBuilder;
-    protected CaptureRequest.Builder videoBuilder;
     private Size imageDimension;
     private ImageReader imageReader;
     ArrayList<String> cameras;
@@ -179,20 +179,21 @@ public class Camera2 {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
+            // fixme: change this!
+            imageDimension = new Size (320, 240);
             texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
-            Log.d(TAG, "createCameraPreview: created surface with dimensions".format (" %d x %d", imageDimension.getWidth(), imageDimension.getHeight()));
+            Log.d(TAG, "createCameraPreview: created surface with dimensions" + ":".format (" %d x %d", imageDimension.getWidth(), imageDimension.getHeight()));
             Surface surface = new Surface(texture);
             captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-            videoBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
             captureRequestBuilder.addTarget(surface);
 
             prepareEncoder();
-            videoBuilder.addTarget(mInputSurface);
+            captureRequestBuilder.addTarget(mInputSurface);
             List<Surface> surfaceList = new ArrayList<>();
             surfaceList.add(surface);
             surfaceList.add(mInputSurface);
 
-            cameraDevice.createCaptureSession(surfaceList, new CameraCaptureSession.StateCallback() {
+            cameraDevice.createCaptureSession(Arrays.asList(surface,mInputSurface), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     //The camera is already closed
@@ -210,6 +211,7 @@ public class Camera2 {
                 }
             }, null);
         } catch (CameraAccessException e) {
+            MainActivity.alert("Failed to start camera \uD83D\uDE13", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -218,10 +220,10 @@ public class Camera2 {
         if (null == cameraDevice) {
             Log.e(TAG, "updatePreview error, return");
         }
-        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+//        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         try {
             cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
-            cameraCaptureSessions.setRepeatingRequest(videoBuilder.build(), null, mBackgroundHandler);
+//            cameraCaptureSessions.setRepeatingRequest(videoBuilder.build(), null, encoderHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -267,6 +269,7 @@ public class Camera2 {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mInputSurface = mEncoder.createInputSurface();
         mEncoder.start();
