@@ -41,6 +41,7 @@ import java.util.List;
 
 public class Camera2 {
     final String TAG = getClass().getSimpleName();
+    int sampleRate = 48000;
     // parameters for the encoder
     private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
     private static final int FRAME_RATE = 30;               // 15fps
@@ -60,7 +61,7 @@ public class Camera2 {
     public boolean mMuxerStarted;
 
     // allocate one of these up front so we don't need to do it every time
-    private MediaCodec.BufferInfo mBufferInfo;
+    public MediaCodec.BufferInfo mBufferInfo;
 
     private TextureView textureView;
     MainActivity mainActivity;
@@ -90,6 +91,9 @@ public class Camera2 {
     Camera2(MainActivity mainActivity_) {
         mainActivity = mainActivity_;
         textureView = mainActivity_.rack.videoTexture;
+        sampleRate = AudioEngine.getSampleRate() ;
+        if (sampleRate == 0)
+            sampleRate = 48000 ;
     }
 
     public void openCamera() {
@@ -261,7 +265,7 @@ public class Camera2 {
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, IFRAME_INTERVAL);
         Log.d(TAG, "format: " + format);
 
-        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm",AudioEngine.getSampleRate(), 1);
+        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm", sampleRate, 1);
         outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
@@ -322,6 +326,7 @@ public class Camera2 {
      */
     private void releaseEncoder() {
         Log.d(TAG, "releaseEncoder: stopping encoder");
+        mMuxerStarted = false;
         mEncoder.signalEndOfInputStream();
 
         if (mEncoder != null) {
@@ -344,7 +349,6 @@ public class Camera2 {
             mMuxer.stop();
             mMuxer.release();
             mMuxer = null;
-            mMuxerStarted = false;
         }
 
         mTrackIndex = -1 ;
@@ -355,9 +359,12 @@ public class Camera2 {
         ByteBuffer outPutByteBuffer, inputByteBuffer, audioBuffer;
         MainActivity.AVBuffer floatBuffer;
         boolean isVideo ;
+        MediaCodec.BufferInfo bufferInfo ;
 
         EncoderCallback (boolean video) {
             isVideo = video;
+            bufferInfo = new MediaCodec.BufferInfo();
+
         }
 
         @Override
@@ -378,7 +385,7 @@ public class Camera2 {
             inputByteBuffer = codec.getInputBuffer(index);
             inputByteBuffer.asFloatBuffer().put(floatBuffer.floatBuffer);
             presentationTimeUs = 1000000l * index / 48000;
-            mainActivity.camera2.audioEncoder.queueInputBuffer(index, 0, floatBuffer.size, presentationTimeUs, eos);;
+            mainActivity.camera2.audioEncoder.queueInputBuffer(index, 0, floatBuffer.size, mBufferInfo.presentationTimeUs, eos);;
 
             if (eos != 0) {
                 audioEncoder.signalEndOfInputStream();
@@ -388,6 +395,7 @@ public class Camera2 {
 
         @Override
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
+            mBufferInfo = info;
             if (! mMuxerStarted) {
                 MediaFormat newFormat = mEncoder.getOutputFormat();
                 Log.d(TAG, "encoder output format changed: " + newFormat);
@@ -395,7 +403,8 @@ public class Camera2 {
                 // now that we have the Magic Goodies, start the muxer
                 if (mTrackIndex == -1)
                     mTrackIndex = mMuxer.addTrack(newFormat);
-                int aIndex = audioEncoder.dequeueOutputBuffer(mBufferInfo, 5000) ;
+
+                int aIndex = audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
                 if (aIndex >= 0) {
                     Log.d(TAG, "onInputBufferAvailable: added audio track");
                     MediaFormat format = audioEncoder.getOutputFormat();
@@ -419,11 +428,10 @@ public class Camera2 {
 //            outPutByteBuffer.get(outDate);
 
 
-
-            int aIndex = audioEncoder.dequeueOutputBuffer(mBufferInfo, 5000) ;
+            int aIndex = audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
             if (aIndex > 0) {
                 audioBuffer = audioEncoder.getOutputBuffer(aIndex);
-                mMuxer.writeSampleData(audioTrackIndex, audioBuffer, mBufferInfo);
+                mMuxer.writeSampleData(audioTrackIndex, audioBuffer, bufferInfo);
             }
         }
 

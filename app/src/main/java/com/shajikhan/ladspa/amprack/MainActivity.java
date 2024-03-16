@@ -2721,7 +2721,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (inputBufferId >= 0) {
                 ByteBuffer inputBuffer = mainActivity.camera2.audioEncoder.getInputBuffer (inputBufferId);
                 inputBuffer.asFloatBuffer().put(data);
-                presentationTimeUs = 1000000l * avEncoderIndex / 48000;
+                presentationTimeUs = presentationTimeUs + size / mainActivity.camera2.sampleRate;
+
                 mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, size, presentationTimeUs, 0);;
                 mainActivity.camera2.audioIndex = inputBufferId ;
             }
@@ -2735,6 +2736,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             mainActivity.camera2.audioEncoder.flush();
 
              */
+        } else {
+            presentationTimeUs = 0 ;
         }
 
         if (! mainActivity.tunerEnabled)
