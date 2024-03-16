@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:textAlignment="viewStart"
                 android:id="@+id/share_file"
-                android:text="  Share"
+                android:text=" Share"
                 android:fontFamily="@font/comfortaa"
                 android:drawableLeft="@drawable/ic_baseline_share_24"/>
             <Button
@@ -84,7 +84,7 @@
             android:fontFamily="@font/comfortaa"
             android:textColor="@color/white"
             android:layout_marginBottom="10dp"
-            android:text="  Tap video to close"/>
+            android:text=" Tap video to close"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

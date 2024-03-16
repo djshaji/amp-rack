@@ -106,6 +106,8 @@ private:
 
 
     int setTuner(buffer_t *buffer);
+
+    int pushToVideo(buffer_t *buffer);
 } ;
 
 #endif // __ENGINE__H

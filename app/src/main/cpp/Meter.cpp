@@ -17,6 +17,7 @@ bool Meter::engine_running = false ;
 //LockFreeQueue<Meter::buffer_t*, LOCK_FREE_SIZE> Meter::lockFreeQueue;
 int Meter::bufferUsed  = 0;
 bool Meter::tunerEnabled = false;
+bool Meter::videoRecording = false ;
 int Meter::bufferUsedOutput  = 0;
 float Meter::tunerBuffer [1024 * 4] ;
 int Meter::tunerIndex = 0;
@@ -29,6 +30,7 @@ jmethodID Meter::setMixerMeter ;
 jclass Meter::mainActivity ;
 jmethodID Meter::setMixerMeterOutput ;
 jmethodID Meter::setTuner ;
+jmethodID Meter::pushToVideo ;
 jclass Meter::mainActivityOutput ;
 JNIEnv * Meter::env = NULL;
 JNIEnv * Meter::envOutput = NULL;
@@ -104,10 +106,6 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
     }
      */
 
-    if (! engine_running) {
-        return 0;
-    }
-
     if (envOutput == nullptr) {
         LOGD("MeterOutput thread id: %d", gettid ());
         envOutput = getEnv();
@@ -128,9 +126,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
         setMixerMeterOutput = envOutput->GetStaticMethodID(mainActivityOutput, "setMixerMeterSwitch",
                                                            "(FZ)V");
-
         setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
-                                                "([F)V");
+                                                "([FI)V");
         if (setMixerMeterOutput == nullptr) {
             LOGF("cannot find method!");
         }
@@ -143,6 +140,21 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         jfloatArray1 = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
         jfloatArray1_index = 0 ;
         return 0 ;
+    } else {
+        if (tunerEnabled or videoRecording) {
+            if ((jfloatArray1_index + samples) >= TUNER_ARRAY_SIZE) {
+                envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, samples, false);
+                jfloatArray1_index = 0 ;
+            } else {
+                envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
+                jfloatArray1_index += samples;
+            }
+        }
+    }
+
+
+    if (! engine_running) {
+        return 0;
     }
 
     if (envOutput == nullptr) {
@@ -180,27 +192,6 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) imax, true);
-    if (tunerEnabled) {
-        /*
-        if (samples > jfloatArray1_Size) {
-            LOGW("increased float array size from %d to %d", jfloatArray1_Size, samples);
-            jboolean copy = true ;
-            jfloat * elems = envOutput->GetFloatArrayElements( jfloatArray1, &copy);
-            envOutput->ReleaseFloatArrayElements(jfloatArray1, elems, 0);
-
-            jfloatArray1 = envOutput->NewFloatArray(samples + 1);
-            jfloatArray1_Size = samples + 1 ;
-        }
-         */
-
-        if ((jfloatArray1_index + samples) >= TUNER_ARRAY_SIZE) {
-            envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, false);
-            jfloatArray1_index = 0 ;
-        } else {
-            envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
-            jfloatArray1_index += samples;
-        }
-    }
 
     return 0;
 }

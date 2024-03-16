@@ -213,6 +213,8 @@ public:
     static _jfloatArray *jfloatArray1;
     static int jfloatArray1_Size;
     static int jfloatArray1_index;
+    static jmethodID pushToVideo;
+    static bool videoRecording;
 };
 
 #endif //AMP_RACK_METER_H

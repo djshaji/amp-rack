@@ -824,3 +824,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_tuneLatency(JNIEnv *env, jclass cl
     if (engine == NULL) return NULL ;
     return env->NewStringUTF (engine -> tuneLatency ().c_str());
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleVideoRecording(JNIEnv *env, jclass clazz,
+                                                                   jboolean toggle) {
+    if (engine == nullptr) return;
+    engine->meter->videoRecording = toggle;
+}

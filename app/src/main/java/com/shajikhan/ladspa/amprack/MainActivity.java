@@ -141,6 +141,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -155,7 +156,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean headphoneWarning = true;
     static Context context;
     static MainActivity mainActivity;
+    boolean videoRecording = false ;
     Camera2 camera2 ;
+    static class AVBuffer {
+        FloatBuffer floatBuffer ;
+        int size ;
+    }
+    static LinkedList<AVBuffer> avBuffer = new LinkedList<>();
+    static int avEncoderIndex = 0 ;
+    static long presentationTimeUs = 0;
+    int totalBytesRead = 0;
+
     ExtendedFloatingActionButton fab ;
     Button hidePanel;
     SwitchMaterial onOff = null ;
@@ -2703,7 +2714,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
 
-    static void setTuner (float [] data) {
+    static void setTuner (float [] data, int size) {
+        if (mainActivity.videoRecording && mainActivity.camera2.mainActivity.camera2.mMuxerStarted) {
+            /*
+            int inputBufferId = mainActivity.camera2.audioEncoder.dequeueInputBuffer(5000);
+            if (inputBufferId >= 0) {
+                ByteBuffer inputBuffer = mainActivity.camera2.audioEncoder.getInputBuffer (avEncoderIndex);
+                inputBuffer.asFloatBuffer().put(data);
+                presentationTimeUs = 1000000l * avEncoderIndex / 48000;
+                mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, size, presentationTimeUs, 0);;
+            }
+
+             */
+
+            AVBuffer buffer = new AVBuffer();
+            buffer.size = size;
+            buffer.floatBuffer = FloatBuffer.wrap(data);
+
+            avBuffer.addLast(buffer);
+        }
+
         if (! mainActivity.tunerEnabled)
             return ;
         double freq = pitch.computePitchFrequency(data);
@@ -3410,4 +3440,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return (360 - (cameraOrientation != null ? cameraOrientation : 0)) % 360;
     }
 
+    public static void pushToVideo (float [] data, int nframes) {
+
+    }
 }

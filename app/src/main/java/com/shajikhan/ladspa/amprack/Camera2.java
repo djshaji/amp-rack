@@ -31,6 +31,7 @@ import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,14 +46,18 @@ public class Camera2 {
     private static final int FRAME_RATE = 30;               // 15fps
     private static final int IFRAME_INTERVAL = 1;          // 10 seconds between I-frames
     private int mWidth = -1;
+    public long presentationTimeUs = 0 ;
     private int mHeight = -1;
     // bit rate, in bits per second
     private int mBitRate = -1;
-    private MediaCodec mEncoder;
+    public MediaCodec mEncoder, audioEncoder;
+    ByteBuffer[] audioInputBuffers ;
+
     private Surface mInputSurface;
     private MediaMuxer mMuxer;
     private int mTrackIndex;
-    private boolean mMuxerStarted;
+    public int audioIndex ;
+    public boolean mMuxerStarted;
 
     // allocate one of these up front so we don't need to do it every time
     private MediaCodec.BufferInfo mBufferInfo;
@@ -259,6 +264,11 @@ public class Camera2 {
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, IFRAME_INTERVAL);
         Log.d(TAG, "format: " + format);
 
+        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm",AudioEngine.getSampleRate(), 1);
+        outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
+        outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
+        outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
+
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
         //
@@ -268,13 +278,19 @@ public class Camera2 {
         // take eglGetCurrentContext() as the share_context argument.
         try {
             mEncoder = MediaCodec.createEncoderByType(MIME_TYPE);
+            audioEncoder = MediaCodec.createEncoderByType("audio/mp4a-latm");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        audioEncoder.configure(outputFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+
         mInputSurface = mEncoder.createInputSurface();
-        mEncoder.setCallback(new EncoderCallback());
+        mEncoder.setCallback(new EncoderCallback(true));
+        audioEncoder.setCallback(new EncoderCallback(false));
+
+        audioEncoder.start();
         mEncoder.start();
 
         // Output filename.  Ideally this would use Context.getFilesDir() rather than a
@@ -310,11 +326,19 @@ public class Camera2 {
     private void releaseEncoder() {
         Log.d(TAG, "releaseEncoder: stopping encoder");
         mEncoder.signalEndOfInputStream();
+
         if (mEncoder != null) {
             mEncoder.stop();
             mEncoder.release();
             mEncoder = null;
         }
+
+        if (audioEncoder != null) {
+            audioEncoder.stop();
+            audioEncoder.release();
+            audioEncoder = null;
+        }
+
         if (mInputSurface != null) {
             mInputSurface.release();
             mInputSurface = null;
@@ -323,6 +347,7 @@ public class Camera2 {
             mMuxer.stop();
             mMuxer.release();
             mMuxer = null;
+            mMuxerStarted = false;
         }
     }
 
@@ -413,30 +438,60 @@ public class Camera2 {
     }
 
     class EncoderCallback extends MediaCodec.Callback {
-        ByteBuffer outPutByteBuffer;
+        ByteBuffer outPutByteBuffer, inputByteBuffer;
+        MainActivity.AVBuffer floatBuffer;
+        boolean isVideo ;
+
+        EncoderCallback (boolean video) {
+            isVideo = video;
+        }
+
         @Override
         public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+            if (! isVideo) return;
+            int eos = 0 ;
 
+            if (! mainActivity.videoRecording)
+                eos = MediaCodec.BUFFER_FLAG_END_OF_STREAM ;
+
+            floatBuffer = mainActivity.avBuffer.pop() ;
+            inputByteBuffer = codec.getInputBuffer(index);
+            inputByteBuffer.asFloatBuffer().put(floatBuffer.floatBuffer);
+            presentationTimeUs = 1000000l * index / 48000;
+            mainActivity.camera2.audioEncoder.queueInputBuffer(index, 0, floatBuffer.size, presentationTimeUs, eos);;
+
+            if (eos != 0) {
+                audioEncoder.signalEndOfInputStream();
+                audioEncoder.stop();
+            }
         }
 
         @Override
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-            if (! mMuxerStarted) {
+            if (! mMuxerStarted && isVideo) {
                 MediaFormat newFormat = mEncoder.getOutputFormat();
                 Log.d(TAG, "encoder output format changed: " + newFormat);
 
                 // now that we have the Magic Goodies, start the muxer
                 mTrackIndex = mMuxer.addTrack(newFormat);
+                mMuxer.addTrack(audioEncoder.getOutputFormat());
+
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
                 mMuxer.start();
                 mMuxerStarted = true;
             }
 
+            if (!mMuxerStarted && ! isVideo)
+                return;
+
             outPutByteBuffer = codec.getOutputBuffer(index);
 //            byte[] outDate = new byte[info.size];
 //            outPutByteBuffer.get(outDate);
 
-            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+            if (isVideo)
+                mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+            else
+                mMuxer.writeSampleData(mTrackIndex + 1, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
         }
 

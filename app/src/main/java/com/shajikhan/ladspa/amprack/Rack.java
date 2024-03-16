@@ -192,12 +192,16 @@ public class Rack extends Fragment {
                     videoPreview.setVisibility(View.GONE);
                     mainActivity.camera2.closeCamera();
                     mainActivity.showMediaPlayerDialog();
+                    mainActivity.avBuffer.clear();
                 }
                 else {
                     videoPreview.setVisibility(View.VISIBLE);
                     mainActivity.camera2.openCamera();
 
                 }
+
+                AudioEngine.toggleVideoRecording(isChecked);
+                mainActivity.videoRecording = isChecked;
             }
         });
 
