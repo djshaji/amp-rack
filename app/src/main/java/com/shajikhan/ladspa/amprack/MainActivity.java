@@ -886,7 +886,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-
+                mediaPlayer.setDisplay(null);
+                mediaPlayer.stop();
             }
         });
 
@@ -2732,6 +2733,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             buffer.floatBuffer = FloatBuffer.wrap(data);
 
             avBuffer.addLast(buffer);
+            mainActivity.camera2.audioEncoder.flush();
         }
 
         if (! mainActivity.tunerEnabled)

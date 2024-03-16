@@ -55,7 +55,7 @@ public class Camera2 {
 
     private Surface mInputSurface;
     private MediaMuxer mMuxer;
-    private int mTrackIndex;
+    private int mTrackIndex, audioTrackIndex = -1;
     public int audioIndex ;
     public boolean mMuxerStarted;
 
@@ -236,15 +236,12 @@ public class Camera2 {
     }
 
     public void closeCamera() {
-        releaseEncoder();
         if (null != cameraDevice) {
             cameraDevice.close();
             cameraDevice = null;
         }
-        if (null != imageReader) {
-            imageReader.close();
-            imageReader = null;
-        }
+
+        releaseEncoder();
     }
 
     private void prepareEncoder() {
@@ -349,92 +346,9 @@ public class Camera2 {
             mMuxer = null;
             mMuxerStarted = false;
         }
-    }
 
-    /**
-     * Extracts all pending data from the encoder.
-     * <p>
-     * If endOfStream is not set, this returns when there is no more data to drain.  If it
-     * is set, we send EOS to the encoder, and then iterate until we see EOS on the output.
-     * Calling this with endOfStream set should be done once, right before stopping the muxer.
-     */
-    private void drainEncoder(boolean endOfStream) {
-        final int TIMEOUT_USEC = 10000;
-        Log.d(TAG, "drainEncoder(" + endOfStream + ")");
-
-        if (endOfStream) {
-            Log.d(TAG, "sending EOS to encoder");
-            mEncoder.signalEndOfInputStream();
-        }
-
-        ByteBuffer[] encoderOutputBuffers = mEncoder.getOutputBuffers();
-        while (true) {
-            int encoderStatus = mEncoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
-            if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
-                // no output available yet
-                if (!endOfStream) {
-                    break;      // out of while
-                } else {
-                    Log.d(TAG, "no output available, spinning to await EOS");
-                }
-            } else if (encoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
-                // not expected for an encoder
-                encoderOutputBuffers = mEncoder.getOutputBuffers();
-            } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                // should happen before receiving buffers, and should only happen once
-                if (mMuxerStarted) {
-                    throw new RuntimeException("format changed twice");
-                }
-                MediaFormat newFormat = mEncoder.getOutputFormat();
-                Log.d(TAG, "encoder output format changed: " + newFormat);
-
-                // now that we have the Magic Goodies, start the muxer
-                mTrackIndex = mMuxer.addTrack(newFormat);
-                mMuxer.start();
-                mMuxerStarted = true;
-            } else if (encoderStatus < 0) {
-                Log.w(TAG, "unexpected result from encoder.dequeueOutputBuffer: " +
-                        encoderStatus);
-                // let's ignore it
-            } else {
-                ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
-                if (encodedData == null) {
-                    throw new RuntimeException("encoderOutputBuffer " + encoderStatus +
-                            " was null");
-                }
-
-                if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
-                    // The codec config data was pulled out and fed to the muxer when we got
-                    // the INFO_OUTPUT_FORMAT_CHANGED status.  Ignore it.
-                    Log.d(TAG, "ignoring BUFFER_FLAG_CODEC_CONFIG");
-                    mBufferInfo.size = 0;
-                }
-
-                if (mBufferInfo.size != 0) {
-                    if (!mMuxerStarted) {
-                        throw new RuntimeException("muxer hasn't started");
-                    }
-
-                    // adjust the ByteBuffer values to match BufferInfo (not needed?)
-                    encodedData.position(mBufferInfo.offset);
-                    encodedData.limit(mBufferInfo.offset + mBufferInfo.size);
-
-                    mMuxer.writeSampleData(mTrackIndex, encodedData, mBufferInfo);
-                    Log.d(TAG, "sent " + mBufferInfo.size + " bytes to muxer");
-                }
-
-                mEncoder.releaseOutputBuffer(encoderStatus, false);
-
-                if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                    if (!endOfStream) {
-                        Log.w(TAG, "reached end of stream unexpectedly");
-                    } else {
-                        Log.d(TAG, "end of stream reached");
-                    }
-                    break;      // out of while
-                }
-            }
-        }
+        mTrackIndex = -1 ;
+        audioTrackIndex = -1 ;
     }
 
     class EncoderCallback extends MediaCodec.Callback {
@@ -448,8 +362,14 @@ public class Camera2 {
 
         @Override
         public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+            Log.d(TAG, String.format ("track: %b", isVideo));
             if (! isVideo) return;
             int eos = 0 ;
+
+            if (audioTrackIndex == -1) {
+                Log.d(TAG, "onInputBufferAvailable: added audio track");
+                audioTrackIndex = mMuxer.addTrack(audioEncoder.getOutputFormat());
+            }
 
             if (! mainActivity.videoRecording)
                 eos = MediaCodec.BUFFER_FLAG_END_OF_STREAM ;
@@ -474,7 +394,6 @@ public class Camera2 {
 
                 // now that we have the Magic Goodies, start the muxer
                 mTrackIndex = mMuxer.addTrack(newFormat);
-                mMuxer.addTrack(audioEncoder.getOutputFormat());
 
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
                 mMuxer.start();
@@ -491,7 +410,7 @@ public class Camera2 {
             if (isVideo)
                 mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             else
-                mMuxer.writeSampleData(mTrackIndex + 1, outPutByteBuffer, info);
+                mMuxer.writeSampleData(audioTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
         }
 
