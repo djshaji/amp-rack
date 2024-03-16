@@ -412,13 +412,13 @@ public class Camera2 {
             }
 
             outPutByteBuffer = codec.getOutputBuffer(index);
+
+            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+            codec.releaseOutputBuffer(index, false);
 //            byte[] outDate = new byte[info.size];
 //            outPutByteBuffer.get(outDate);
 
-            if (isVideo && mMuxerStarted)
-                mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
 
-            codec.releaseOutputBuffer(index, false);
 
             int aIndex = audioEncoder.dequeueOutputBuffer(mBufferInfo, 5000) ;
             if (aIndex > 0) {
