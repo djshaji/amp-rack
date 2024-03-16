@@ -55,7 +55,7 @@ public class Camera2 {
 
     private Surface mInputSurface;
     private MediaMuxer mMuxer;
-    private int mTrackIndex, audioTrackIndex = -1;
+    private int mTrackIndex = -1, audioTrackIndex = -1;
     public int audioIndex ;
     public boolean mMuxerStarted;
 
@@ -285,7 +285,7 @@ public class Camera2 {
 
         mInputSurface = mEncoder.createInputSurface();
         mEncoder.setCallback(new EncoderCallback(true));
-        audioEncoder.setCallback(new EncoderCallback(false));
+//        audioEncoder.setCallback(new EncoderCallback(false));
 
         audioEncoder.start();
         mEncoder.start();
@@ -352,7 +352,7 @@ public class Camera2 {
     }
 
     class EncoderCallback extends MediaCodec.Callback {
-        ByteBuffer outPutByteBuffer, inputByteBuffer;
+        ByteBuffer outPutByteBuffer, inputByteBuffer, audioBuffer;
         MainActivity.AVBuffer floatBuffer;
         boolean isVideo ;
 
@@ -388,30 +388,43 @@ public class Camera2 {
 
         @Override
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-            if (! mMuxerStarted && isVideo) {
+            if (! mMuxerStarted) {
                 MediaFormat newFormat = mEncoder.getOutputFormat();
                 Log.d(TAG, "encoder output format changed: " + newFormat);
 
                 // now that we have the Magic Goodies, start the muxer
-                mTrackIndex = mMuxer.addTrack(newFormat);
+                if (mTrackIndex == -1)
+                    mTrackIndex = mMuxer.addTrack(newFormat);
+                int aIndex = audioEncoder.dequeueOutputBuffer(mBufferInfo, 5000) ;
+                if (aIndex >= 0) {
+                    Log.d(TAG, "onInputBufferAvailable: added audio track");
+                    MediaFormat format = audioEncoder.getOutputFormat();
+                    Log.d(TAG, String.format("format: %s", format.toString()));
+                    audioTrackIndex = mMuxer.addTrack(format);
+                } else {
+                    Log.e(TAG, "onOutputBufferAvailable: dequeue input buffer: " + aIndex, null);
+                    return;
+                }
 
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
                 mMuxer.start();
                 mMuxerStarted = true;
             }
 
-            if (!mMuxerStarted && ! isVideo)
-                return;
-
             outPutByteBuffer = codec.getOutputBuffer(index);
 //            byte[] outDate = new byte[info.size];
 //            outPutByteBuffer.get(outDate);
 
-            if (isVideo)
+            if (isVideo && mMuxerStarted)
                 mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
-            else
-                mMuxer.writeSampleData(audioTrackIndex, outPutByteBuffer, info);
+
             codec.releaseOutputBuffer(index, false);
+
+            int aIndex = audioEncoder.dequeueOutputBuffer(mBufferInfo, 5000) ;
+            if (aIndex > 0) {
+                audioBuffer = audioEncoder.getOutputBuffer(aIndex);
+                mMuxer.writeSampleData(audioTrackIndex, audioBuffer, mBufferInfo);
+            }
         }
 
         @Override
