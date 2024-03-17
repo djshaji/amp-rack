@@ -162,9 +162,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         FloatBuffer floatBuffer ;
         int size ;
     }
-    static LinkedList<AVBuffer> avBuffer = new LinkedList<>();
+    public static LinkedList<AVBuffer> avBuffer = new LinkedList<>();
     static int avEncoderIndex = 0 ;
-    static long presentationTimeUs = 0;
+    public static long presentationTimeUs = 0;
     int totalBytesRead = 0;
 
     ExtendedFloatingActionButton fab ;
@@ -1378,6 +1378,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             if (record.isChecked())
                 record.setChecked(false);
+            if (rack.toggleVideo.isChecked())
+                rack.toggleVideo.setChecked(false);
+
             stopEffect();
             notificationManager.cancelAll();
             running = false ;
@@ -2715,29 +2718,88 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         outputMeter.setProgress((int) (outputValue * 100));
     }
 
+    static int audioIn = 0, audioOut = 0 ;
     static void setTuner (float [] data, int size) {
-        if (mainActivity.videoRecording && mainActivity.camera2.mainActivity.camera2.mMuxerStarted) {
+        mainActivity.camera2.frame += size ;
+        if (mainActivity.videoRecording && mainActivity.camera2.timestamp != null) {
             int inputBufferId = mainActivity.camera2.audioEncoder.dequeueInputBuffer(5000);
-            if (inputBufferId >= 0) {
-                ByteBuffer inputBuffer = mainActivity.camera2.audioEncoder.getInputBuffer (inputBufferId);
-                inputBuffer.asFloatBuffer().put(data);
-                presentationTimeUs = presentationTimeUs + size / mainActivity.camera2.sampleRate;
+            ByteBuffer inputBuffer = null;
 
-                mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, size, presentationTimeUs, 0);;
+            if (inputBufferId >= 0)
+                inputBuffer = mainActivity.camera2.audioEncoder.getInputBuffer (inputBufferId);
+
+            int eos = 0 ;
+            if (! mainActivity.videoRecording)
+                eos = MediaCodec.BUFFER_FLAG_END_OF_STREAM ;
+
+            if (inputBufferId >= 0 && inputBuffer != null) {
+                inputBuffer.clear();
+                inputBuffer.rewind();
+                for (int i = 0 ; i < size ; i ++) {
+                    inputBuffer.putFloat(data [i]);
+                }
+
+                inputBuffer.rewind();
+//                presentationTimeUs =  System.nanoTime() / 1000 ; //computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate);
+
+                presentationTimeUs = computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate) ;
+//                presentationTimeUs = mainActivity.camera2.timestamp.get();
+//                presentationTimeUs = mainActivity.camera2.mBufferInfo.presentationTimeUs;
+                Log.d(TAG, "[aac]: pushed data of size " + String.format ("%d [%d]", size, presentationTimeUs));
+                mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, size, presentationTimeUs, eos);;
                 mainActivity.camera2.audioIndex = inputBufferId ;
+                audioIn += size ;
             }
 
+            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+            int aIndex = mainActivity.camera2.audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
+            int counter = 0 ;
+            if (aIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
+                if (mainActivity.camera2.audioTrackIndex != -1)
+                    Log.e(TAG, "[aac] output format changed! " + mainActivity.camera2.audioEncoder.getOutputFormat());
+                else {
+                    mainActivity.camera2.audioTrackIndex = mainActivity.camera2.mMuxer.addTrack(
+                            mainActivity.camera2.audioEncoder.getOutputFormat());
+
+                    Log.d(TAG, "setTuner: audio track index " + mainActivity.camera2.audioTrackIndex);
+                }
+
+            }
+
+            while (aIndex >= 0 && mainActivity.camera2.audioTrackIndex != -1) {
+                audioOut += bufferInfo.size;
+//                bufferInfo.presentationTimeUs = mainActivity.camera2.mBufferInfo.presentationTimeUs ;
+//                bufferInfo.presentationTimeUs = info.presentationTimeUs - presentationTimeUs;
+//                mainActivity.camera2.audioEncoder.getOutputBuffer(aIndex);
+
+//                if (mainActivity.camera2.audioTrackIndex == -1) {
+//                    mainActivity.camera2.audioTrackIndex = mainActivity.camera2.mMuxer.addTrack(
+//                            mainActivity.camera2.audioEncoder.getOutputFormat()
+//                    );
+
+                if (mainActivity.camera2.mMuxerStarted) {
+                    ByteBuffer buffer = mainActivity.camera2.audioEncoder.getOutputBuffer(aIndex);
+                    if (buffer != null) {
+                        buffer.rewind();
+                        mainActivity.camera2.mMuxer.writeSampleData(mainActivity.camera2.audioTrackIndex, buffer, bufferInfo);
+                        Log.d(TAG, "[aac]: popped data of size " + bufferInfo.size + " " + bufferInfo.presentationTimeUs);
+                    }
+                }
+
+                mainActivity.camera2.audioEncoder.releaseOutputBuffer(aIndex, false);
+                aIndex = mainActivity.camera2.audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
+            }
+
+            Log.d(TAG, String.format ("audio in [%d]: audio out [%s]", audioIn, audioOut));
             /*
             AVBuffer buffer = new AVBuffer();
             buffer.size = size;
             buffer.floatBuffer = FloatBuffer.wrap(data);
 
             avBuffer.addLast(buffer);
-            mainActivity.camera2.audioEncoder.flush();
-
              */
         } else {
-            presentationTimeUs = 0 ;
+            audioIn = audioOut = 0 ;
         }
 
         if (! mainActivity.tunerEnabled)
@@ -3449,4 +3511,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static void pushToVideo (float [] data, int nframes) {
 
     }
+
+    private static long computePresentationTimeNsec(long frameIndex, int sampleRate) {
+        final long ONE_BILLION = 1000000000;
+        return frameIndex * ONE_BILLION / sampleRate;
+    }
+
 }

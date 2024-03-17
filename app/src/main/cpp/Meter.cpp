@@ -91,6 +91,7 @@ int Meter::autoincrease_callback(vringbuffer_t *vrb, bool first_call, int readin
 }
 
 int Meter::updateMeterOutput (AudioBuffer * buffer) {
+//    LOGD("HIT");
     float * data = buffer->data ;
     float * raw = buffer -> raw ;
     int samples = buffer -> pos ;
@@ -143,7 +144,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
     } else {
         if (tunerEnabled or videoRecording) {
             if ((jfloatArray1_index + samples) >= TUNER_ARRAY_SIZE) {
-                envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, samples, false);
+                envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, jfloatArray1_index, false);
                 jfloatArray1_index = 0 ;
             } else {
                 envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
