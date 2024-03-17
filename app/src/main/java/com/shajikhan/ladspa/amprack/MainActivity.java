@@ -2794,20 +2794,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (mainActivity.camera2.mMuxerStarted) {
                     ByteBuffer buffer = mainActivity.camera2.audioEncoder.getOutputBuffer(aIndex);
                     if (buffer != null) {
+                        if (fileOutputStream != null) {
+                            buffer.rewind();
+                            try {
+                                for (int i = 0 ; i < bufferInfo.size ; i ++)
+                                    dataOutputStream.write(buffer.get(i));
+                            } catch (IOException e) {
+                                Log.e(TAG, "setTuner: ", e);
+                                throw new RuntimeException(e);
+                            }
+                        }
+
                         buffer.rewind();
                         mainActivity.camera2.mMuxer.writeSampleData(mainActivity.camera2.audioTrackIndex, buffer, bufferInfo);
                         Log.d(TAG, "[aac]: popped data of size " + bufferInfo.size + " " + bufferInfo.presentationTimeUs);
-                    }
-
-                    if (fileOutputStream != null) {
-                        buffer.rewind();
-                        try {
-                            for (int i = 0 ; i < bufferInfo.size ; i ++)
-                                dataOutputStream.write(buffer.get(i));
-                        } catch (IOException e) {
-                            Log.e(TAG, "setTuner: ", e);
-                            throw new RuntimeException(e);
-                        }
                     }
                 }
 
