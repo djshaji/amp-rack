@@ -81,6 +81,7 @@ std::string LIBRARY_PATH ;
 
 
     void test();
+    long getTimeStamp();
 
 private:
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
@@ -108,6 +109,7 @@ private:
     int setTuner(buffer_t *buffer);
 
     int pushToVideo(buffer_t *buffer);
+
 } ;
 
 #endif // __ENGINE__H

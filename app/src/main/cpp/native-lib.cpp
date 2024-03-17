@@ -831,3 +831,9 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_toggleVideoRecording(JNIEnv *env, 
     if (engine == nullptr) return;
     engine->meter->videoRecording = toggle;
 }
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getTimeStamp(JNIEnv *env, jclass clazz) {
+    // TODO: implement getTimeStamp()
+    return (jlong) engine -> getTimeStamp() ;
+}

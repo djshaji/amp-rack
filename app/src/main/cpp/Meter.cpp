@@ -146,10 +146,10 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             if ((jfloatArray1_index + samples) >= TUNER_ARRAY_SIZE) {
                 envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, jfloatArray1_index, false);
                 jfloatArray1_index = 0 ;
-            } else {
-                envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
-                jfloatArray1_index += samples;
             }
+            
+            envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
+            jfloatArray1_index += samples;
         }
     }
 

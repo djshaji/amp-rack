@@ -121,6 +121,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -128,6 +129,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     SurfaceTexture surfaceTexture;
     public boolean headphoneWarning = true;
     static Context context;
+    static FileOutputStream fileOutputStream = null ;
+    static DataOutputStream dataOutputStream = null ;
     static MainActivity mainActivity;
     boolean videoRecording = false ;
     Camera2 camera2 ;
@@ -862,8 +866,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void showMediaPlayerDialog() {
-        if (lastRecordedFileName == null)
+        if (lastRecordedFileName == null) {
+            Log.e(TAG, "showMediaPlayerDialog: no last recorded audio");
             return;
+        }
         Log.d(TAG, "showMediaPlayerDialog: " + lastRecordedFileName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -1384,7 +1390,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             stopEffect();
             notificationManager.cancelAll();
             running = false ;
+            stopDemoRecord();
         } else {
+            startDemoRecord();
             if (! isHeadphonesPlugged() && headphoneWarning) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setMessage("No headphones or audio interface detected: you may hear feedback if you run the app on device speakers. Do you wish to continue?")
@@ -2722,6 +2730,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static void setTuner (float [] data, int size) {
         mainActivity.camera2.frame += size ;
         if (mainActivity.videoRecording && mainActivity.camera2.timestamp != null) {
+            if (mainActivity.camera2.firstAudioFrame == -1)
+                mainActivity.camera2.firstAudioFrame = AudioEngine.getTimeStamp();
+
             int inputBufferId = mainActivity.camera2.audioEncoder.dequeueInputBuffer(5000);
             ByteBuffer inputBuffer = null;
 
@@ -2742,9 +2753,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 inputBuffer.rewind();
 //                presentationTimeUs =  System.nanoTime() / 1000 ; //computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate);
 
-                presentationTimeUs = computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate) ;
+//                presentationTimeUs = computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate) ;
+//                presentationTimeUs = AudioEngine.getTimeStamp() - mainActivity.camera2.firstAudioFrame;
 //                presentationTimeUs = mainActivity.camera2.timestamp.get();
 //                presentationTimeUs = mainActivity.camera2.mBufferInfo.presentationTimeUs;
+                presentationTimeUs = System.nanoTime();
+//                presentationTimeUs -= (size / mainActivity.camera2.sampleRate ) / 1000000000 ;
                 Log.d(TAG, "[aac]: pushed data of size " + String.format ("%d [%d]", size, presentationTimeUs));
                 mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, size, presentationTimeUs, eos);;
                 mainActivity.camera2.audioIndex = inputBufferId ;
@@ -2783,6 +2797,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         buffer.rewind();
                         mainActivity.camera2.mMuxer.writeSampleData(mainActivity.camera2.audioTrackIndex, buffer, bufferInfo);
                         Log.d(TAG, "[aac]: popped data of size " + bufferInfo.size + " " + bufferInfo.presentationTimeUs);
+                    }
+
+                    if (fileOutputStream != null) {
+                        buffer.rewind();
+                        try {
+                            for (int i = 0 ; i < bufferInfo.size ; i ++)
+                                dataOutputStream.write(buffer.get(i));
+                        } catch (IOException e) {
+                            Log.e(TAG, "setTuner: ", e);
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
 
@@ -3515,6 +3540,38 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static long computePresentationTimeNsec(long frameIndex, int sampleRate) {
         final long ONE_BILLION = 1000000000;
         return frameIndex * ONE_BILLION / sampleRate;
+    }
+
+    void startDemoRecord () {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
+        Date date = new Date();
+        mainActivity.lastRecordedFileName = formatter.format(date);
+        mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName  + ".wav";
+
+        try {
+            fileOutputStream = new FileOutputStream(mainActivity.lastRecordedFileName);
+        } catch (IOException e) {
+            fileOutputStream = null ;
+            dataOutputStream = null ;
+            throw new RuntimeException(e);
+        }
+
+        dataOutputStream = new DataOutputStream(fileOutputStream);
+    }
+
+    void stopDemoRecord () {
+        if (fileOutputStream == null)
+            return;
+        try {
+            dataOutputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            fileOutputStream = null ;
+            throw new RuntimeException(e);
+        }
+
+        fileOutputStream = null ;
+        dataOutputStream = null ;
     }
 
 }

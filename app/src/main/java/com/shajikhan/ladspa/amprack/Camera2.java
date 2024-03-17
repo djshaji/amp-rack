@@ -48,7 +48,7 @@ public class Camera2 {
     private static final int FRAME_RATE = 30;               // 15fps
     private static final int IFRAME_INTERVAL = 1;          // 10 seconds between I-frames
     private int mWidth = -1;
-    public long presentationTimeUs = 0 ;
+    public long presentationTimeUs = 0, firstAudioFrame = -1 ;
     long frame = 0 ;
     private int mHeight = -1;
     // bit rate, in bits per second
@@ -374,6 +374,7 @@ public class Camera2 {
         audioTrackIndex = -1 ;
         frame = 0 ;
         presentationTimeUs = 0 ;
+        firstAudioFrame = -1 ;
     }
 
     class EncoderCallback extends MediaCodec.Callback {
