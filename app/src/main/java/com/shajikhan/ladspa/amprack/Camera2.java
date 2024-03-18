@@ -288,7 +288,7 @@ public class Camera2 {
         outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
-        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
+//        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
@@ -330,11 +330,16 @@ public class Camera2 {
 
                 avBuffer = mainActivity.avBuffer.pop();
                 avBuffer.floatBuffer.rewind();
-                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
+//                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
+//                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
+//                buffer.rewind();
+                for (int i = 0 ; i < avBuffer.size ; i ++)
+                    buffer.putInt(i, (int) (avBuffer.floatBuffer.get(i) * 32767f));
+
+                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size +
+                        String.format(" {%d:%d}", buffer.get(0), buffer.get(avBuffer.size - 1)));
+
                 buffer.rewind();
-//                for (int i = 0 ; i < avBuffer.size ; i ++)
-//                    Log.d(TAG, "[audio] onInputBufferAvailable: %f" + buffer.getFloat(i));
-//                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size);
                 codec.queueInputBuffer(index, 0, avBuffer.size, timestamp.get(), 0);
             }
 
