@@ -3,6 +3,8 @@
 #include "Engine.h"
 #include "logging_macros.h"
 
+jmethodID Engine::pushAudio = nullptr;
+
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
 //    queueManager = new LockFreeQueueManager ();
@@ -564,7 +566,10 @@ int Engine::setTuner (buffer_t * buffer) {
 }
 
 
-int Engine::pushToVideo (buffer_t * buffer) {
+int Engine::pushToVideo (AudioBuffer * buffer) {
+    if (pushAudio == nullptr) {
+
+    }
 
 }
 

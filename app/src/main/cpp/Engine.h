@@ -79,6 +79,7 @@ std::string LIBRARY_PATH ;
     std::shared_ptr<oboe::AudioStream> mRecordingStream;
     std::shared_ptr<oboe::AudioStream> mPlayStream;
 
+    static jmethodID pushAudio ;
 
     void test();
     long getTimeStamp();
@@ -108,7 +109,7 @@ private:
 
     int setTuner(buffer_t *buffer);
 
-    int pushToVideo(buffer_t *buffer);
+    static int pushToVideo(AudioBuffer *buffer);
 
 } ;
 

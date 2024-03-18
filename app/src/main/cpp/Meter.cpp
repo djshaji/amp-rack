@@ -43,6 +43,8 @@ bool Meter::enabled = false ;
 float Meter::lastTotal = 0 ;
 bool Meter::isInput = true;
 
+jfloatArray pushVideoSamples = nullptr;
+
 JNIEnv* getEnv() {
     JNIEnv *env;
     int status = gJvm->GetEnv((void**)&env, JNI_VERSION_1_6);
@@ -129,6 +131,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
                                                            "(FZ)V");
         setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
                                                 "([FI)V");
+        pushToVideo = envOutput->GetStaticMethodID(mainActivityOutput, "pushToVideo",
+                                                "([FI)V");
         if (setMixerMeterOutput == nullptr) {
             LOGF("cannot find method!");
         }
@@ -139,10 +143,11 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
         // this should never be more than this
         jfloatArray1 = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
+        pushVideoSamples = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
         jfloatArray1_index = 0 ;
         return 0 ;
     } else {
-        if (tunerEnabled or videoRecording) {
+        if (tunerEnabled) {
             if ((jfloatArray1_index + samples) >= TUNER_ARRAY_SIZE) {
                 envOutput->CallStaticVoidMethod(mainActivityOutput, setTuner, jfloatArray1, jfloatArray1_index, false);
                 jfloatArray1_index = 0 ;
@@ -150,6 +155,11 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             
             envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
             jfloatArray1_index += samples;
+        }
+
+        if (videoRecording) {
+            envOutput->SetFloatArrayRegion(pushVideoSamples, 0, samples, data);
+            envOutput->CallStaticVoidMethod(mainActivityOutput, pushToVideo, pushVideoSamples, samples);
         }
     }
 

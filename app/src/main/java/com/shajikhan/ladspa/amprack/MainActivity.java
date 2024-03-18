@@ -3433,7 +3433,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void pushToVideo (float [] data, int nframes) {
-
+        Log.d(TAG, String.format ("%d: %f - %f", nframes, data [0], data [nframes - 1]));
     }
 
     private static long computePresentationTimeNsec(long frameIndex, int sampleRate) {
