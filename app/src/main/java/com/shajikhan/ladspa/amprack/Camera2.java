@@ -327,8 +327,11 @@ public class Camera2 {
                 ByteBuffer buffer = codec.getInputBuffer(index);
 
                 avBuffer = mainActivity.avBuffer.pop();
+                buffer.rewind();
+                avBuffer.floatBuffer.rewind();
                 buffer.asFloatBuffer().put(avBuffer.floatBuffer);
 
+                buffer.rewind();
 //                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size);
                 codec.queueInputBuffer(index, 0, avBuffer.size, timestamp.get(), 0);
             }
@@ -339,7 +342,8 @@ public class Camera2 {
 
                 if (mMuxerStarted) {
                     ByteBuffer outPutByteBuffer = codec.getOutputBuffer(index);
-                    info.presentationTimeUs = System.nanoTime() / 1000;
+                    outPutByteBuffer.rewind();
+                    info.presentationTimeUs = timestamp.get();
                     mMuxer.writeSampleData(audioTrackIndex, outPutByteBuffer, info);
                 }
 
@@ -462,8 +466,8 @@ public class Camera2 {
                 if (mTrackIndex == -1)
                     mTrackIndex = mMuxer.addTrack(newFormat);
 
-                if (audioTrackIndex == -1)
-                    return;
+//                if (audioTrackIndex == -1)
+//                    return;
 
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
@@ -475,7 +479,7 @@ public class Camera2 {
             }
 
             outPutByteBuffer = codec.getOutputBuffer(index);
-            info.presentationTimeUs = System.nanoTime()/1000;
+            info.presentationTimeUs = timestamp.get();
             mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
             mBufferInfo = info;
