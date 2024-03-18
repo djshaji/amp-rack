@@ -391,55 +391,11 @@ public class Camera2 {
 
         @Override
         public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-            Log.d(TAG, String.format ("track: %b", isVideo));
-            if (! isVideo) return;
-            int eos = 0 ;
 
-            if (audioTrackIndex == -1) {
-                Log.d(TAG, "onInputBufferAvailable: added audio track");
-                audioTrackIndex = mMuxer.addTrack(audioEncoder.getOutputFormat());
-            }
-
-            if (! mainActivity.videoRecording)
-                eos = MediaCodec.BUFFER_FLAG_END_OF_STREAM ;
-
-            floatBuffer = mainActivity.avBuffer.pop() ;
-            inputByteBuffer = codec.getInputBuffer(index);
-            inputByteBuffer.asFloatBuffer().put(floatBuffer.floatBuffer);
-            presentationTimeUs = 1000000l * index / 48000;
-            mainActivity.camera2.audioEncoder.queueInputBuffer(index, 0, floatBuffer.size, mBufferInfo.presentationTimeUs, eos);;
-
-            if (eos != 0) {
-                audioEncoder.signalEndOfInputStream();
-                audioEncoder.stop();
-            }
         }
 
         @Override
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-            /*
-            if (mainActivity.avBuffer.size() > 0) {
-                MainActivity.AVBuffer data = mainActivity.avBuffer.pop();
-                int inputBufferId = mainActivity.camera2.audioEncoder.dequeueInputBuffer(5000);
-                int eos = 0;
-                if (!mainActivity.videoRecording)
-                    eos = MediaCodec.BUFFER_FLAG_END_OF_STREAM;
-
-                if (inputBufferId >= 0) {
-                    ByteBuffer inputBuffer = mainActivity.camera2.audioEncoder.getInputBuffer(inputBufferId);
-                    inputBuffer.asFloatBuffer().put(data.floatBuffer);
-
-                    presentationTimeUs = mainActivity.camera2.mBufferInfo.presentationTimeUs; // - mainActivity.camera2.presentationTimeUs ;
-                    Log.d(TAG, "setTuner: pushed data of size " + String.format("%d [%d]", data.size, presentationTimeUs));
-                    mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, data.size, presentationTimeUs, eos);
-                    ;
-                    mainActivity.camera2.audioIndex = inputBufferId;
-                }
-            }
-
-             */
-
-            Log.d(TAG, "onOutputBufferAvailable: video " + String.format(" [%d: %d]", info.size, info.presentationTimeUs));
             if (! mMuxerStarted) {
                 MediaFormat newFormat = mEncoder.getOutputFormat();
                 Log.d(TAG, "encoder output format changed: " + newFormat);
@@ -450,13 +406,6 @@ public class Camera2 {
 
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
-                timestamp = new Timestamp() ;
-                if (audioTrackIndex == -1) {
-                    outPutByteBuffer = codec.getOutputBuffer(index);
-                    codec.releaseOutputBuffer(index, false);
-                    return;
-                }
-
                 Log.d(TAG, "onOutputBufferAvailable: starting muxer");
                 mMuxer.start();
                 mMuxerStarted = true;
@@ -464,32 +413,8 @@ public class Camera2 {
             }
 
             outPutByteBuffer = codec.getOutputBuffer(index);
-//            info.presentationTimeUs = info.presentationTimeUs - presentationTimeUs;
-
-//            info.presentationTimeUs = timestamp.get();
-//            Log.d(TAG, "onOutputBufferAvailable: writing muxer frame at " + info.presentationTimeUs);
             mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
-//            byte[] outDate = new byte[info.size];
-//            outPutByteBuffer.get(outDate);
-
-            /*
-            int aIndex = audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
-            int counter = 0 ;
-            while (aIndex > 0) {
-                bufferInfo.presentationTimeUs = info.presentationTimeUs + counter;
-//                bufferInfo.presentationTimeUs = info.presentationTimeUs - presentationTimeUs;
-                audioBuffer = audioEncoder.getOutputBuffer(aIndex);
-                Log.d(TAG, "onOutputBufferAvailable: presentaton time: " + bufferInfo.presentationTimeUs + counter );
-                mMuxer.writeSampleData(audioTrackIndex, audioBuffer, bufferInfo);
-                audioEncoder.releaseOutputBuffer(aIndex, false);
-                Log.d(TAG, "onOutputBufferAvailable: popped data of size " + bufferInfo.size + " " + bufferInfo.presentationTimeUs);
-                aIndex = audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
-                counter += 1000 ;
-            }
-
-             */
-
             mBufferInfo = info;
         }
 

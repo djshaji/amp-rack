@@ -1390,9 +1390,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             stopEffect();
             notificationManager.cancelAll();
             running = false ;
-            stopDemoRecord();
         } else {
-            startDemoRecord();
             if (! isHeadphonesPlugged() && headphoneWarning) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setMessage("No headphones or audio interface detected: you may hear feedback if you run the app on device speakers. Do you wish to continue?")
@@ -2728,105 +2726,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     static int audioIn = 0, audioOut = 0 ;
     static void setTuner (float [] data, int size) {
-        mainActivity.camera2.frame += size ;
-        if (mainActivity.videoRecording && mainActivity.camera2.timestamp != null) {
-            if (mainActivity.camera2.firstAudioFrame == -1)
-                mainActivity.camera2.firstAudioFrame = AudioEngine.getTimeStamp();
-
-            int inputBufferId = mainActivity.camera2.audioEncoder.dequeueInputBuffer(5000);
-            ByteBuffer inputBuffer = null;
-
-            if (inputBufferId >= 0)
-                inputBuffer = mainActivity.camera2.audioEncoder.getInputBuffer (inputBufferId);
-
-            int eos = 0 ;
-            if (! mainActivity.videoRecording)
-                eos = MediaCodec.BUFFER_FLAG_END_OF_STREAM ;
-
-            if (inputBufferId >= 0 && inputBuffer != null) {
-                inputBuffer.clear();
-                inputBuffer.rewind();
-                for (int i = 0 ; i < size ; i ++) {
-                    inputBuffer.putFloat(data [i]);
-                }
-
-                inputBuffer.rewind();
-//                presentationTimeUs =  System.nanoTime() / 1000 ; //computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate);
-
-//                presentationTimeUs = computePresentationTimeNsec(mainActivity.camera2.frame, mainActivity.camera2.sampleRate) ;
-//                presentationTimeUs = AudioEngine.getTimeStamp() - mainActivity.camera2.firstAudioFrame;
-//                presentationTimeUs = mainActivity.camera2.timestamp.get();
-//                presentationTimeUs = mainActivity.camera2.mBufferInfo.presentationTimeUs;
-                presentationTimeUs = System.nanoTime();
-//                presentationTimeUs -= (size / mainActivity.camera2.sampleRate ) / 1000000000 ;
-                Log.d(TAG, "[aac]: pushed data of size " + String.format ("%d [%d]", size, presentationTimeUs));
-                mainActivity.camera2.audioEncoder.queueInputBuffer(inputBufferId, 0, size, presentationTimeUs, eos);;
-                mainActivity.camera2.audioIndex = inputBufferId ;
-                audioIn += size ;
-            }
-
-            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-            int aIndex = mainActivity.camera2.audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
-            int counter = 0 ;
-            if (aIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                if (mainActivity.camera2.audioTrackIndex != -1)
-                    Log.e(TAG, "[aac] output format changed! " + mainActivity.camera2.audioEncoder.getOutputFormat());
-                else {
-                    mainActivity.camera2.audioTrackIndex = mainActivity.camera2.mMuxer.addTrack(
-                            mainActivity.camera2.audioEncoder.getOutputFormat());
-
-                    Log.d(TAG, "setTuner: audio track index " + mainActivity.camera2.audioTrackIndex);
-                }
-
-            }
-
-            while (aIndex >= 0 && mainActivity.camera2.audioTrackIndex != -1) {
-                audioOut += bufferInfo.size;
-//                bufferInfo.presentationTimeUs = mainActivity.camera2.mBufferInfo.presentationTimeUs ;
-//                bufferInfo.presentationTimeUs = info.presentationTimeUs - presentationTimeUs;
-//                mainActivity.camera2.audioEncoder.getOutputBuffer(aIndex);
-
-//                if (mainActivity.camera2.audioTrackIndex == -1) {
-//                    mainActivity.camera2.audioTrackIndex = mainActivity.camera2.mMuxer.addTrack(
-//                            mainActivity.camera2.audioEncoder.getOutputFormat()
-//                    );
-
-                if (mainActivity.camera2.mMuxerStarted) {
-                    ByteBuffer buffer = mainActivity.camera2.audioEncoder.getOutputBuffer(aIndex);
-                    if (buffer != null) {
-                        if (fileOutputStream != null) {
-                            buffer.rewind();
-                            try {
-                                for (int i = 0 ; i < bufferInfo.size ; i ++)
-                                    dataOutputStream.write(buffer.get(i));
-                            } catch (IOException e) {
-                                Log.e(TAG, "setTuner: ", e);
-                                throw new RuntimeException(e);
-                            }
-                        }
-
-                        buffer.rewind();
-                        mainActivity.camera2.mMuxer.writeSampleData(mainActivity.camera2.audioTrackIndex, buffer, bufferInfo);
-                        Log.d(TAG, "[aac]: popped data of size " + bufferInfo.size + " " + bufferInfo.presentationTimeUs);
-                    }
-                }
-
-                mainActivity.camera2.audioEncoder.releaseOutputBuffer(aIndex, false);
-                aIndex = mainActivity.camera2.audioEncoder.dequeueOutputBuffer(bufferInfo, 5000) ;
-            }
-
-            Log.d(TAG, String.format ("audio in [%d]: audio out [%s]", audioIn, audioOut));
-            /*
-            AVBuffer buffer = new AVBuffer();
-            buffer.size = size;
-            buffer.floatBuffer = FloatBuffer.wrap(data);
-
-            avBuffer.addLast(buffer);
-             */
-        } else {
-            audioIn = audioOut = 0 ;
-        }
-
         if (! mainActivity.tunerEnabled)
             return ;
         double freq = pitch.computePitchFrequency(data);
