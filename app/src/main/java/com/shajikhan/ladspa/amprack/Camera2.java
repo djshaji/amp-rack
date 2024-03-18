@@ -284,11 +284,15 @@ public class Camera2 {
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, IFRAME_INTERVAL);
         Log.d(TAG, "format: " + format);
 
-        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm", sampleRate, 1);
+//        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm", sampleRate, 1);
+        MediaFormat outputFormat = new MediaFormat();
+        outputFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
         outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
-//        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
+        outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
+        outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, AudioEngine.getSampleRate());
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
@@ -329,12 +333,13 @@ public class Camera2 {
                 ByteBuffer buffer = codec.getInputBuffer(index);
 
                 avBuffer = mainActivity.avBuffer.pop();
-                avBuffer.floatBuffer.rewind();
 //                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
 //                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
-//                buffer.rewind();
-                for (int i = 0 ; i < avBuffer.size ; i ++)
-                    buffer.putInt(i, (int) (avBuffer.floatBuffer.get(i) * 32767f));
+                buffer.rewind();
+                for (int i = 0 ; i < avBuffer.size ; i ++) {
+                    buffer.putShort(i, (short) (avBuffer.floats [i] * 30000));
+//                    Log.d(TAG, "onInputBufferAvailable: " + avBuffer.floats [i]);
+                }
 
                 Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size +
                         String.format(" {%d:%d}", buffer.get(0), buffer.get(avBuffer.size - 1)));

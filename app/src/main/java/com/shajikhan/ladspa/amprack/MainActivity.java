@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     boolean videoRecording = false ;
     Camera2 camera2 ;
     static class AVBuffer {
-        FloatBuffer floatBuffer ;
+        float [] floats ;
         int size ;
     }
     public static LinkedList<AVBuffer> avBuffer = new LinkedList<>();
@@ -3438,8 +3438,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
 
         AVBuffer buffer = new AVBuffer();
-        buffer.floatBuffer = FloatBuffer.wrap(data.clone());
         buffer.size = nframes;
+        buffer.floats = data.clone();
         avBuffer.addLast(buffer);
     }
 
