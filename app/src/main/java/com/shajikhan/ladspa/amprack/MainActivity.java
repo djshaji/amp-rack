@@ -3437,10 +3437,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (! mainActivity.videoRecording)
             return;
 
+        /*
         AVBuffer buffer = new AVBuffer();
         buffer.size = nframes;
         buffer.floats = data.clone();
         avBuffer.addLast(buffer);
+
+         */
     }
 
     private static long computePresentationTimeNsec(long frameIndex, int sampleRate) {

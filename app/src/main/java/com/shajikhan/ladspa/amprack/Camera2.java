@@ -316,76 +316,6 @@ public class Camera2 {
         mEncoder.setCallback(new EncoderCallback(true));
 
         timestamp = new Timestamp();
-        audioEncoder.setCallback(new MediaCodec.Callback() {
-            long prev_pts = 0 ;
-            @Override
-            public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-//                Log.d(TAG, "[audio] onInputBufferAvailable: " + index);
-
-                if (mainActivity.avBuffer.isEmpty()) {
-//                    Log.w(TAG, "[audio] onInputBufferAvailable: av Buffer is empty");
-                    codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
-
-                    return;
-                }
-
-                MainActivity.AVBuffer avBuffer ;
-                ByteBuffer buffer = codec.getInputBuffer(index);
-
-                avBuffer = mainActivity.avBuffer.pop();
-//                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
-//                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
-                buffer.rewind();
-                for (int i = 0 ; i < avBuffer.size ; i ++) {
-                    buffer.putShort(i, (short) (avBuffer.floats [i] * 30000));
-//                    Log.d(TAG, "onInputBufferAvailable: " + avBuffer.floats [i]);
-                }
-
-                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size +
-                        String.format(" {%d:%d}", buffer.get(0), buffer.get(avBuffer.size - 1)));
-
-                buffer.rewind();
-                codec.queueInputBuffer(index, 0, avBuffer.size, timestamp.get(), 0);
-            }
-
-            @Override
-            public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-//                Log.d(TAG, "[audio] onOutputBufferAvailable: " + String.format("[%d] %d: %d", index, info.size, info.presentationTimeUs));
-
-                if (mMuxerStarted) {
-                    ByteBuffer outPutByteBuffer = codec.getOutputBuffer(index);
-                    outPutByteBuffer.rewind();
-                    info.presentationTimeUs = timestamp.get();
-                    mMuxer.writeSampleData(audioTrackIndex, outPutByteBuffer, info);
-                }
-
-                codec.releaseOutputBuffer(index, false);
-            }
-
-            @Override
-            public void onError(@NonNull MediaCodec codec, @NonNull MediaCodec.CodecException e) {
-
-            }
-
-            @Override
-            public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
-                Log.d(TAG, "[audio] onOutputFormatChanged: " + format.toString());
-                if (audioTrackIndex != -1) {
-//                    Log.w(TAG, "[audio] onOutputFormatChanged: we already have audio track!");
-                    return;
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    Log.d(TAG, "[audio] onOutputFormatChanged: float support: input: " +
-                            codec.getInputFormat().getInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_16BIT) +
-                            " output: " +
-                            codec.getOutputFormat().getInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_16BIT));
-                }
-
-                MediaFormat cformat = codec.getOutputFormat();
-                audioTrackIndex = mMuxer.addTrack(cformat);
-            }
-        });
 //        audioEncoder.setCallback(new EncoderCallback(false));
 
         audioEncoder.start();
@@ -487,7 +417,7 @@ public class Camera2 {
 
 //                if (audioTrackIndex == -1)
 //                    return;
-
+//
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
 //                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
