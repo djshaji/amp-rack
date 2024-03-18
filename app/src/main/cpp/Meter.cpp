@@ -6,6 +6,8 @@
 #include "Meter.h"
 
 #define TUNER_ARRAY_SIZE 4096
+
+faacEncHandle Meter::faacEncHandle = nullptr;
 jfloatArray Meter::jfloatArray1 ;
 int Meter::jfloatArray1_index = 0 ;
 int Meter::jfloatArray1_Size = 0 ;
@@ -433,4 +435,28 @@ void Meter::process (int nframes, const float * data, bool isInput) {
         vringbuffer_trigger_autoincrease_callback(vringbufferOutput);
     }
      */
+}
+
+void Meter::faacInit (int sampleRate, unsigned long maxSamples, unsigned long maxBytes) {
+    jack_samplerate = sampleRate ;
+    faacEncHandle = faacEncOpen(
+                sampleRate,
+                1,
+                &maxSamples,
+                &maxBytes
+            ) ;
+
+    if (faacEncHandle == NULL) {
+        LOGE("[faac] unable to initialize encoder!");
+    }
+}
+
+void Meter::faacClose () {
+    faacEncClose(faacEncHandle);
+}
+
+void Meter::faacConfig () {
+    faacEncConfigurationPtr config = faacEncGetCurrentConfiguration(faacEncHandle);
+    config -> bitRate = 160000 ;
+    config->inputFormat = 4 ; // aaaaahhhhhhhhhhh
 }

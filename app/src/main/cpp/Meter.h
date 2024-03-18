@@ -20,6 +20,7 @@ extern "C" {
 }
 #endif
 #include "LockFreeQueue.h"
+#include "faac.h"
 
 //#include "FileWriter.h"
 JNIEnv* getEnv() ;
@@ -215,6 +216,14 @@ public:
     static int jfloatArray1_index;
     static jmethodID pushToVideo;
     static bool videoRecording;
+    static faacEncHandle faacEncHandle;
+
+public:
+    void faacInit(int sampleRate, unsigned long maxSamples, unsigned long maxBytes);
+
+    void faacClose();
+
+    void faacConfig();
 };
 
 #endif //AMP_RACK_METER_H
