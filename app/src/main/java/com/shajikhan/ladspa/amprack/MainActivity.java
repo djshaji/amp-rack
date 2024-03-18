@@ -3433,7 +3433,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void pushToVideo (float [] data, int nframes) {
-        Log.d(TAG, String.format ("%d: %f - %f", nframes, data [0], data [nframes - 1]));
+//        Log.d(TAG, String.format ("%d: %f - %f", nframes, data [0], data [nframes - 1]));
+        if (! mainActivity.videoRecording)
+            return;
+
+        AVBuffer buffer = new AVBuffer();
+        buffer.floatBuffer = FloatBuffer.wrap(data);
+        avBuffer.addLast(buffer);
     }
 
     private static long computePresentationTimeNsec(long frameIndex, int sampleRate) {

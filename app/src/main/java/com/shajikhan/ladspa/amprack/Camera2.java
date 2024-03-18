@@ -109,6 +109,8 @@ public class Camera2 {
         sampleRate = AudioEngine.getSampleRate() ;
         if (sampleRate == 0)
             sampleRate = 48000 ;
+
+        timestamp = new Timestamp();
     }
 
     public void openCamera() {
@@ -305,6 +307,42 @@ public class Camera2 {
 
         mInputSurface = mEncoder.createInputSurface();
         mEncoder.setCallback(new EncoderCallback(true));
+        audioEncoder.setCallback(new MediaCodec.Callback() {
+            @Override
+            public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+                Log.d(TAG, "[audio] onInputBufferAvailable: " + index);
+
+                if (mainActivity.avBuffer.isEmpty()) {
+                    Log.w(TAG, "[audio] onInputBufferAvailable: av Buffer is empty");
+                    return;
+                }
+
+                MainActivity.AVBuffer avBuffer ;
+                ByteBuffer buffer = codec.getInputBuffer(index);
+
+                avBuffer = mainActivity.avBuffer.pop();
+                buffer.asFloatBuffer().put(avBuffer.floatBuffer);
+
+                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size);
+                codec.queueInputBuffer(index, 0, avBuffer.size, timestamp.get(), 0);
+            }
+
+            @Override
+            public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
+                Log.d(TAG, "[audio] onOutputBufferAvailable: " + String.format("[%d] %d: %d", index, info.size, info.presentationTimeUs));
+                codec.releaseOutputBuffer(index, false);
+            }
+
+            @Override
+            public void onError(@NonNull MediaCodec codec, @NonNull MediaCodec.CodecException e) {
+
+            }
+
+            @Override
+            public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
+                Log.d(TAG, "[audio] onOutputFormatChanged: " + format.toString());
+            }
+        });
 //        audioEncoder.setCallback(new EncoderCallback(false));
 
         audioEncoder.start();
