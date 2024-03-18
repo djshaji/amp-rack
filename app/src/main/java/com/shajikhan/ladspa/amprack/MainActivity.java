@@ -3439,6 +3439,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         AVBuffer buffer = new AVBuffer();
         buffer.floatBuffer = FloatBuffer.wrap(data);
+        buffer.size = nframes;
         avBuffer.addLast(buffer);
     }
 

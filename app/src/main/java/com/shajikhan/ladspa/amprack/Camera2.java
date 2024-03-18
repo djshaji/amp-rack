@@ -58,14 +58,15 @@ public class Camera2 {
 
     private Surface mInputSurface;
     class Timestamp {
-        long start ;
+        long start = 0;
+        long vidstart = 0;
 
         Timestamp () {
             start = System.nanoTime() / 1000 ;
         }
 
         long get () {
-            return (System.nanoTime() / 1000) - start ;
+            return ((System.nanoTime() / 1000) - start) + vidstart ;
         }
     }
 
@@ -307,13 +308,18 @@ public class Camera2 {
 
         mInputSurface = mEncoder.createInputSurface();
         mEncoder.setCallback(new EncoderCallback(true));
+
+        timestamp = new Timestamp();
         audioEncoder.setCallback(new MediaCodec.Callback() {
+            long prev_pts = 0 ;
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-                Log.d(TAG, "[audio] onInputBufferAvailable: " + index);
+//                Log.d(TAG, "[audio] onInputBufferAvailable: " + index);
 
                 if (mainActivity.avBuffer.isEmpty()) {
-                    Log.w(TAG, "[audio] onInputBufferAvailable: av Buffer is empty");
+//                    Log.w(TAG, "[audio] onInputBufferAvailable: av Buffer is empty");
+                    codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
+
                     return;
                 }
 
@@ -323,13 +329,20 @@ public class Camera2 {
                 avBuffer = mainActivity.avBuffer.pop();
                 buffer.asFloatBuffer().put(avBuffer.floatBuffer);
 
-                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size);
+//                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size);
                 codec.queueInputBuffer(index, 0, avBuffer.size, timestamp.get(), 0);
             }
 
             @Override
             public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-                Log.d(TAG, "[audio] onOutputBufferAvailable: " + String.format("[%d] %d: %d", index, info.size, info.presentationTimeUs));
+//                Log.d(TAG, "[audio] onOutputBufferAvailable: " + String.format("[%d] %d: %d", index, info.size, info.presentationTimeUs));
+
+                if (mMuxerStarted) {
+                    ByteBuffer outPutByteBuffer = codec.getOutputBuffer(index);
+                    info.presentationTimeUs = System.nanoTime() / 1000;
+                    mMuxer.writeSampleData(audioTrackIndex, outPutByteBuffer, info);
+                }
+
                 codec.releaseOutputBuffer(index, false);
             }
 
@@ -340,7 +353,14 @@ public class Camera2 {
 
             @Override
             public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
-                Log.d(TAG, "[audio] onOutputFormatChanged: " + format.toString());
+//                Log.d(TAG, "[audio] onOutputFormatChanged: " + format.toString());
+                if (audioTrackIndex != -1) {
+//                    Log.w(TAG, "[audio] onOutputFormatChanged: we already have audio track!");
+                    return;
+                }
+
+                MediaFormat cformat = codec.getOutputFormat();
+                audioTrackIndex = mMuxer.addTrack(cformat);
             }
         });
 //        audioEncoder.setCallback(new EncoderCallback(false));
@@ -436,21 +456,26 @@ public class Camera2 {
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
             if (! mMuxerStarted) {
                 MediaFormat newFormat = mEncoder.getOutputFormat();
-                Log.d(TAG, "encoder output format changed: " + newFormat);
+//                Log.d(TAG, "encoder output format changed: " + newFormat);
 
                 // now that we have the Magic Goodies, start the muxer
                 if (mTrackIndex == -1)
                     mTrackIndex = mMuxer.addTrack(newFormat);
 
+                if (audioTrackIndex == -1)
+                    return;
+
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
-                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
+//                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
                 mMuxer.start();
                 mMuxerStarted = true;
                 presentationTimeUs = info.presentationTimeUs;
+                timestamp.vidstart = info.presentationTimeUs;
             }
 
             outPutByteBuffer = codec.getOutputBuffer(index);
+            info.presentationTimeUs = System.nanoTime()/1000;
             mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
             mBufferInfo = info;
