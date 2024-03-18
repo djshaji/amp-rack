@@ -219,11 +219,15 @@ public:
     static faacEncHandle faacEncHandle;
 
 public:
-    void faacInit(int sampleRate, unsigned long maxSamples, unsigned long maxBytes);
+    void faacInit(int sampleRate, unsigned long maxSamples);
 
     void faacClose();
 
     void faacConfig();
+
+    static int faacEncode(float * data, int nframes, unsigned char *outputBuffer, unsigned int bufferSize);
+
+    static unsigned char *audioToVideoBytes;
 };
 
 #endif //AMP_RACK_METER_H
