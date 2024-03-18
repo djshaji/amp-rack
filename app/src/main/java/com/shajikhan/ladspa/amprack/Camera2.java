@@ -18,6 +18,7 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -305,6 +306,7 @@ public class Camera2 {
 
         mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         audioEncoder.configure(outputFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        Log.d(TAG, "[audio] prepareEncoder: configured format: " + outputFormat.toString());
 
         mInputSurface = mEncoder.createInputSurface();
         mEncoder.setCallback(new EncoderCallback(true));
@@ -327,11 +329,11 @@ public class Camera2 {
                 ByteBuffer buffer = codec.getInputBuffer(index);
 
                 avBuffer = mainActivity.avBuffer.pop();
-                buffer.rewind();
                 avBuffer.floatBuffer.rewind();
                 buffer.asFloatBuffer().put(avBuffer.floatBuffer);
-
                 buffer.rewind();
+//                for (int i = 0 ; i < avBuffer.size ; i ++)
+//                    Log.d(TAG, "[audio] onInputBufferAvailable: %f" + buffer.getFloat(i));
 //                Log.d(TAG, "[audio] onInputBufferAvailable: queued input buffer of size " + avBuffer.size);
                 codec.queueInputBuffer(index, 0, avBuffer.size, timestamp.get(), 0);
             }
@@ -357,10 +359,17 @@ public class Camera2 {
 
             @Override
             public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
-//                Log.d(TAG, "[audio] onOutputFormatChanged: " + format.toString());
+                Log.d(TAG, "[audio] onOutputFormatChanged: " + format.toString());
                 if (audioTrackIndex != -1) {
 //                    Log.w(TAG, "[audio] onOutputFormatChanged: we already have audio track!");
                     return;
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Log.d(TAG, "[audio] onOutputFormatChanged: float support: input: " +
+                            codec.getInputFormat().getInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_16BIT) +
+                            " output: " +
+                            codec.getOutputFormat().getInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_16BIT));
                 }
 
                 MediaFormat cformat = codec.getOutputFormat();
