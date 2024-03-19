@@ -24,7 +24,14 @@ class MP4 {
     AP4_Cardinal sample_count = 0;
     bool eos = false;
 
+    AP4_Movie* movie = nullptr ;
+    AP4_Track* track = nullptr ;
+    AP4_File* file = nullptr ;
+
     void openFile(std::string _filename);
+
+    void MakeDsi(unsigned int sampling_frequency_index, unsigned int channel_configuration,
+                 unsigned char *dsi);
 };
 
 
