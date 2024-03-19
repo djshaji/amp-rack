@@ -225,9 +225,9 @@ public:
 
     void faacConfig();
 
-    static int faacEncode(float * data, int nframes, unsigned char *outputBuffer, unsigned int bufferSize);
+    static int faacEncode(float * data, int nframes, jchar *outputBuffer, unsigned int bufferSize);
 
-    static unsigned char *audioToVideoBytes;
+    static jchar *audioToVideoBytes;
 };
 
 #endif //AMP_RACK_METER_H

@@ -7,7 +7,7 @@
 
 #define TUNER_ARRAY_SIZE 4096
 
-unsigned char * Meter::audioToVideoBytes = NULL ;
+jchar * Meter::audioToVideoBytes = NULL ;
 faacEncHandle Meter::faacEncHandle = nullptr;
 jfloatArray Meter::jfloatArray1 ;
 int Meter::jfloatArray1_index = 0 ;
@@ -46,7 +46,7 @@ bool Meter::enabled = false ;
 float Meter::lastTotal = 0 ;
 bool Meter::isInput = true;
 
-jbyteArray pushVideoSamples = nullptr;
+jcharArray pushVideoSamples = nullptr;
 
 JNIEnv* getEnv() {
     JNIEnv *env;
@@ -135,7 +135,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
                                                 "([FI)V");
         pushToVideo = envOutput->GetStaticMethodID(mainActivityOutput, "pushToVideo",
-                                                "([BI)V");
+                                                "([CI)V");
         if (setMixerMeterOutput == nullptr) {
             LOGF("cannot find method!");
         }
@@ -146,8 +146,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
         // this should never be more than this
         jfloatArray1 = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
-        pushVideoSamples = envOutput->NewByteArray(TUNER_ARRAY_SIZE);
-        audioToVideoBytes = (unsigned char *) malloc(sizeof(char) * TUNER_ARRAY_SIZE);
+        pushVideoSamples = envOutput->NewCharArray(TUNER_ARRAY_SIZE);
+        audioToVideoBytes = (jchar *) malloc(sizeof(jchar) * TUNER_ARRAY_SIZE);
         jfloatArray1_index = 0 ;
         return 0 ;
     } else {
@@ -164,8 +164,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         if (videoRecording) {
             int bytesWritten = faacEncode(data, samples, audioToVideoBytes, TUNER_ARRAY_SIZE);
             if (bytesWritten >= 0) {
-                envOutput->SetByteArrayRegion(pushVideoSamples, 0, bytesWritten,
-                                              (jbyte *) audioToVideoBytes);
+                envOutput->SetCharArrayRegion(pushVideoSamples, 0, bytesWritten+1,
+                                              audioToVideoBytes);
                 envOutput->CallStaticVoidMethod(mainActivityOutput, pushToVideo, pushVideoSamples,
                                                 bytesWritten);
             }
@@ -445,6 +445,7 @@ void Meter::process (int nframes, const float * data, bool isInput) {
 }
 
 void Meter::faacInit (int sampleRate, unsigned long maxSamples) {
+    LOGD("[faac] init %d %d", sampleRate, maxSamples);
     unsigned long maxBytes = TUNER_ARRAY_SIZE ;
     jack_samplerate = sampleRate ;
     faacEncHandle = faacEncOpen(
@@ -470,9 +471,9 @@ void Meter::faacConfig () {
     faacEncSetConfiguration(faacEncHandle, config);
 }
 
-int Meter::faacEncode (float * data, int nframes, unsigned char *outputBuffer,
-			 unsigned int bufferSize) {
-    int bytesWritten = faacEncEncode(faacEncHandle, reinterpret_cast<int32_t *>(data), nframes, outputBuffer, bufferSize) ;
+int Meter::faacEncode (float * data, int nframes, jchar *outputBuffer,
+                       unsigned int bufferSize) {
+    int bytesWritten = faacEncEncode(faacEncHandle, (int *) data, nframes, (unsigned char *) outputBuffer, bufferSize) ;
     if (bytesWritten < 0) {
         LOGE("[faac] error: %d", bytesWritten);
     }
@@ -480,5 +481,6 @@ int Meter::faacEncode (float * data, int nframes, unsigned char *outputBuffer,
 //    for (int i = 0 ; i < bytesWritten ; i ++)
 //        LOGD("%c", outputBuffer [i]);
 //
+    LOGD("[faac] %d: {%d:%d}", bytesWritten, outputBuffer [0], outputBuffer [bytesWritten]);
     return bytesWritten;
 }

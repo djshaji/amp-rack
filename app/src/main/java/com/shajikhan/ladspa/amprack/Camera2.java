@@ -472,9 +472,12 @@ public class Camera2 {
                 return;
 
             MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
+            ByteBuffer buffer = ByteBuffer.allocate(avBuffer.size * 2);
+            for (int i = 0; i < avBuffer.size ; i ++)
+                buffer.putChar(i, avBuffer.bytes[i]);
             bufferInfo.set(0, avBuffer.size, info.presentationTimeUs, 0);
-            mMuxer.writeSampleData(audioTrackIndex, ByteBuffer.wrap(avBuffer.bytes), bufferInfo);
-            Log.d(TAG, String.format ("[audio video]: %d {%d:%d}", bufferInfo.size, avBuffer.bytes [0], avBuffer.bytes [bufferInfo.size]));
+            mMuxer.writeSampleData(audioTrackIndex, buffer, bufferInfo);
+            Log.d(TAG, String.format ("[muxer]: %d {%d:%d}", bufferInfo.size, (int) avBuffer.bytes [0], (int) avBuffer.bytes [bufferInfo.size]));
         }
 
         @Override

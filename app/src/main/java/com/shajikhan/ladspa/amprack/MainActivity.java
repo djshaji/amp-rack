@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     boolean videoRecording = false ;
     Camera2 camera2 ;
     static class AVBuffer {
-        byte [] bytes ;
+        char [] bytes ;
         int size ;
     }
     public static LinkedList<AVBuffer> avBuffer = new LinkedList<>();
@@ -3432,7 +3432,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return (360 - (cameraOrientation != null ? cameraOrientation : 0)) % 360;
     }
 
-    public static void pushToVideo (byte [] data, int nframes) {
+    public static void pushToVideo (char [] data, int nframes) {
 //        Log.d(TAG, String.format ("%d: %f - %f", nframes, data [0], data [nframes - 1]));
         if (! mainActivity.videoRecording)
             return;
