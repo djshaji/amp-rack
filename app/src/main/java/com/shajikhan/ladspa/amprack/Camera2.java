@@ -468,16 +468,22 @@ public class Camera2 {
             mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
 
-            if (mainActivity.avBuffer.size() == 0)
-                return;
+            int bytesWritten = 0 ;
+            ByteBuffer buffer = ByteBuffer.allocate(info.size * 2);
+            buffer.rewind();
 
-            MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
-            ByteBuffer buffer = ByteBuffer.allocate(avBuffer.size * 2);
-            for (int i = 0; i < avBuffer.size ; i ++)
-                buffer.putChar(i, avBuffer.bytes[i]);
-            bufferInfo.set(0, avBuffer.size, info.presentationTimeUs, 0);
+            while (mainActivity.avBuffer.size() > 0) {
+                MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
+                bytesWritten += avBuffer.size ;
+                for (int i = 0; i < avBuffer.size; i++)
+                    buffer.putChar(avBuffer.bytes[i]);
+                if (bytesWritten + avBuffer.size > info.size)
+                    break ;
+            }
+
+            bufferInfo.set(0, bytesWritten, info.presentationTimeUs, 0);
             mMuxer.writeSampleData(audioTrackIndex, buffer, bufferInfo);
-            Log.d(TAG, String.format ("[muxer]: %d {%d:%d}", bufferInfo.size, (int) avBuffer.bytes [0], (int) avBuffer.bytes [bufferInfo.size]));
+            Log.d(TAG, String.format ("[muxer]: (%d) %d {%d:%d}", info.size, bufferInfo.size, (int) buffer .get(0), (int) buffer.get(bufferInfo.size)));
         }
 
         @Override
