@@ -34,6 +34,8 @@ set_target_properties( # Specifies the target library.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopus.a )
 
 add_library(libopusenc STATIC IMPORTED)
+add_library(libap4 STATIC IMPORTED)
+
 set_target_properties( # Specifies the target library.
         libopusenc
 
@@ -42,6 +44,15 @@ set_target_properties( # Specifies the target library.
 
         # Provides the path to the library you want to import.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopusenc.a )
+
+set_target_properties( # Specifies the target library.
+        libap4
+
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+
+        # Provides the path to the library you want to import.
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libap4.a )
 
 add_library(libmp3lame STATIC IMPORTED)
 add_library(libfaac STATIC IMPORTED)
@@ -85,6 +96,7 @@ add_library( # Sets the name of the library.
         Plugin2.cpp
         Meter.cpp
         LockFreeQueue.cpp
+        MP4.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a
