@@ -473,7 +473,7 @@ void Meter::faacConfig () {
 
 int Meter::faacEncode (float * data, int nframes, jchar *outputBuffer,
                        unsigned int bufferSize) {
-    int bytesWritten = faacEncEncode(faacEncHandle, (int *) data, nframes, (unsigned char *) outputBuffer, bufferSize) ;
+    int bytesWritten = faacEncEncode(faacEncHandle,  (int32_t *) data, nframes, (unsigned char *) outputBuffer, bufferSize) ;
     if (bytesWritten < 0) {
         LOGE("[faac] error: %d", bytesWritten);
     }
@@ -481,6 +481,6 @@ int Meter::faacEncode (float * data, int nframes, jchar *outputBuffer,
 //    for (int i = 0 ; i < bytesWritten ; i ++)
 //        LOGD("%c", outputBuffer [i]);
 //
-    LOGD("[faac] %d: {%d:%d}", bytesWritten, outputBuffer [0], outputBuffer [bytesWritten]);
+    LOGD("[faac] in %d: out: %d", nframes, bytesWritten);
     return bytesWritten;
 }

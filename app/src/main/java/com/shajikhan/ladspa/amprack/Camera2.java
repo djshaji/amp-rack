@@ -67,7 +67,7 @@ public class Camera2 {
         }
 
         long get () {
-            return ((System.nanoTime() / 1000) - start) + vidstart ;
+            return (System.nanoTime() / 1000) - start;
         }
     }
 
@@ -436,8 +436,8 @@ public class Camera2 {
 //                Log.d(TAG, "encoder output format changed: " + newFormat);
 
                 // now that we have the Magic Goodies, start the muxer
-                if (mTrackIndex == -1)
-                    mTrackIndex = mMuxer.addTrack(newFormat);
+//                if (mTrackIndex == -1)
+//                    mTrackIndex = mMuxer.addTrack(newFormat);
 
                 if (audioTrackIndex == -1)
                     return;
@@ -465,12 +465,12 @@ public class Camera2 {
 
             outPutByteBuffer = codec.getOutputBuffer(index);
             info.presentationTimeUs = timestamp.get();
-            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+//            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
 
-            int bytesWritten = 0 ;
-            ByteBuffer buffer = ByteBuffer.allocate(info.size * 2);
-            buffer.rewind();
+//            int bytesWritten = 0 ;
+//            ByteBuffer buffer = ByteBuffer.allocate(info.size * 2);
+//            buffer.rewind();
 
             /*
             while (mainActivity.avBuffer.size() > 0) {
