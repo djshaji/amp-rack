@@ -162,10 +162,13 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         }
 
         if (videoRecording) {
-            faacEncode(data, samples, audioToVideoBytes, TUNER_ARRAY_SIZE);
-            envOutput->SetByteArrayRegion(pushVideoSamples, 0, samples,
-                                          reinterpret_cast<const jbyte *>(audioToVideoBytes));
-            envOutput->CallStaticVoidMethod(mainActivityOutput, pushToVideo, pushVideoSamples, samples);
+            int bytesWritten = faacEncode(data, samples, audioToVideoBytes, TUNER_ARRAY_SIZE);
+            if (bytesWritten >= 0) {
+                envOutput->SetByteArrayRegion(pushVideoSamples, 0, bytesWritten,
+                                              (jbyte *) audioToVideoBytes);
+                envOutput->CallStaticVoidMethod(mainActivityOutput, pushToVideo, pushVideoSamples,
+                                                bytesWritten);
+            }
         }
     }
 
@@ -474,5 +477,8 @@ int Meter::faacEncode (float * data, int nframes, unsigned char *outputBuffer,
         LOGE("[faac] error: %d", bytesWritten);
     }
 
+//    for (int i = 0 ; i < bytesWritten ; i ++)
+//        LOGD("%c", outputBuffer [i]);
+//
     return bytesWritten;
 }

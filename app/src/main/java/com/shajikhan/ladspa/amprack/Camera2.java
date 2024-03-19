@@ -474,8 +474,7 @@ public class Camera2 {
             MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
             bufferInfo.set(0, avBuffer.size, info.presentationTimeUs, 0);
             mMuxer.writeSampleData(audioTrackIndex, ByteBuffer.wrap(avBuffer.bytes), bufferInfo);
-            Log.d(TAG, String.format ("[audio]: wrote %s frames at %s",
-                    avBuffer.size, bufferInfo.toString()));
+            Log.d(TAG, String.format ("[audio video]: %d {%d:%d}", bufferInfo.size, avBuffer.bytes [0], avBuffer.bytes [bufferInfo.size]));
         }
 
         @Override
