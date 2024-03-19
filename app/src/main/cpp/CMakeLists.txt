@@ -44,6 +44,7 @@ set_target_properties( # Specifies the target library.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopusenc.a )
 
 add_library(libmp3lame STATIC IMPORTED)
+add_library(libfaac STATIC IMPORTED)
 set_target_properties( # Specifies the target library.
         libmp3lame
 
@@ -52,6 +53,15 @@ set_target_properties( # Specifies the target library.
 
         # Provides the path to the library you want to import.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libmp3lame.a )
+
+set_target_properties( # Specifies the target library.
+        libfaac
+
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+
+        # Provides the path to the library you want to import.
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libfaac.a )
 
 
 add_library( # Sets the name of the library.
@@ -102,6 +112,7 @@ target_link_libraries( # Specifies the target library.
         libopusenc
         libopus
         libmp3lame
+        libfaac
         mediandk
         android
         OpenMAXAL

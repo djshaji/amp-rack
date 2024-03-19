@@ -188,6 +188,7 @@ public class Rack extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mainActivity.RequestCamera();
+                mainActivity.videoRecording = isChecked;
                 if (!isChecked) {
                     videoPreview.setVisibility(View.GONE);
                     mainActivity.camera2.closeCamera();
@@ -201,7 +202,6 @@ public class Rack extends Fragment {
                 }
 
                 AudioEngine.toggleVideoRecording(isChecked);
-                mainActivity.videoRecording = isChecked;
             }
         });
 

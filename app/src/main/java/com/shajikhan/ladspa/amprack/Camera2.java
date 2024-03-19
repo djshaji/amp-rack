@@ -259,6 +259,7 @@ public class Camera2 {
     }
 
     public void closeCamera() {
+        mMuxerStarted = false;
         if (null != cameraDevice) {
             cameraDevice.close();
             cameraDevice = null;
@@ -286,7 +287,7 @@ public class Camera2 {
 
 //        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm", sampleRate, 1);
         MediaFormat outputFormat = new MediaFormat();
-        outputFormat.setString(MediaFormat.KEY_MIME, "audio/aac");
+        outputFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
         outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
@@ -318,6 +319,29 @@ public class Camera2 {
         timestamp = new Timestamp();
 //        audioEncoder.setCallback(new EncoderCallback(false));
 
+        audioEncoder.setCallback(new MediaCodec.Callback() {
+            @Override
+            public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+
+            }
+
+            @Override
+            public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
+
+            }
+
+            @Override
+            public void onError(@NonNull MediaCodec codec, @NonNull MediaCodec.CodecException e) {
+
+            }
+
+            @Override
+            public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
+                audioTrackIndex = mMuxer.addTrack(codec.getOutputFormat());
+                Log.d(TAG, String.format ("[audio]: added audio track [%d] with format %s",
+                        audioTrackIndex, codec.getOutputFormat()));
+            }
+        });
         audioEncoder.start();
         mEncoder.start();
 
@@ -415,19 +439,21 @@ public class Camera2 {
                 if (mTrackIndex == -1)
                     mTrackIndex = mMuxer.addTrack(newFormat);
 
-//                if (audioTrackIndex == -1)
-//                    return;
-//
+                if (audioTrackIndex == -1)
+                    return;
+
                 MediaFormat outputFormat = new MediaFormat();
-                outputFormat.setString(MediaFormat.KEY_MIME, "audio/aac");
+                outputFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
                 outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
                 outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
                 outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
-                outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+                outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 2);
 //        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
-                outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, AudioEngine.getSampleRate());
+                outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
 
-                audioTrackIndex = mMuxer.addTrack(outputFormat);
+                outputFormat = audioEncoder.getOutputFormat();
+                Log.d(TAG, "[audio] onOutputBufferAvailable: format " + outputFormat.toString());
+//                audioTrackIndex = mMuxer.addTrack(outputFormat);
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
 //                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
@@ -448,7 +474,8 @@ public class Camera2 {
             MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
             bufferInfo.set(0, avBuffer.size, info.presentationTimeUs, 0);
             mMuxer.writeSampleData(audioTrackIndex, ByteBuffer.wrap(avBuffer.bytes), bufferInfo);
-
+            Log.d(TAG, String.format ("[audio]: wrote %s frames at %s",
+                    avBuffer.size, bufferInfo.toString()));
         }
 
         @Override
