@@ -472,6 +472,7 @@ public class Camera2 {
             ByteBuffer buffer = ByteBuffer.allocate(info.size * 2);
             buffer.rewind();
 
+            /*
             while (mainActivity.avBuffer.size() > 0) {
                 MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
                 bytesWritten += avBuffer.size ;
@@ -484,6 +485,8 @@ public class Camera2 {
             bufferInfo.set(0, bytesWritten, info.presentationTimeUs, 0);
             mMuxer.writeSampleData(audioTrackIndex, buffer, bufferInfo);
             Log.d(TAG, String.format ("[muxer]: (%d) %d {%d:%d}", info.size, bufferInfo.size, (int) buffer .get(0), (int) buffer.get(bufferInfo.size)));
+
+             */
         }
 
         @Override

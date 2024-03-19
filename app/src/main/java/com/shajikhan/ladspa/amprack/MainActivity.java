@@ -3434,13 +3434,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static void pushToVideo (char [] data, int nframes) {
 //        Log.d(TAG, String.format ("%d: %f - %f", nframes, data [0], data [nframes - 1]));
-        if (! mainActivity.videoRecording)
+        if (! mainActivity.videoRecording || ! mainActivity.camera2.mMuxerStarted)
             return;
 
+        ByteBuffer buffer = ByteBuffer.allocate(nframes*2);
+        for (int i = 0 ; i < nframes ; i ++)
+            buffer.putChar(data [i]);
+
+        MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+
+        bufferInfo.set(0, nframes, mainActivity.camera2.timestamp.get(), 0);
+        mainActivity.camera2.mMuxer.writeSampleData(mainActivity.camera2.audioTrackIndex, buffer, bufferInfo);
+
+        /*
         AVBuffer buffer = new AVBuffer();
         buffer.size = nframes;
         buffer.bytes = data.clone();
         avBuffer.addLast(buffer);
+
+         */
 
     }
 
