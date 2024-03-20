@@ -344,14 +344,14 @@ public class Camera2 {
         audioEncoder.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-                float[] data = new float[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
+                float [] data = new float[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
                 int read = audioRecord.read(data, 0, data.length, AudioRecord.READ_NON_BLOCKING);
                 ByteBuffer buffer = codec.getInputBuffer(index);
                 buffer.rewind();
                 if (read > 0) {
 //                    buffer.put(data, 0, read);
                     for (int i = 0 ; i < read; i ++)
-                        buffer.putFloat(data [i]);
+                        buffer.putShort((short) (data [i] * 32768.0));
 //                        if (data [i] > 1f)
 //                            buffer .putInt((int) (32767f));
 //                        else if (data [i] < -1f)
@@ -364,7 +364,7 @@ public class Camera2 {
                 long time = timestamp.get() ;
 //                Log.d(TAG, String.format ("[audioRecord]: %s | %d", read, time));
 //                buffer.rewind();
-                codec.queueInputBuffer(index, 0, read, time, 0);
+                codec.queueInputBuffer(index, 0, read * 2, time, 0);
             }
 
             @Override
