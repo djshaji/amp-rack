@@ -164,10 +164,13 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         }
 
         // mp4 muxer test
+        /*
         int bytesWritten = faacEncode(data, samples, audioToVideoBytes, TUNER_ARRAY_SIZE);
         if (bytesWritten >= 0) {
             mp4 -> write (audioToVideoBytes, bytesWritten);
         }
+         */
+
         // end mp4 muxer test
         /*
         if (videoRecording) {
@@ -228,14 +231,14 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
 void Meter::start () {
     engine_running = true ;
-    mp4 = new MP4 (lastRecordedFileName);
+//    mp4 = new MP4 (lastRecordedFileName);
 }
 
 void Meter::stop () {
     IN
     engine_running = false ;
-    mp4 ->aacToMP4();
-    delete mp4 ;
+//    mp4 ->aacToMP4();
+//    delete mp4 ;
 
     /* we never detach
     envOutput = nullptr ;

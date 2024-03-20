@@ -12,12 +12,14 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.media.CamcorderProfile;
 import android.media.ImageReader;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
+import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -104,6 +106,16 @@ public class Camera2 {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+
+    // Start Audio Record
+    static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC; // for raw audio, use MediaRecorder.AudioSource.UNPROCESSED, see note in MediaRecorder section
+    static final int SAMPLE_RATE = 48000;
+    static final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
+    static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
+    static final int BUFFER_SIZE_RECORDING = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT);
+    AudioRecord audioRecord;
+
+    // End Audio Record
 
     Camera2(MainActivity mainActivity_) {
         mainActivity = mainActivity_;
@@ -292,8 +304,8 @@ public class Camera2 {
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
         outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-//        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
-        outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, AudioEngine.getSampleRate());
+        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
+        outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 48000);
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
@@ -309,6 +321,16 @@ public class Camera2 {
             throw new RuntimeException(e);
         }
 
+        // audio record start
+        audioRecord = new AudioRecord(AUDIO_SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE_RECORDING);
+
+        if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED) { // check for proper initialization
+            Log.e(TAG, "error initializing " );
+            return;
+        }
+
+        // audio record end
+
         mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         audioEncoder.configure(outputFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         Log.d(TAG, "[audio] prepareEncoder: configured format: " + outputFormat.toString());
@@ -322,12 +344,28 @@ public class Camera2 {
         audioEncoder.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-
+                byte[] data = new byte[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
+                int read = audioRecord.read(data, 0, data.length);
+                ByteBuffer buffer = codec.getInputBuffer(index);
+                buffer.rewind();
+                if (read > 0)
+                    buffer.put(data, 0, read);
+                else
+                    Log.e(TAG, "[audioRecord]: read returned " + read);
+                long time = timestamp.get() ;
+//                Log.d(TAG, String.format ("[audioRecord]: %s | %d", read, time));
+//                buffer.rewind();
+                codec.queueInputBuffer(index, 0, read, time, 0);
             }
 
             @Override
             public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-
+                ByteBuffer buffer = codec.getOutputBuffer(index);
+                buffer.rewind();
+                if (mMuxerStarted)
+                    mMuxer.writeSampleData(audioTrackIndex, buffer, info);
+//                Log.d(TAG, String.format ("[audioOutput]: %d | %d", info.size, info.presentationTimeUs));
+                codec.releaseOutputBuffer(index, false);
             }
 
             @Override
@@ -342,8 +380,10 @@ public class Camera2 {
                         audioTrackIndex, codec.getOutputFormat()));
             }
         });
+
         audioEncoder.start();
         mEncoder.start();
+        audioRecord.startRecording();
 
         // Output filename.  Ideally this would use Context.getFilesDir() rather than a
         // hard-coded output directory.
@@ -436,24 +476,12 @@ public class Camera2 {
 //                Log.d(TAG, "encoder output format changed: " + newFormat);
 
                 // now that we have the Magic Goodies, start the muxer
-//                if (mTrackIndex == -1)
-//                    mTrackIndex = mMuxer.addTrack(newFormat);
+                if (mTrackIndex == -1)
+                    mTrackIndex = mMuxer.addTrack(newFormat);
 
                 if (audioTrackIndex == -1)
                     return;
 
-                MediaFormat outputFormat = new MediaFormat();
-                outputFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
-                outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-                outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
-                outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
-                outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 2);
-//        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_FLOAT);
-                outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
-
-                outputFormat = audioEncoder.getOutputFormat();
-                Log.d(TAG, "[audio] onOutputBufferAvailable: format " + outputFormat.toString());
-//                audioTrackIndex = mMuxer.addTrack(outputFormat);
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
 //                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
@@ -465,7 +493,7 @@ public class Camera2 {
 
             outPutByteBuffer = codec.getOutputBuffer(index);
             info.presentationTimeUs = timestamp.get();
-//            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
 
 //            int bytesWritten = 0 ;
