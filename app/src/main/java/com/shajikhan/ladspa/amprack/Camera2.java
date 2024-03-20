@@ -111,7 +111,7 @@ public class Camera2 {
     static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC; // for raw audio, use MediaRecorder.AudioSource.UNPROCESSED, see note in MediaRecorder section
     static final int SAMPLE_RATE = 48000;
     static final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
-    static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
+    static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_FLOAT;
     static final int BUFFER_SIZE_RECORDING = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT);
     AudioRecord audioRecord;
 
@@ -344,12 +344,21 @@ public class Camera2 {
         audioEncoder.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-                byte[] data = new byte[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
-                int read = audioRecord.read(data, 0, data.length);
+                float[] data = new float[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
+                int read = audioRecord.read(data, 0, data.length, AudioRecord.READ_NON_BLOCKING);
                 ByteBuffer buffer = codec.getInputBuffer(index);
                 buffer.rewind();
-                if (read > 0)
-                    buffer.put(data, 0, read);
+                if (read > 0) {
+//                    buffer.put(data, 0, read);
+                    for (int i = 0 ; i < read; i ++)
+                        buffer.putFloat(data [i]);
+//                        if (data [i] > 1f)
+//                            buffer .putInt((int) (32767f));
+//                        else if (data [i] < -1f)
+//                            buffer .putInt((int) (-32767f));
+//                        else
+//                            buffer .putInt((int) (data [i] * 32767f));
+                }
                 else
                     Log.e(TAG, "[audioRecord]: read returned " + read);
                 long time = timestamp.get() ;
@@ -422,6 +431,9 @@ public class Camera2 {
         mMuxerStarted = false;
         mEncoder.signalEndOfInputStream();
         timestamp = null ;
+
+        if (audioRecord != null)
+            audioRecord.stop();
 
         if (mEncoder != null) {
             mEncoder.stop();
