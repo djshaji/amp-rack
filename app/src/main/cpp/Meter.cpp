@@ -7,7 +7,9 @@
 
 #define TUNER_ARRAY_SIZE 4096
 
-jchar * Meter::audioToVideoBytes = NULL ;
+MP4 * Meter::mp4 ;
+
+unsigned char * Meter::audioToVideoBytes = NULL ;
 faacEncHandle Meter::faacEncHandle = nullptr;
 jfloatArray Meter::jfloatArray1 ;
 int Meter::jfloatArray1_index = 0 ;
@@ -147,7 +149,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         // this should never be more than this
         jfloatArray1 = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
         pushVideoSamples = envOutput->NewCharArray(TUNER_ARRAY_SIZE);
-        audioToVideoBytes = (jchar *) malloc(sizeof(jchar) * TUNER_ARRAY_SIZE);
+        audioToVideoBytes = (unsigned  char *) malloc(sizeof(unsigned  char) * TUNER_ARRAY_SIZE);
         jfloatArray1_index = 0 ;
         return 0 ;
     } else {
@@ -161,6 +163,13 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             jfloatArray1_index += samples;
         }
 
+        // mp4 muxer test
+        int bytesWritten = faacEncode(data, samples, audioToVideoBytes, TUNER_ARRAY_SIZE);
+        if (bytesWritten >= 0) {
+            mp4 -> write (audioToVideoBytes, bytesWritten);
+        }
+        // end mp4 muxer test
+        /*
         if (videoRecording) {
             int bytesWritten = faacEncode(data, samples, audioToVideoBytes, TUNER_ARRAY_SIZE);
             if (bytesWritten >= 0) {
@@ -170,6 +179,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
                                                 bytesWritten);
             }
         }
+         */
     }
 
 
@@ -218,11 +228,14 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
 void Meter::start () {
     engine_running = true ;
+    mp4 = new MP4 (lastRecordedFileName);
 }
 
 void Meter::stop () {
     IN
     engine_running = false ;
+    mp4 ->aacToMP4();
+    delete mp4 ;
 
     /* we never detach
     envOutput = nullptr ;
@@ -471,7 +484,7 @@ void Meter::faacConfig () {
     faacEncSetConfiguration(faacEncHandle, config);
 }
 
-int Meter::faacEncode (float * data, int nframes, jchar *outputBuffer,
+int Meter::faacEncode (float * data, int nframes, unsigned char *outputBuffer,
                        unsigned int bufferSize) {
     int bytesWritten = faacEncEncode(faacEncHandle,  (int32_t *) data, nframes, (unsigned char *) outputBuffer, bufferSize) ;
     if (bytesWritten < 0) {
@@ -481,6 +494,6 @@ int Meter::faacEncode (float * data, int nframes, jchar *outputBuffer,
 //    for (int i = 0 ; i < bytesWritten ; i ++)
 //        LOGD("%c", outputBuffer [i]);
 //
-    LOGD("[faac] in %d: out: %d", nframes, bytesWritten);
+//    LOGD("[faac] in %d: out: %d", nframes, bytesWritten);
     return bytesWritten;
 }

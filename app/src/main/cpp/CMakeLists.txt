@@ -122,6 +122,7 @@ target_link_libraries( # Specifies the target library.
         oboe::oboe
         libsndfile
         libopusenc
+        libap4
         libopus
         libmp3lame
         libfaac

@@ -87,6 +87,7 @@ bool Engine::setEffectOn(bool isOn) {
                 }
                  */
 
+                meter->lastRecordedFileName = fileWriter->filename;
                 meter->enable();
                 meter->start();
                 meter->faacInit(mSampleRate, bufferSizeInFrames);

@@ -17,6 +17,7 @@
 #ifndef __SAMPLE_ANDROID_DEBUG_H__
 #define __SAMPLE_ANDROID_DEBUG_H__
 #include <android/log.h>
+#include "utils.h"
 
 #if 1
 #ifndef MODULE_NAME
