@@ -84,4 +84,13 @@ void MP4::openFile (std::string _filename) {
 
 }
 
-void MP4::writeFile ()
+void MP4::writeFile (unsigned char * data) {
+
+}
+
+void MP4::closeFile () {
+    delete file;
+    input->Release();
+    output->Release();
+
+}

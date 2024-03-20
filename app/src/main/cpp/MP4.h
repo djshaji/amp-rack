@@ -13,6 +13,7 @@
 class MP4 {
     std::string filename ;
     AP4_Result result;
+    AP4_ByteStream* input = NULL;
     AP4_ByteStream* output = NULL;
     AP4_SyntheticSampleTable* sample_table;
     AP4_AdtsParser parser;
@@ -32,6 +33,8 @@ class MP4 {
 
     void MakeDsi(unsigned int sampling_frequency_index, unsigned int channel_configuration,
                  unsigned char *dsi);
+
+    void writeFile(unsigned char *data);
 };
 
 
