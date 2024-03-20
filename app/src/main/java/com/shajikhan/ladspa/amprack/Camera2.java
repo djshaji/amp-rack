@@ -344,27 +344,34 @@ public class Camera2 {
         audioEncoder.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+                if (mainActivity.avBuffer.size() == 0) {
+                    codec.queueInputBuffer(index, 0, 0,timestamp.get(), 0);
+                    return;
+                }
+
+                MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
+                ByteBuffer buffer = codec.getInputBuffer(index);
+
+                for (int i = 0 ; i < avBuffer.size ; i++)
+                    buffer.putShort((short) (avBuffer.bytes [i] * 32768.0));
+
+                codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
+
+                /*
                 float [] data = new float[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
                 int read = audioRecord.read(data, 0, data.length, AudioRecord.READ_NON_BLOCKING);
                 ByteBuffer buffer = codec.getInputBuffer(index);
                 buffer.rewind();
                 if (read > 0) {
-//                    buffer.put(data, 0, read);
                     for (int i = 0 ; i < read; i ++)
                         buffer.putShort((short) (data [i] * 32768.0));
-//                        if (data [i] > 1f)
-//                            buffer .putInt((int) (32767f));
-//                        else if (data [i] < -1f)
-//                            buffer .putInt((int) (-32767f));
-//                        else
-//                            buffer .putInt((int) (data [i] * 32767f));
                 }
                 else
                     Log.e(TAG, "[audioRecord]: read returned " + read);
                 long time = timestamp.get() ;
-//                Log.d(TAG, String.format ("[audioRecord]: %s | %d", read, time));
-//                buffer.rewind();
                 codec.queueInputBuffer(index, 0, read * 2, time, 0);
+
+                 */
             }
 
             @Override

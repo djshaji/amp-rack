@@ -48,7 +48,7 @@ bool Meter::enabled = false ;
 float Meter::lastTotal = 0 ;
 bool Meter::isInput = true;
 
-jcharArray pushVideoSamples = nullptr;
+jfloatArray pushVideoSamples = nullptr;
 
 JNIEnv* getEnv() {
     JNIEnv *env;
@@ -137,7 +137,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         setTuner = envOutput->GetStaticMethodID(mainActivityOutput, "setTuner",
                                                 "([FI)V");
         pushToVideo = envOutput->GetStaticMethodID(mainActivityOutput, "pushToVideo",
-                                                "([CI)V");
+                                                "([FI)V");
         if (setMixerMeterOutput == nullptr) {
             LOGF("cannot find method!");
         }
@@ -148,7 +148,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
         // this should never be more than this
         jfloatArray1 = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
-        pushVideoSamples = envOutput->NewCharArray(TUNER_ARRAY_SIZE);
+        pushVideoSamples = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
         audioToVideoBytes = (unsigned  char *) malloc(sizeof(unsigned  char) * TUNER_ARRAY_SIZE);
         jfloatArray1_index = 0 ;
         return 0 ;
@@ -161,6 +161,13 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
             
             envOutput->SetFloatArrayRegion(jfloatArray1, jfloatArray1_index, samples, raw);
             jfloatArray1_index += samples;
+        }
+
+        if (videoRecording) {
+            envOutput->SetFloatArrayRegion(pushVideoSamples, 0, samples+1,
+                                          data);
+            envOutput->CallStaticVoidMethod(mainActivityOutput, pushToVideo, pushVideoSamples,
+                                            samples);
         }
 
         // mp4 muxer test
