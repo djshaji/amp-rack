@@ -20,8 +20,6 @@ extern "C" {
 }
 #endif
 #include "LockFreeQueue.h"
-#include "faac.h"
-#include "MP4.h"
 
 //#include "FileWriter.h"
 JNIEnv* getEnv() ;
@@ -62,7 +60,6 @@ class Meter {
 public:
     Meter(JavaVM *pVm);
     std::string lastRecordedFileName ;
-    static MP4 * mp4 ;
     static bool tunerEnabled ;
     static jmethodID setMixerMeter ;
     static jclass mainActivity ;
@@ -219,17 +216,8 @@ public:
     static int jfloatArray1_index;
     static jmethodID pushToVideo;
     static bool videoRecording;
-    static faacEncHandle faacEncHandle;
 
 public:
-    void faacInit(int sampleRate, unsigned long maxSamples);
-
-    void faacClose();
-
-    void faacConfig();
-
-    static int faacEncode(float * data, int nframes, unsigned char *outputBuffer, unsigned int bufferSize);
-
     static unsigned char *audioToVideoBytes;
 };
 

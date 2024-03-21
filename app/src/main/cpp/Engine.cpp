@@ -90,8 +90,6 @@ bool Engine::setEffectOn(bool isOn) {
                 meter->lastRecordedFileName = fileWriter->filename;
                 meter->enable();
                 meter->start();
-                meter->faacInit(mSampleRate, bufferSizeInFrames);
-                meter->faacConfig();
 //                addPluginToRack(0, 0);
                 mIsEffectOn = isOn;
             }
@@ -106,7 +104,6 @@ bool Engine::setEffectOn(bool isOn) {
             mFullDuplexPass.stop();
             closeStreams();
             mIsEffectOn = isOn;
-            meter->faacClose();
         }
     }
 

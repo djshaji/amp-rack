@@ -3,8 +3,10 @@ package com.shajikhan.ladspa.amprack;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,14 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
         String name = filenames.get(position) ;
         String basename = name.substring(name.lastIndexOf(File.separator) + 1);
         holder.fileButton.setText(basename);
+
+//        if (basename.endsWith(".mp4"))
+//            holder.fileButton.setCompoundDrawables(new BitmapDrawable (BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.baseline_ondemand_video_24)),
+//                    null, null, null);
+//        else
+//            holder.fileButton.setCompoundDrawables(new BitmapDrawable (BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.ic_baseline_audio_file_24)),
+//                    null, null, null);
+
         // we want the file to have extension so user doesn't try to send WAVE files by Whatsapp (unknowningly)
 //        holder.fileButton.setText(basename.substring(0, basename.indexOf(".")));
         holder.fileButton.setOnClickListener(new View.OnClickListener() {

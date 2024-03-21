@@ -32,6 +32,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static MainActivity mainActivity;
     boolean videoRecording = false ;
     Camera2 camera2 ;
+    MediaPlayerDialog mediaPlayerDialog = null;
     static class AVBuffer {
         float [] bytes ;
         int size ;
@@ -582,8 +584,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, "onCreate: savedInstanceState is not null");
 
             rack = new Rack();
-            tracks = new Tracks();
-            drums = new Tracks(true);
+            tracks = new Tracks(this);
+            drums = new Tracks(this, true);
             drums.isDrums = true ;
             presets = new Presets();
 //            quickPatch = new MyPresets(false, true);
@@ -803,7 +805,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         tracks.load(dir);
-        tracks.load(context.getExternalFilesDir(Environment.DIRECTORY_MOVIES));
+//        tracks.load(context.getExternalFilesDir(Environment.DIRECTORY_MOVIES));
         Set<String> _tracksCustom = defaultSharedPreferences.getStringSet("tracks", null) ;
         if (_tracksCustom != null) {
             for (String _d:
@@ -870,6 +872,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.e(TAG, "showMediaPlayerDialog: no last recorded audio");
             return;
         }
+
+//        if (mediaPlayerDialog == null)
+//            mediaPlayerDialog = new MediaPlayerDialog(this, mediaPlayer);
+//        mediaPlayerDialog.dialog.show();
+//        if (mediaPlayerDialog.dialog != null)
+//            return;
         Log.d(TAG, "showMediaPlayerDialog: " + lastRecordedFileName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -3491,5 +3499,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         fileOutputStream = null ;
         dataOutputStream = null ;
     }
+
+    public static Bitmap getBitmapFromAsset(AssetManager mgr, String path) {
+        InputStream is = null;
+        Bitmap bitmap = null;
+        try {
+            is = mgr.open(path);
+            bitmap = BitmapFactory.decodeStream(is);
+        } catch (final IOException e) {
+            bitmap = null;
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+        return bitmap;
+    }
+
 
 }

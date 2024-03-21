@@ -545,7 +545,7 @@
 
     <LinearLayout
         android:id="@+id/video_preview"
-        android:layout_width="90dp"
+        android:layout_width="101dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -7,10 +7,7 @@
 
 #define TUNER_ARRAY_SIZE 4096
 
-MP4 * Meter::mp4 ;
-
 unsigned char * Meter::audioToVideoBytes = NULL ;
-faacEncHandle Meter::faacEncHandle = nullptr;
 jfloatArray Meter::jfloatArray1 ;
 int Meter::jfloatArray1_index = 0 ;
 int Meter::jfloatArray1_Size = 0 ;
@@ -467,43 +464,3 @@ void Meter::process (int nframes, const float * data, bool isInput) {
      */
 }
 
-void Meter::faacInit (int sampleRate, unsigned long maxSamples) {
-    LOGD("[faac] init %d %d", sampleRate, maxSamples);
-    unsigned long maxBytes = TUNER_ARRAY_SIZE ;
-    jack_samplerate = sampleRate ;
-    faacEncHandle = faacEncOpen(
-                sampleRate,
-                1,
-                &maxSamples,
-                &maxBytes
-            ) ;
-
-    if (faacEncHandle == NULL) {
-        LOGE("[faac] unable to initialize encoder!");
-    }
-}
-
-void Meter::faacClose () {
-    faacEncClose(faacEncHandle);
-}
-
-void Meter::faacConfig () {
-    faacEncConfigurationPtr config = faacEncGetCurrentConfiguration(faacEncHandle);
-    config -> bitRate = 160000 ;
-    config->inputFormat = 4 ; // aaaaahhhhhhhhhhh
-    faacEncSetConfiguration(faacEncHandle, config);
-}
-
-int Meter::faacEncode (float * data, int nframes, unsigned char *outputBuffer,
-                       unsigned int bufferSize) {
-    int bytesWritten = faacEncEncode(faacEncHandle,  (int32_t *) data, nframes, (unsigned char *) outputBuffer, bufferSize) ;
-    if (bytesWritten < 0) {
-        LOGE("[faac] error: %d", bytesWritten);
-    }
-
-//    for (int i = 0 ; i < bytesWritten ; i ++)
-//        LOGD("%c", outputBuffer [i]);
-//
-//    LOGD("[faac] in %d: out: %d", nframes, bytesWritten);
-    return bytesWritten;
-}

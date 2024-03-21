@@ -55,11 +55,15 @@ public class Tracks extends Fragment {
     boolean isDrums = false ;
     BitmapDrawable play, pause, reset ;
 
-    public Tracks () {
+    public Tracks (MainActivity activity) {
+        mainActivity = activity;
         tracksAdapter = new TracksAdapter();
+        tracksAdapter.mainActivity = mainActivity;
     }
-    public Tracks (boolean _isDrums) {
+    public Tracks (MainActivity activity, boolean _isDrums) {
+        mainActivity = activity ;
         tracksAdapter = new TracksAdapter();
+        tracksAdapter.mainActivity = mainActivity;
         isDrums = _isDrums;
     }
 
