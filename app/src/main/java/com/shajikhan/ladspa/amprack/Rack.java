@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -87,7 +88,7 @@ public class Rack extends Fragment {
     LinearProgressIndicator quickPatchProgress ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
-    ToggleButton toggleVideo ;
+    ToggleButton toggleVideo, videoRecord ;
     LinearLayout videoPreview ;
     TextureView videoTexture ;
     LinearLayout mixer ;
@@ -181,18 +182,44 @@ public class Rack extends Fragment {
             });
 
         toggleVideo = mainActivity.findViewById(R.id.video_button);
+        videoRecord = mainActivity.findViewById(R.id.toggle_video);
         videoPreview = mainActivity.findViewById(R.id.video_preview);
         videoTexture = mainActivity.findViewById(R.id.video_texture);
+
+        if (mainActivity.useTheme) {
+            Bitmap b = mainActivity.skinEngine.bitmapDrawable("card", "bg").getBitmap();
+            Log.d(TAG, "onViewCreated: " + b.getHeight());
+            videoPreview.setBackground(new BitmapDrawable(Bitmap.createScaledBitmap(b, 90, (220/90) * b.getHeight(), true)));
+//            mainActivity.skinEngine.card(videoPreview);
+        }
+
+        videoRecord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    mainActivity.camera2.startRecording();
+                else
+                    toggleVideo.setChecked(false);
+            }
+        });
 
         toggleVideo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (! mainActivity.running && isChecked) {
+                    MainActivity.toast("Start the audio engine to begin recording");
+                    buttonView.setChecked(false);
+                    return;
+                }
+
                 mainActivity.RequestCamera();
                 mainActivity.videoRecording = isChecked;
                 if (!isChecked) {
                     videoPreview.setVisibility(View.GONE);
+                    boolean mStarted = mainActivity.camera2.mMuxerStarted ;
                     mainActivity.camera2.closeCamera();
-                    mainActivity.showMediaPlayerDialog();
+                    if (mStarted)
+                        mainActivity.showMediaPlayerDialog();
 //                    mainActivity.avBuffer.clear();
                 }
                 else {

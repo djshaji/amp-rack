@@ -550,7 +550,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="10dp"
-        android:background="@drawable/semi_trans"
+        android:background="@color/black"
         android:orientation="vertical"
         android:layout_height="220dp">
 

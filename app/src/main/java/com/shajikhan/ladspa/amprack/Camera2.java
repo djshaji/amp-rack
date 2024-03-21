@@ -283,9 +283,9 @@ public class Camera2 {
     private void prepareEncoder() {
         mBufferInfo = new MediaCodec.BufferInfo();
         ///| Todo: fixme: get width and height from camera
-        mWidth = imageDimension.getWidth() ;
-        mHeight = imageDimension.getHeight() ;
-        mBitRate = 1000000 ;
+        mWidth = imageDimension.getWidth();
+        mHeight = imageDimension.getHeight();
+        mBitRate = 1000000;
         MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, mWidth, mHeight);
 
         // Set some properties.  Failing to specify some of these can cause the MediaCodec
@@ -322,12 +322,12 @@ public class Camera2 {
         }
 
         // audio record start
-        audioRecord = new AudioRecord(AUDIO_SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE_RECORDING);
-
-        if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED) { // check for proper initialization
-            Log.e(TAG, "error initializing " );
-            return;
-        }
+//        audioRecord = new AudioRecord(AUDIO_SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE_RECORDING);
+//
+//        if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED) { // check for proper initialization
+//            Log.e(TAG, "error initializing " );
+//            return;
+//        }
 
         // audio record end
 
@@ -336,24 +336,21 @@ public class Camera2 {
         Log.d(TAG, "[audio] prepareEncoder: configured format: " + outputFormat.toString());
 
         mInputSurface = mEncoder.createInputSurface();
-        mEncoder.setCallback(new EncoderCallback(true));
-
-        timestamp = new Timestamp();
 //        audioEncoder.setCallback(new EncoderCallback(false));
-
+        mEncoder.setCallback(new EncoderCallback(true));
         audioEncoder.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
                 if (mainActivity.avBuffer.size() == 0) {
-                    codec.queueInputBuffer(index, 0, 0,timestamp.get(), 0);
+                    codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
                     return;
                 }
 
                 MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
                 ByteBuffer buffer = codec.getInputBuffer(index);
 
-                for (int i = 0 ; i < avBuffer.size ; i++)
-                    buffer.putShort((short) (avBuffer.bytes [i] * 32768.0));
+                for (int i = 0; i < avBuffer.size; i++)
+                    buffer.putShort((short) (avBuffer.bytes[i] * 32768.0));
 
                 codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
 
@@ -392,22 +389,25 @@ public class Camera2 {
             @Override
             public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
                 audioTrackIndex = mMuxer.addTrack(codec.getOutputFormat());
-                Log.d(TAG, String.format ("[audio]: added audio track [%d] with format %s",
+                Log.d(TAG, String.format("[audio]: added audio track [%d] with format %s",
                         audioTrackIndex, codec.getOutputFormat()));
             }
         });
 
-        audioEncoder.start();
-        mEncoder.start();
-        audioRecord.startRecording();
+//        audioRecord.startRecording();
 
         // Output filename.  Ideally this would use Context.getFilesDir() rather than a
         // hard-coded output directory.
+        audioEncoder.start();
+        mEncoder.start();
+
+        timestamp = new Timestamp();
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
         Date date = new Date();
         mainActivity.lastRecordedFileName =
                 String.format("%s/%s.mp4",
-                        mainActivity.getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath(),
+                        mainActivity.getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath(),
                         formatter.format(date));
         String outputPath = mainActivity.lastRecordedFileName;
         Log.d(TAG, String.format ("recording video to file: %s", mainActivity.lastRecordedFileName));
@@ -435,14 +435,21 @@ public class Camera2 {
      */
     private void releaseEncoder() {
         Log.d(TAG, "releaseEncoder: stopping encoder");
-        mMuxerStarted = false;
-        mEncoder.signalEndOfInputStream();
         timestamp = null ;
 
-        if (audioRecord != null)
-            audioRecord.stop();
+//        if (audioRecord != null)
+//            audioRecord.stop();
+
+        if (mMuxer != null) {
+            if (mMuxerStarted)
+                mMuxer.stop();
+            mMuxerStarted = false;
+            mMuxer.release();
+            mMuxer = null;
+        }
 
         if (mEncoder != null) {
+            mEncoder.signalEndOfInputStream();
             mEncoder.stop();
             mEncoder.release();
             mEncoder = null;
@@ -457,11 +464,6 @@ public class Camera2 {
         if (mInputSurface != null) {
             mInputSurface.release();
             mInputSurface = null;
-        }
-        if (mMuxer != null) {
-            mMuxer.stop();
-            mMuxer.release();
-            mMuxer = null;
         }
 
         mTrackIndex = -1 ;
@@ -490,29 +492,30 @@ public class Camera2 {
 
         @Override
         public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-            if (! mMuxerStarted) {
+            if (mTrackIndex == -1) {
                 MediaFormat newFormat = mEncoder.getOutputFormat();
 //                Log.d(TAG, "encoder output format changed: " + newFormat);
 
                 // now that we have the Magic Goodies, start the muxer
-                if (mTrackIndex == -1)
-                    mTrackIndex = mMuxer.addTrack(newFormat);
+//                if (mTrackIndex == -1)
+                mTrackIndex = mMuxer.addTrack(newFormat);
 
-                if (audioTrackIndex == -1)
-                    return;
+//                if (audioTrackIndex == -1)
+//                    return;
 
                 mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
 //                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
-                mMuxer.start();
-                mMuxerStarted = true;
+//                mMuxer.start();
+//                mMuxerStarted = true;
                 presentationTimeUs = info.presentationTimeUs;
                 timestamp.vidstart = info.presentationTimeUs;
             }
 
             outPutByteBuffer = codec.getOutputBuffer(index);
             info.presentationTimeUs = timestamp.get();
-            mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
+            if (mMuxerStarted)
+                mMuxer.writeSampleData(mTrackIndex, outPutByteBuffer, info);
             codec.releaseOutputBuffer(index, false);
 
 //            int bytesWritten = 0 ;
@@ -545,5 +548,17 @@ public class Camera2 {
         public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
             Log.d(TAG, String.format ("encoder format changed: %s", format.toString()));
         }
+    }
+
+    void startRecording () {
+        Log.d(TAG, "startRecording: ");
+        mMuxer.start();
+        mMuxerStarted = true;
+    }
+
+    void stopRecording () {
+        Log.d(TAG, "stopRecording: ");
+        mMuxerStarted = false;
+        mMuxer.stop();
     }
 }
