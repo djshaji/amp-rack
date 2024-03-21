@@ -352,6 +352,8 @@ public class Camera2 {
                     return;
                 }
 
+                // the following is always true. why?
+                // fixme
                 if (!mainActivity.avBuffer.isEmpty()) {
                     MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
                     ByteBuffer buffer = codec.getInputBuffer(index);
