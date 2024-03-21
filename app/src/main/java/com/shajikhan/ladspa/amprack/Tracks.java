@@ -145,7 +145,7 @@ public class Tracks extends Fragment {
                 } else {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_pause_24));
                     player.play();
-                    if (player.getVideoFormat() != null) {
+                    if (player.getCurrentMediaItem().localConfiguration.uri.toString().endsWith(".mp4")) {
                         frameLayout.setVisibility(View.VISIBLE);
                   }
 

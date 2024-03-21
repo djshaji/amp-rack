@@ -552,15 +552,27 @@
         android:layout_margin="10dp"
         android:background="@color/black"
         android:orientation="vertical"
-        android:layout_height="220dp">
+        android:layout_height="280dp">
 
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:textOff="Front"
+            android:id="@+id/flip_camera"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:textOn="Back"
+            android:layout_margin="10dp"
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
+            android:background="@color/fui_transparent"
+            android:drawableLeft="@drawable/baseline_sync_24"/>
         <TextureView
             android:id="@+id/video_texture"
             android:layout_width="match_parent"
             android:layout_height="180dp"/>
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:textOff="Rec"
             android:id="@+id/toggle_video"
             style="@style/TextAppearance.AppCompat.Caption"

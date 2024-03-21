@@ -94,6 +94,7 @@ public class Rack extends Fragment {
     LinearLayout mixer ;
     Button patchUp, patchDown ;
     JSONObject jsonObject = new JSONObject();
+    ToggleButton swapCamera ;
     boolean mixerInit = false ;
     boolean autoHideMixer = true ;
     /*
@@ -184,8 +185,21 @@ public class Rack extends Fragment {
         toggleVideo = mainActivity.findViewById(R.id.video_button);
         videoRecord = mainActivity.findViewById(R.id.toggle_video);
         videoPreview = mainActivity.findViewById(R.id.video_preview);
+        swapCamera = mainActivity.findViewById(R.id.flip_camera);
         videoTexture = mainActivity.findViewById(R.id.video_texture);
 
+        swapCamera.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (videoRecord.isChecked()) {
+                    mainActivity.toast ("Cannot flip camera while recording") ;
+                    return;
+                }
+
+                toggleVideo.setChecked(false);
+                toggleVideo.setChecked(true);
+            }
+        });
         if (mainActivity.useTheme) {
             Bitmap b = mainActivity.skinEngine.bitmapDrawable("card", "bg").getBitmap();
             Log.d(TAG, "onViewCreated: " + b.getHeight());
@@ -199,7 +213,8 @@ public class Rack extends Fragment {
                 if (isChecked)
                     mainActivity.camera2.startRecording();
                 else
-                    toggleVideo.setChecked(false);
+                    if (! toggleVideo.isChecked())
+                        toggleVideo.setChecked(false);
             }
         });
 
@@ -218,6 +233,7 @@ public class Rack extends Fragment {
                     videoPreview.setVisibility(View.GONE);
                     boolean mStarted = mainActivity.camera2.mMuxerStarted ;
                     mainActivity.camera2.closeCamera();
+                    mainActivity.rack.videoRecord.setChecked(false);
                     if (mStarted)
                         mainActivity.showMediaPlayerDialog();
 //                    mainActivity.avBuffer.clear();

@@ -138,7 +138,10 @@ public class Camera2 {
                 Log.d(TAG, String.format("found camera: %s", s));
                 CameraCharacteristics characteristics = manager.getCameraCharacteristics(s);
                 Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-                if (facing == CameraCharacteristics.LENS_FACING_FRONT)
+                int front = 0;
+                if (mainActivity.rack.swapCamera.isChecked())
+                    front = 1;
+                if (facing == front)
                     cameraId = s ;
 
                 cameras.add(s);
@@ -304,7 +307,10 @@ public class Camera2 {
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
         outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-        outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
+        }
+
         outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 48000);
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
@@ -346,13 +352,16 @@ public class Camera2 {
                     return;
                 }
 
-                MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
-                ByteBuffer buffer = codec.getInputBuffer(index);
+                if (!mainActivity.avBuffer.isEmpty()) {
+                    MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
+                    ByteBuffer buffer = codec.getInputBuffer(index);
 
-                for (int i = 0; i < avBuffer.size; i++)
-                    buffer.putShort((short) (avBuffer.bytes[i] * 32768.0));
+                    for (int i = 0; i < avBuffer.size; i++)
+                        buffer.putShort((short) (avBuffer.bytes[i] * 32767.0));
 
-                codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
+                    codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
+                } else
+                    codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
 
                 /*
                 float [] data = new float[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
