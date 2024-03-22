@@ -210,6 +210,12 @@ public class Rack extends Fragment {
         videoRecord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mainActivity.record.isChecked()) {
+                    buttonView.setChecked(false);
+                    MainActivity.toast("Cannot record audio and video at the same time");
+                    return;
+                }
+
                 if (isChecked)
                     mainActivity.camera2.startRecording();
                 else
@@ -298,6 +304,12 @@ public class Rack extends Fragment {
         mainActivity.record.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (videoRecord.isChecked()) {
+                    compoundButton.setChecked(false);
+                    MainActivity.toast("Cannot record audio and video at the same time");
+                    return;
+                }
+
                 if (!mainActivity.onOff.isChecked()) {
 //                        mainActivity.record.setChecked(!b);
                     if (b) {
