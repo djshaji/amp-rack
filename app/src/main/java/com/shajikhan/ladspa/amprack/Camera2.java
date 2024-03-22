@@ -42,6 +42,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Camera2 {
     final String TAG = getClass().getSimpleName();
@@ -307,9 +308,9 @@ public class Camera2 {
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
         outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
+//        }
 
         outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 48000);
 
@@ -354,16 +355,20 @@ public class Camera2 {
 
                 // the following is always true. why?
                 // fixme
-                if (!mainActivity.avBuffer.isEmpty()) {
-                    MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
-                    ByteBuffer buffer = codec.getInputBuffer(index);
+                try {
+                    if (mainActivity.avBuffer.size() > 1) {
+                        MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
+                        ByteBuffer buffer = codec.getInputBuffer(index);
 
-                    for (int i = 0; i < avBuffer.size; i++)
-                        buffer.putShort((short) (avBuffer.bytes[i] * 32767.0));
+                        for (int i = 0; i < avBuffer.size; i++)
+                            buffer.putShort((short) (avBuffer.bytes[i] * 32767.0));
 
-                    codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
-                } else
-                    codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
+                        codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
+                    } else
+                        codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
+                } catch (NoSuchElementException e) {
+                    Log.e(TAG, "[audio] onInputBufferAvailable: no element even though size > 1", e);
+                }
 
                 /*
                 float [] data = new float[BUFFER_SIZE_RECORDING/2]; // assign size so that bytes are read in in chunks inferior to AudioRecord internal buffer size
