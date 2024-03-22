@@ -202,8 +202,10 @@ public class Rack extends Fragment {
         });
         if (mainActivity.useTheme) {
             Bitmap b = mainActivity.skinEngine.bitmapDrawable("card", "bg").getBitmap();
-            Log.d(TAG, "onViewCreated: " + b.getHeight());
-            videoPreview.setBackground(new BitmapDrawable(Bitmap.createScaledBitmap(b, 90, (220/90) * b.getHeight(), true)));
+            if (b != null) {
+                Log.d(TAG, "onViewCreated: " + b.getHeight());
+                videoPreview.setBackground(new BitmapDrawable(Bitmap.createScaledBitmap(b, 90, (220 / 90) * b.getHeight(), true)));
+            }
 //            mainActivity.skinEngine.card(videoPreview);
         }
 

@@ -47,6 +47,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.hardware.SensorManager;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.AudioAttributes;
@@ -73,6 +74,7 @@ import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.SubMenu;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     boolean videoRecording = false ;
     Camera2 camera2 ;
     MediaPlayerDialog mediaPlayerDialog = null;
+    private OrientationEventListener orientationEventListener;
+
     static class AVBuffer {
         float [] bytes ;
         int size ;
@@ -856,6 +860,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
 //        Log.d(TAG, "onCreate: mixer state: " + );
+
+//        Log.d(TAG, String.format ("[orientation]: %s", getWindowManager().getDefaultDisplay().getRotation()));
     }
 
     void showMediaPlayerDialog() {
@@ -1717,7 +1723,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     });
                 }
             });
-            initCamera.start();
+//            initCamera.start();
+            mainActivity.rack.toggleVideo.setChecked(false);
+//            mainActivity.rack.toggleVideo.setChecked(true);
         }
     }
 
@@ -2691,6 +2699,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         for (AudioDeviceInfo audioDeviceInfo: audioDevicesOutput)
             Log.d(TAG, String.format ("[%s] %s: %s", audioDeviceInfo.getType(), audioDeviceInfo.getId(), audioDeviceInfo.getProductName()));
 //        Log.d(TAG, "testLV2: " + getLV2Info("mda-Limiter.so", "http://drobilla.net/plugins/mda/Limiter"));
+        Log.d(TAG, String.format ("[orientation]: %d", mainActivity.getResources().getConfiguration().orientation));
+
     }
 
     public static String getLV2Info (String libraryName, String plugin) {

@@ -129,7 +129,7 @@ public class Camera2 {
     }
 
     public void openCamera() {
-        CameraManager manager = (CameraManager) mainActivity.getSystemService(mainActivity.CAMERA_SERVICE);
+        manager = (CameraManager) mainActivity.getSystemService(mainActivity.CAMERA_SERVICE);
         cameras = new ArrayList<>();
         cameraCharacteristicsHashMap = new HashMap<>();
 
@@ -298,8 +298,14 @@ public class Camera2 {
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         format.setInteger(MediaFormat.KEY_BIT_RATE, mBitRate);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
+        try {
+            format.setInteger(MediaFormat.KEY_ROTATION, manager.getCameraCharacteristics(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
+        } catch (CameraAccessException e) {
+            throw new RuntimeException(e);
+        }
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, IFRAME_INTERVAL);
         Log.d(TAG, "format: " + format);
+        Log.d(TAG, "rotation: " + format.getInteger(MediaFormat.KEY_ROTATION));
 
 //        MediaFormat outputFormat = MediaFormat.createAudioFormat("audio/mp4a-latm", sampleRate, 1);
         MediaFormat outputFormat = new MediaFormat();
@@ -448,6 +454,8 @@ public class Camera2 {
 
         mTrackIndex = -1;
         mMuxerStarted = false;
+        mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
+        Log.d(TAG, String.format ("set orientation hint: %d", cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION)));
 
         presentationTimeUs = System.nanoTime()/1000;
     }
@@ -524,8 +532,6 @@ public class Camera2 {
 
 //                if (audioTrackIndex == -1)
 //                    return;
-
-                mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
 
 //                Log.d(TAG, "onOutputBufferAvailable: starting muxer");
 //                mMuxer.start();
