@@ -528,8 +528,9 @@ public class Rack extends Fragment {
         MenuItem getPro = optionsMenu.getMenu().getItem(3);
         if (mainActivity.defaultSharedPreferences.getBoolean("pro", false)) {
             getPro.setVisible(false);
-            TextView textView = view.findViewById(R.id.app_main_title);
-            textView.setText("Pro");
+            TextView textView = view.findViewById(R.id.pro_label);
+//            textView.setText("Pro");
+            textView.setVisibility(View.VISIBLE);
         }
 
         getPro.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
