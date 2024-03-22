@@ -55,7 +55,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
-import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaPlayer;
@@ -122,21 +121,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2736,6 +2727,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static void setTuner (float [] data, int size) {
         if (! mainActivity.tunerEnabled)
             return ;
+
         double freq = pitch.computePitchFrequency(data);
         String note = " - " ;
         double cents = 0 ;
@@ -2779,7 +2771,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
 //        Log.d(TAG, "setMixerMeterSwitch() called with: inputValue = [" + inputValue + "], isInput = [" + isInput + "]");
         if (isInput) {
-            inputMeter.setProgress((int) (inputValue * 100));
+            mainActivity.handler.post(() -> {
+                        if (inputValue > 1f)
+                            inputMeter.setProgressTintList(ColorStateList.valueOf(Color.RED));
+                        else
+                            inputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+
+                        inputMeter.setProgress((int) (inputValue * 100));
+                    });
             /*
             if (tunerBuffer.size() < 32) {
                 Log.d(TAG, tunerBuffer.size() + ": setMixerMeter: " + inputValue);
@@ -2821,47 +2820,55 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
              */
         }
         else {
-            outputMeter.setProgress((int) (inputValue * 100));
+            mainActivity.handler.post(() -> {
+                outputMeter.setProgress((int) (inputValue * 100));
 //            Log.d(TAG, "setMixerMeterSwitch: " + inputValue);
-            if (mainActivity.triggerRecord) {
-                if (mainActivity.recording) {
-                    if (inputValue < 0.1) {
+                if (mainActivity.triggerRecord) {
+                    if (mainActivity.recording) {
+                        if (inputValue < 0.1) {
 //                        mainActivity.record.setChecked(false);
-                        AudioEngine.toggleRecording(false);
-                        mainActivity.recording = false;
-                        mainActivity.triggerRecord = false;
-                        outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+                            AudioEngine.toggleRecording(false);
+                            mainActivity.recording = false;
+                            mainActivity.triggerRecord = false;
+                            outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+                        }
+                    } else {
+                        if (inputValue > 0.3) {
+                            outputMeter.setProgressTintList(ColorStateList.valueOf(Color.RED));
+//                        mainActivity.record.setChecked(true);
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
+                            Date date = new Date();
+                            mainActivity.lastRecordedFileName = formatter.format(date);
+                            mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName;
+                            AudioEngine.setFileName(mainActivity.lastRecordedFileName);
+                            switch (mainActivity.exportFormat) {
+                                case "0":
+                                default:
+                                    mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".wav";
+                                    break;
+                                case "1":
+                                    mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".ogg";
+                                    break;
+                                case "2":
+                                    mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".mp3";
+                                    break;
+                            }
+
+                            mainActivity.triggerRecordedSomething = true;
+                            mainActivity.recording = true;
+                            Log.d(TAG, "setMixerMeterSwitch: triggering recording");
+                            AudioEngine.toggleRecording(true);
+//                        mainActivity.triggerRecordToggle.setChecked(false);
+                        }
                     }
                 } else {
-                    if (inputValue > 0.3) {
+                    if (inputValue > 1f)
                         outputMeter.setProgressTintList(ColorStateList.valueOf(Color.RED));
-//                        mainActivity.record.setChecked(true);
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
-                        Date date = new Date();
-                        mainActivity.lastRecordedFileName = formatter.format(date);
-                        mainActivity.lastRecordedFileName = mainActivity.dir.getAbsolutePath() + "/" + mainActivity.lastRecordedFileName ;
-                        AudioEngine.setFileName(mainActivity.lastRecordedFileName);
-                        switch (mainActivity.exportFormat) {
-                            case "0":
-                            default:
-                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".wav" ;
-                                break ;
-                            case "1":
-                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".ogg" ;
-                                break ;
-                            case "2":
-                                mainActivity.lastRecordedFileName = mainActivity.lastRecordedFileName + ".mp3" ;
-                                break ;
-                        }
+                    else
+                        outputMeter.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
 
-                        mainActivity.triggerRecordedSomething = true ;
-                        mainActivity.recording = true;
-                        Log.d(TAG, "setMixerMeterSwitch: triggering recording");
-                        AudioEngine.toggleRecording(true);
-//                        mainActivity.triggerRecordToggle.setChecked(false);
-                    }
                 }
-            }
+            });
 
         }
     }
@@ -3519,5 +3526,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return bitmap;
     }
 
-
+    public static double rootMeanSquare(float[] nums) {
+        double sum = 0.0;
+        for (double num : nums)
+            sum += num * num;
+        return Math.sqrt(sum / nums.length);
+    }
 }

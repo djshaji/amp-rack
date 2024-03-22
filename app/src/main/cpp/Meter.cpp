@@ -464,3 +464,12 @@ void Meter::process (int nframes, const float * data, bool isInput) {
      */
 }
 
+float Meter::rms(float *v, int n)
+{
+    int i;
+    float sum = 0.0;
+    for(i = 0; i < n; i++)
+        sum += v[i] * v[i];
+    return sum / n;
+}
+

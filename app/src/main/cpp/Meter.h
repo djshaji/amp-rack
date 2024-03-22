@@ -219,6 +219,8 @@ public:
 
 public:
     static unsigned char *audioToVideoBytes;
+
+    static float rms(float *v, int n);
 };
 
 #endif //AMP_RACK_METER_H

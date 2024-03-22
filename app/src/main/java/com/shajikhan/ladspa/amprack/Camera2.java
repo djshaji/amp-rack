@@ -360,8 +360,14 @@ public class Camera2 {
                         MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
                         ByteBuffer buffer = codec.getInputBuffer(index);
 
-                        for (int i = 0; i < avBuffer.size; i++)
+                        for (int i = 0; i < avBuffer.size; i++) {
+                            if (avBuffer.bytes[i] > 1.0f)
+                                avBuffer.bytes[i] = 0.99f;
+                            if (avBuffer.bytes[i] < -1.0f)
+                                avBuffer.bytes[i] = -0.99f;
+
                             buffer.putShort((short) (avBuffer.bytes[i] * 32767.0));
+                        }
 
                         codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
                     } else
