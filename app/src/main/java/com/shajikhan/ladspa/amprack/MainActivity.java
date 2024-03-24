@@ -48,6 +48,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.SensorManager;
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.AudioAttributes;
@@ -72,6 +73,7 @@ import android.text.TextWatcher;
 import android.util.ArraySet;
 import android.util.Log;
 import android.util.Size;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -352,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "featured");
         hashCommands.add(this, "resetOnboard");
         hashCommands.add(this, "setAudioDevice");
+        hashCommands.add (this, "cameraTest");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
@@ -3541,5 +3544,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         for (double num : nums)
             sum += num * num;
         return Math.sqrt(sum / nums.length);
+    }
+
+    public static void cameraTest () {
+        SensorManager sensorManager;
+        final float[] rotationMatrix = new float[9];
+        float[] accelerometerReading = new float[9];
+        float[] magnetometerReading = new float[9];
+        SensorManager.getRotationMatrix(rotationMatrix, null,
+                accelerometerReading, magnetometerReading);
+
+        final float[] orientationAngles = new float[3];
+        SensorManager.getOrientation(rotationMatrix, orientationAngles);
+
+        Log.d(TAG, String.format ("[orientation]: %f %f %f",
+                orientationAngles[0],
+                orientationAngles[1],
+                orientationAngles[2]
+                ));
     }
 }

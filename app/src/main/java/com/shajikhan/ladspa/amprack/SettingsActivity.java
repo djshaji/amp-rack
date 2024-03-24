@@ -496,4 +496,13 @@ public class SettingsActivity extends AppCompatActivity implements
 
         MainActivity.alert("Resource loaded", "Restart the app for changes to take effect.");
     }
+
+    public static class CameraSettings extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.camera_settings, rootKey);
+
+        }
+    }
 }

@@ -31,6 +31,12 @@
         app:title="Export Settings" />
 
     <Preference
+        app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$CameraSettings"
+        app:icon="@drawable/baseline_ondemand_video_24"
+        app:key="camera_header"
+        app:title="Camera Settings" />
+
+    <Preference
         app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$ProfileFragment"
         app:icon="@drawable/ic_baseline_account_circle_24"
         app:key="account_header"

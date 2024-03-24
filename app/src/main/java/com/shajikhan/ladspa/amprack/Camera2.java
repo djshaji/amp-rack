@@ -454,10 +454,15 @@ public class Camera2 {
 
         mTrackIndex = -1;
         mMuxerStarted = false;
-        mMuxer.setOrientationHint(cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION));
+        int videoRecordOrientation = Integer.parseInt(mainActivity.defaultSharedPreferences.getString("camera_orientation", "0"));
+        videoRecordOrientation += cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION) ;
+        if (videoRecordOrientation >= 360)
+            videoRecordOrientation = 0 ;
+        mMuxer.setOrientationHint(videoRecordOrientation);
         Log.d(TAG, String.format ("set orientation hint: %d", cameraCharacteristicsHashMap.get(cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION)));
 
         presentationTimeUs = System.nanoTime()/1000;
+
     }
 
     /**

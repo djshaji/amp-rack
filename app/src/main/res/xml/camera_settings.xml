@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<DropDownPreference
+    android:defaultValue="0"
+    android:entries="@array/camera_orientations"
+    android:entryValues="@array/c_o_values"
+    android:key="camera_orientation"
+    app:title="Record video in"
+    android:summary="Select whether to record video in portrait or landscape"/>
+</androidx.preference.PreferenceScreen>
