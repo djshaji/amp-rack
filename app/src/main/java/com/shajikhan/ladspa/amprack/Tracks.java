@@ -116,6 +116,7 @@ public class Tracks extends Fragment {
         });
 
         player = new ExoPlayer.Builder(context).build();
+        player.setVideoScalingMode (C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
         tracksAdapter.player = player;
 
         playPause = view.findViewById(R.id.tracks_play);
@@ -162,6 +163,11 @@ public class Tracks extends Fragment {
 
 
         player.addListener(new Player.Listener() {
+            @Override
+            public void onVideoSizeChanged(VideoSize videoSize) {
+                Player.Listener.super.onVideoSizeChanged(videoSize);
+                surfaceView.getHolder().setFixedSize(videoSize.width, videoSize.height);
+            }
             @Override
             public void onPlaybackStateChanged(int playbackState) {
                 Player.Listener.super.onPlaybackStateChanged(playbackState);

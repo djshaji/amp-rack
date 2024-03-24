@@ -28,10 +28,14 @@
     <string-array name="camera_orientations">
         <item>Portrait</item>
         <item>Landscape</item>
+        <item>Reverse Portrait</item>
+        <item>Reverse Landscape</item>
     </string-array>
     <string-array name="c_o_values">
         <item>0</item>
         <item>90</item>
+        <item>180</item>
+        <item>360</item>
     </string-array>
     <string-array name="channels">
         <item>Mono</item>
