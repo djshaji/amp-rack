@@ -885,6 +885,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.media_player_dialog, null);
         SurfaceView surface = constraintLayout.findViewById(R.id.video_player_dialog);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                int w = mp.getVideoWidth(), h = mp.getVideoHeight() ;
+                surface.getHolder().setFixedSize(w, h);
+            }
+        });
 
         surface.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
