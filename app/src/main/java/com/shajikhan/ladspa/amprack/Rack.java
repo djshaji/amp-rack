@@ -749,11 +749,10 @@ public class Rack extends Fragment {
             @Override
             public void onClick(View v) {
 //                mainActivity.drummer ();
-                if (BuildConfig.DEBUG)
-                    mainActivity.cameraPreview();
-                else
-                    MainActivity.setAudioDevice();
-                return;
+//                if (BuildConfig.DEBUG)
+//                    mainActivity.cameraPreview();
+//                else
+                MainActivity.setAudioDevice();
             }
         });
 

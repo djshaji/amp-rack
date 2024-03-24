@@ -376,10 +376,15 @@ public class Camera2 {
                         }
 
                         codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
+                        avBuffer.bytes = null ;
+//                        avBuffer.size = 0 ;
+                        avBuffer = null ;
                     } else
                         codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
                 } catch (NoSuchElementException e) {
                     Log.e(TAG, "[audio] onInputBufferAvailable: no element even though size > 1", e);
+                    codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
+
                 }
 
                 /*
