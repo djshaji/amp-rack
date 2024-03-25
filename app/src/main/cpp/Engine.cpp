@@ -209,7 +209,8 @@ oboe::AudioStreamBuilder *Engine::setupRecordingStreamParameters(
     // This sample uses blocking read() because we don't specify a callback
     builder->setDeviceId(mRecordingDeviceId)
             ->setDirection(oboe::Direction::Input)
-            ->setSampleRate(sampleRate)
+            ->setSampleRate(mSampleRate)
+//            ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
 //            ->setFormat(oboe::AudioFormat::I16)
             ->setChannelCount(mInputChannelCount);
     return setupCommonStreamParameters(builder);
@@ -227,6 +228,14 @@ oboe::AudioStreamBuilder *Engine::setupPlaybackStreamParameters(
             ->setErrorCallback(this)
             ->setDeviceId(mPlaybackDeviceId)
             ->setDirection(oboe::Direction::Output)
+//            ->setSampleRate(48000)
+            /* fixme:
+             * we do this because
+             * 1. sample rate on Android is *almost always™ 48000
+             * 2. Android AAC encoder does not support sample rate > 48000
+             * 3. Even if it did, it might not be *that* much of an enhancement
+             *    in order for it to justify complex resampling in real time
+             */
             ->setChannelCount(mOutputChannelCount);
 
     return setupCommonStreamParameters(builder);

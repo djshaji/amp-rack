@@ -47,6 +47,7 @@ import java.util.NoSuchElementException;
 public class Camera2 {
     final String TAG = getClass().getSimpleName();
     int sampleRate = 48000;
+    Resampler resampler ;
     int MAX_AUDIO_INPUT = 16384 ;
     // parameters for the encoder
     private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
@@ -56,6 +57,7 @@ public class Camera2 {
     public long presentationTimeUs = 0, firstAudioFrame = -1 ;
     long frame = 0 ;
     private int mHeight = -1;
+    int engineSampleRate = 0 ;
     // bit rate, in bits per second
     private int mBitRate = -1;
     public MediaCodec mEncoder, audioEncoder = null;
@@ -122,11 +124,13 @@ public class Camera2 {
     Camera2(MainActivity mainActivity_) {
         mainActivity = mainActivity_;
         textureView = mainActivity_.rack.videoTexture;
-        sampleRate = AudioEngine.getSampleRate() ;
-        if (sampleRate == 0)
-            sampleRate = 48000 ;
+//        sampleRate = AudioEngine.getSampleRate() ;
+//        if (sampleRate == 0)
+//            sampleRate = 48000 ;
 
+//        Log.d(TAG, String.format ("[audio] set sample rate: %d", sampleRate));
         timestamp = new Timestamp();
+        resampler = new Resampler(true,0.1,30);
     }
 
     public void openCamera() {
@@ -286,6 +290,16 @@ public class Camera2 {
     }
 
     private void prepareEncoder() {
+        sampleRate = AudioEngine.getSampleRate() ;
+        engineSampleRate = sampleRate ;
+        Log.d(TAG, "prepareEncoder: got sample rate of " + sampleRate);
+        if (sampleRate == 0 || sampleRate > 48000) {
+            sampleRate = 48000;
+            if (engineSampleRate == 0)
+                engineSampleRate = 48000 ; /// fixme aaaargh
+            Log.e(TAG, "prepareEncoder: set default sample rate, might be incorrect!");
+        }
+
         mBufferInfo = new MediaCodec.BufferInfo();
         ///| Todo: fixme: get width and height from camera
         mWidth = imageDimension.getWidth();
@@ -315,11 +329,12 @@ public class Camera2 {
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
         outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, MAX_AUDIO_INPUT);
         outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+        outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //            outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
 //        }
 
-        outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 48000);
+//        outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 48000);
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
@@ -363,17 +378,19 @@ public class Camera2 {
                 // the following is always true. why?
                 // fixme
                 int bCounter = 0, popped = 0, toPop = mainActivity.avBuffer.size();
+                int poorMansSampleRateConverter = engineSampleRate / sampleRate;
 //                Log.e(TAG, "[audio]: samples " + toPop);
                 ByteBuffer buffer = codec.getInputBuffer(index);
                 try {
                     while (toPop > 0) {
                         toPop -- ;
-                        if (bCounter >= (MAX_AUDIO_INPUT / 2))
-                            break;
 
                         MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.poll();
 
                         for (int i = 0; i < avBuffer.size; i++) {
+                            if (i % poorMansSampleRateConverter == 1)
+                                continue;
+
                             if (avBuffer.bytes[i] > 1.0f)
                                 avBuffer.bytes[i] = 0.99f;
                             if (avBuffer.bytes[i] < -1.0f)
@@ -383,18 +400,29 @@ public class Camera2 {
                         }
 
                         bCounter += avBuffer.size ;
+                        if (bCounter + (avBuffer.size) >= (MAX_AUDIO_INPUT / 2)) {
+                            avBuffer.bytes = null ;
+                            avBuffer = null ;
+                            popped ++ ;
+                            break;
+                        }
+
                         avBuffer.bytes = null ;
-//                        avBuffer.size = 0 ;
                         avBuffer = null ;
                         popped ++ ;
 //                        break ;
                     }
 
 //                    Log.d(TAG, String.format ("[audio] queued samples: %d [%d]", bCounter, popped));
+                    bCounter = bCounter / poorMansSampleRateConverter ;
                     codec.queueInputBuffer(index, 0, bCounter * 2, timestamp.get(), 0);
                 } catch (NoSuchElementException e) {
                     Log.e(TAG, "[audio] onInputBufferAvailable: no element even though size > 1", e);
                     codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
+                } catch (java.nio.BufferOverflowException e) {
+                    bCounter = bCounter / poorMansSampleRateConverter ;
+                    codec.queueInputBuffer(index, 0, bCounter * 2, timestamp.get(), 0);
+                    Log.e(TAG, "[audio]: queued " + bCounter + " samples", e);
                 }
 
                 /*
