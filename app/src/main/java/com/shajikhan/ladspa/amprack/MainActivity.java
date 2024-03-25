@@ -143,6 +143,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, TextureView.SurfaceTextureListener {
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         float [] bytes ;
         int size ;
     }
-    public static LinkedList<AVBuffer> avBuffer = new LinkedList<>();
+    public static LinkedBlockingQueue <AVBuffer> avBuffer = new LinkedBlockingQueue<>();
     static int avEncoderIndex = 0 ;
     public static long presentationTimeUs = 0;
     int totalBytesRead = 0;
@@ -3487,7 +3488,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AVBuffer buffer = new AVBuffer();
         buffer.size = nframes;
         buffer.bytes = data.clone();
-        avBuffer.addLast(buffer);
+
+        try {
+            avBuffer.put(buffer);
+        } catch (InterruptedException e) {
+            Log.e(TAG, "pushToVideo: error adding avbuffer to queue", e);
+            throw new RuntimeException(e);
+        }
     }
 
     private static long computePresentationTimeNsec(long frameIndex, int sampleRate) {

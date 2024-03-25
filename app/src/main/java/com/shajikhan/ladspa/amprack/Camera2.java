@@ -47,6 +47,7 @@ import java.util.NoSuchElementException;
 public class Camera2 {
     final String TAG = getClass().getSimpleName();
     int sampleRate = 48000;
+    int MAX_AUDIO_INPUT = 16384 ;
     // parameters for the encoder
     private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
     private static final int FRAME_RATE = 30;               // 15fps
@@ -312,7 +313,7 @@ public class Camera2 {
         outputFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
         outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 160000);
-        outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
+        outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, MAX_AUDIO_INPUT);
         outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //            outputFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_32BIT);
@@ -361,10 +362,16 @@ public class Camera2 {
 
                 // the following is always true. why?
                 // fixme
+                int bCounter = 0, popped = 0, toPop = mainActivity.avBuffer.size();
+//                Log.e(TAG, "[audio]: samples " + toPop);
+                ByteBuffer buffer = codec.getInputBuffer(index);
                 try {
-                    if (mainActivity.avBuffer.size() > 0) {
-                        MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
-                        ByteBuffer buffer = codec.getInputBuffer(index);
+                    while (toPop > 0) {
+                        toPop -- ;
+                        if (bCounter >= (MAX_AUDIO_INPUT / 2))
+                            break;
+
+                        MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.poll();
 
                         for (int i = 0; i < avBuffer.size; i++) {
                             if (avBuffer.bytes[i] > 1.0f)
@@ -375,16 +382,19 @@ public class Camera2 {
                             buffer.putShort((short) (avBuffer.bytes[i] * 32767.0));
                         }
 
-                        codec.queueInputBuffer(index, 0, avBuffer.size * 2, timestamp.get(), 0);
+                        bCounter += avBuffer.size ;
                         avBuffer.bytes = null ;
 //                        avBuffer.size = 0 ;
                         avBuffer = null ;
-                    } else
-                        codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
+                        popped ++ ;
+//                        break ;
+                    }
+
+//                    Log.d(TAG, String.format ("[audio] queued samples: %d [%d]", bCounter, popped));
+                    codec.queueInputBuffer(index, 0, bCounter * 2, timestamp.get(), 0);
                 } catch (NoSuchElementException e) {
                     Log.e(TAG, "[audio] onInputBufferAvailable: no element even though size > 1", e);
                     codec.queueInputBuffer(index, 0, 0, timestamp.get(), 0);
-
                 }
 
                 /*
