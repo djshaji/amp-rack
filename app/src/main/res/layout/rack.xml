@@ -518,6 +518,17 @@
                     android:textOn="Trigger Off"
                     android:background="@color/fui_transparent"
                     android:id="@+id/record_trigger"/>
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/major_mono_display"
+                    android:text="48kHz"
+                    app:drawableLeftCompat="@drawable/baseline_warning_24" />
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
