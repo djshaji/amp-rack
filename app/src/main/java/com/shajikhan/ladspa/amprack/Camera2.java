@@ -362,7 +362,7 @@ public class Camera2 {
                 // the following is always true. why?
                 // fixme
                 try {
-                    if (mainActivity.avBuffer.size() > 1) {
+                    if (mainActivity.avBuffer.size() > 0) {
                         MainActivity.AVBuffer avBuffer = mainActivity.avBuffer.pop();
                         ByteBuffer buffer = codec.getInputBuffer(index);
 
