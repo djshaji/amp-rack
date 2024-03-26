@@ -183,6 +183,11 @@ public class Rack extends Fragment {
             });
 
         toggleVideo = mainActivity.findViewById(R.id.video_button);
+        if (mainActivity.useTheme) {
+            mainActivity.skinEngine.toggleWithKey(mainActivity.rack.toggleVideo, "icons", "camera", "camera", true);
+
+        }
+
         videoRecord = mainActivity.findViewById(R.id.toggle_video);
         videoPreview = mainActivity.findViewById(R.id.video_preview);
         swapCamera = mainActivity.findViewById(R.id.flip_camera);
@@ -221,7 +226,7 @@ public class Rack extends Fragment {
                 if (isChecked)
                     mainActivity.camera2.startRecording();
                 else
-                    if (! toggleVideo.isChecked())
+                    if (toggleVideo.isChecked())
                         toggleVideo.setChecked(false);
             }
         });
@@ -1034,6 +1039,12 @@ public class Rack extends Fragment {
         mainActivity.sampleRateLabel = mainActivity.findViewById(R.id.sample_rate_display);
         mainActivity.srLayout = mainActivity.findViewById(R.id.sr_layout);
         mainActivity.latencyWarnLogo = mainActivity.findViewById(R.id.lowLatencyWarning);
+        mainActivity.latencyWarnLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.lowLatencyDialog();
+            }
+        });
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

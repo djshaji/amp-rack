@@ -537,4 +537,13 @@
         Version 3.2: More than 50 new plugins\n\n✓ More than 200 High Quality Effect Plugins\n\n✓ Low Latency\n\n✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n✓ Fully Skinnable User Interface\n\n✓ Save patches and share them with the world\n\nMade with ♥
     </string>
     <string name="title_activity_featured_videos">FeaturedVideos</string>
+    <string name="low_latency_warning">
+        The app is not running in low latency mode.
+        If you experience very high latency please try the following:\n\n
+        1. Use a different audio device (e.g. device earphone jack instead of external soundcard\n\n
+        2. Disable "Hey Google" voice activation (Google Assistant)\n\n
+        3. Close any apps running in the background that might be using audio devices\n\n
+        4. Close any CPU intensive apps that might be running in the background\n
+
+    </string>
 </resources>

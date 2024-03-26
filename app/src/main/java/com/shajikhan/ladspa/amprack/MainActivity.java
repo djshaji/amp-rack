@@ -3598,4 +3598,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 mainActivity.latencyWarnLogo.setVisibility(View.VISIBLE);
         });
     }
+
+    public static void lowLatencyDialog () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setTitle("Latency Warning")
+                .setMessage(R.string.low_latency_warning)
+                .setNegativeButton("Close", null)
+                .setIcon(R.drawable.baseline_warning_24);
+        builder.create().show();
+    }
 }

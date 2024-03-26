@@ -128,7 +128,7 @@
                 android:layout_width="30dp"
                 android:background="@color/fui_transparent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_add_a_photo_24"/>
+                android:drawableRight="@drawable/baseline_add_a_photo_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/menu_button"

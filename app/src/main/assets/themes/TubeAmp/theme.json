@@ -71,7 +71,8 @@
         "media": "play_small.png",
         "reset": "loop.png",
         "mixer-on": "mixer_on.png",
-        "mixer-off": "mixer_off.png"
+        "mixer-off": "mixer_off.png",
+        "camera": "camera.png"
     },
 
     "knobs": {

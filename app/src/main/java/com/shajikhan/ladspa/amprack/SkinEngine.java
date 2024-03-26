@@ -1555,6 +1555,8 @@ public class SkinEngine {
         }
 
         String finalOn = on;
+        toggleButton.setCompoundDrawables(null,null,null,null);
+
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
