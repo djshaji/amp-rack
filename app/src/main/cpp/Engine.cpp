@@ -88,6 +88,8 @@ bool Engine::setEffectOn(bool isOn) {
                  */
 
                 meter->lastRecordedFileName = fileWriter->filename;
+                meter->jack_samplerate = mSampleRate ;
+                meter->lowLatency = lowLatencyMode ;
                 meter->enable();
                 meter->start();
 //                addPluginToRack(0, 0);

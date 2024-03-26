@@ -48,6 +48,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -153,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String CHANNEL_ID = "default";
     Surface surface_ = null;
     public static TextView sampleRateLabel ;
+    public static ImageView latencyWarnLogo ;
+    public static LinearLayout srLayout; ;
     SurfaceTexture surfaceTexture;
     public boolean headphoneWarning = true;
     static Context context;
@@ -1409,7 +1412,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             notificationManager.cancelAll();
             running = false ;
             mainActivity.sampleRateLabel.setText(null);
-            mainActivity.sampleRateLabel.setCompoundDrawables(null, null, null, null);
+            srLayout.setVisibility(View.GONE);
+            mainActivity.latencyWarnLogo.setVisibility(View.GONE);
         } else {
             if (! isHeadphonesPlugged() && headphoneWarning) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -3583,13 +3587,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static void setSampleRateDisplay (int sampleRateDisplay, boolean lowLatency) {
+        Log.d(TAG, String.format ("[audio]: %d (%b)", sampleRateDisplay, lowLatency));
+
         mainActivity.handler.post(() -> {
+            srLayout.setVisibility(View.VISIBLE);
             mainActivity.sampleRateLabel.setText(String.format("%dkHz", sampleRateDisplay));
             if (lowLatency)
-                mainActivity.sampleRateLabel.setCompoundDrawables(null, null, null, null);
+                mainActivity.latencyWarnLogo.setVisibility(View.GONE);
             else
-                mainActivity.sampleRateLabel.setCompoundDrawables(
-                        new BitmapDrawable(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.baseline_warning_24)), null, null, null);
+                mainActivity.latencyWarnLogo.setVisibility(View.VISIBLE);
         });
     }
 }

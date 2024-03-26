@@ -9,12 +9,14 @@
 
 unsigned char * Meter::audioToVideoBytes = NULL ;
 jfloatArray Meter::jfloatArray1 ;
+bool Meter::lowLatency = false;
 int Meter::jfloatArray1_index = 0 ;
 int Meter::jfloatArray1_Size = 0 ;
 vringbuffer_t * Meter::vringbuffer ;
 vringbuffer_t * Meter::vringbufferOutput ;
 Meter::buffer_t *Meter::current_buffer;
 int Meter::attached_thread = 0 ;
+bool Meter::sampleRateSet = false;
 bool Meter::engine_running = false ;
 //LockFreeQueue<Meter::buffer_t*, LOCK_FREE_SIZE> Meter::lockFreeQueue;
 int Meter::bufferUsed  = 0;
@@ -137,7 +139,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         pushToVideo = envOutput->GetStaticMethodID(mainActivityOutput, "pushToVideo",
                                                 "([FI)V");
         setSampleRateDisplay = envOutput->GetStaticMethodID(mainActivityOutput, "setSampleRateDisplay",
-                                                "(IB)V");
+                                                "(IZ)V");
         if (setMixerMeterOutput == nullptr) {
             LOGF("cannot find method!");
         }
@@ -233,6 +235,11 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) max, false);
     envOutput->CallStaticVoidMethod(mainActivityOutput, setMixerMeterOutput, (jfloat) imax, true);
 
+    if (! sampleRateSet) {
+        envOutput->CallStaticVoidMethod(mainActivityOutput, setSampleRateDisplay, (jint) jack_samplerate / 1000, lowLatency);
+        sampleRateSet = true ;
+    }
+
     return 0;
 }
 
@@ -243,6 +250,7 @@ void Meter::start () {
 
 void Meter::stop () {
     IN
+    sampleRateSet = false;
     engine_running = false ;
 //    mp4 ->aacToMP4();
 //    delete mp4 ;

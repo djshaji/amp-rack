@@ -1032,6 +1032,8 @@ public class Rack extends Fragment {
 //        mainActivity.audioEncoder = new AudioEncoder(mainActivity);
         mainActivity.camera2 = new Camera2 (mainActivity);
         mainActivity.sampleRateLabel = mainActivity.findViewById(R.id.sample_rate_display);
+        mainActivity.srLayout = mainActivity.findViewById(R.id.sr_layout);
+        mainActivity.latencyWarnLogo = mainActivity.findViewById(R.id.lowLatencyWarning);
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

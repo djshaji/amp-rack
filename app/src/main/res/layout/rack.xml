@@ -268,7 +268,41 @@
                     android:layout_margin="5dp"
                     android:id="@+id/mixer_label"
                     android:textSize="25dp" />
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:id="@+id/sr_layout"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_warning_24"
+                        android:padding="5dp"
+                        android:visibility="gone"
+                        android:id="@+id/lowLatencyWarning"/>
+                    <TextView
+                        android:textSize="12sp"
+                        android:padding="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/white"
+                        android:backgroundTintMode="multiply"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:background="@drawable/semi_trans"
+                        android:fontFamily="@font/major_mono_display"
+                        android:id="@+id/sample_rate_display"/>
 
+                </LinearLayout>
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
                 <TextView
                     android:textStyle="bold"
                     android:layout_weight="1"
@@ -277,6 +311,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gruppo"
                     android:text="Premium"
+                    android:enabled="false"
                     android:textAlignment="viewEnd"
                     android:layout_margin="5dp"
                     android:id="@+id/pro_label"
@@ -518,18 +553,6 @@
                     android:textOn="Trigger Off"
                     android:background="@color/fui_transparent"
                     android:id="@+id/record_trigger"/>
-                <androidx.legacy.widget.Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/major_mono_display"
-                    android:id="@+id/sample_rate_display"
-                    android:text="48kHz"
-                    app:drawableLeftCompat="@drawable/baseline_warning_24" />
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

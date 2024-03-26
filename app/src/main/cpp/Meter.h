@@ -45,7 +45,6 @@ class Meter {
     static vringbuffer_t * vringbufferOutput ;
     static buffer_t *current_buffer;
     float *empty_buffer;
-    static int jack_samplerate ;
     int buffer_size_in_bytes = 192;
     static int block_size ;
     static int bufferUsed  ;
@@ -60,6 +59,7 @@ class Meter {
 public:
     Meter(JavaVM *pVm);
     std::string lastRecordedFileName ;
+    static int jack_samplerate ;
     static bool tunerEnabled ;
     static jmethodID setMixerMeter ;
     static jclass mainActivity ;
@@ -223,6 +223,8 @@ public:
     static float rms(float *v, int n);
 
     static jmethodID setSampleRateDisplay;
+    static bool sampleRateSet;
+    static bool lowLatency;
 };
 
 #endif //AMP_RACK_METER_H
