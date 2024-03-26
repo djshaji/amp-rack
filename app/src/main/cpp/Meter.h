@@ -221,6 +221,8 @@ public:
     static unsigned char *audioToVideoBytes;
 
     static float rms(float *v, int n);
+
+    static jmethodID setSampleRateDisplay;
 };
 
 #endif //AMP_RACK_METER_H

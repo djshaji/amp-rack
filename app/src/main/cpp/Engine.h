@@ -111,6 +111,7 @@ private:
 
     static int pushToVideo(AudioBuffer *buffer);
 
+    void setSampleRateDisplay(int sampleRate, bool lowLatency);
 } ;
 
 #endif // __ENGINE__H

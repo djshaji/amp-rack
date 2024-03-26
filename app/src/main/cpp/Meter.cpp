@@ -33,6 +33,7 @@ jclass Meter::mainActivity ;
 jmethodID Meter::setMixerMeterOutput ;
 jmethodID Meter::setTuner ;
 jmethodID Meter::pushToVideo ;
+jmethodID Meter::setSampleRateDisplay = nullptr ;
 jclass Meter::mainActivityOutput ;
 JNIEnv * Meter::env = NULL;
 JNIEnv * Meter::envOutput = NULL;
@@ -135,6 +136,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
                                                 "([FI)V");
         pushToVideo = envOutput->GetStaticMethodID(mainActivityOutput, "pushToVideo",
                                                 "([FI)V");
+        setSampleRateDisplay = envOutput->GetStaticMethodID(mainActivityOutput, "setSampleRateDisplay",
+                                                "(IB)V");
         if (setMixerMeterOutput == nullptr) {
             LOGF("cannot find method!");
         }

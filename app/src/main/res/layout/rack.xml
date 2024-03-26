@@ -527,6 +527,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/major_mono_display"
+                    android:id="@+id/sample_rate_display"
                     android:text="48kHz"
                     app:drawableLeftCompat="@drawable/baseline_warning_24" />
                 <Space

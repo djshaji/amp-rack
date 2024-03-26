@@ -588,3 +588,7 @@ long Engine::getTimeStamp () {
             CLOCK_MONOTONIC);
     return frameTimeStamp.value().timestamp ;
 }
+
+void Engine::setSampleRateDisplay (int sampleRate, bool lowLatency) {
+
+}

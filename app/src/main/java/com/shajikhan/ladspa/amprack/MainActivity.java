@@ -47,6 +47,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private static final String CHANNEL_ID = "default";
     Surface surface_ = null;
+    public static TextView sampleRateLabel ;
     SurfaceTexture surfaceTexture;
     public boolean headphoneWarning = true;
     static Context context;
@@ -1406,6 +1408,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             stopEffect();
             notificationManager.cancelAll();
             running = false ;
+            mainActivity.sampleRateLabel.setText(null);
+            mainActivity.sampleRateLabel.setCompoundDrawables(null, null, null, null);
         } else {
             if (! isHeadphonesPlugged() && headphoneWarning) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -3576,5 +3580,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 orientationAngles[1],
                 orientationAngles[2]
                 ));
+    }
+
+    public static void setSampleRateDisplay (int sampleRateDisplay, boolean lowLatency) {
+        mainActivity.handler.post(() -> {
+            mainActivity.sampleRateLabel.setText(String.format("%dkHz", sampleRateDisplay));
+            if (lowLatency)
+                mainActivity.sampleRateLabel.setCompoundDrawables(null, null, null, null);
+            else
+                mainActivity.sampleRateLabel.setCompoundDrawables(
+                        new BitmapDrawable(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.baseline_warning_24)), null, null, null);
+        });
     }
 }
