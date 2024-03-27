@@ -837,3 +837,12 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getTimeStamp(JNIEnv *env, jclass c
     // TODO: implement getTimeStamp()
     return (jlong) engine -> getTimeStamp() ;
 }
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getLatency(JNIEnv *env, jclass clazz, jboolean input) {
+    // TODO: implement getLatency()
+    if (! engine)
+        return -1.0;
+
+    return engine->getLatency(input);
+}

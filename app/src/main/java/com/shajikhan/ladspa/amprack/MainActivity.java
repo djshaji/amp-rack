@@ -3588,6 +3588,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static void setSampleRateDisplay (int sampleRateDisplay, boolean lowLatency) {
         Log.d(TAG, String.format ("[audio]: %d (%b)", sampleRateDisplay, lowLatency));
+//        double inputLatency = AudioEngine.getLatency(true), outputLatency = AudioEngine.getLatency(false) ;
 
         mainActivity.handler.post(() -> {
             srLayout.setVisibility(View.VISIBLE);

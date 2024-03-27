@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,9 +29,9 @@ public class Onboard extends AppCompatActivity {
         setContentView(R.layout.activity_onboard);
         getSupportActionBar().hide ();
 
-        ExtendedFloatingActionButton prev = findViewById(R.id.onboard_prev);
-        ExtendedFloatingActionButton next = findViewById(R.id.onboard_next);
-        ExtendedFloatingActionButton finish = findViewById(R.id.onboard_finish);
+        Button prev = findViewById(R.id.onboard_prev);
+        Button next = findViewById(R.id.onboard_next);
+        Button finish = findViewById(R.id.onboard_finish);
 
         TextView buildId = findViewById(R.id.onboard_build_number);
         String version = String.format("Build %s Version Code %d",
@@ -109,7 +110,7 @@ public class Onboard extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        ExtendedFloatingActionButton skip = findViewById(R.id.onboard_skip);
+        Button skip = findViewById(R.id.onboard_skip);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

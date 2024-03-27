@@ -594,3 +594,13 @@ long Engine::getTimeStamp () {
 void Engine::setSampleRateDisplay (int sampleRate, bool lowLatency) {
 
 }
+
+double Engine::getLatency (bool input) {
+    if (input) {
+        const oboe::ResultWithValue<double> &latency = mRecordingStream->calculateLatencyMillis();
+        return latency.value();
+    } else {
+        const oboe::ResultWithValue<double> &latency = mPlayStream->calculateLatencyMillis();
+        return latency.value();
+    }
+}

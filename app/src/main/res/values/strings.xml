@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">Amp Rack</string>
-    <string name="app_version">Version 3 Nighthawk</string>
-    <string name="build_id">491</string>
+    <string name="app_version">Version 4 Razor</string>
+    <string name="build_id">570</string>
+    <string name="onboard_description">
+        [new] Video Recorder\n\n
+        Welcome to Version 4: \n\n
+        ✓ High Quality Audio / Video Recording Capability\n\n
+        ✓ Low Latency\n\n
+        ✓ More than 200 High Quality Effect Plugins\n\n
+        ✓ Floating point precision at native device sample rate\n\n
+        ✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n
+        ✓ Fully Skinnable User Interface\n\n
+        ✓ Save patches and share them with the world\n\n
+
+        Made with ♥
+    </string>
     <string name="onboard_theme_chooser">
         Choose a theme for the UI. Choose Material Theme for Native
         Android Material Design, or Tube Amp theme based on the new
@@ -533,9 +546,6 @@
     <string name="title_activity_delete_account">DeleteAccount</string>
     <string name="delete_warn">This action will delete the following data\n\t- Your presets\n\t-Your favorites\n\t-Associated account data</string>
     <string name="title_activity_drum_machine">DrumMachineActivity</string>
-    <string name="onboard_description">
-        Version 3.2: More than 50 new plugins\n\n✓ More than 200 High Quality Effect Plugins\n\n✓ Low Latency\n\n✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n✓ Fully Skinnable User Interface\n\n✓ Save patches and share them with the world\n\nMade with ♥
-    </string>
     <string name="title_activity_featured_videos">FeaturedVideos</string>
     <string name="low_latency_warning">
         The app is not running in low latency mode.

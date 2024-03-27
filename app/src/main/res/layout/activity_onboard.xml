@@ -25,6 +25,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:padding="5dp"
+            android:background="@drawable/semi_trans"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -36,26 +39,40 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/comfortaa"
+                android:fontFamily="@font/gruppo"
                 android:textSize="40dp"
                 android:layout_marginLeft="10dp"
                 android:text="Amp Rack"/>
 
         </LinearLayout>
 
-        <TextView
-            android:fontFamily="@font/start"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="11sp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_version"/>
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/build_id"
-            android:id="@+id/onboard_build_number"/>
+            <TextView
+                android:fontFamily="@font/start"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="11sp"
+                android:layout_height="wrap_content"
+                android:text="@string/app_version"/>
+
+            <androidx.legacy.widget.Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:fontFamily="@font/gruppo"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/build_id"
+                android:id="@+id/onboard_build_number"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,15 +84,21 @@
             android:fontFamily="@font/comfortaa"
             android:text="Advanced High Performance\nGuitar Effects Processor"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textSize="17dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/comfortaa"
-            android:text="@string/onboard_description"/>
+        <ScrollView
+            android:layout_marginBottom="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="17dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/comfortaa"
+                android:text="@string/onboard_description"/>
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
@@ -233,8 +256,9 @@
             android:text="Detailed User Guide"/>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <Button
         android:id="@+id/onboard_prev"
+        android:background="@drawable/semi_trans"
         android:clickable="true"
         android:layout_margin="30dp"
         android:layout_width="wrap_content"
@@ -246,7 +270,8 @@
         android:visibility="gone"
         android:drawableLeft="@drawable/ic_baseline_arrow_back_ios_new_24" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <Button
+        android:background="@drawable/semi_trans"
         android:id="@+id/onboard_skip"
         android:clickable="true"
         android:layout_margin="30dp"
@@ -257,7 +282,8 @@
         android:textColor="@color/white"
         android:text="Skip"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <Button
+        android:background="@drawable/semi_trans"
         android:id="@+id/onboard_next"
         android:clickable="true"
         android:layout_margin="30dp"
@@ -269,7 +295,8 @@
         android:text="Next"
         android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <Button
+        android:background="@drawable/semi_trans"
         android:id="@+id/onboard_finish"
         android:clickable="true"
         android:layout_margin="30dp"

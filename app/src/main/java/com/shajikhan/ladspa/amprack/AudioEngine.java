@@ -113,4 +113,5 @@ public class AudioEngine {
     static native int getSampleRate () ;
     static native void toggleVideoRecording (boolean toggle);
     static native long getTimeStamp () ;
+    static native double getLatency (boolean input) ;
 }
