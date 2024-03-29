@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.text.LineBreaker;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -519,6 +520,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     rotarySeekbar.setValue(slider.getValue());
 
                     label.setText(string);
+//                    label.setMaxLines(3);
+//                    label.setBreakStrategy(LineBreaker.BREAK_STRATEGY_HIGH_QUALITY);
+//                    label.setElegantTextHeight(true);
+//                    label.setSingleLine(false);
                     label.setPadding(10, 10, 10, 10);
                     display.setPadding(10, 10, 10, 10);
                     LinearLayout.LayoutParams layoutParamsL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT) ;

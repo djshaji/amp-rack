@@ -401,5 +401,150 @@
        "1/6"
       
     ]
+  },
+  "rkr Harmonizer (no midi)": {
+    "1": [
+       "C",
+       "Db",
+       "D",
+       "Eb",
+       "E",
+       "F",
+       "Gb",
+       "G",
+       "Ab",
+       "A",
+       "Bb",
+       "B",
+       "C",
+       "C#",
+       "D",
+       "D#",
+       "E",
+       "F",
+       "F#",
+       "G",
+       "G#",
+       "A",
+       "A#",
+       "A"
+    ],
+    "2": [
+       "None",
+       "6",
+       "Maj7",
+       "lyd",
+       "Maj(9)",
+       "Maj7(9)",
+       "6/9",
+       "+",
+       "min",
+       "min6",
+       "min7",
+       "min7(b5)",
+       "min9",
+       "min7(9)",
+       "min7(11)",
+       "min(Maj7)",
+       "min(Maj7)(9)",
+       "dim",
+       "dim7",
+       "7",
+       "7(Sus4)",
+       "7(b5)",
+       "7(9)",
+       "7(#11)",
+       "7(13)",
+       "7(b9)",
+       "7(b13)",
+       "7(#9)",
+       "+Maj7",
+       "+7",
+       "1+8",
+       "1+5",
+       "(Sus4)",
+       "2"
+    ]
+  },
+  "rkr OpticalTrem": {
+    "6": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+      
+    ]
+  },
+  "rkr Pan": {
+    "9": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr Phaser": {
+    "12": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+    ]
+  },
+  "rkr Sequence": {
+    "8": [
+       "Lineal (Filter)",
+       "UpDown (Filter)",
+       "Stepper (Filter)",
+       "Shifter (Pitch)",
+       "Tremor (Gain)",
+       "Arpeggiator (Pitch)",
+       "Chorus (Pitch)",
+       "TrigStepper (Filter)",
+       "Sequenced Delay"
+    ],
+    "9": [
+       "450-2.5k",
+       "150-4k",
+       "40-800",
+       "100-1.6k",
+       "80-16k",
+       "60-18k",
+       "40-2.2k",
+       "20-6k"
+      
+    ]
+  },
+  "rkr Shuffle": {
+    "5": [
+       "Mid",
+       "Side"
+
+    ]
   }
 }
