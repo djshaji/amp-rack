@@ -339,5 +339,67 @@
       "Valve 2",
       "Diode Clipper"
     ]
+  },
+  "rkr AlienWah": {
+    "11": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr Analog Phaser": {
+    "13": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+      
+    ]
+  },
+  "rkr Flanger/Chorus": {
+    "12": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr Echoverse": {
+    "3": [
+       "1",
+       "1/2",
+       "1/3",
+       "1/4",
+       "1/5",
+       "1/6"
+      
+    ]
   }
 }

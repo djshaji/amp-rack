@@ -219,7 +219,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             }
 
             if (isSpinner) {
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(50, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, ViewGroup.LayoutParams.WRAP_CONTENT);
                 next.setLayoutParams(layoutParams);
                 prev.setLayoutParams(layoutParams);
 
