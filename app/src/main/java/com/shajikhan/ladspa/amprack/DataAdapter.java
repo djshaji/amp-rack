@@ -2,7 +2,9 @@ package com.shajikhan.ladspa.amprack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -134,6 +136,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             SeekBar seekBar = new SeekBar(context);
             boolean isSpinner = false ;
             boolean isBypass = false ;
+            Button prev = null, next = null;
             if (string != null) {
                 /*
                 Log.d(TAG, "onBindViewHolder: control name: " + string +
@@ -141,7 +144,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                  */
 
-                isBypass = string.equalsIgnoreCase("bypass") || string.contains("oggle");
+                isBypass = string.equalsIgnoreCase("bypass") || string.contains("oggle") || string.contains("witch") || string.equalsIgnoreCase("prefilter");
             }
 
             if (mainActivity.useTheme) {
@@ -190,11 +193,43 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 //                spinner.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+                prev = new Button(context);
+                next = new Button(context);
+
+                prev.setText("<");
+                next.setText(">");
+
+                prev.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int selected = spinner.getSelectedItemPosition();
+                        if (selected > 0)
+                            spinner.setSelection(selected - 1);
+                    }
+                });
+
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int selected = spinner.getSelectedItemPosition();
+                        if (selected < adapter.getCount() - 1)
+                            spinner.setSelection(selected + 1);
+                    }
+                });
             }
 
-
             if (isSpinner) {
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(50, ViewGroup.LayoutParams.WRAP_CONTENT);
+                next.setLayoutParams(layoutParams);
+                prev.setLayoutParams(layoutParams);
+
+                prev.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+                next.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+
+                layout.addView(prev);
                 layout.addView(spinner);
+                layout.addView(next);
+
                 slider.setVisibility(View.GONE);
                 editText.setVisibility(View.GONE);
             }

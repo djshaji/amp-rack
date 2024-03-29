@@ -287,5 +287,57 @@
       "1x8",
       "Off"
     ]
+  },
+  "rkr Arpie": {
+    "4": [
+      "Ascending",
+      "Descending",
+      "Up-Down",
+      "Stutter",
+      "Interrupted Descent",
+      "Double Descend"
+    ],
+    "5": [
+      "1",
+      "1/2",
+      "1/3",
+      "1/4",
+      "1/5",
+      "1/6"
+    ]
+  },
+  "rkr Distorsion": {
+    "0": [
+      "Arctangent",
+      "Asymmetric 1",
+      "Power",
+      "Sine",
+      "Quantize",
+      "Zigzag",
+      "Limiter",
+      "Upper Limiter",
+      "Lower Limiter",
+      "Inverse Limiter",
+      "Clip",
+      "Asymmetric 2",
+      "Power 2",
+      "Sigmoid",
+      "Crunch",
+      "Hard Crunch",
+      "Dirty Octave Up",
+      "Modulated Square",
+      "Modulated Saw",
+      "Compression",
+      "Overdrive",
+      "Soft",
+      "Super Soft",
+      "Hard Compression",
+      "Limit, No Gain",
+      "JFET",
+      "Dyno JFET",
+      "Valve 1",
+      "Valve 2",
+      "Diode Clipper"
+    ]
   }
 }
