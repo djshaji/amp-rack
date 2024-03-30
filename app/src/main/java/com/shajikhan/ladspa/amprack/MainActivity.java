@@ -367,7 +367,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Log.d(TAG, "onCreate: " + String.format("" +
                 "%d: %d", BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)));
-        if (BuildConfig.VERSION_CODE > defaultSharedPreferences.getInt("currentVersion", 0)) {
+//        if (BuildConfig.VERSION_CODE > defaultSharedPreferences.getInt("currentVersion", 0)) {
+        // only show onboard when first installed
+        if (defaultSharedPreferences.getInt("currentVersion", 0) == 0) {
             Log.d(TAG, "onCreate: " + String.format(
                     "Version Code: %d\t\tcurrent version: %d",
                     BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)
