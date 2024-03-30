@@ -595,6 +595,45 @@
       "Triangle Topped Sine",
       "Triangle Bottomed Sine"
 
+    ],
+    "5": [
+       "Analog Low-Pass",
+       "State Variable LPF",
+       "Analog Band-Pass",
+       "Formant 1",
+       "Formant 2"
+      
+    ]
+  },
+  "MDA Bandisto": {
+    "0": [
+      "Low" ,
+      "Mid" ,
+      "High" ,
+      "Out"
+      
+    ],
+    "9": [
+      "Bipolar",
+      "Unipolar"
+    ]
+  },
+  "MDA Shepard": {
+    "0": [
+       "Tones only" ,
+       "Input ring modulated by tones" ,
+       "Tones mixed with input"
+
+    ]
+  },
+  "State Variable Filter": {
+    "2": [
+      "No Filtering",
+      "Low Pass",
+      "High Pass",
+      "Band Pass",
+      "Band Reject",
+      "All pass"
     ]
   }
 }

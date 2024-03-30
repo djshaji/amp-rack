@@ -46,6 +46,16 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+    String [] bypassContains = {
+            "Pull the",
+            "witch",
+            "oggle"};
+    String [] bypassIs = {
+            "prefilter",
+            "bypass",
+            "stick it!"
+    } ;
+
     int totalItems = 0;
     int xOffset = 0, yOffset = 0 ;
     String TAG = this.getClass().getSimpleName();
@@ -145,7 +155,21 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                  */
 
-                isBypass = string.equalsIgnoreCase("bypass") || string.contains("oggle") || string.contains("witch") || string.equalsIgnoreCase("prefilter");
+                for (String s: bypassContains)
+                    if (string.contains(s)) {
+                        isBypass = true ;
+                        break;
+                    }
+
+                if (! isBypass) {
+                    for (String s: bypassIs)
+                        if (string.equalsIgnoreCase(s)) {
+                            isBypass = true ;
+                            break;
+                        }
+                }
+
+//                isBypass = string.equalsIgnoreCase("bypass") ||  || string.contains("witch") || string.equalsIgnoreCase("prefilter");
             }
 
             if (mainActivity.useTheme) {
