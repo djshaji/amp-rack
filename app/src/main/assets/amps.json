@@ -635,5 +635,12 @@
       "Band Reject",
       "All pass"
     ]
+  },
+  "Diode Processor": {
+    "0": [
+      "None",
+      "Half Wave",
+      "Full Wave"
+    ]
   }
 }

@@ -46,7 +46,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         LinearLayout layout = holder.linearLayout ;
         String pluginName = pluginNames.get(position) ;
         if (mainActivity.isPluginLV2(pluginName))
-            holder.pluginName.setText("[LV2] " + pluginName);
+            holder.pluginName.setText(/*"[LV2] " + */ pluginName);
         else
             holder.pluginName.setText(pluginName);
         holder.button.setOnClickListener(new View.OnClickListener() {
