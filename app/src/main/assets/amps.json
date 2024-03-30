@@ -546,5 +546,55 @@
        "Side"
 
     ]
+  },
+  "rkr Synthfilter": {
+    "16": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+    ]
+  },
+  "rkr Vibe": {
+    "10": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr WahWah": {
+    "11": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+
+    ]
   }
 }
