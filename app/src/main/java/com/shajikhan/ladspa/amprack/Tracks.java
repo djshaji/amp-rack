@@ -41,7 +41,7 @@ import com.google.android.material.slider.Slider;
 import java.io.File;
 
 public class Tracks extends Fragment {
-    MainActivity mainActivity;
+    MainActivity mainActivity = null;
     TracksAdapter tracksAdapter ;
     RecyclerView recyclerView ;
     ToggleButton playPause ;
@@ -54,6 +54,15 @@ public class Tracks extends Fragment {
     LinearLayout playerWindow ;
     boolean isDrums = false ;
     BitmapDrawable play, pause, reset ;
+
+    public Tracks () {
+        tracksAdapter = new TracksAdapter();
+    }
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+        this.tracksAdapter.mainActivity = mainActivity;
+    }
 
     public Tracks (MainActivity activity) {
         mainActivity = activity;

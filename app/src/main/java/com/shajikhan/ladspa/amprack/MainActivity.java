@@ -332,6 +332,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             break;
                         case "tracks":
                             tracks = (Tracks) frag;
+
+                            if (tracks.mainActivity == null)
+                                tracks.setMainActivity(this);
                             break;
                         case "drums":
                             drums = (Tracks) frag;
