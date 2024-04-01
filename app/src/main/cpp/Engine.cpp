@@ -161,7 +161,7 @@ oboe::Result  Engine::openStreams() {
 
     result = inBuilder.openStream(mRecordingStream);
 
-    latencyTuner = new oboe::LatencyTuner ( *mRecordingStream, 160);
+    latencyTuner = new oboe::LatencyTuner ( *mRecordingStream, 8192);
     latencyTuner->setMinimumBufferSize(160);
     mRecordingStream->setBufferSizeInFrames(80);
     latencyTuner->tune();
