@@ -847,8 +847,8 @@ public class Rack extends Fragment {
         patchMaster.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (patchName.getText().equals("Tap to load"))
-                    patchName.performClick();
+//                if (patchName.getText().equals("Tap to load"))
+                patchName.performClick();
                 return false;
             }
         });
@@ -856,8 +856,8 @@ public class Rack extends Fragment {
         patchName.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (! patchName.getText().equals("Tap to load"))
-                    return false;
+//                if (! patchName.getText().equals("Tap to load"))
+//                    return false;
 
                 if (! mainActivity.running) {
                     if (patchName.getText().equals("Tap to load") && mainActivity.dataAdapter.totalItems == 0) {
@@ -867,7 +867,7 @@ public class Rack extends Fragment {
                                 patchDown.performClick();
                             }
                         };
-                    } else {
+                    } else if (patchName.getText().equals("Tap to load")){
                         patchName.setText("Custom");
                     }
 
@@ -887,67 +887,46 @@ public class Rack extends Fragment {
         patchUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (! mainActivity.running)
+                if (! mainActivity.running) {
+                    MainActivity.OnEngineStartListener engineStartListener = new MainActivity.OnEngineStartListener() {
+                        @Override
+                        void run() {
+                            patchMove(true);
+                        }
+                    };
+
+                } else {
+                    patchMove(true);
                     return;
-                /*
-                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
-                    mainActivity.onOff.setChecked(true);
-
-                if (mainActivity.useTheme && ! toggleButton.isChecked())
-                    toggleButton.setChecked(true);
-
-                 */
-
-                String text = String.valueOf(patchNo.getText()) ;
-                if (text == "-")
-                    text = "0" ;
-                int p = Integer.valueOf(text);
-                p ++ ;
-                if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size())
-                    return ;
-
-                if (mainActivity.quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
-                    MainActivity.alert("Restart the app to load patches", "Patches are not loaded. Restart the app to load patches.");
-                    return ;
                 }
 
-                mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
-                patchNo.setText(String.valueOf(p));
-                patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
-                patchDesc.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("desc"));
+                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
+                    mainActivity.onOff.setChecked(true);
+                else if (mainActivity.useTheme && ! toggleButton.isChecked())
+                    toggleButton.setChecked(true);
+
             }
         });
 
         patchDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (! mainActivity.running)
+                if (! mainActivity.running) {
+                    MainActivity.OnEngineStartListener engineStartListener = new MainActivity.OnEngineStartListener() {
+                        @Override
+                        void run() {
+                            patchMove(false);
+                        }
+                    };
+                } else {
+                    patchMove(false);
                     return;
-
-//                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
-//                    mainActivity.onOff.setChecked(true);
-//
-//                if (mainActivity.useTheme && ! toggleButton.isChecked())
-//                    toggleButton.setChecked(true);
-
-                String text = String.valueOf(patchNo.getText()) ;
-                if (text == "-")
-                    text = "0" ;
-                int p = Integer.valueOf(text);
-
-                p -- ;
-                if (p < 0)
-                    p = 0 ;
-
-                if (mainActivity.quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
-                    MainActivity.alert("Restart the app to load patches", "Patches are not loaded. Restart the app to load patches.");
-                    return ;
                 }
 
-                mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
-                patchNo.setText(String.valueOf(p));
-                patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
-                patchDesc.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("desc"));
+                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
+                    mainActivity.onOff.setChecked(true);
+                else if (mainActivity.useTheme && ! toggleButton.isChecked())
+                    toggleButton.setChecked(true);
             }
         });
 
@@ -1113,5 +1092,30 @@ public class Rack extends Fragment {
                         Log.e(TAG, "onFailure: cannot save bug report", e);
                     }
                 });
+    }
+
+    public void patchMove (boolean up) {
+        String text = String.valueOf(mainActivity.patchNo.getText()) ;
+        if (text == "-")
+            text = "0" ;
+        int p = Integer.valueOf(text);
+        if (up)
+            p ++ ;
+        else
+            p -- ;
+
+        if (p >= mainActivity.quickPatch.myPresetsAdapter.allPresets.size() || p < 0)
+            return ;
+
+        if (mainActivity.quickPatch.myPresetsAdapter.allPresets.isEmpty()) {
+            MainActivity.alert("Restart the app to load patches", "Patches are not loaded. Restart the app to load patches.");
+            return ;
+        }
+
+        mainActivity.loadPreset(mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p));
+        mainActivity.patchNo.setText(String.valueOf(p));
+        mainActivity.patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
+        mainActivity.patchDesc.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("desc"));
+
     }
 }
