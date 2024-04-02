@@ -172,6 +172,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         int size ;
     }
     public static LinkedBlockingQueue <AVBuffer> avBuffer = new LinkedBlockingQueue<>();
+    public static LinkedBlockingQueue <OnEngineStartListener> engineStartListeners = new LinkedBlockingQueue<>();
+
     static int avEncoderIndex = 0 ;
     public static long presentationTimeUs = 0;
     int totalBytesRead = 0;
@@ -3602,6 +3604,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 mainActivity.latencyWarnLogo.setVisibility(View.GONE);
             else
                 mainActivity.latencyWarnLogo.setVisibility(View.VISIBLE);
+
+            while (engineStartListeners.size() > 0) {
+                OnEngineStartListener onEngineStartListener = engineStartListeners.poll();
+                if (onEngineStartListener != null)
+                    onEngineStartListener.run();
+            }
         });
     }
 
@@ -3612,5 +3620,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .setNegativeButton("Close", null)
                 .setIcon(R.drawable.baseline_warning_24);
         builder.create().show();
+    }
+
+    /*  I think this is pretty amazing.
+        Am I OOP yet?
+     */
+    public static abstract class OnEngineStartListener {
+        abstract void run () ;
+
+        OnEngineStartListener () {
+            engineStartListeners.add(this);
+        }
     }
 }

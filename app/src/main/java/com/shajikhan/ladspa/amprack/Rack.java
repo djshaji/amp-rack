@@ -836,12 +836,19 @@ public class Rack extends Fragment {
         mainActivity.patchName = patchName ;
         mainActivity.patchNo = patchNo;
 
+        patchDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                patchName.performClick();
+            }
+        });
+
         LinearLayout patchMaster = mainActivity.findViewById(R.id.patch_master);
         patchMaster.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (patchName.getText().equals("Tap to load"))
-                    patchDown.performClick();
+                    patchName.performClick();
                 return false;
             }
         });
@@ -849,19 +856,45 @@ public class Rack extends Fragment {
         patchName.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (patchName.getText().equals("Tap to load"))
-                    patchDown.performClick();
+                if (! patchName.getText().equals("Tap to load"))
+                    return false;
+
+                if (! mainActivity.running) {
+                    if (patchName.getText().equals("Tap to load")) {
+                        MainActivity.OnEngineStartListener engineStartListener = new MainActivity.OnEngineStartListener() {
+                            @Override
+                            void run() {
+                                patchDown.performClick();
+                            }
+                        };
+                    }
+
+                    if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
+                        mainActivity.onOff.setChecked(true);
+
+                    else if (mainActivity.useTheme && ! toggleButton.isChecked())
+                        toggleButton.setChecked(true);
+
+                } else {
+                    if (patchName.getText().equals("Tap to load"))
+                        patchDown.performClick();
+                }
                 return false;
             }
         });
         patchUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (! mainActivity.running)
+                    return;
+                /*
                 if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
                     mainActivity.onOff.setChecked(true);
 
                 if (mainActivity.useTheme && ! toggleButton.isChecked())
                     toggleButton.setChecked(true);
+
+                 */
 
                 String text = String.valueOf(patchNo.getText()) ;
                 if (text == "-")
@@ -886,11 +919,14 @@ public class Rack extends Fragment {
         patchDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
-                    mainActivity.onOff.setChecked(true);
+                if (! mainActivity.running)
+                    return;
 
-                if (mainActivity.useTheme && ! toggleButton.isChecked())
-                    toggleButton.setChecked(true);
+//                if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
+//                    mainActivity.onOff.setChecked(true);
+//
+//                if (mainActivity.useTheme && ! toggleButton.isChecked())
+//                    toggleButton.setChecked(true);
 
                 String text = String.valueOf(patchNo.getText()) ;
                 if (text == "-")
