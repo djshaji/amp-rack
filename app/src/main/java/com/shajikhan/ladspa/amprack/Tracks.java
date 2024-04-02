@@ -144,6 +144,11 @@ public class Tracks extends Fragment {
                     return;
                 }
 
+                if (player == null) {
+                    MainActivity.alert("Inconsistent app state", "Media Player is not initialized.");
+                    return;
+                }
+
                 if (!b) {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_play_arrow_24));
                     player.pause();

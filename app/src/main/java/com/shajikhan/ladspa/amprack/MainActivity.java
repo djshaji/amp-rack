@@ -963,6 +963,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         e.printStackTrace();
                         toast("Cannot load media file: " + e.getMessage());
                         return;
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                        MainActivity.toast(e.getMessage());
+                        return;
                     }
 
                     toggleButton.setButtonDrawable(R.drawable.ic_baseline_pause_24);

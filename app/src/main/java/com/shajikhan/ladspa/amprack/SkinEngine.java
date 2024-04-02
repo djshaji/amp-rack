@@ -1345,6 +1345,8 @@ public class SkinEngine {
                     bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), Uri.parse(customBg));
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (SecurityException e) {
+                    e.printStackTrace();
                 }
 
                 if (bitmap != null) {

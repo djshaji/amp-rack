@@ -139,7 +139,12 @@ public class ConnectGuitar extends AppCompatActivity {
             ex.printStackTrace();
             Log.e(TAG, "loadJSONFromFile: unable to parse json " + filename, ex);
             return null;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+
+        if (json == null)
+            json = "{}" ;
 
         JSONObject jsonObject = null ;
         try {
