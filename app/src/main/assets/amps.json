@@ -642,5 +642,28 @@
       "Half Wave",
       "Full Wave"
     ]
+  },
+  "Gx_ampegsvt_": {
+    "6": [
+       "LOWCUT",
+       "OFF",
+       "ULTRALOW"
+    ], 
+    "7": [
+       "220Hz",
+       "800Hz",
+       "3kHz"
+
+    ], 
+    "8": [
+       "OFF",
+       "ON"
+
+    ],
+    "0": [
+       "OFF",
+       "ON"
+
+    ]
   }
 }

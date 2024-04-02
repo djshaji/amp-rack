@@ -860,13 +860,15 @@ public class Rack extends Fragment {
                     return false;
 
                 if (! mainActivity.running) {
-                    if (patchName.getText().equals("Tap to load")) {
+                    if (patchName.getText().equals("Tap to load") && mainActivity.dataAdapter.totalItems == 0) {
                         MainActivity.OnEngineStartListener engineStartListener = new MainActivity.OnEngineStartListener() {
                             @Override
                             void run() {
                                 patchDown.performClick();
                             }
                         };
+                    } else {
+                        patchName.setText("Custom");
                     }
 
                     if (! mainActivity.useTheme && ! mainActivity.onOff.isChecked())
