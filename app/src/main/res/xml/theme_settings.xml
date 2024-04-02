@@ -2,6 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <SwitchPreference
+        android:title="Don't close plugin dialog after adding plugin"
+        android:key="keep_plugindialog_open"
+        android:defaultValue="false"
+        android:summary="Keep plugin dialog open after adding a plugin"/>
+
     <ListPreference
         android:title="Theme"
         android:key="theme"
