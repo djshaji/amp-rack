@@ -160,9 +160,14 @@ public class Tracks extends Fragment {
                 } else {
                     playPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_pause_24));
                     player.play();
-                    if (player.getCurrentMediaItem().localConfiguration.uri.toString().endsWith(".mp4")) {
-                        frameLayout.setVisibility(View.VISIBLE);
-                  }
+                    try {
+                        if (player.getCurrentMediaItem() != null && player.getCurrentMediaItem().localConfiguration.uri.toString().endsWith(".mp4")) {
+                            frameLayout.setVisibility(View.VISIBLE);
+                        }
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "onCheckedChanged: ", e);
+                        return;
+                    }
 
                     if (mainActivity.useTheme) {
                         if (pause != null)
