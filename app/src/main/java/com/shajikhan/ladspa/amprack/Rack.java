@@ -45,6 +45,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -95,6 +96,7 @@ public class Rack extends Fragment {
     Button patchUp, patchDown ;
     JSONObject jsonObject = new JSONObject();
     ToggleButton swapCamera ;
+    LinearLayout rackMaster, pane_2 ;
     boolean mixerInit = false ;
     boolean autoHideMixer = true ;
     /*
@@ -153,6 +155,8 @@ public class Rack extends Fragment {
         quickPatchProgress = mainActivity.findViewById(R.id.patch_loading);
 
         mainActivity.onOff = view.findViewById(R.id.onoff);
+        rackMaster = view.findViewById(R.id.rack_master);
+        pane_2 = view.findViewById(R.id.pane_2);
         /*
         mainActivity.onOff.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -1062,6 +1066,30 @@ public class Rack extends Fragment {
                 MainActivity.lowLatencyDialog();
             }
         });
+
+        if (mainActivity.tabletMode) {
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(mainActivity.deviceWidth/2, mainActivity.deviceHeight);
+            pane_2.setLayoutParams(layoutParams);
+//            rackMaster.setLayoutParams(layoutParams);
+
+            ConstraintLayout constraintLayout = mainActivity.findViewById(R.id.super_parent);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+
+            constraintSet.connect(R.id.pane_2, ConstraintSet.RIGHT,R.id.super_parent,ConstraintSet.RIGHT,0);
+//            constraintSet.connect(R.id.rack_master, ConstraintSet.LEFT,R.id.super_parent,ConstraintSet.LEFT,0);
+            constraintSet.connect(R.id.pane_2,ConstraintSet.TOP,R.id.super_parent,ConstraintSet.TOP,0);
+//            constraintSet.connect(R.id.pane_2,ConstraintSet.LEFT,R.id.rack_master,ConstraintSet.RIGHT,0);
+            constraintSet.applyTo(constraintLayout);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2,mainActivity.deviceHeight, 1.0f);
+            rackMaster.setLayoutParams(lp);
+            MainActivity.applyWallpaper(mainActivity, mainActivity.pluginDialog.getWindow(), getResources(), mainActivity.pluginDialogWallpaper, mainActivity.deviceWidth, mainActivity.deviceHeight);
+
+            Log.w(TAG, "onViewCreated: tablet mode activated");
+        } else {
+            Log.d(TAG, String.format ("[display dimensions]: %d x %d {%f}", mainActivity.deviceWidth, mainActivity.deviceHeight, (float) (1.0 * mainActivity.deviceWidth/mainActivity.deviceHeight)));
+        }
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

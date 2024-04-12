@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_marginTop="0dp"
+    android:id="@+id/super_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/rack_master"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -581,6 +583,7 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_weight="0"
+        android:id="@+id/floating_box"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -644,4 +647,12 @@
             android:background="@color/fui_transparent"
             android:drawableLeft="@drawable/ic_baseline_fiber_manual_record_24"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toLeftOf="@id/rack_master"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/pane_2"
+        android:orientation="vertical" />
 </androidx.constraintlayout.widget.ConstraintLayout>

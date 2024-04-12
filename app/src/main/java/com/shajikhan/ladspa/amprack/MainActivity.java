@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static DataOutputStream dataOutputStream = null ;
     static MainActivity mainActivity;
     boolean videoRecording = false ;
+    static boolean tabletMode = false ;
     Camera2 camera2 ;
     MediaPlayerDialog mediaPlayerDialog = null;
     private OrientationEventListener orientationEventListener;
@@ -860,6 +861,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         deviceWidth = getWindowManager().getDefaultDisplay().getWidth();
         deviceHeight = getWindowManager().getDefaultDisplay().getHeight();
+
+        if ((float) (1.0f * deviceWidth / deviceHeight) > 0.7f)
+            tabletMode = true ;
 
         Log.d(TAG, "onCreate: Loading JSON");
         rdf = loadJSONFromAsset("plugins_info.json");
@@ -1891,6 +1895,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         pluginDialogCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (view == null)
+                    return;
                 String category = ((TextView) view).getText().toString();
                 Log.d(TAG, "onItemSelected: selected category " + category);
                 pluginDialogAdapter.filterByCategory(category);
@@ -1904,7 +1910,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         pluginDialogWallpaper = linearLayoutPluginDialog.findViewById(R.id.pl_wallpaper);
 
-        builder.setView(linearLayoutPluginDialog);
+        if (! tabletMode)
+            builder.setView(linearLayoutPluginDialog);
+        else
+            mainActivity.rack.pane_2.addView(linearLayoutPluginDialog);
+
         AlertDialog pluginDialog = builder.create();
         Button closeButton = linearLayoutPluginDialog.findViewById(R.id.pl_close);
         closeButton.setOnClickListener(new View.OnClickListener() {

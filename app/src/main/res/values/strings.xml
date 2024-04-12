@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 4 Razor</string>
-    <string name="build_id">586</string>
+    <string name="build_id">589</string>
     <string name="onboard_description">
         [new] Video Recorder\n\n
         Welcome to Version 4: \n\n
