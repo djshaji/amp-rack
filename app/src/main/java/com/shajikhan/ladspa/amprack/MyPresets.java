@@ -85,7 +85,8 @@ public class MyPresets extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        if (mainActivity == null)
+            mainActivity = (MainActivity) getActivity();
         db = new FirestoreDB (mainActivity);
 
         recyclerView = (RecyclerView) ((LinearLayout) view).getChildAt(2);

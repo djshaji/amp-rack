@@ -120,7 +120,21 @@ public class Presets extends Fragment {
 
         viewPager.setSaveEnabled(false);
         fragmentStateAdapter.createFragment(0);
-        fragmentStateAdapter.createFragment(1);
+        if (! mainActivity.tabletMode)
+            fragmentStateAdapter.createFragment(1);
+        else {
+            LinearLayout linearLayout = mainActivity.findViewById(R.id.my_presets_layout);
+            fragmentStateAdapter.libraryPresets = new MyPresets(true);
+            fragmentStateAdapter.libraryPresets.mainActivity = mainActivity ;
+            fragmentStateAdapter.libraryPresets.progressBar = progressPreset;
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            LinearLayout ll = (LinearLayout) fragmentStateAdapter.libraryPresets.onCreateView(mainActivity.getLayoutInflater(), null, null);
+
+            fragmentStateAdapter.libraryPresets.onViewCreated(ll, null);
+            linearLayout.addView(ll);
+        }
+
         viewPager.setAdapter(fragmentStateAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -259,6 +273,7 @@ public class Presets extends Fragment {
         public int getItemCount() {
             return 2;
         }
+
 
     }
 

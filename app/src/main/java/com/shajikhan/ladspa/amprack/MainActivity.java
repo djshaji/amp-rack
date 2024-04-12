@@ -1909,14 +1909,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         pluginDialogWallpaper = linearLayoutPluginDialog.findViewById(R.id.pl_wallpaper);
+        Button closeButton = linearLayoutPluginDialog.findViewById(R.id.pl_close);
 
         if (! tabletMode)
             builder.setView(linearLayoutPluginDialog);
-        else
+        else {
             mainActivity.rack.pane_2.addView(linearLayoutPluginDialog);
+            closeButton.setVisibility(View.GONE);
+        }
 
         AlertDialog pluginDialog = builder.create();
-        Button closeButton = linearLayoutPluginDialog.findViewById(R.id.pl_close);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

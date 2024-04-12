@@ -1086,6 +1086,7 @@ public class Rack extends Fragment {
             rackMaster.setLayoutParams(lp);
             MainActivity.applyWallpaper(mainActivity, mainActivity.pluginDialog.getWindow(), getResources(), mainActivity.pluginDialogWallpaper, mainActivity.deviceWidth, mainActivity.deviceHeight);
 
+            mainActivity.fab.setVisibility(View.GONE);
             Log.w(TAG, "onViewCreated: tablet mode activated");
         } else {
             Log.d(TAG, String.format ("[display dimensions]: %d x %d {%f}", mainActivity.deviceWidth, mainActivity.deviceHeight, (float) (1.0 * mainActivity.deviceWidth/mainActivity.deviceHeight)));
