@@ -21,6 +21,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -123,16 +124,28 @@ public class Presets extends Fragment {
         if (! mainActivity.tabletMode)
             fragmentStateAdapter.createFragment(1);
         else {
-            LinearLayout linearLayout = mainActivity.findViewById(R.id.my_presets_layout);
             fragmentStateAdapter.libraryPresets = new MyPresets(true);
             fragmentStateAdapter.libraryPresets.mainActivity = mainActivity ;
             fragmentStateAdapter.libraryPresets.progressBar = progressPreset;
-            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
             LinearLayout ll = (LinearLayout) fragmentStateAdapter.libraryPresets.onCreateView(mainActivity.getLayoutInflater(), null, null);
-
             fragmentStateAdapter.libraryPresets.onViewCreated(ll, null);
-            linearLayout.addView(ll);
+
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(mainActivity.deviceWidth/2, mainActivity.deviceHeight);
+            ll.setLayoutParams(layoutParams);
+
+            ConstraintLayout root = mainActivity.findViewById(R.id.presets_constraint);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(R.id.presets_library_layout, ConstraintSet.LEFT,R.id.presets_pager,ConstraintSet.RIGHT,0);
+            constraintSet.connect(R.id.presets_pager, ConstraintSet.TOP,R.id.my_preset_tab_layout,ConstraintSet.BOTTOM,0);
+
+            constraintSet.applyTo(constraintLayout);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2,mainActivity.deviceHeight, 1.0f);
+            viewPager.setLayoutParams(layoutParams);
+            LinearLayout libLayout = view.findViewById(R.id.presets_library_layout);
+            libLayout.addView(ll);
         }
 
         viewPager.setAdapter(fragmentStateAdapter);
