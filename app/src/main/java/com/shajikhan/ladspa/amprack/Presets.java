@@ -131,8 +131,9 @@ public class Presets extends Fragment {
             LinearLayout ll = (LinearLayout) fragmentStateAdapter.libraryPresets.onCreateView(mainActivity.getLayoutInflater(), null, null);
             fragmentStateAdapter.libraryPresets.onViewCreated(ll, null);
 
-            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(mainActivity.deviceWidth/2, mainActivity.deviceHeight);
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(mainActivity.deviceWidth/2, ViewGroup.LayoutParams.WRAP_CONTENT);
             ll.setLayoutParams(layoutParams);
+            viewPager.setLayoutParams(layoutParams);
 
             ConstraintLayout root = mainActivity.findViewById(R.id.presets_constraint);
             ConstraintSet constraintSet = new ConstraintSet();
@@ -142,8 +143,9 @@ public class Presets extends Fragment {
 
             constraintSet.applyTo(constraintLayout);
 
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2,mainActivity.deviceHeight, 1.0f);
-            viewPager.setLayoutParams(layoutParams);
+//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2,mainActivity.deviceHeight, 1.0f);
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(mainActivity.deviceWidth/2, ViewGroup.LayoutParams.WRAP_CONTENT);
+
             LinearLayout libLayout = view.findViewById(R.id.presets_library_layout);
             libLayout.addView(ll);
         }
