@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -627,6 +628,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 //        LoadFragment(presets);
 //        LoadFragment(rack);
+
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();

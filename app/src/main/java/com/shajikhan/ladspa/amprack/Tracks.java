@@ -24,6 +24,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class Tracks extends Fragment {
     String TAG = getClass().getSimpleName();
     SurfaceView surfaceView;
     String filesDir ;
+    ConstraintLayout constraintLayout ;
     ExoPlayer player ;
     static int requestCode = 1001 ;
     LinearLayout playerWindow ;
@@ -79,7 +81,8 @@ public class Tracks extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tracks, null);
+        constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.tracks, null);
+        return constraintLayout;
     }
 
     @Override
@@ -87,6 +90,7 @@ public class Tracks extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (MainActivity) getActivity();
 
+        constraintLayout = (ConstraintLayout) view;
         recyclerView = (RecyclerView) view.findViewById(R.id.tracks_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setAdapter(tracksAdapter);
@@ -255,7 +259,7 @@ public class Tracks extends Fragment {
 
          */
 
-        boolean dynamicsProcessingEnabled = mainActivity.defaultSharedPreferences.getBoolean("tracks_fx", true);
+//        boolean dynamicsProcessingEnabled = mainActivity.defaultSharedPreferences.getBoolean("tracks_fx", true);
         /* commenting out because causes crashes on some devices
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P && dynamicsProcessingEnabled) {
@@ -359,6 +363,43 @@ public class Tracks extends Fragment {
                 requestCode ++ ;
             }
         });
+
+        if (! isDrums)
+            addDrumsLooper();
+    }
+
+    public void addDrumsLooper () {
+        if (isDrums)
+            return;
+
+        if (mainActivity == null) {
+            Log.e(TAG, "addDrumsLooper: main activity is null!");
+            return;
+        }
+
+        if (mainActivity.tabletMode) {
+            if (mainActivity.drums == null) {
+                Log.e(TAG, "addDrumsLooper: drums is null!");
+                return;
+            }
+
+            mainActivity.drums.isDrums = true ;
+            mainActivity.drums.onCreateView(mainActivity.getLayoutInflater(), null, null);
+            mainActivity.drums.onViewCreated(mainActivity.drums.constraintLayout, null);
+
+            ConstraintLayout td = constraintLayout.findViewById(R.id.tracks_drums);
+
+            td.addView(mainActivity.drums.constraintLayout);
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(mainActivity.deviceWidth/2, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(mainActivity.drums.constraintLayout);
+            LinearLayout ll = constraintLayout.findViewById(R.id.tracks_ll);
+            ll.setLayoutParams(layoutParams);
+            mainActivity.drums.constraintLayout.setLayoutParams(layoutParams);
+
+            constraintSet.connect(R.id.tracks_ll, ConstraintSet.RIGHT,R.id.tracks_master,ConstraintSet.RIGHT,0);
+            constraintSet.applyTo(mainActivity.drums.constraintLayout);
+        }
     }
 
     public void load (String [] files) {
