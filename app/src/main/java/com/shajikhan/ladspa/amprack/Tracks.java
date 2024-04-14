@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -37,6 +38,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.audio.AuxEffectInfo;
 import com.google.android.exoplayer2.video.VideoSize;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.slider.Slider;
 
 import java.io.File;
@@ -399,6 +401,9 @@ public class Tracks extends Fragment {
 
             constraintSet.connect(R.id.tracks_ll, ConstraintSet.RIGHT,R.id.tracks_master,ConstraintSet.RIGHT,0);
             constraintSet.applyTo(mainActivity.drums.constraintLayout);
+
+            BottomNavigationItemView menuItem = mainActivity.findViewById(R.id.page_drums);
+            ((ViewGroup)menuItem.getParent()).removeView (menuItem);
         }
     }
 

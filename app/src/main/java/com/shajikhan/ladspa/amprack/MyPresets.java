@@ -2,7 +2,9 @@ package com.shajikhan.ladspa.amprack;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,10 +18,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -284,6 +288,64 @@ public class MyPresets extends Fragment {
 
                 }
             });
+
+            if (mainActivity.tabletMode) {
+                LinearLayout horiz = new LinearLayout(mainActivity);
+                horiz.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout parent = (LinearLayout) recyclerView.getParent();
+                parent.removeView(recyclerView);
+                parent.addView(horiz);
+                horiz.addView(recyclerView);
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+                recyclerView.setLayoutParams(layoutParams);
+
+                LinearLayout ll = new LinearLayout(mainActivity);
+                ll.setLayoutParams(layoutParams);
+
+                ImageView up = new ImageView(mainActivity),
+                        down = new ImageView(mainActivity);
+//                up.setText("Patch up ⬆");
+//                down.setText("Patch down ⬇");
+
+                up.setImageDrawable(getResources().getDrawable(R.drawable.baseline_arrow_drop_up_24));
+                down.setImageDrawable(getResources().getDrawable(R.drawable.baseline_arrow_drop_down_24));
+
+                TextView t1 = new TextView(mainActivity),
+                         t2 = new TextView(mainActivity);
+                t1.setText("Patch");
+                t2.setText(R.string.app_version);
+                t1.setTextSize(48);
+                t1.setTextSize(36);
+                t1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                t2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    t1.setTypeface(getResources().getFont(R.font.gruppo));
+                    t2.setTypeface(getResources().getFont(R.font.gruppo));
+                }
+
+                ll.setOrientation(LinearLayout.VERTICAL);
+                ll.addView(t1);
+                ll.addView(up);
+                ll.addView(down);
+                ll.addView(t2);
+
+                up.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainActivity.rack.patchMove(true);
+                    }
+                });
+
+                down.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainActivity.rack.patchMove(false);
+                    }
+                });
+
+                horiz.addView(ll);
+            }
         }
 
         if (!shared) {
