@@ -864,8 +864,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         deviceWidth = getWindowManager().getDefaultDisplay().getWidth();
         deviceHeight = getWindowManager().getDefaultDisplay().getHeight();
 
-        if ((float) (1.0f * deviceWidth / deviceHeight) > 0.7f)
+        tabletMode = defaultSharedPreferences.getBoolean("tablet_mode", true);
+        if (tabletMode && (float) (1.0f * deviceWidth / deviceHeight) > 0.7f)
             tabletMode = true ;
+        else
+            tabletMode = false ;
 
         Log.d(TAG, "onCreate: Loading JSON");
         rdf = loadJSONFromAsset("plugins_info.json");

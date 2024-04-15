@@ -1082,7 +1082,7 @@ public class Rack extends Fragment {
 //            constraintSet.connect(R.id.pane_2,ConstraintSet.LEFT,R.id.rack_master,ConstraintSet.RIGHT,0);
             constraintSet.applyTo(constraintLayout);
 
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2,mainActivity.deviceHeight, 1.0f);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mainActivity.deviceWidth/2, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
             rackMaster.setLayoutParams(lp);
             MainActivity.applyWallpaper(mainActivity, mainActivity.pluginDialog.getWindow(), getResources(), mainActivity.pluginDialogWallpaper, mainActivity.deviceWidth, mainActivity.deviceHeight);
 

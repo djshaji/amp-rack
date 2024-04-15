@@ -8,6 +8,12 @@
         android:defaultValue="false"
         android:summary="Keep plugin dialog open after adding a plugin"/>
 
+    <SwitchPreference
+        android:title="Adapt UI to large screens"
+        android:key="tablet_mode"
+        android:defaultValue="true"
+        android:summary="Optimise UI to make use of large displays (e.g. tablets)"/>
+
     <ListPreference
         android:title="Theme"
         android:key="theme"

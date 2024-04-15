@@ -316,12 +316,12 @@ public class MyPresets extends Fragment {
                 t1.setText("Patch");
                 t2.setText(R.string.app_version);
                 t1.setTextSize(48);
-                t1.setTextSize(36);
+                t1.setTextSize(40);
                 t1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 t2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     t1.setTypeface(getResources().getFont(R.font.gruppo));
-                    t2.setTypeface(getResources().getFont(R.font.gruppo));
+                    t2.setTypeface(getResources().getFont(R.font.start));
                 }
 
                 ll.setOrientation(LinearLayout.VERTICAL);

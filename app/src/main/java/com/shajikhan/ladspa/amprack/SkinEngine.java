@@ -1290,6 +1290,8 @@ public class SkinEngine {
         mainActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         display = mainActivity.getWindowManager().getDefaultDisplay();
         screenWidth = display.getWidth() ;
+        if (_mainActivity.tabletMode)
+            screenWidth = screenWidth / 2;
         screenHeight = display.getHeight();
         scaleFactor = screenWidth / 1120f ;
 
