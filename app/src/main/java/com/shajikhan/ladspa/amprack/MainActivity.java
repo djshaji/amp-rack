@@ -892,11 +892,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
 
-//        if (mediaPlayerDialog == null)
-//            mediaPlayerDialog = new MediaPlayerDialog(this, mediaPlayer);
-//        mediaPlayerDialog.dialog.show();
-//        if (mediaPlayerDialog.dialog != null)
-//            return;
+        if (mediaPlayerDialog == null)
+            mediaPlayerDialog = new MediaPlayerDialog(this, mediaPlayer);
+        mediaPlayerDialog.dialog.show();
+        if (mediaPlayerDialog.dialog != null)
+            return;
         Log.d(TAG, "showMediaPlayerDialog: " + lastRecordedFileName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
