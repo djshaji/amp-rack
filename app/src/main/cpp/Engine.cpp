@@ -532,6 +532,14 @@ int Engine::addPlugintoRackByName (std::string pluginName) {
     return  0 ;
 }
 
+void Engine::setPluginFilename (std::string filename, int plugin) {
+    IN
+    mFullDuplexPass.bypass = true;
+    activePlugins.at(plugin)->setFileName(filename);
+    mFullDuplexPass.bypass = false;
+    OUT
+}
+
 bool Engine::setPluginBuffer (float * buffer, int buffer_size, int plugin) {
     IN
 //    LOGD("plugins in queue %d requested %d", activePlugins.size(), plugin);

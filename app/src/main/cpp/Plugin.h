@@ -43,6 +43,8 @@ public:
     void load();
 
     int addPluginControl(const LV2_Descriptor *_descriptor, nlohmann::json _j);
+
+    void setFileName(std::string filename);
 };
 
 template<class UnaryFunction>

@@ -846,3 +846,17 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getLatency(JNIEnv *env, jclass cla
 
     return engine->getLatency(input);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginFilename(JNIEnv *env, jclass clazz,
+                                                                jstring filename, jint plugin) {
+    if (!engine)
+        return;
+
+    const char *nativeString = env->GetStringUTFChars(filename, 0);
+
+    // use your string
+
+    engine->setPluginFilename(std::string (nativeString), plugin);
+    env->ReleaseStringUTFChars(filename, nativeString);
+}

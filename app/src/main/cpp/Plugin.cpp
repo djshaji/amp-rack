@@ -289,3 +289,7 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
     lv2Descriptor->connect_port(handle, 2, buffer);
     OUT
 }
+
+void Plugin::setFileName (std::string filename) {
+    lv2Descriptor->connect_port(handle, 4, (void *) filename.c_str());
+}

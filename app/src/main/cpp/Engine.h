@@ -115,6 +115,8 @@ private:
 
 public:
     double getLatency(bool input);
+
+    void setPluginFilename(std::string filename, int plugin);
 } ;
 
 #endif // __ENGINE__H

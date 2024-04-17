@@ -74,6 +74,7 @@ public class AudioEngine {
 
     static native void testLV2 ();
     static native void setPluginBuffer (float  [] data, int plugin);
+    static native void setPluginFilename (String filename, int plugin);
     static native String tuneLatency ();
 
     static void setDefaultStreamValues(Context context) {

@@ -83,6 +83,7 @@ public:
     unsigned long sampleRate ;
     LADSPA_Descriptor_Function descriptorFunction ;
     LV2_Descriptor_Function lv2DescriptorFunction ;
+    (void)(LV2_Handle, )
 
     void setSampleRate(unsigned long _sampleRate);
     char *load();

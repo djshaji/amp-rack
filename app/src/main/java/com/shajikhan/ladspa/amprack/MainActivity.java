@@ -1674,6 +1674,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         if (resultCode == RESULT_OK && requestCode > 4999 && requestCode < 5020) {
+            /* todo:
+            1. Check if file is audio OR better plugin name
+            2. If it is, do below
+            3. If it is not, send filename to NAM plugin
+            4. maybe a switch here, if NAM do this, if Looper do that
+
+             */
             int plugin = requestCode - 5000 ;
             AudioDecoder audioDecoder = new AudioDecoder(this);
             MediaCodecList supported = new MediaCodecList(MediaCodecList.ALL_CODECS);
