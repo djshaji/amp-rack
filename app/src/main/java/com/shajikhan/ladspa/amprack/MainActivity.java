@@ -1681,7 +1681,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             4. maybe a switch here, if NAM do this, if Looper do that
 
              */
+
             int plugin = requestCode - 5000 ;
+            Uri returnUri = data.getData();
+            if (returnUri != null) {
+                String mimeType = getContentResolver().getType(returnUri);
+                if (!mimeType.startsWith("audio")) {
+                    String path = returnUri.getPath();
+                    if (path != null) {
+                        Log.d(TAG, String.format ("setFileName: %s", returnUri.getPath()));
+                        String s = getFileContent(returnUri);
+                        Log.d(TAG, String.format ("[content]: %s", s));
+                        AudioEngine.setPluginFilename(s, plugin);
+                    }
+                    return;
+                }
+            }
+
             AudioDecoder audioDecoder = new AudioDecoder(this);
             MediaCodecList supported = new MediaCodecList(MediaCodecList.ALL_CODECS);
             int numCodecs = MediaCodecList.getCodecCount();
@@ -3659,5 +3675,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         OnEngineStartListener () {
             engineStartListeners.add(this);
         }
+    }
+
+    public String getFileContent(Uri uri) {
+        InputStreamReader inputStreamReader = null;
+        try {
+            inputStreamReader = new InputStreamReader(getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "getFileContent: ", e);
+            throw new RuntimeException(e);
+        }
+
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder sb = new StringBuilder();
+        String s;
+        while (true) {
+            try {
+                if (!((s = bufferedReader.readLine()) != null)) break;
+            } catch (IOException e) {
+                Log.e(TAG, "getFileContent: ", e);
+                throw new RuntimeException(e);
+            }
+
+            sb.append(s);
+        }
+        String fileContent = sb.toString();
+        return fileContent;
     }
 }

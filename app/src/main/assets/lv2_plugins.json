@@ -1336,5 +1336,11 @@
     "id": 8100,
     "index": 0,
     "library": "liblooper.so"
+  },
+  "33000": {
+    "name": "Neural Amp Modeler",
+    "id": 8101,
+    "index": 0,
+    "library": "neural_amp_modeler.so"
   }
 }

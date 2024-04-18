@@ -497,6 +497,7 @@
         <item>libgnuitar-distort.lv2.so</item>
         <item>libgnuitar-distort2.lv2.so</item>
         <item>liblooper.so</item>
+        <item>neural_amp_modeler.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

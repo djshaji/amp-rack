@@ -629,7 +629,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         Button fileChooser = null;
-        if (pluginName .equals( "Looper")) {
+        if (pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler")) {
             fileChooser = new Button(mainActivity);
             fileChooser.setText("Load file");
             if (mainActivity.useTheme)
@@ -647,7 +647,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent_upload = new Intent();
-                    intent_upload.setType("audio/*");
+                    if (pluginName.equals("Looper"))
+                        intent_upload.setType("audio/*");
+                    else
+                        intent_upload.setType("*/*");
                     intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
                     intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
