@@ -124,6 +124,11 @@ public:
     }
 
     void process (const float * data, int samplesToProcess) {
+#define PROFILE_PLUGINS1
+#ifdef PROFILE_PLUGINS
+        auto start = std::chrono::system_clock::now();
+        auto since_last = start ;
+#endif
         for (int i = 0 ; i < activePlugins ; i ++) {
             if (inputPorts [i] != -1)
                 connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) data);
@@ -131,6 +136,7 @@ public:
                 connect_port [i] (handle [i], outputPorts [i], (LADSPA_Data *) data);
 
 //            LOGD("I/O Ports %d %d", inputPorts [i], outputPorts [i]);
+//            LOGD("[%d] samples", samplesToProcess);
 
             if (inputPorts2 [i] != -1)
                 connect_port [i] (handle [i], inputPorts2 [i], (LADSPA_Data *) data);
@@ -149,7 +155,18 @@ public:
             if (run_adding [i] != NULL)
                 run [i] (handle [i], samplesToProcess);
             */
+
+#ifdef PROFILE_PLUGINS
+            auto elapsed = std::chrono::system_clock::now() - since_last ;
+            since_last = since_last + elapsed;
+            LOGD("[%d: %d] %lld ms", i, samplesToProcess, elapsed.count ()) ;
+#endif
         }
+
+#ifdef PROFILE_PLUGINS
+        auto elapsed = std::chrono::system_clock::now() - start ;
+        LOGD("[%d] %lld ms", samplesToProcess, elapsed.count ()) ;
+#endif
 
         /*
         if (triggerRecord) {
