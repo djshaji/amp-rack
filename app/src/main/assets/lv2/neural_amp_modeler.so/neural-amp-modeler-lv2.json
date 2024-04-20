@@ -12,20 +12,20 @@
   "0": {
     "InputPort": true,
     "ControlPort": true,
-    "default": "1.0",
+    "default": "0.0",
     "index": 2,
     "maximum": 6,
-    "minimum": 0,
+    "minimum": -6,
     "name": "Input Level",
     "symbol": "input_level"
   },
   "1": {
     "InputPort": true,
     "ControlPort": true,
-    "default": "1.0",
+    "default": "0.0",
     "index": 3,
     "maximum": 6,
-    "minimum": 0,
+    "minimum": -6,
     "name": "Output Level",
     "symbol": "output_level"
   },

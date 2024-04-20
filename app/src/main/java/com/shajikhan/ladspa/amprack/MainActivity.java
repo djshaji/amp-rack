@@ -134,6 +134,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -1694,16 +1695,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         return;
                     String ext = path.substring(path.toString().lastIndexOf('.')+1) ;
                     Log.d(TAG, "onActivityResult: got mime type " + mimeType + ": " + path + " (" + ext + ")");
+                    String dir = context.getExternalFilesDir(
+                            Environment.DIRECTORY_DOWNLOADS) + "/NamModels";
+                    DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
                     switch (ext.toLowerCase()) {
                         case "nam":
                             Log.d(TAG, String.format("setFileName: %s", returnUri.getPath()));
                             String s = getFileContent(returnUri);
-                            Log.d(TAG, String.format("[content]: %s", s));
-                            AudioEngine.setPluginFilename(s, plugin);
-                            toast("Loaded model " + path);
+//                            AudioEngine.setPluginFilename(s, plugin);
+                            String basename = returnUri.getLastPathSegment();
+                            basename = basename.substring(basename.lastIndexOf(":") + 1);
+                            Log.d(TAG, String.format("[basename]: %s", basename));
+                            String dest = dir + "/" + basename;
+                            writeFile(dest, s);
+                            int position = setSpinnerFromDir(holder.modelSpinner, dir, basename);
+                            holder.modelSpinner.setSelection(position);
+                            //                            ((DataAdapter.ViewHolder) mainActivity.recyclerView.findViewHolderForAdapterPosition(plugin)).modelSpinnerLayout.setVisibility(View.GONE);
                             return;
                         case "zip":
                             unzipNAMModel(returnUri);
+                            setSpinnerFromDir(holder.modelSpinner, dir, null);
                             return;
                     }
                 }
@@ -3691,7 +3702,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public String getFileContent(Uri uri) {
         InputStreamReader inputStreamReader = null;
         try {
-            if (! uri.getPath().startsWith("/"))
+            if (!uri.toString().startsWith("/"))
                 inputStreamReader = new InputStreamReader(getContentResolver().openInputStream(uri));
             else {
                 inputStreamReader = new InputStreamReader(new FileInputStream(new File(String.valueOf(uri))));
@@ -3699,7 +3710,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         } catch (FileNotFoundException e) {
             Log.e(TAG, "getFileContent: ", e);
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            return null;
         }
 
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -3738,5 +3750,119 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         alert("Extracted Model " + basename, "Model was saved to " + dir);
+    }
+
+    public void manageNAMModels (Spinner spinner, String dir) {
+        DocumentFile root = DocumentFile.fromFile(new File(dir));
+        DocumentFile [] files = root.listFiles() ;
+        ArrayList <String> models = new ArrayList<>();
+        for (DocumentFile file: files) {
+            Log.d(TAG, String.format ("%s: %s", file.getName(), file.getUri()));
+            models.add(file.getName());
+        }
+
+        ArrayList <Integer> selectedItems = new ArrayList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title.
+        builder.setTitle("Manage NAM Models")
+                // Specify the list array, the items to be selected by default (null for
+                // none), and the listener through which to receive callbacks when items
+                // are selected.
+                .setMultiChoiceItems(models.toArray(new CharSequence[models.size()]), null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checks the item, add it to the selected
+                                    // items.
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which)) {
+                                    // If the item is already in the array, remove it.
+                                    selectedItems.remove(which);
+                                }
+                            }
+                        });
+
+        builder.setNegativeButton("Cancel", null)
+                .setPositiveButton("Delete Selected", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(mainActivity);
+                        builder1.setTitle("Delete selected models?");
+                        builder1.setMessage("This step cannot be undone.");
+                        builder1.setPositiveButton("Delete selected", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+//                                Log.d(TAG, String.format ("delete: %s", selectedItems.toString()));
+                                for (int s: selectedItems) {
+                                    new File(dir +"/"+ models.get(s)).delete();
+                                }
+
+                                setSpinnerFromDir(spinner, dir, null);
+                            }
+                        });
+
+                        builder1.setNegativeButton("Cancel", null);
+                        builder1.show();
+                    }
+                }).setNeutralButton("Delete All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(mainActivity);
+                        builder1.setTitle("Delete all models?");
+                        builder1.setMessage("This step cannot be undone.");
+                        builder1.setPositiveButton("Delete all", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+//                                Log.d(TAG, String.format ("delete: %s", selectedItems.toString()));
+                                for (String s: models) {
+                                    new File(dir + "/" + s).delete();
+                                }
+                                setSpinnerFromDir(spinner, dir, null);
+                            }
+                        });
+
+                        builder1.setNegativeButton("Cancel", null);
+                        builder1.show();
+                    }
+                });
+        builder.show();
+    }
+
+    public static int setSpinnerFromDir (Spinner spinner, String dir, String toSelect) {
+        int selection = 0 ;
+        ArrayList <String> models = new ArrayList<>();
+        DocumentFile root = DocumentFile.fromFile(new File(dir));
+        DocumentFile [] files = root.listFiles() ;
+        int counter = 0 ;
+        for (DocumentFile file: files) {
+            Log.d(TAG, String.format ("%s: %s", file.getName(), file.getUri()));
+            models.add(file.getName());
+            if (toSelect != null && file.getName().equals(toSelect))
+                selection = counter ;
+            counter ++ ;
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
+                android.R.layout.simple_spinner_item, models);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        return selection;
+    }
+
+    public static void writeFile (String path, String text) {
+        try {
+            File file = new File(path);
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter writer = new FileWriter(file);
+            writer.append(text);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            Log.e(TAG, "writeFile: ", e);
+            toast(e.getMessage());
+        }
     }
 }

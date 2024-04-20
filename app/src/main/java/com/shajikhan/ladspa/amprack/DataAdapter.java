@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.text.LineBreaker;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -80,7 +81,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holders.add(holder);
         LinearLayout linearLayout = holder.getLinearLayout();
         linearLayout.removeAllViews();
@@ -642,6 +643,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             LinearLayout layout = new LinearLayout(mainActivity);
             linearLayout.addView(layout);
             layout.addView(fileChooser);
+
+            TextView textView = new TextView(mainActivity);
+            textView.setText("Load from file or import from zip");
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textView.setEnabled(false);
+
             layout.setOrientation(LinearLayout.VERTICAL);
             layout.setGravity(Gravity.CENTER);
             fileChooser.setGravity(Gravity.CENTER);
@@ -677,12 +684,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
 
                 Spinner spinner = new Spinner(context);
+                holder.modelSpinner = spinner;
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
                         android.R.layout.simple_spinner_item, models);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
                 LinearLayout hz = new LinearLayout(mainActivity);
+                holder.modelSpinnerLayout = hz ;
                 Button prev = new Button(context);
                 Button next = new Button(context);
 
@@ -702,21 +711,34 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         int selected = spinner.getSelectedItemPosition();
-                        if (selected < adapter.getCount() - 1)
+                        if (selected < spinner.getAdapter().getCount() - 1)
                             spinner.setSelection(selected + 1);
                     }
                 });
 
+                Button manage = new Button (mainActivity);
+                manage.setText("⚙️");
                 layout.addView(hz);
+//                layout.addView(textView);
                 hz.addView(prev);
                 hz.addView(spinner);
+                hz.addView(manage);
                 hz.addView(next);
+
+                manage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainActivity.manageNAMModels(spinner, dir);
+                    }
+                });
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, ViewGroup.LayoutParams.WRAP_CONTENT);
                 next.setLayoutParams(layoutParams);
                 prev.setLayoutParams(layoutParams);
+                manage.setLayoutParams(layoutParams);
 
                 prev.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+                manage.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
                 next.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
 
                 LinearLayout.LayoutParams l3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -729,7 +751,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int _position, long id) {
-                        String m = adapter.getItem(_position);
+                        String m = spinner.getAdapter().getItem(_position).toString();
                         String dir = context.getExternalFilesDir(
                                 Environment.DIRECTORY_DOWNLOADS) + "/NamModels/";
                         String s = mainActivity.getFileContent(Uri.parse(dir + m));
@@ -779,6 +801,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         TextView pluginName ;
         SwitchMaterial switchMaterial ;
         ToggleButton toggleButton ;
+        Spinner modelSpinner ;
+        LinearLayout modelSpinnerLayout ;
         MaterialButton deleteButton, moveUpButton, moveDownButton ;
 
         public ViewHolder(@NonNull View itemView) {
