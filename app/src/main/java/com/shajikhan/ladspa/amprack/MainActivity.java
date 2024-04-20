@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.splashscreen.SplashScreen;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -130,6 +131,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1688,13 +1690,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 String mimeType = getContentResolver().getType(returnUri);
                 if (!mimeType.startsWith("audio")) {
                     String path = returnUri.getPath();
-                    if (path != null) {
-                        Log.d(TAG, String.format ("setFileName: %s", returnUri.getPath()));
-                        String s = getFileContent(returnUri);
-                        Log.d(TAG, String.format ("[content]: %s", s));
-                        AudioEngine.setPluginFilename(s, plugin);
+                    if (path == null)
+                        return;
+                    String ext = path.substring(path.toString().lastIndexOf('.')+1) ;
+                    Log.d(TAG, "onActivityResult: got mime type " + mimeType + ": " + path + " (" + ext + ")");
+                    switch (ext.toLowerCase()) {
+                        case "nam":
+                            Log.d(TAG, String.format("setFileName: %s", returnUri.getPath()));
+                            String s = getFileContent(returnUri);
+                            Log.d(TAG, String.format("[content]: %s", s));
+                            AudioEngine.setPluginFilename(s, plugin);
+                            toast("Loaded model " + path);
+                            return;
+                        case "zip":
+                            unzipNAMModel(returnUri);
+                            return;
                     }
-                    return;
                 }
             }
 
@@ -3680,7 +3691,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public String getFileContent(Uri uri) {
         InputStreamReader inputStreamReader = null;
         try {
-            inputStreamReader = new InputStreamReader(getContentResolver().openInputStream(uri));
+            if (! uri.getPath().startsWith("/"))
+                inputStreamReader = new InputStreamReader(getContentResolver().openInputStream(uri));
+            else {
+                inputStreamReader = new InputStreamReader(new FileInputStream(new File(String.valueOf(uri))));
+            }
+
         } catch (FileNotFoundException e) {
             Log.e(TAG, "getFileContent: ", e);
             throw new RuntimeException(e);
@@ -3701,5 +3717,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
         String fileContent = sb.toString();
         return fileContent;
+    }
+
+    public void unzipNAMModel (Uri uri) {
+        InputStream inputStream = null;
+        String basename = null ;
+        String dir = context.getExternalFilesDir(
+                Environment.DIRECTORY_DOWNLOADS) + "/NamModels";
+        try {
+            inputStream = getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            MainActivity.alert("Cannot load model", e.getMessage());
+            Log.e(TAG, "onActivityResult: ", e);
+        }
+        try {
+            basename = SkinEngine.unzip(inputStream, dir);
+        } catch (IOException e) {
+            MainActivity.alert("Cannot unzip model", e.getMessage());
+            Log.e(TAG, "onActivityResult: ", e);
+        }
+
+        alert("Extracted Model " + basename, "Model was saved to " + dir);
     }
 }

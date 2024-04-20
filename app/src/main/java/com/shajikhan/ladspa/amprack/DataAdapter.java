@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.text.LineBreaker;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -41,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -659,6 +663,86 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     mainActivity.startActivityForResult(intent_upload,requestCode);
                 }
             });
+
+            if (pluginName.equals("Neural Amp Modeler")) {
+                String dir = context.getExternalFilesDir(
+                        Environment.DIRECTORY_DOWNLOADS) + "/NamModels";
+
+                DocumentFile root = DocumentFile.fromFile(new File(dir));
+                DocumentFile [] files = root.listFiles() ;
+                ArrayList <String> models = new ArrayList<>();
+                for (DocumentFile file: files) {
+                    Log.d(TAG, String.format ("%s: %s", file.getName(), file.getUri()));
+                    models.add(file.getName());
+                }
+
+                Spinner spinner = new Spinner(context);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
+                        android.R.layout.simple_spinner_item, models);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+                LinearLayout hz = new LinearLayout(mainActivity);
+                Button prev = new Button(context);
+                Button next = new Button(context);
+
+                prev.setText("<");
+                next.setText(">");
+
+                prev.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int selected = spinner.getSelectedItemPosition();
+                        if (selected > 0)
+                            spinner.setSelection(selected - 1);
+                    }
+                });
+
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int selected = spinner.getSelectedItemPosition();
+                        if (selected < adapter.getCount() - 1)
+                            spinner.setSelection(selected + 1);
+                    }
+                });
+
+                layout.addView(hz);
+                hz.addView(prev);
+                hz.addView(spinner);
+                hz.addView(next);
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, ViewGroup.LayoutParams.WRAP_CONTENT);
+                next.setLayoutParams(layoutParams);
+                prev.setLayoutParams(layoutParams);
+
+                prev.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+                next.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+
+                LinearLayout.LayoutParams l3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                hz.setLayoutParams(l3);
+
+                LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                spinnerLayoutParams.setMargins(0,20,0,20);
+                spinner.setLayoutParams(spinnerLayoutParams);
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int _position, long id) {
+                        String m = adapter.getItem(_position);
+                        String dir = context.getExternalFilesDir(
+                                Environment.DIRECTORY_DOWNLOADS) + "/NamModels/";
+                        String s = mainActivity.getFileContent(Uri.parse(dir + m));
+                        Log.d(TAG, String.format("[content]: %s", s));
+                        AudioEngine.setPluginFilename(s, holder.getAdapterPosition());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
         }
 
         if (mainActivity.useTheme) {

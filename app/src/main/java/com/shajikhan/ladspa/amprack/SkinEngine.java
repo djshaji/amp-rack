@@ -1917,11 +1917,13 @@ public class SkinEngine {
         ZipEntry entry = zipIn.getNextEntry();
         // iterates over entries in the zip file
         while (entry != null) {
+            Log.d("SkinEngine", String.format ("[unzip] %s: %s", destDirectory, entry.getName()));
             String filePath = destDirectory + File.separator + entry.getName();
             if (dirname == null)
                 dirname = entry.getName();
             if (!entry.isDirectory()) {
                 // if the entry is a file, extracts it
+//                Log.d("Skin Engine", String.format ("%s: %s", destDirectory, entry.getName()));
                 extractFile(zipIn, filePath);
             } else {
                 // if the entry is a directory, make the directory
