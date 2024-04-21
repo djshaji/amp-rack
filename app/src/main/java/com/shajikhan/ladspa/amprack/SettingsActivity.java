@@ -203,12 +203,15 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.sync_preferences, rootKey);
+            /*
             if (MainActivity.proVersion == false) {
                 ListPreference export = findPreference("export_format");
                 export.setSummary("More export formats are available in the Pro Version");
                 export.setShouldDisableView(true);
                 export.setEnabled(false);
             }
+
+             */
         }
     }
 

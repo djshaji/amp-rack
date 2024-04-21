@@ -1700,6 +1700,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
                     switch (ext.toLowerCase()) {
                         case "nam":
+                        default: // aye
                             Log.d(TAG, String.format("setFileName: %s", returnUri.getPath()));
                             String s = getFileContent(returnUri);
 //                            AudioEngine.setPluginFilename(s, plugin);
