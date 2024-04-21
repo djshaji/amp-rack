@@ -1707,10 +1707,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             basename = basename.substring(basename.lastIndexOf(":") + 1);
                             Log.d(TAG, String.format("[basename]: %s", basename));
                             String dest = dir + "/" + basename;
+                            File fDir = new File (dir) ;
+                            if (! fDir.exists())
+                                if (!fDir.mkdirs())
+                                    alert("Cannot create directory", "Error loading model: " + dir);
+
                             writeFile(dest, s);
                             int position = setSpinnerFromDir(holder.modelSpinner, dir, basename);
                             holder.modelSpinner.setSelection(position);
                             //                            ((DataAdapter.ViewHolder) mainActivity.recyclerView.findViewHolderForAdapterPosition(plugin)).modelSpinnerLayout.setVisibility(View.GONE);
+                            toast("Loaded model successfully: " + basename);
                             return;
                         case "zip":
                             unzipNAMModel(returnUri);
@@ -3749,7 +3755,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.e(TAG, "onActivityResult: ", e);
         }
 
-        alert("Extracted Model " + basename, "Model was saved to " + dir);
+        toast("Successfully extracted Model " + basename);
     }
 
     public void manageNAMModels (Spinner spinner, String dir) {
