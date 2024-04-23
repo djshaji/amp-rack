@@ -817,6 +817,7 @@ jint plugin
     LOGI ("array of size %d", len);
     int retval = engine -> setPluginBuffer (body, len, plugin);
     env->ReleaseFloatArrayElements(data, body, 0);
+    LOGI("plugin buffer copied");
 }
 extern "C"
 JNIEXPORT jstring JNICALL

@@ -20,11 +20,11 @@
     "name": "Right audio input",
     "symbol": "in_R"
   },
-  "2": {
+  "30": {
     "OutputPort": true,
     "AudioPort": true,
     "datatype": "http://lv2plug.in/ns/lv2core#float",
-    "index": 2,
+    "index": 30,
     "name": "Left audio output",
     "symbol": "out_L"
   },
@@ -95,12 +95,12 @@
     "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
     "symbol": "port_envelope"
   },
-  "9": {
+  "31": {
     "InputPort": true,
     "ControlPort": true,
     "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
     "default": "100.0",
-    "index": 9,
+    "index": 31,
     "maximum": "100.0",
     "minimum": "0.0",
     "name": "Length",

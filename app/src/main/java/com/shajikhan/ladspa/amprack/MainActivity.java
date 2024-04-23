@@ -1759,6 +1759,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     samplerate = 48000 ;
                 float [] samples = audioDecoder.decode(data.getData(), null, samplerate);
                 AudioEngine.setPluginBuffer(samples, plugin);
+                Log.d(TAG, String.format ("[decoder]: %d", samples.length));
             } catch (IOException e) {
                 toast(e.getMessage());
                 Log.e(TAG, "onActivityResult: ", e);
