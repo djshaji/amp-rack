@@ -1342,5 +1342,11 @@
     "id": 8101,
     "index": 0,
     "library": "neural_amp_modeler.so"
+  },
+  "33100": {
+    "name": "Tap IR",
+    "id": 8102,
+    "index": 0,
+    "library": "libir.so"
   }
 }

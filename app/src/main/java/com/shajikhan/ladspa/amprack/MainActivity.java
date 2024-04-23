@@ -1689,8 +1689,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Uri returnUri = data.getData();
             if (returnUri != null) {
                 String mimeType = getContentResolver().getType(returnUri);
+                Log.d(TAG, String.format ("[mimetype]: %s", mimeType));
                 if (!mimeType.startsWith("audio")) {
-                    String path = returnUri.getPath();
+                    DocumentFile file = DocumentFile.fromSingleUri(mainActivity, returnUri);
+                    Log.d(TAG, String.format ("ayyo filename: %s", file.getName()));
+                    String path = file.getName();
+//                    String path = returnUri.getPath();
                     if (path == null)
                         return;
                     String ext = path.substring(path.toString().lastIndexOf('.')+1) ;

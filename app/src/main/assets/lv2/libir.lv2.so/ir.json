@@ -1,0 +1,205 @@
+{
+  "-1": {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "-90.0",
+    "http://www.w3.org/2000/01/rdf-schema#label": "-inf",
+    "pluginName": "TAP IR"
+  },
+  "0": {
+    "InputPort": true,
+    "AudioPort": true,
+    "datatype": "http://lv2plug.in/ns/lv2core#float",
+    "index": 0,
+    "name": "Left audio input",
+    "symbol": "in_L"
+  },
+  "1": {
+    "InputPort": true,
+    "AudioPort": true,
+    "datatype": "http://lv2plug.in/ns/lv2core#float",
+    "index": 1,
+    "name": "Right audio input",
+    "symbol": "in_R"
+  },
+  "2": {
+    "OutputPort": true,
+    "AudioPort": true,
+    "datatype": "http://lv2plug.in/ns/lv2core#float",
+    "index": 2,
+    "name": "Left audio output",
+    "symbol": "out_L"
+  },
+  "3": {
+    "OutputPort": true,
+    "AudioPort": true,
+    "datatype": "http://lv2plug.in/ns/lv2core#float",
+    "index": 3,
+    "name": "Right audio output",
+    "symbol": "out_R"
+  },
+  "4": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0.0",
+    "index": 4,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "name": "Reverse IR",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "port_reverse"
+  },
+  "5": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#ms",
+    "default": "0.0",
+    "index": 5,
+    "maximum": "2000.0",
+    "minimum": "0.0",
+    "name": "Predelay",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_predelay"
+  },
+  "6": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
+    "default": "100.0",
+    "index": 6,
+    "maximum": "100.0",
+    "minimum": "0.0",
+    "name": "Attack",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_attack"
+  },
+  "7": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#ms",
+    "default": "0.0",
+    "index": 7,
+    "maximum": "300.0",
+    "minimum": "0.0",
+    "name": "Attack time",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_attacktime"
+  },
+  "8": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
+    "default": "100.0",
+    "index": 8,
+    "maximum": "100.0",
+    "minimum": "0.0",
+    "name": "Envelope",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_envelope"
+  },
+  "9": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
+    "default": "100.0",
+    "index": 9,
+    "maximum": "100.0",
+    "minimum": "0.0",
+    "name": "Length",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_length"
+  },
+  "10": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
+    "default": "100.0",
+    "index": 10,
+    "maximum": "150.0",
+    "minimum": "50.0",
+    "name": "Stretch",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_stretch"
+  },
+  "11": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
+    "default": "100.0",
+    "index": 11,
+    "maximum": "150.0",
+    "minimum": "0.0",
+    "name": "Stereo width in",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_stereo_in"
+  },
+  "12": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#pc",
+    "default": "100.0",
+    "index": 12,
+    "maximum": "150.0",
+    "minimum": "0.0",
+    "name": "Stereo width IR",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "symbol": "port_stereo_ir"
+  },
+  "13": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1.0",
+    "index": 13,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "name": "Autogain",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "port_agc_sw"
+  },
+  "14": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1.0",
+    "index": 14,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "name": "Dry",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "port_dry_sw"
+  },
+  "15": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#db",
+    "default": "0.0",
+    "index": 15,
+    "maximum": "6.0",
+    "minimum": "-90.0",
+    "name": "Dry gain",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "scalePoint": "_:n3fd9423691864f7b8e2320dadb25ead7b18",
+    "symbol": "port_dry_gain"
+  },
+  "16": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1.0",
+    "index": 16,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "name": "Wet",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "port_wet_sw"
+  },
+  "17": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#db",
+    "default": "-10.0",
+    "index": 17,
+    "maximum": "6.0",
+    "minimum": "-90.0",
+    "name": "Wet gain",
+    "portProperty": "http://lv2plug.in/ns/dev/extportinfo#hasStrictBounds",
+    "scalePoint": "_:n3fd9423691864f7b8e2320dadb25ead7b21",
+    "symbol": "port_wet_gain"
+  }
+}
