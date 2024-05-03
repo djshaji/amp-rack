@@ -590,6 +590,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 //        AudioEngine.showProgress(null);
 //        AudioEngine.showProgress(context);
+
         AudioEngine.create();
         AudioEngine.setLibraryPath(getApplicationInfo().nativeLibraryDir);
         AudioEngine.setLazyLoad(lazyLoad);
@@ -2433,9 +2434,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Integer bitRate = Integer.valueOf(defaultSharedPreferences.getString("opus_bitrate", "64"));
         Log.d(TAG, "applyPreferencesExport: setting bitrate " + bitRate * 1000);
         AudioEngine.setOpusBitRate(bitRate * 1000);
-        if (proVersion == false) {
-            AudioEngine.setExportFormat(0);
-        }
+//        if (proVersion == false) {
+//            AudioEngine.setExportFormat(0);
+//        }
     }
 
     public static void printDebugLog() {
