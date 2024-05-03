@@ -14,11 +14,15 @@
 #include "PluginControl.h"
 #include "SharedLibrary.h"
 #include "json.hpp"
+#include "lv2_ext.h"
 
 class Plugin {
     LADSPA_Data ** portControls ;
     unsigned long sampleRate ;
 public:
+    URID urid;
+    std::vector<const LV2_Feature*> features;
+
     void setBuffer (float * buffer, int read_bytes) ;
     bool active = true ;
     SharedLibrary::PluginType type ;
@@ -45,6 +49,9 @@ public:
     int addPluginControl(const LV2_Descriptor *_descriptor, nlohmann::json _j);
 
     void setFileName(std::string filename);
+
+    void lv2FeaturesInit();
+    void lv2FeaturesURID();
 };
 
 template<class UnaryFunction>

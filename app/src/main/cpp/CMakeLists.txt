@@ -76,6 +76,7 @@ add_library( # Sets the name of the library.
         Plugin2.cpp
         Meter.cpp
         LockFreeQueue.cpp
+        lv2_ext.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a

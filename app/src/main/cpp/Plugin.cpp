@@ -121,6 +121,8 @@ void Plugin::print () {
 
 void Plugin::load () {
     IN
+    lv2FeaturesInit();
+
     LOGD("Creating plugin: %s from %s @ %s", lv2Descriptor->URI, sharedLibrary->LIBRARY_PATH.c_str(), sharedLibrary->so_file.c_str());
     std::string lib_path = sharedLibrary->LIBRARY_PATH + "/" + sharedLibrary -> so_file + ".lv2/" ;
     LOGD("[LV2] library path: %s", lib_path.c_str());
@@ -130,7 +132,8 @@ void Plugin::load () {
     } else
         LOGD ("[LV2] descriptor is ok, instantiating handle at %d ...", sampleRate);
 
-    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->featurePointers());
+//    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->featurePointers());
+    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), features.data());
 //    handle = (LADSPA_Handle *) lv2Descriptor->instantiate(lv2Descriptor, sampleRate, lib_path.c_str(), sharedLibrary->feature_list);
     if (handle == NULL)
         LOGF("[LV2] plugin handle is NULL, we will probably crash ...!") ;
@@ -292,4 +295,21 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
 
 void Plugin::setFileName (std::string filename) {
     lv2Descriptor->connect_port(handle, 4, (void *) filename.c_str());
+}
+
+void Plugin::lv2FeaturesURID () {
+    urid = URID ();
+    LV2_URID_Map lv2UridMap ;
+    lv2UridMap.handle = &urid ;
+    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(urid_map);
+
+    LV2_Feature featureURID ;
+    featureURID.URI = strdup ("map");
+    featureURID.data = &lv2UridMap ;
+
+    features.push_back(&featureURID);
+}
+
+void Plugin::lv2FeaturesInit () {
+    lv2FeaturesURID();
 }
