@@ -7,6 +7,8 @@
 
 #include "lv2.h"
 #include "lv2/urid/urid.h"
+#include "lv2/log/log.h"
+#include "logging_macros.h"
 #include <list>
 #include <string>
 
@@ -23,5 +25,12 @@ int urid_map (URID * handle, const char * string) {
 void urid_unmap (URID * handle, int at) {
     handle -> urids.erase(std::next(handle -> urids.begin(), at));
 }
+
+int logger_printf (LV2_Log_Handle handle, LV2_URID type, const char* fmt, ...) ;
+
+int logger_printf (LV2_Log_Handle handle, LV2_URID type, const char* fmt, va_list ap) {
+    return LOGD(fmt, ap);
+}
+
 
 #endif //AMP_RACK_LV2_EXT_H

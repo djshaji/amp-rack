@@ -52,7 +52,17 @@ public:
 
     void lv2FeaturesInit();
     void lv2FeaturesURID();
+
+    // have to begin somewhere
+    LV2_Worker_Interface * lv2WorkerInterface ;
+    LV2_State_Interface  * lv2StateInterface ;
+
+    void lv2ConnectWorkers();
+
 };
+
+LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);
+
 
 template<class UnaryFunction>
 void recursive_iterate(const Plugin &plugin, const nlohmann::json& j, UnaryFunction f)

@@ -235,6 +235,7 @@ void Plugin::load () {
     });
      */
 
+    lv2ConnectWorkers();
     OUT
 }
 
@@ -307,9 +308,37 @@ void Plugin::lv2FeaturesURID () {
     featureURID.URI = strdup ("map");
     featureURID.data = &lv2UridMap ;
 
+    LV2_Log_Log logLog ;
+    logLog.handle = NULL ;
+    logLog.printf = logger_printf ;
+    logLog.vprintf = logger_printf ;
+
+    LV2_Feature featureLog ;
+    featureLog.URI = strdup (LV2_LOG__log) ;
+    featureLog.data = &logLog ;
+
+    LV2_Feature featureSchedule ;
+    LV2_Worker_Schedule lv2WorkerSchedule ;
+    lv2WorkerSchedule.schedule_work = lv2ScheduleWork ;
+    lv2WorkerSchedule.handle = handle;
+    featureSchedule.URI = strdup (LV2_WORKER__schedule);
+    featureSchedule.data = &lv2WorkerSchedule ;
+
     features.push_back(&featureURID);
+    features.push_back(&featureLog);
+    features.push_back(&featureSchedule);
 }
 
 void Plugin::lv2FeaturesInit () {
     lv2FeaturesURID();
+}
+
+void Plugin::lv2ConnectWorkers () {
+    lv2WorkerInterface = (LV2_Worker_Interface *) lv2Descriptor->extension_data (LV2_WORKER__interface);
+    lv2StateInterface = (LV2_State_Interface *) lv2Descriptor->extension_data (LV2_STATE__interface);
+}
+
+LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle handle, uint32_t size, const void * data) {
+    Plugin * plugin = reinterpret_cast<Plugin *>(handle);
+    return plugin->lv2WorkerInterface->work (plugin->handle, plugin->lv2WorkerInterface->work_response, plugin->handle, size, data);
 }
