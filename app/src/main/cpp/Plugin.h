@@ -62,7 +62,8 @@ public:
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);
-
+uint32_t lv2_options_set (LV2_Handle instance, const LV2_Options_Option* options) ;
+uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) ;
 
 template<class UnaryFunction>
 void recursive_iterate(const Plugin &plugin, const nlohmann::json& j, UnaryFunction f)

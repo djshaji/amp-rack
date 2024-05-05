@@ -320,13 +320,21 @@ void Plugin::lv2FeaturesURID () {
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;
     lv2WorkerSchedule.schedule_work = lv2ScheduleWork ;
-    lv2WorkerSchedule.handle = handle;
+    lv2WorkerSchedule.handle = this;
     featureSchedule.URI = strdup (LV2_WORKER__schedule);
     featureSchedule.data = &lv2WorkerSchedule ;
+
+    LV2_Feature featureState ;
+    LV2_Options_Interface optionsInterface ;
+    optionsInterface.get = lv2_options_get;
+    optionsInterface.set = lv2_options_set;
+    featureState.URI = strdup (LV2_OPTIONS__options);
+    featureState.data = &optionsInterface;
 
     features.push_back(&featureURID);
     features.push_back(&featureLog);
     features.push_back(&featureSchedule);
+    features.push_back(&featureState);
 }
 
 void Plugin::lv2FeaturesInit () {
@@ -341,4 +349,12 @@ void Plugin::lv2ConnectWorkers () {
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle handle, uint32_t size, const void * data) {
     Plugin * plugin = reinterpret_cast<Plugin *>(handle);
     return plugin->lv2WorkerInterface->work (plugin->handle, plugin->lv2WorkerInterface->work_response, plugin->handle, size, data);
+}
+
+uint32_t lv2_options_set (LV2_Handle instance, const LV2_Options_Option* options) {
+    return 0u;
+}
+
+uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) {
+    return 0u;
 }
