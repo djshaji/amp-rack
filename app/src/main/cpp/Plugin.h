@@ -20,8 +20,21 @@ class Plugin {
     LADSPA_Data ** portControls ;
     unsigned long sampleRate ;
 public:
-    URID urid;
+    URID urid = URID ();
     std::vector<const LV2_Feature*> features;
+    std::vector<const LV2_Feature*> m_featurePointers;
+    LV2_URID_Map lv2UridMap ;
+    LV2_Feature featureURID ;
+    LV2_Log_Log logLog ;
+    LV2_Feature featureLog ;
+    LV2_Feature featureSchedule ;
+    LV2_Worker_Schedule lv2WorkerSchedule ;
+    LV2_Feature featureState ;
+
+    const LV2_Feature* const* featurePointers() const
+    {
+        return m_featurePointers.data();
+    }
 
     void setBuffer (float * buffer, int read_bytes) ;
     bool active = true ;

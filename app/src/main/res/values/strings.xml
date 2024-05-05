@@ -499,6 +499,7 @@
         <item>liblooper.so</item>
         <item>neural_amp_modeler.so</item>
         <item>libir.lv2.so</item>
+        <item>libconvoLV2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

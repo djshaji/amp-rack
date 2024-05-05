@@ -299,32 +299,25 @@ void Plugin::setFileName (std::string filename) {
 }
 
 void Plugin::lv2FeaturesURID () {
-    urid = URID ();
-    LV2_URID_Map lv2UridMap ;
     lv2UridMap.handle = &urid ;
-    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(urid_map);
+    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
+//    lv2UridMap.unmap = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_unmap);
 
-    LV2_Feature featureURID ;
-    featureURID.URI = strdup ("map");
+    featureURID.URI = strdup (LV2_URID__map);
     featureURID.data = &lv2UridMap ;
 
-    LV2_Log_Log logLog ;
     logLog.handle = NULL ;
     logLog.printf = logger_printf ;
-    logLog.vprintf = logger_printf ;
+    logLog.vprintf = logger_vprintf ;
 
-    LV2_Feature featureLog ;
     featureLog.URI = strdup (LV2_LOG__log) ;
     featureLog.data = &logLog ;
 
-    LV2_Feature featureSchedule ;
-    LV2_Worker_Schedule lv2WorkerSchedule ;
     lv2WorkerSchedule.schedule_work = lv2ScheduleWork ;
     lv2WorkerSchedule.handle = this;
     featureSchedule.URI = strdup (LV2_WORKER__schedule);
     featureSchedule.data = &lv2WorkerSchedule ;
 
-    LV2_Feature featureState ;
     LV2_Options_Interface optionsInterface ;
     optionsInterface.get = lv2_options_get;
     optionsInterface.set = lv2_options_set;
@@ -335,6 +328,7 @@ void Plugin::lv2FeaturesURID () {
     features.push_back(&featureLog);
     features.push_back(&featureSchedule);
     features.push_back(&featureState);
+    features.push_back(nullptr);
 }
 
 void Plugin::lv2FeaturesInit () {
@@ -342,6 +336,8 @@ void Plugin::lv2FeaturesInit () {
 }
 
 void Plugin::lv2ConnectWorkers () {
+    if (lv2Descriptor->extension_data == nullptr)
+        return;
     lv2WorkerInterface = (LV2_Worker_Interface *) lv2Descriptor->extension_data (LV2_WORKER__interface);
     lv2StateInterface = (LV2_State_Interface *) lv2Descriptor->extension_data (LV2_STATE__interface);
 }
