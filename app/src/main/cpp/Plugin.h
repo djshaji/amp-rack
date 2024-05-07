@@ -16,6 +16,7 @@
 #include "SharedLibrary.h"
 #include "json.hpp"
 #include "lv2_ext.h"
+#include "lv2/atom/forge.h"
 
 class Plugin {
     LADSPA_Data ** portControls ;
@@ -32,6 +33,7 @@ public:
     LV2_Worker_Schedule lv2WorkerSchedule ;
     LV2_Feature featureState ;
     LV2_Atom_Sequence * filePort = nullptr;
+    LV2_Atom_Forge forge;
 
     const LV2_Feature* const* featurePointers() const
     {

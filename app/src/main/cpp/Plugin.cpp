@@ -366,7 +366,6 @@ void Plugin::setFilePortValue (std::string filename) {
     IN
     LOGD("[atom sequence] %s", filename.c_str());
     LV2_Atom_Forge_Frame frame;
-    LV2_Atom_Forge forge;
     LV2_URID_Map map ;
     map.handle = &urid;
     map.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
@@ -380,13 +379,12 @@ void Plugin::setFilePortValue (std::string filename) {
     lv2_atom_forge_path(&forge, filename.c_str(), filename.size());
 
     lv2_atom_forge_pop(&forge, &frame);
-
-    const uint32_t notify_capacity = set->size;
-    lv2_atom_forge_set_buffer(&forge,
-                              reinterpret_cast<uint8_t *>(filePort),
-                              notify_capacity);
-
-    HERE
     lv2_atom_forge_sequence_head(&forge, &frame, 0);
+
+    uint8_t buf [1024];
+    lv2_atom_forge_set_buffer(&forge,
+                              (uint8_t *) filePort,
+                              1024);
+
     OUT
 }
