@@ -1687,11 +1687,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
              */
 
             int plugin = requestCode - 5000 ;
+            boolean hasFilePort = AudioEngine.getFilePort(plugin);
             Uri returnUri = data.getData();
+
             if (returnUri != null) {
                 String mimeType = getContentResolver().getType(returnUri);
                 Log.d(TAG, String.format ("[mimetype]: %s", mimeType));
-                if (!mimeType.startsWith("audio")) {
+                if (!mimeType.startsWith("audio") || hasFilePort) {
                     DocumentFile file = DocumentFile.fromSingleUri(mainActivity, returnUri);
                     Log.d(TAG, String.format ("ayyo filename: %s", file.getName()));
                     String path = file.getName();
@@ -1701,15 +1703,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     String ext = path.substring(path.toString().lastIndexOf('.')+1) ;
                     Log.d(TAG, "onActivityResult: got mime type " + mimeType + ": " + path + " (" + ext + ")");
                     String dir = context.getExternalFilesDir(
-                            Environment.DIRECTORY_DOWNLOADS) + "/NamModels";
+                            Environment.DIRECTORY_DOWNLOADS) + "/" + AudioEngine.getActivePluginName(plugin);
                     DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
                     switch (ext.toLowerCase()) {
                         case "nam":
                         default: // aye
-                            Log.d(TAG, String.format("setFileName: %s", returnUri.getPath()));
+                            Log.d(TAG, String.format("setFileName: %s", path));
                             String s = getFileContent(returnUri);
 //                            AudioEngine.setPluginFilename(s, plugin);
-                            String basename = returnUri.getLastPathSegment();
+                            String basename = path ; //returnUri.getLastPathSegment();
                             basename = basename.substring(basename.lastIndexOf(":") + 1);
                             Log.d(TAG, String.format("[basename]: %s", basename));
                             String dest = dir + "/" + basename;
@@ -1725,7 +1727,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             toast("Loaded model successfully: " + basename);
                             return;
                         case "zip":
-                            unzipNAMModel(returnUri);
+                            unzipNAMModel(dir, returnUri);
                             setSpinnerFromDir(holder.modelSpinner, dir, null);
                             return;
                     }
@@ -3744,11 +3746,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return fileContent;
     }
 
-    public void unzipNAMModel (Uri uri) {
+    public void unzipNAMModel (String dir, Uri uri) {
         InputStream inputStream = null;
         String basename = null ;
-        String dir = context.getExternalFilesDir(
-                Environment.DIRECTORY_DOWNLOADS) + "/NamModels";
         try {
             inputStream = getContentResolver().openInputStream(uri);
         } catch (FileNotFoundException e) {

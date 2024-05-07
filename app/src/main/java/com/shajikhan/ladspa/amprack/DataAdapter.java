@@ -101,6 +101,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         });
 
         String pluginName = AudioEngine.getActivePluginName(position) ;
+        boolean hasFilePort = AudioEngine.getFilePort(position);
         if (pluginName == null) {
             Log.e(TAG, "onBindViewHolder: plugin name returned null, what are we even doing?", null);
 //            notifyItemRemoved(position);
@@ -634,7 +635,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         Button fileChooser = null;
-        if (pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")) {
+        if (pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR") || hasFilePort) {
             fileChooser = new Button(mainActivity);
             fileChooser.setText("Load file");
             if (mainActivity.useTheme)
@@ -658,7 +659,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent_upload = new Intent();
-                    if (pluginName.equals("Looper"))
+                    if (pluginName.equals("Looper") || hasFilePort)
                         intent_upload.setType("audio/*");
                     else
                         intent_upload.setType("*/*");
@@ -671,9 +672,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
 
-            if (pluginName.equals("Neural Amp Modeler")) {
+            if (pluginName.equals("Neural Amp Modeler") || hasFilePort) {
                 String dir = context.getExternalFilesDir(
-                        Environment.DIRECTORY_DOWNLOADS) + "/NamModels";
+                        Environment.DIRECTORY_DOWNLOADS) + "/" + pluginName + "/";
 
                 DocumentFile root = DocumentFile.fromFile(new File(dir));
                 DocumentFile [] files = root.listFiles() ;
@@ -752,11 +753,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int _position, long id) {
                         String m = spinner.getAdapter().getItem(_position).toString();
-                        String dir = context.getExternalFilesDir(
-                                Environment.DIRECTORY_DOWNLOADS) + "/NamModels/";
-                        String s = mainActivity.getFileContent(Uri.parse(dir + m));
-                        Log.d(TAG, String.format("[content]: %s", s));
-                        AudioEngine.setPluginFilename(s, holder.getAdapterPosition());
+
+                        Uri ri = Uri.parse(dir + m);
+                        if (hasFilePort)
+                            AudioEngine.setFilePortValue(holder.getAdapterPosition(), ri.getPath());
+                        else {
+                            String s = mainActivity.getFileContent(ri);
+//                            Log.d(TAG, String.format("[content]: %s", s));
+                            AudioEngine.setPluginFilename(s, holder.getAdapterPosition());
+                        }
                     }
 
                     @Override

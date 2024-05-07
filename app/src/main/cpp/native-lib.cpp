@@ -861,3 +861,38 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginFilename(JNIEnv *env, jcl
     engine->setPluginFilename(std::string (nativeString), plugin);
     env->ReleaseStringUTFChars(filename, nativeString);
 }
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getFilePort(JNIEnv *env, jclass clazz, jint plugin) {
+    // TODO: implement getFilePort()
+    if (engine == NULL)
+        return false ;
+
+    if (engine->activePlugins.size() <= plugin)
+        return false;
+
+    if (engine->activePlugins.at (plugin)->filePort == nullptr)
+        return false ;
+
+    return true ;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setFilePortValue(JNIEnv *env, jclass clazz,
+                                                               jint plugin, jstring filename) {
+    // TODO: implement setFilePortValue()
+    IN
+    if (engine == nullptr) {
+        OUT
+        return;
+    }
+
+    if (engine->activePlugins.size() <= plugin)
+        return;
+
+    const char *nativeString = env->GetStringUTFChars(filename, 0);
+    engine->activePlugins.at(plugin)->setFilePortValue(std::string (nativeString));
+
+    env->ReleaseStringUTFChars(filename, nativeString);
+    OUT
+}

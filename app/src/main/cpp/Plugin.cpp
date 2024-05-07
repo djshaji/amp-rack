@@ -1,4 +1,7 @@
 #include "Plugin.h"
+#include "lv2/atom/atom.h"
+#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
+
 using namespace nlohmann ;
 
 void Plugin::free () {
@@ -184,6 +187,10 @@ void Plugin::load () {
         } else if (jsonPort.find ("OutputPort") != jsonPort.end() && jsonPort.find("ControlPort") != jsonPort.end()) {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
 //            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
+        } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("InputPort") != jsonPort.end()) {
+            filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof(LV2_Atom_Sequence)));
+            lv2Descriptor->connect_port(handle, port, filePort);
+            LOGD("[%s %d]: found possible file port", lv2Descriptor->URI, port);
         } else {
             LOGD("[LV2] Cannot understand port %d of %s: %s", port, pluginName, portName);
         }
@@ -353,4 +360,33 @@ uint32_t lv2_options_set (LV2_Handle instance, const LV2_Options_Option* options
 
 uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) {
     return 0u;
+}
+
+void Plugin::setFilePortValue (std::string filename) {
+    IN
+    LOGD("[atom sequence] %s", filename.c_str());
+    LV2_Atom_Forge_Frame frame;
+    LV2_Atom_Forge forge;
+    LV2_URID_Map map ;
+    map.handle = &urid;
+    map.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
+    lv2_atom_forge_init(&forge, &map);
+    LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
+            &forge, &frame, 1, 9);
+
+    lv2_atom_forge_property_head(&forge, 10, 0);
+    lv2_atom_forge_urid(&forge, 6);
+    lv2_atom_forge_property_head(&forge, 11, 0);
+    lv2_atom_forge_path(&forge, filename.c_str(), filename.size());
+
+    lv2_atom_forge_pop(&forge, &frame);
+
+    const uint32_t notify_capacity = set->size;
+    lv2_atom_forge_set_buffer(&forge,
+                              reinterpret_cast<uint8_t *>(filePort),
+                              notify_capacity);
+
+    HERE
+    lv2_atom_forge_sequence_head(&forge, &frame, 0);
+    OUT
 }

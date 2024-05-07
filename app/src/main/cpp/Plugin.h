@@ -2,6 +2,7 @@
 #define __PLUGIN_H
 #include "ladspa.h"
 #include "lv2.h"
+#include "lv2/atom/atom.h"
 
 #include <cstddef>
 #include <fstream>
@@ -30,6 +31,7 @@ public:
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;
     LV2_Feature featureState ;
+    LV2_Atom_Sequence * filePort = nullptr;
 
     const LV2_Feature* const* featurePointers() const
     {
@@ -72,6 +74,7 @@ public:
 
     void lv2ConnectWorkers();
 
+    void setFilePortValue(std::string filename);
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);
