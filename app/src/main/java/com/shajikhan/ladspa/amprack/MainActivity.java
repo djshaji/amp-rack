@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static LinearLayout srLayout; ;
     SurfaceTexture surfaceTexture;
     public boolean headphoneWarning = true;
+    public boolean experimentalBuild = false;
     static Context context;
     static FileOutputStream fileOutputStream = null ;
     static DataOutputStream dataOutputStream = null ;
@@ -400,6 +401,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (showIntro && !introShown && showOn == 0 && ! lowMemoryMode) {
             Intent intent = new Intent(this, Onboard.class);
             startActivity(intent);
+        }
+
+        String[] configVersion = BuildConfig.VERSION_NAME.split("-");
+
+        if (configVersion.length > 1 && configVersion[1].equals("experimental")) {
+            experimentalBuild = true ;
         }
 
         Log.d(TAG, "onCreate: loading theme " + theme);
@@ -891,6 +898,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        Log.d(TAG, "onCreate: mixer state: " + );
 
 //        Log.d(TAG, String.format ("[orientation]: %s", getWindowManager().getDefaultDisplay().getRotation()));
+
+
+        if (experimentalBuild)
+            alert("Experimental beta version", "For testing only. Please report issues on Github or via the app's feedback bug reporting system.");
+
     }
 
     void showMediaPlayerDialog() {

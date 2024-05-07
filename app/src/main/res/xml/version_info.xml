@@ -12,6 +12,10 @@
             android:summary="0001"
             android:key="build_number"/>
         <Preference
+            android:title="Version Code"
+            android:summary="80"
+            android:key="version_code"/>
+        <Preference
             android:title="Release"
             android:key="build_name"
             android:summary="Alpha"/>

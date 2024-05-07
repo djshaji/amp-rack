@@ -407,7 +407,9 @@ public class SettingsActivity extends AppCompatActivity implements
                     return false;
                 }
             });
-            findPreference("build_name").setSummary(R.string.app_version);
+//            findPreference("build_name").setSummary(R.string.app_version);
+            findPreference("build_name").setSummary(BuildConfig.VERSION_NAME);
+            findPreference("version_code").setSummary(BuildConfig.VERSION_CODE + "-" + BuildConfig.BUILD_TYPE);
 //            int plugins = AudioEngine.getTotalPlugins() ;
             int plugins = MainActivity.totalPlugins;
             findPreference("plugins").setSummary(String.valueOf(plugins));

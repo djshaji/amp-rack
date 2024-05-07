@@ -1091,6 +1091,14 @@ public class Rack extends Fragment {
         } else {
             Log.d(TAG, String.format ("[display dimensions]: %d x %d {%f}", mainActivity.deviceWidth, mainActivity.deviceHeight, (float) (1.0 * mainActivity.deviceWidth/mainActivity.deviceHeight)));
         }
+
+        if (mainActivity.experimentalBuild) {
+            TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label);
+            mixerLabel.setText("Beta " + String.valueOf(BuildConfig.VERSION_CODE));
+//            mixerLabel.setTextColor(getResources().getColor(R.color.dark_red));
+//            mixerLabel.setBackgroundColor(getResources().getColor(R.color.wheat));
+        }
+
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {
