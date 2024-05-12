@@ -188,8 +188,10 @@ void Plugin::load () {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
 //            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("InputPort") != jsonPort.end()) {
-            filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof(LV2_Atom_Sequence)));
-            lv2Descriptor->connect_port(handle, port, filePort);
+//            filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof(LV2_Atom_Sequence)));
+            filePortIndex = port ;
+            lv2Descriptor->connect_port(handle, filePortIndex, filePort);
+
             LOGD("[%s %d]: found possible file port", lv2Descriptor->URI, port);
         } else {
             LOGD("[LV2] Cannot understand port %d of %s: %s", port, pluginName, portName);
@@ -364,7 +366,25 @@ uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) {
 
 void Plugin::setFilePortValue (std::string filename) {
     IN
+    int size = filename.size();
+    char * str = (char * ) malloc (filename.size() + 1);
+    strcpy(str, filename.c_str());
+    lv2Descriptor->connect_port(handle, 9, &size);
+    lv2Descriptor->connect_port(handle, 4, str);
+    OUT
+}
+
+void Plugin::setFilePortValue1 (std::string filename) {
+    IN
+    if (filePortIndex == -1) {
+        LOGE("set file port requested but no file port available") ;
+        return;
+    }
+
     LOGD("[atom sequence] %s", filename.c_str());
+#ifdef USE_THIS
+    LV2_Atom_Forge       forge ;
+
     LV2_Atom_Forge_Frame frame;
     LV2_URID_Map map ;
     map.handle = &urid;
@@ -386,5 +406,53 @@ void Plugin::setFilePortValue (std::string filename) {
                               (uint8_t *) filePort,
                               1024);
 
+
+
+    LV2_Atom_Object lv2AtomObject;
+    lv2AtomObject.body.otype = 9 ;
+#else
+    LV2_Atom_Forge       forge ;
+    LV2_Atom_Forge_Frame frame;
+    uint8_t              buf[1024];
+    lv2_atom_forge_set_buffer(&forge, buf, sizeof(buf));
+
+    lv2_atom_forge_object(&forge, &frame, 0, 9);
+    lv2_atom_forge_key(&forge, 10);
+    lv2_atom_forge_urid(&forge, 6);
+    lv2_atom_forge_key(&forge, 11);
+    lv2_atom_forge_atom(&forge, filename.size(), 12);
+    lv2_atom_forge_write(&forge, filename.c_str(), filename.size());
+
+    const LV2_Atom* atom = lv2_atom_forge_deref(&forge, frame.ref);
+    typedef struct {
+        uint32_t index;
+        uint32_t protocol;
+        uint32_t size;
+        // Followed immediately by size bytes of data
+    } ControlChange;
+    typedef struct {
+        ControlChange change;
+        LV2_Atom      atom;
+    } Header;
+    const Header header = {
+            {0, 5, (uint32_t) (sizeof(LV2_Atom) + filename.size())},
+            {uint32_t (filename.size()), 12}};
+
+//    lv2Descriptor->connect_port(handle, filePortIndex, filePort);
+    memcpy(filePort, &header, sizeof  (header));
+    memcpy(filePort + sizeof (header), &atom, sizeof  (atom));
+    __atomic_store_n(&filePort, filePort, __ATOMIC_RELEASE) ;
+
+    lv2Descriptor->connect_port(handle, filePortIndex, filePort);
+
+#endif
+    LV2_ATOM_SEQUENCE_FOREACH(filePort, ev) {
+        const LV2_Atom_Object *obj = (LV2_Atom_Object *) &ev->body;
+        LOGD ("[command] %d", obj->body.otype);
+        const LV2_Atom* property = NULL;
+        lv2_atom_object_get(obj, 10, &property, 0);
+        LOGD ("%s", property);
+
+    }
     OUT
 }

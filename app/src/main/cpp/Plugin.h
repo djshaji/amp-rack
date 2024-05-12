@@ -32,8 +32,9 @@ public:
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;
     LV2_Feature featureState ;
-    LV2_Atom_Sequence * filePort = nullptr;
-    LV2_Atom_Forge forge;
+    LV2_Atom_Sequence * filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof (LV2_Atom_Sequence)));
+    int filePortIndex = -1 ;
+//    LV2_Atom_Forge forge;
 
     const LV2_Feature* const* featurePointers() const
     {
@@ -77,6 +78,8 @@ public:
     void lv2ConnectWorkers();
 
     void setFilePortValue(std::string filename);
+
+    void setFilePortValue1(std::string filename);
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);

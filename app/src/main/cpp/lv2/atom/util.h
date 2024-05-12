@@ -35,6 +35,7 @@
 */
 
 #include "lv2/atom/atom.h"
+#include "../../logging_macros.h"
 
 #include <stdarg.h>
 #include <stdbool.h>
@@ -442,6 +443,7 @@ lv2_atom_object_get(const LV2_Atom_Object* object, ...)
       const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
       if (qkey == prop->key && !*qval) {
         *qval = &prop->value;
+        LOGD ("%d, %s", prop->key, prop->value);
         if (++matches == n_queries) {
           va_end(args);
           return matches;
