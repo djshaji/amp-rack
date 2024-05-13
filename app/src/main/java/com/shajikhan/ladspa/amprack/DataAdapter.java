@@ -46,6 +46,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -754,9 +757,25 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     public void onItemSelected(AdapterView<?> parent, View view, int _position, long id) {
                         String m = spinner.getAdapter().getItem(_position).toString();
 
-                        Uri ri = Uri.parse(dir + m);
-                        if (hasFilePort)
-                            AudioEngine.setFilePortValue(holder.getAdapterPosition(), ri.getPath());
+                        Uri ri = Uri.parse("file://" + dir + m);
+                        if (hasFilePort) {
+//                            AudioEngine.setFilePortValue(holder.getAdapterPosition(), ri.getPath());
+                            AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
+                            try {
+                                int samplerate = AudioEngine.getSampleRate() ;
+                                if (samplerate < 44100 /*aaaaaaaarghhh*/)
+                                    samplerate = 48000 ;
+                                String p = ri.getPath() ;
+                                Log.d(TAG, "onItemSelected: loading file " + ri.toString());
+                                float [] samples = audioDecoder.decode(ri, null, samplerate);
+                                AudioEngine.setPluginBuffer(samples, holder.getAdapterPosition());
+                                Log.d(TAG, String.format ("[decoder]: %d", samples.length));
+                            } catch (IOException e) {
+                                MainActivity.toast(e.getMessage());
+                                Log.e(TAG, "onActivityResult: ", e);
+                            }
+
+                        }
                         else {
                             String s = mainActivity.getFileContent(ri);
 //                            Log.d(TAG, String.format("[content]: %s", s));

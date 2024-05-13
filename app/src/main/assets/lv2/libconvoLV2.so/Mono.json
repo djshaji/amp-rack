@@ -1,6 +1,6 @@
 {
   "-1": {
-    "pluginName": "LV2 Convolution"
+    "pluginName": "convoLV2"
   },
   "0": {
     "InputPort": true,
