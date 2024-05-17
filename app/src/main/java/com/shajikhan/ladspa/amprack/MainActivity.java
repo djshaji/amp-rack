@@ -1699,13 +1699,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
              */
 
             int plugin = requestCode - 5000 ;
-            boolean hasFilePort = AudioEngine.getFilePort(plugin);
             Uri returnUri = data.getData();
 
             if (returnUri != null) {
                 String mimeType = getContentResolver().getType(returnUri);
                 Log.d(TAG, String.format ("[mimetype]: %s", mimeType));
-                if (!mimeType.startsWith("audio") || hasFilePort) {
+                if (!mimeType.startsWith("audio")) {
                     DocumentFile file = DocumentFile.fromSingleUri(mainActivity, returnUri);
                     Log.d(TAG, String.format ("ayyo filename: %s", file.getName()));
                     String path = file.getName();
@@ -1773,6 +1772,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (samplerate < 44100 /*aaaaaaaarghhh*/)
                     samplerate = 48000 ;
                 float [] samples = audioDecoder.decode(data.getData(), null, samplerate);
+                if (samples == null)
+                    return;
                 AudioEngine.setPluginBuffer(samples, plugin);
                 Log.d(TAG, String.format ("[decoder]: %d", samples.length));
             } catch (IOException e) {

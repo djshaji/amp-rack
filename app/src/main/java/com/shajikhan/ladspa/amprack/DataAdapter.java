@@ -675,7 +675,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
 
-            if (pluginName.equals("Neural Amp Modeler") || hasFilePort) {
+            if (pluginName.equals("Neural Amp Modeler")) {
                 String dir = context.getExternalFilesDir(
                         Environment.DIRECTORY_DOWNLOADS) + "/" + pluginName + "/";
 

@@ -665,5 +665,31 @@
        "ON"
 
     ]
+  },
+  "SWH Impulse convolver": {
+    "0": [
+      "Unit impulse (identity) ",
+      "My flat (light natural reverb) ",
+      "Yamaha Marshall stack simulator ",
+      "Fender 68 Vibrolux (SM57 on axis) ",
+      "Fender 68 Vibrolux (SM57 off axis) ",
+      "Fender 68 Vibrolux (Audio-technica AT4050) ",
+      "Fender 68 Vibrolux (Neumann U87) ",
+      "Fender Bassman (SM57 on axis) ",
+      "Fender Bassman (SM57 off axis) ",
+      "Fender Bassman (Audio-technica AT4050) ",
+      "Fender Bassman (Neumann U87) ",
+      "Fender Superchamp (SM57 on axis) ",
+      "Fender Superchamp (SM57 off axis) ",
+      "Fender Superchamp (Audio-technica AT4050) ",
+      "Fender Superchamp (Neumann U87) ",
+      "Marshall JCM2000 (SM57 on axis) ",
+      "Marshall JCM2000 (SM57 off axis) ",
+      "Marshall Plexi (SM57 on axis) ",
+      "Marshall Plexi (SM57 off axis) ",
+      "Matchless Chieftan (SM57 on axis) ",
+      "Matchless Chieftan (SM57 off axis) ",
+      "Custom"
+    ]
   }
 }

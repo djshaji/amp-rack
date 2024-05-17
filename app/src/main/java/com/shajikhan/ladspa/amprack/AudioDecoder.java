@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AudioDecoder {
     MainActivity mainActivity ;
@@ -72,7 +73,13 @@ public class AudioDecoder {
         ByteBuffer[] codecInputBuffers;
         ByteBuffer[] codecOutputBuffers;
         extractor = new MediaExtractor();
-        metadataRetriever.setDataSource(fileDescriptor);
+        try {
+            metadataRetriever.setDataSource(fileDescriptor);
+        } catch (RuntimeException re) {
+            Log.e(TAG, "decode: ", re);
+            MainActivity.alert("Unsupported file", re.getMessage());
+            return null;
+        }
 
         HashMap <Integer, String> metadata = new HashMap();
         int dataKeys [] = {

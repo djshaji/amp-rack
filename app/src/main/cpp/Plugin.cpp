@@ -298,8 +298,15 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
     IN
     // dangerous non standard stuff
     // dont try this at home
-    lv2Descriptor->connect_port(handle, 9, & read_bytes);
-    lv2Descriptor->connect_port(handle, 2, buffer);
+    if (type == SharedLibrary::LV2) {
+        LOGD("setting buffer for LV2 plugin") ;
+        lv2Descriptor->connect_port(handle, 9, &read_bytes);
+        lv2Descriptor->connect_port(handle, 2, buffer);
+    } else {
+        LOGD("setting buffer for LADSPA plugin");
+        descriptor->connect_port(handle, 99, reinterpret_cast<LADSPA_Data *>(&read_bytes));
+        descriptor->connect_port(handle, 100, buffer);
+    }
     OUT
 }
 

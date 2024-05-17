@@ -354,7 +354,7 @@
     "library": "libhilbert_1440.so"
   },
   "5500": {
-    "name": "Nonbandlimited single-sample impulses (Frequency: Control)",
+    "name": "SWH Impulse convolver",
     "id": 1885,
     "plugin": 0,
     "library": "libimpulse_1885.so"
