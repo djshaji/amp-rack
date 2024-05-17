@@ -27,11 +27,15 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +53,7 @@ public class Purchase extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase2);
+        TextView priceView = findViewById(R.id.price);
         context = this;
         TextView oldPrice = findViewById(R.id.old_price);
         oldPrice.setPaintFlags(oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -111,7 +116,9 @@ public class Purchase extends AppCompatActivity {
                                         return;
                                     }
                                     for (SkuDetails details: skuDetailsList) {
-                                        Log.d(TAG, "onSkuDetailsResponse: " + String.format("%s", details.getDescription()));
+                                        String price = details.getPrice();
+                                        Log.d(TAG, "onSkuDetailsResponse: " + String.format("%s", price));
+                                        priceView.setText(price);
                                         materialButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
