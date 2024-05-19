@@ -638,7 +638,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         Button fileChooser = null;
-        if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| hasFilePort) {
+        if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| pluginName.equals("SWH Impulse convolver")) {
             fileChooser = new Button(mainActivity);
             fileChooser.setText("Load file");
             if (mainActivity.useTheme)
