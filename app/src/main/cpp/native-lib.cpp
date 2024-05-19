@@ -810,6 +810,7 @@ data,
 jint plugin
 ) {
     if (engine == nullptr) return ;
+    if (data == nullptr) return;
     jsize len = env->GetArrayLength( data);
     jfloat *body = env->GetFloatArrayElements( data, 0);
 

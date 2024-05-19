@@ -638,7 +638,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         Button fileChooser = null;
-        if (pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR") || hasFilePort) {
+        if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| hasFilePort) {
             fileChooser = new Button(mainActivity);
             fileChooser.setText("Load file");
             if (mainActivity.useTheme)
@@ -662,7 +662,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent_upload = new Intent();
-                    if (pluginName.equals("Looper") || hasFilePort)
+                    if (pluginName.equals("Looper"))
                         intent_upload.setType("audio/*");
                     else
                         intent_upload.setType("*/*");
@@ -675,7 +675,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
 
-            if (pluginName.equals("Neural Amp Modeler")) {
+            if (pluginName.equals("Neural Amp Modeler") || pluginName.equals("AIDA-X")) {
                 String dir = context.getExternalFilesDir(
                         Environment.DIRECTORY_DOWNLOADS) + "/" + pluginName + "/";
 
@@ -758,25 +758,27 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         String m = spinner.getAdapter().getItem(_position).toString();
 
                         Uri ri = Uri.parse("file://" + dir + m);
+                        /*
                         if (hasFilePort) {
 //                            AudioEngine.setFilePortValue(holder.getAdapterPosition(), ri.getPath());
                             AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
                             try {
                                 int samplerate = AudioEngine.getSampleRate() ;
-                                if (samplerate < 44100 /*aaaaaaaarghhh*/)
+                                if (samplerate < 44100 )
                                     samplerate = 48000 ;
                                 String p = ri.getPath() ;
                                 Log.d(TAG, "onItemSelected: loading file " + ri.toString());
                                 float [] samples = audioDecoder.decode(ri, null, samplerate);
                                 AudioEngine.setPluginBuffer(samples, holder.getAdapterPosition());
-                                Log.d(TAG, String.format ("[decoder]: %d", samples.length));
+//                                Log.d(TAG, String.format ("[decoder]: %d", samples.length));
                             } catch (IOException e) {
                                 MainActivity.toast(e.getMessage());
                                 Log.e(TAG, "onActivityResult: ", e);
                             }
 
                         }
-                        else {
+                        else */
+                        {
                             String s = mainActivity.getFileContent(ri);
 //                            Log.d(TAG, String.format("[content]: %s", s));
                             AudioEngine.setPluginFilename(s, holder.getAdapterPosition());

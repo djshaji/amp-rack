@@ -300,8 +300,8 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
     // dont try this at home
     if (type == SharedLibrary::LV2) {
         LOGD("setting buffer for LV2 plugin") ;
-        lv2Descriptor->connect_port(handle, 9, &read_bytes);
-        lv2Descriptor->connect_port(handle, 2, buffer);
+        lv2Descriptor->connect_port(handle, 99, &read_bytes);
+        lv2Descriptor->connect_port(handle, 100, buffer);
     } else {
         LOGD("setting buffer for LADSPA plugin");
         descriptor->connect_port(handle, 99, reinterpret_cast<LADSPA_Data *>(&read_bytes));
@@ -311,7 +311,11 @@ void Plugin::setBuffer (float * buffer, int read_bytes) {
 }
 
 void Plugin::setFileName (std::string filename) {
-    lv2Descriptor->connect_port(handle, 4, (void *) filename.c_str());
+    IN
+    float s = filename.size() ;
+    lv2Descriptor->connect_port(handle, 99, (void *) &s);
+    lv2Descriptor->connect_port(handle, 100, (void *) filename.c_str());
+    OUT
 }
 
 void Plugin::lv2FeaturesURID () {
