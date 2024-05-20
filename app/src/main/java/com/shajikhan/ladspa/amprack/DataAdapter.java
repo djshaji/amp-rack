@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -50,6 +51,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -72,6 +74,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     int primaryColor = com.google.android.material.R.color.design_default_color_primary;
     ArrayList <Integer> plugins = new ArrayList<>();
     ArrayList <ViewHolder> holders = new ArrayList<>();
+    HashMap <Integer, Integer> selectedModels = new HashMap<>();
     MainActivity mainActivity;
 
     @NonNull
@@ -658,14 +661,34 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             fileChooser.setGravity(Gravity.CENTER);
             layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+            if (pluginName.equals("Neural Amp Modeler")|| pluginName.equals("AIDA-X"))
+                holder.hasFileSpinner = true ;
             fileChooser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent_upload = new Intent();
-                    if (pluginName.equals("Looper"))
+                    if (pluginName.equals("Looper")|| pluginName.equals("SWH Impulse convolver"))
                         intent_upload.setType("audio/*");
-                    else
-                        intent_upload.setType("*/*");
+                    else {
+                        intent_upload.setType("application/zip");
+                        String mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension("zip");
+                        String [] mimeTypes = {
+                                "text/*",
+                                "application/x-zip",
+                                "application/ld-json",
+                                "application/json",
+                                "application/octet-stream",
+                                "application/x-compress",
+                                "application/x-compressed",
+                                "application/x-zip-compressed",
+                                "multipart/x-zip",
+                                mimetype
+                        };
+
+
+                        intent_upload.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
+                    }
                     intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
                     intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -790,6 +813,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     }
                 });
+
+                if (selectedModels.containsKey(position)) {
+                    spinner.setSelection(selectedModels.get(position));
+                    selectedModels.remove(position);
+                }
             }
         }
 
@@ -827,13 +855,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         TextView pluginName ;
         SwitchMaterial switchMaterial ;
         ToggleButton toggleButton ;
+        int selectedModel = -1 ;
         Spinner modelSpinner ;
         LinearLayout modelSpinnerLayout ;
+        boolean hasFileSpinner ;
         MaterialButton deleteButton, moveUpButton, moveDownButton ;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             sliders = new ArrayList<>();
+            hasFileSpinner = false;
             root = (LinearLayout) itemView ;
             linearLayout = (LinearLayout) itemView ;
             linearLayout = (LinearLayout) linearLayout.getChildAt(0);
@@ -876,6 +907,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     void addItem(int pluginID, int index) {
         plugins.add(pluginID);
         notifyItemInserted(index);
+    }
+
+    void setSelectedModel (int plugin, int model) {
+        selectedModels.put(plugin, model);
     }
 
     void deleteAll () {

@@ -2089,9 +2089,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
 
+            DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            int spinnerValue = -1 ;
+            if (holder == null) {
+                Log.w(TAG, "presetToString: holder is null" );
+            } else if (holder.hasFileSpinner) {
+                spinnerValue = holder.modelSpinner.getSelectedItemPosition();
+            } else {
+                Log.d(TAG, "presetToString: preset has holder, but no file spinner!");
+            }
+
             try {
                 jo.put("name", AudioEngine.getActivePluginName(i));
                 jo.put("controls", vals);
+                if (spinnerValue > -1)
+                    jo.put("selectedModel", spinnerValue);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -2300,9 +2312,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
             String name, controls;
+            int spinnerValue = -1 ;
             try {
                 name = jo.getString("name");
                 controls = jo.getString("controls");
+                if (jo.has("selectedModel"))
+                    spinnerValue = jo.getInt("selectedModel");
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e(TAG, "loadPreset: unable to parse name or controls for key: " + key, e);
@@ -2346,7 +2361,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
             dataAdapter.addItem(ret, ret);
+            int pos = dataAdapter.getItemCount();
+            if (spinnerValue > -1 )
+                dataAdapter.setSelectedModel(plugin, spinnerValue);
             plugin++;
+
+//            holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(dataAdapter.getItemCount() - 1);
+//            if (holder.hasFileSpinner) {
+//                holder.modelSpinner.setSelection(spinnerValue);
+//            }
         }
 
         AudioEngine.bypass(false);
