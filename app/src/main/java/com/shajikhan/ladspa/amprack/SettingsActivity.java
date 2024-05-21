@@ -389,7 +389,6 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.version_info, rootKey);
-            findPreference("name_info").setTitle("AmpRack Pro Version");
             findPreference("build_number").setSummary(R.string.build_id);
             findPreference("build_number").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -416,6 +415,8 @@ public class SettingsActivity extends AppCompatActivity implements
 
             if (MainActivity.proVersion == false) {
                 findPreference("encoders_supported").setSummary("WAV 16 Bit");
+            } else {
+                findPreference("name_info").setTitle("AmpRack Pro Version");
             }
         }
     }

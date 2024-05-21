@@ -654,8 +654,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     try {
                         samples = audioDecoder.decode(Uri.parse(holder.audioFile), null, samplerate);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+//                        throw new RuntimeException(e);
+                        Log.e(TAG, "onBindViewHolder: cannot load audio file for plugin " + pluginName, e);
+                        mainActivity.toast (e.getMessage());
                     }
+
 
                     if (samples != null)
                         AudioEngine.setPluginBuffer(samples, position);
@@ -837,7 +840,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 });
 
                 if (selectedModels.containsKey(position)) {
-                    spinner.setSelection(selectedModels.get(position));
+                    if (spinner.getAdapter().getCount() > position)
+                        spinner.setSelection(selectedModels.get(position));
+                    else
+                        MainActivity.toast("Unable to load preset properly: a user loaded json file is missing");
+
                     selectedModels.remove(position);
                 }
             }

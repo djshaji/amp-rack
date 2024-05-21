@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 95,
-      "versionName": "4.31-Razor",
+      "versionCode": 96,
+      "versionName": "4.32-Razor",
       "outputFile": "app-release.apk"
     }
   ],

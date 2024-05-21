@@ -907,6 +907,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (experimentalBuild)
             alert("Experimental beta version", "For testing only. Please report issues on Github or via the app's feedback bug reporting system.");
 
+        if (BuildConfig.BUILD_TYPE.equals("debug")) {
+            proVersion = true ;
+        }
     }
 
     void showMediaPlayerDialog() {
