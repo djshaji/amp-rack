@@ -1775,11 +1775,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 int samplerate = AudioEngine.getSampleRate() ;
                 if (samplerate < 44100 /*aaaaaaaarghhh*/)
                     samplerate = 48000 ;
-                float [] samples = audioDecoder.decode(data.getData(), null, samplerate);
+
+                Uri audioFile = data.getData();
+                getContentResolver().takePersistableUriPermission(audioFile, Intent.FLAG_GRANT_READ_URI_PERMISSION) ;
+
+                Log.d(TAG, String.format ("[audiofile]: %s", audioFile));
+                float [] samples = audioDecoder.decode(audioFile, null, samplerate);
                 if (samples == null)
                     return;
                 AudioEngine.setPluginBuffer(samples, plugin);
                 Log.d(TAG, String.format ("[decoder]: %d", samples.length));
+                DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
+                holder.audioFile = audioFile.toString();
             } catch (IOException e) {
                 toast(e.getMessage());
                 Log.e(TAG, "onActivityResult: ", e);
@@ -2091,12 +2098,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             int spinnerValue = -1 ;
+            String audioFile = null ;
             if (holder == null) {
                 Log.w(TAG, "presetToString: holder is null" );
-            } else if (holder.hasFileSpinner) {
-                spinnerValue = holder.modelSpinner.getSelectedItemPosition();
             } else {
-                Log.d(TAG, "presetToString: preset has holder, but no file spinner!");
+                audioFile = holder.audioFile;
+                if (holder.hasFileSpinner) {
+                    spinnerValue = holder.modelSpinner.getSelectedItemPosition();
+                } else {
+                    Log.d(TAG, "presetToString: preset has holder, but no file spinner!");
+                }
             }
 
             try {
@@ -2104,6 +2115,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 jo.put("controls", vals);
                 if (spinnerValue > -1)
                     jo.put("selectedModel", spinnerValue);
+                if (audioFile != null)
+                    jo.put("audioFile", audioFile);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -2126,6 +2139,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Map<String, String> jo = new HashMap<>();
             String vals = "";
 
+            DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            int spinnerValue = -1 ;
+            String audioFile = null ;
+
+            if (holder == null) {
+                Log.w(TAG, "presetToString: holder is null" );
+            } else {
+                audioFile = holder.audioFile;
+                if (holder.hasFileSpinner) {
+                    spinnerValue = holder.modelSpinner.getSelectedItemPosition();
+                } else {
+                    Log.d(TAG, "presetToString: preset has holder, but no file spinner!");
+                }
+            }
+
             float[] values = AudioEngine.getActivePluginValues(i);
             for (int k = 0; k < values.length; k++) {
                 vals += values[k];
@@ -2136,6 +2164,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             jo.put("name", AudioEngine.getActivePluginName(i));
             jo.put("controls", vals);
+            if (spinnerValue > -1)
+                jo.put("selectedModel", String.valueOf(spinnerValue));
+            if (audioFile != null)
+                jo.put ("audioFile", audioFile);
 
             preset.put(String.valueOf(i), jo);
         }
@@ -2313,11 +2345,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             String name, controls;
             int spinnerValue = -1 ;
+            String audioFile = null ;
             try {
                 name = jo.getString("name");
                 controls = jo.getString("controls");
                 if (jo.has("selectedModel"))
                     spinnerValue = jo.getInt("selectedModel");
+                if (jo.has("audioFile"))
+                    audioFile = jo.getString("audioFile");
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e(TAG, "loadPreset: unable to parse name or controls for key: " + key, e);
@@ -2362,8 +2397,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             dataAdapter.addItem(ret, ret);
             int pos = dataAdapter.getItemCount();
+
             if (spinnerValue > -1 )
                 dataAdapter.setSelectedModel(plugin, spinnerValue);
+            if (audioFile != null)
+                dataAdapter.setAudioFiles(plugin, audioFile);
+
             plugin++;
 
 //            holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(dataAdapter.getItemCount() - 1);

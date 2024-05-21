@@ -75,6 +75,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     ArrayList <Integer> plugins = new ArrayList<>();
     ArrayList <ViewHolder> holders = new ArrayList<>();
     HashMap <Integer, Integer> selectedModels = new HashMap<>();
+    HashMap <Integer, String> audioFiles = new HashMap<>();
     MainActivity mainActivity;
 
     @NonNull
@@ -642,6 +643,25 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         Button fileChooser = null;
         if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| pluginName.equals("SWH Impulse convolver")) {
+            if (audioFiles.containsKey(position) && pluginName.equals("Looper") || pluginName.equals("SWH Impulse convolver")) {
+                String audioFile = audioFiles.get(position);
+                AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
+                int samplerate = AudioEngine.getSampleRate() ;
+                if (samplerate < 44100 /*aaaaaaaarghhh*/)
+                    samplerate = 48000 ;
+                float [] samples = new float[0];
+                try {
+                    samples = audioDecoder.decode(Uri.parse(audioFile), null, samplerate);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (samples != null)
+                    AudioEngine.setPluginBuffer(samples, position);
+
+                audioFiles.remove(position);
+            }
+
             fileChooser = new Button(mainActivity);
             fileChooser.setText("Load file");
             if (mainActivity.useTheme)
@@ -856,6 +876,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         SwitchMaterial switchMaterial ;
         ToggleButton toggleButton ;
         int selectedModel = -1 ;
+        String audioFile = null ;
         Spinner modelSpinner ;
         LinearLayout modelSpinnerLayout ;
         boolean hasFileSpinner ;
@@ -911,6 +932,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     void setSelectedModel (int plugin, int model) {
         selectedModels.put(plugin, model);
+    }
+
+    void setAudioFiles (int plugin, String filename) {
+        audioFiles.put(plugin, filename);
     }
 
     void deleteAll () {
