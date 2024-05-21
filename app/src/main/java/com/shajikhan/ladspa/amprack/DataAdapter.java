@@ -644,20 +644,22 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         Button fileChooser = null;
         if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| pluginName.equals("SWH Impulse convolver")) {
             if (audioFiles.containsKey(position) && pluginName.equals("Looper") || pluginName.equals("SWH Impulse convolver")) {
-                String audioFile = audioFiles.get(position);
-                AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
-                int samplerate = AudioEngine.getSampleRate() ;
-                if (samplerate < 44100 /*aaaaaaaarghhh*/)
-                    samplerate = 48000 ;
-                float [] samples = new float[0];
-                try {
-                    samples = audioDecoder.decode(Uri.parse(audioFile), null, samplerate);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                holder.audioFile = audioFiles.get(position);
+                if (holder.audioFile != null) {
+                    AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
+                    int samplerate = AudioEngine.getSampleRate();
+                    if (samplerate < 44100 /*aaaaaaaarghhh*/)
+                        samplerate = 48000;
+                    float[] samples = new float[0];
+                    try {
+                        samples = audioDecoder.decode(Uri.parse(holder.audioFile), null, samplerate);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                if (samples != null)
-                    AudioEngine.setPluginBuffer(samples, position);
+                    if (samples != null)
+                        AudioEngine.setPluginBuffer(samples, position);
+                }
 
                 audioFiles.remove(position);
             }
