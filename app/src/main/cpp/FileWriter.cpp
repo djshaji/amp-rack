@@ -610,3 +610,8 @@ void FileWriter::setFileType (int fType) {
     fileType = static_cast<FileType>(fType);
 }
 
+void FileWriter::setLamePreset (int preset) {
+    IN
+    lame_set_preset(lame, preset);
+    OUT
+}

@@ -55,6 +55,7 @@ public:
         LV2
     } PluginType ;
 
+    std::string mainActivityClassName ;
     //! feature storage
     std::vector<LV2_Feature> m_features;
     //! pointers to m_features, required for lilv_plugin_instantiate

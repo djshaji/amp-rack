@@ -365,6 +365,9 @@ void Engine::onErrorAfterClose(oboe::AudioStream *oboeStream,
 void Engine::addPluginToRackLazy(char* library, int pluginIndex, SharedLibrary::PluginType _type) {
     SharedLibrary * sharedLibrary = new SharedLibrary (library, _type);
     sharedLibrary -> vm = vm ;
+    if (mainActivityClassName != "")
+        sharedLibrary->mainActivityClassName = mainActivityClassName ;
+
     sharedLibrary ->setLibraryPath(LIBRARY_PATH);
     sharedLibrary->load();
 
@@ -611,4 +614,8 @@ double Engine::getLatency (bool input) {
         const oboe::ResultWithValue<double> &latency = mPlayStream->calculateLatencyMillis();
         return latency.value();
     }
+}
+
+void Engine::popFunction () {
+    queueManager.pop_function();
 }

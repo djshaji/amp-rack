@@ -192,5 +192,7 @@ public:
 
     void attach();
     void detach ();
+
+    void pop_function();
 };
 #endif //AMP_RACK_LOCKFREEQUEUE_H

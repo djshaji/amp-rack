@@ -53,6 +53,7 @@ public:
     int inputPorts2 [MAX_PLUGINS] ;
     int outputPorts [MAX_PLUGINS] ;
     int outputPorts2 [MAX_PLUGINS] ;
+    bool pushToLockFreeBeforeOutputVolume = false ;
     int activePlugins =  0 ;
     float * raw = NULL; // this will never be greater than this(TM)
     bool recordingActive = false ;
@@ -98,6 +99,9 @@ public:
          * hence the entire vringbuffer stuff
          */
 
+        if (pushToLockFreeBeforeOutputVolume)
+            lockFreeQueueManager->process(raw, inSamples, samplesToProcess) ;
+
         for (int32_t i = 0; i < samplesToProcess; i++) {
             inSamples [i] = inSamples [i]  * outputVolume; // do some arbitrary processing
             *outputFloats++ = inSamples [i];
@@ -107,7 +111,8 @@ public:
 //            Meter::process (samplesToProcess, inSamples, false);
 //        }
 
-        lockFreeQueueManager->process(raw, inSamples, samplesToProcess) ;
+        if (! pushToLockFreeBeforeOutputVolume)
+            lockFreeQueueManager->process(raw, inSamples, samplesToProcess) ;
 
         //        for (int32_t i = 0; i < samplesToProcess; i++) {
 //            *outputFloats++ = *inputFloats++  * outputVolume; // do some arbitrary processing

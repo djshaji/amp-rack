@@ -24,6 +24,7 @@ std::string LIBRARY_PATH ;
     Engine() ;
     std::string tuneLatency();
     JavaVM * vm ;
+    std::string mainActivityClassName = "";
     bool              mIsEffectOn = false;
     bool setPluginBuffer (float * buffer, int buffer_size, int plugin) ;
 
@@ -117,6 +118,8 @@ public:
     double getLatency(bool input);
 
     void setPluginFilename(std::string filename, int plugin);
+
+    void popFunction();
 } ;
 
 #endif // __ENGINE__H

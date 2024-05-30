@@ -897,3 +897,69 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setFilePortValue(JNIEnv *env, jcla
     env->ReleaseStringUTFChars(filename, nativeString);
     OUT
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_popFunction(JNIEnv *env, jclass clazz) {
+    // TODO: implement popFunction()
+    if (engine == nullptr)
+        return;
+
+    engine->popFunction();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setMainActivityClassName(JNIEnv *env, jclass clazz,
+                                                                       jstring class_name) {
+    if (engine == nullptr)
+        return;
+
+    const char *nativeString = env->GetStringUTFChars(class_name, 0);
+    engine->mainActivityClassName = std::string (nativeString);
+    env->ReleaseStringUTFChars(class_name, nativeString);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_pushToLockFreeBeforeOutputVolumeAaaaaargh(JNIEnv *env,
+                                                                                        jclass clazz,
+                                                                                        jboolean setting) {
+    // TODO: implement pushToLockFreeBeforeOutputVolumeAaaaaargh()
+    IN
+    if (engine == nullptr)
+        return;
+
+    engine->mFullDuplexPass.pushToLockFreeBeforeOutputVolume = setting;
+    OUT
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setLamePreset(JNIEnv *env, jclass clazz,
+                                                            jint preset) {
+    IN
+    if (engine == nullptr) {
+        LOGE("engine is null!");
+        OUT
+        return;
+    }
+
+    LOGD("[lame preset] %d", preset);
+    engine ->fileWriter->setLamePreset(preset);
+    OUT
+}
+extern "C"
+JNIEXPORT int JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActiveEnabledPlugins(JNIEnv *env, jclass clazz) {
+    IN
+    if (engine == nullptr) {
+        OUT
+        return 0;
+    }
+
+    int active = 0 ;
+    for (int i = 0 ; i < engine->activePlugins.size(); i ++) {
+        if (engine->activePlugins.at(i)->active)
+            active ++ ;
+    }
+
+    return active;
+    OUT
+}

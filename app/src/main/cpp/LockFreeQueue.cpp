@@ -50,6 +50,11 @@ void LockFreeQueueManager::init (int _buffer_size) {
     OUT
 }
 
+void LockFreeQueueManager::pop_function () {
+    functions [functions_count] = nullptr ;
+    functions_count -- ;
+}
+
 void LockFreeQueueManager::add_function (int (* f) (AudioBuffer *)) {
     IN
     if (functions_count > MAX_FUNCTIONS) {

@@ -3,6 +3,15 @@
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 
 using namespace nlohmann ;
+void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+    if(from.empty())
+        return;
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+    }
+}
 
 void Plugin::free () {
     IN
@@ -143,7 +152,9 @@ void Plugin::load () {
     else
         LOGD("[LV2] Handle instantiated ok! Congratulations");
 
-    std::string json_ = getLV2JSON(lv2Descriptor -> URI);
+    std::string _uri_ = std::string (lv2Descriptor -> URI);
+    replaceAll (_uri_, ":", "_");
+    std::string json_ = getLV2JSON(_uri_.c_str());
     json j = json::parse(json_);
     lv2_name = j ["-1"]["pluginName"];
 
@@ -260,7 +271,9 @@ std::string Plugin::getLV2JSON (std::string pluginName) {
     jstring jstr1 = env->NewStringUTF(pluginName.c_str());
     jstring libname = env->NewStringUTF(sharedLibrary->so_file.c_str());
 
-    jclass clazz = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
+    if (sharedLibrary->mainActivityClassName == "")
+        sharedLibrary->mainActivityClassName = std::string ("com/shajikhan/ladspa/amprack/MainActivity");
+    jclass clazz = env->FindClass(sharedLibrary->mainActivityClassName.c_str());
     if (clazz == nullptr) {
         HERE LOGF("cannot find class!");
     }
@@ -467,3 +480,4 @@ void Plugin::setFilePortValue1 (std::string filename) {
     }
     OUT
 }
+

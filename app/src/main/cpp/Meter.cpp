@@ -64,6 +64,7 @@ JNIEnv* getEnv() {
     return env;
 }
 
+/*
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *pjvm, void *reserved) {
     gJvm = pjvm;  // cache the JavaVM pointer
     auto env = getEnv();
@@ -79,6 +80,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *pjvm, void *reserved) {
 
     return JNI_VERSION_1_6;
 }
+ */
 
 
 jclass Meter::findClass(const char* name) {

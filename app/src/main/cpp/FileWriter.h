@@ -200,6 +200,8 @@ public:
     void setChannels(int channels);
 
     void writeLoop();
+
+    void setLamePreset(int preset);
 };
 
 
