@@ -19,7 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags '-g -Wl'
+                cppFlags '-g -Wl -fast'
                 arguments "-DANDROID_STL=c++_shared"
             }
         }

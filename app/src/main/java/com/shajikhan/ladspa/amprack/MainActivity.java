@@ -153,6 +153,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
@@ -377,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add(this, "resetOnboard");
         hashCommands.add(this, "setAudioDevice");
         hashCommands.add (this, "cameraTest");
+        hashCommands.add (this, "getLatency");
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
@@ -3961,5 +3963,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.e(TAG, "writeFile: ", e);
             toast(e.getMessage());
         }
+    }
+
+    public static void getLatency () {
+        if (!mainActivity.running) {
+            Toast.makeText(context, "not running", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "getLatency: not running");
+            return;
+        }
+        
+        Toast.makeText(context,
+                new StringJoiner (" ")
+                        .add("Input:")
+                        .add(String.valueOf(AudioEngine.getLatency(true)))
+                        .add("Output: ")
+                        .add(String.valueOf(AudioEngine.getLatency(false)))
+                        .toString()
+                , Toast.LENGTH_SHORT).show();
     }
 }

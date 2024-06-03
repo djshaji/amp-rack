@@ -178,6 +178,8 @@ oboe::Result  Engine::openStreams() {
     latencyTunerOut->tune();
     warnIfNotLowLatency(mRecordingStream);
 
+    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
     mFullDuplexPass.setInputStream(mRecordingStream);
     mFullDuplexPass.setOutputStream(mPlayStream);
 
@@ -565,9 +567,11 @@ std::string Engine::tuneLatency () {
     oboe::Result result = latencyTuner->tune() ;
     latencyTunerOut->requestReset();
     oboe::Result resultOut = latencyTunerOut->tune() ;
-    char tmp [400];
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
+    char tmp [450];
     // hello, old friend
-    sprintf (tmp, "Tuner: %d/%d, Xruns: %d/%d, Buffer size in frames: %d/%d", result, resultOut,
+    sprintf (tmp, "Latency: %.0fms, Xruns: %d/%d, Buffer size: %d/%d",
+             getLatency(false),
              mRecordingStream->getXRunCount(),mPlayStream->getXRunCount(),
              mRecordingStream->getBufferSizeInFrames(), mPlayStream->getBufferSizeInFrames());
     LOGD ("%s",tmp);
@@ -608,12 +612,24 @@ void Engine::setSampleRateDisplay (int sampleRate, bool lowLatency) {
 }
 
 double Engine::getLatency (bool input) {
+    if (mPlayStream->usesAAudio())
+        LOGI("using AAudio");
+
     if (input) {
         const oboe::ResultWithValue<double> &latency = mRecordingStream->calculateLatencyMillis();
         return latency.value();
     } else {
+        int frames = mPlayStream->getFramesWritten() - mPlayStream->getFramesRead();
+        int bufferLatencyMillis = 1000 * frames / mPlayStream->getSampleRate();
+
         const oboe::ResultWithValue<double> &latency = mPlayStream->calculateLatencyMillis();
-        return latency.value();
+        LOGD("[%f: %d] %d %d %d %d", latency.value(), bufferLatencyMillis,
+                mPlayStream->getFramesPerBurst(),
+                mPlayStream->getXRunCount().value(),
+                mPlayStream->getBufferSizeInFrames(),
+                mPlayStream->getBufferCapacityInFrames());
+//        mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
+        return latency.value() - bufferLatencyMillis;
     }
 }
 
