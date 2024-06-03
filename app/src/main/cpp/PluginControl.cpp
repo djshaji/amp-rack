@@ -180,7 +180,13 @@ LADSPA_Data PluginControl::getDefault () {
 }
 
 LADSPA_Data PluginControl::getValue () {
-    return val ;
+    /*  I've forgotten how I use this, but I don't *set* this variable.
+     *  So why do I *get* this?
+     *
+     *  I wonder what changing this will break?
+     */
+//    return val ;
+    return *def;
 }
 
 void PluginControl::print () {

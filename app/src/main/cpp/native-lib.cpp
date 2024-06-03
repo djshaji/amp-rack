@@ -89,6 +89,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setEffectOn(JNIEnv *env, jclass cl
     }
     */
 
+    LOGD("[set effect on] %d", is_effect_on);
     return engine->setEffectOn(is_effect_on) ? JNI_TRUE : JNI_FALSE;
 }
 extern "C"
@@ -915,6 +916,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setMainActivityClassName(JNIEnv *e
 
     const char *nativeString = env->GetStringUTFChars(class_name, 0);
     engine->mainActivityClassName = std::string (nativeString);
+    engine->meter->setActivityClassName(engine->mainActivityClassName);
     env->ReleaseStringUTFChars(class_name, nativeString);
 }
 extern "C"
@@ -961,5 +963,103 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getActiveEnabledPlugins(JNIEnv *en
     }
 
     return active;
+    OUT
+}
+
+extern "C"
+JNIEXPORT jfloat JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginValue(JNIEnv *env, jclass clazz,
+                                                                    jint plugin, jint control) {
+    IN
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        OUT
+        return 0;
+    }
+
+    LOGD("request plugin %d control %d", plugin, control);
+    if (plugin >= engine->activePlugins.size() || control >= engine->activePlugins.at(plugin)->pluginControls.size()) {
+        LOGE("out of range request! %d [%d] %d [%d]",
+             engine->activePlugins.size(),
+             plugin,
+             engine->activePlugins.at(plugin)->pluginControls.size(),
+             control) ;
+        OUT
+        return 0 ;
+    }
+
+    float val = engine->activePlugins.at(plugin)->pluginControls.at(control)->getValue();
+    OUT
+    return val ;
+}
+
+extern "C"
+JNIEXPORT jfloat JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginValueByIndex(JNIEnv *env, jclass clazz,
+                                                                    jint plugin, jint control) {
+    IN
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        OUT
+        return 0;
+    }
+
+    for (int i = 0 ; i < engine->activePlugins.at(plugin)->pluginControls.size(); i ++) {
+        if (engine->activePlugins.at (plugin)->pluginControls.at(i)->port == control) {
+            LOGD("found value for index %d at port %d: %f", control,
+                 engine->activePlugins.at (plugin)->pluginControls.at(i)->port,
+                 engine->activePlugins.at(plugin)->pluginControls.at(i)->getValue());
+            OUT
+            return engine->activePlugins.at(plugin)->pluginControls.at(i)->getValue();
+        }
+    }
+
+    LOGE("returning default value 0!");
+    OUT
+    return 0 ;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginEnabled(JNIEnv *env, jclass clazz, jint plugin) {
+    // TODO: implement togglePlugin()
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        return false;
+    }
+
+    return engine->activePlugins.at(plugin)->active ;
+}
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getActivePluginID(JNIEnv *env, jclass clazz,
+                                                                jint plugin) {
+    if (engine == nullptr)
+        return -1 ;
+
+    return engine -> activePlugins.at (plugin)->ID;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControlByIndex(JNIEnv *env, jclass clazz,
+                                                                      jint plugin, jint control,
+                                                                      jfloat value) {
+    IN
+    if (engine == NULL) {
+        LOGF ("engine is NULL");
+        OUT
+        return;
+    }
+
+    for (int i = 0 ; i < engine->activePlugins.at(plugin)->pluginControls.size(); i ++) {
+        if (engine->activePlugins.at (plugin)->pluginControls.at(i)->port == control) {
+            engine->activePlugins.at(plugin)->pluginControls.at(i)->setValue(value);
+            OUT
+            return;
+        }
+    }
+
     OUT
 }

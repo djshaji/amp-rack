@@ -41,6 +41,7 @@ Plugin::Plugin (const LADSPA_Descriptor * _descriptor, unsigned long _sampleRate
         LOGD("Creating plugin: %s", _descriptor->Name);
 
         handle = (LADSPA_Handle *) descriptor->instantiate(descriptor, sampleRate);
+        ID = descriptor->UniqueID;
         LOGD("[%s] loaded plugin %s [%d: %s] at %u", __PRETTY_FUNCTION__, descriptor->Name,
              descriptor->UniqueID, descriptor->Label, sampleRate);
         print();

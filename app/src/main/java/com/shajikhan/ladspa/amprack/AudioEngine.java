@@ -19,6 +19,9 @@ public class AudioEngine {
     // activePlugins
     public static native int getActivePlugins ();
     public static native float [] getActivePluginValues (int plugin);
+    public static native float getActivePluginValue (int plugin, int control);
+    public static native float getActivePluginValueByIndex (int plugin, int control);
+    public static native int getActivePluginID (int plugin);
     public static native int getPluginControls (int plugin) ;
     public static native boolean getFilePort (int plugin);
     public static native void setFilePortValue (int plugin, String filename);
@@ -42,12 +45,14 @@ public class AudioEngine {
     public static native void toggleRecording (boolean state) ;
 
     public static native void setPluginControl (int plugin, int control, float value);
+    public static native void setPluginControlByIndex (int plugin, int control, float value);
     public static native void setPresetValue (int plugin, int control, float value);
     public static native int movePlugin (int plugin, int position) ;
     public static native int movePluginUp (int plugin) ;
     public static native int movePluginDown (int plugin) ;
 
     public static native boolean togglePlugin (int plugin, boolean state) ;
+    public static native boolean getActivePluginEnabled (int plugin);
     public static native void bypass (boolean state) ;
 
     public static native void setExportFormat (int format);

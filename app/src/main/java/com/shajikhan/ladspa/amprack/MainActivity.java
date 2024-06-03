@@ -604,6 +604,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        AudioEngine.showProgress(context);
 
         AudioEngine.create();
+
         AudioEngine.setLibraryPath(getApplicationInfo().nativeLibraryDir);
         AudioEngine.setLazyLoad(lazyLoad);
         // load included plugins
@@ -2058,6 +2059,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        String[] tapPlugins = context.getResources().getStringArray(R.array.tap_plugins);
         sharedLibraries = context.getResources().getStringArray(R.array.ladspa_plugins);
         sharedLibrariesLV2 = context.getResources().getStringArray(R.array.lv2_plugins);
+        AudioEngine.setMainActivityClassName("com/shajikhan/ladspa/amprack/MainActivity");
 
 //        sharedLibraries.add (sharedLibrariesLV2);
 

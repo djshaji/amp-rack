@@ -51,36 +51,50 @@ bool Meter::isInput = true;
 jfloatArray pushVideoSamples = nullptr;
 
 JNIEnv* getEnv() {
+    IN
+    if (gJvm == nullptr) {
+        LOGE("gJvm == nullptr");
+    }
+
     JNIEnv *env;
     int status = gJvm->GetEnv((void**)&env, JNI_VERSION_1_6);
     if(status < 0) {
         status = gJvm->AttachCurrentThread(&env, NULL);
         if(status < 0) {
+            OUT
+            LOGE("STATUS < 0");
             return nullptr;
         }
     }
 
     LOGD("[getenv] attached thread id %d", gettid());
+    OUT
     return env;
 }
 
-/*
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *pjvm, void *reserved) {
-    gJvm = pjvm;  // cache the JavaVM pointer
+//JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *_pjvm, void *reserved) {
+//    gJvm = _pjvm;  // cache the JavaVM pointer
+//    return JNI_VERSION_1_6;
+//}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *_pjvm, void *reserved) {
+    IN
+    gJvm = _pjvm;  // cache the JavaVM pointer
     auto env = getEnv();
     //replace with one of your classes in the line below
-    auto randomClass = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
-    jclass classClass = env->GetObjectClass(randomClass);
-    auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
-    auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
-                                                 "()Ljava/lang/ClassLoader;");
-    gClassLoader = (jclass) env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
-    gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
-                                        "(Ljava/lang/String;)Ljava/lang/Class;");
+//    auto randomClass = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
+//    jclass classClass = env->GetObjectClass(randomClass);
+//    auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
+//    auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
+//                                                 "()Ljava/lang/ClassLoader;");
+//    gClassLoader = (jclass) env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
+//    gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
+//                                        "(Ljava/lang/String;)Ljava/lang/Class;");
 
+    OUT
     return JNI_VERSION_1_6;
 }
- */
+
 
 
 jclass Meter::findClass(const char* name) {
@@ -118,6 +132,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
 
     if (envOutput == nullptr) {
         LOGD("MeterOutput thread id: %d", gettid ());
+//        _JNI_OnLoad(vm, nullptr);
         envOutput = getEnv();
 //        int status = gJvm->GetEnv((void**)&envOutput, JNI_VERSION_1_6);
 //        if (status < 0) {
@@ -155,6 +170,7 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         pushVideoSamples = envOutput->NewFloatArray(TUNER_ARRAY_SIZE);
         audioToVideoBytes = (unsigned  char *) malloc(sizeof(unsigned  char) * TUNER_ARRAY_SIZE);
         jfloatArray1_index = 0 ;
+        OUT
         return 0 ;
     } else {
         if (tunerEnabled) {
@@ -486,3 +502,28 @@ float Meter::rms(float *v, int n)
     return sum / n;
 }
 
+void Meter::setActivityClassName (std::string name) {
+    IN
+    /*  Note to self:
+     * I've moved this here from JNI_ONLOAD (see above)
+     * so that the name of the MainActivity class can be dynamic
+     * I think this may cause (maybe) a race condition that
+     * causes random crashes.
+     *
+     * If that happens, revert this back.
+     */
+
+    jMainActivityClassName = name ;
+    env = getEnv();
+    auto randomClass = env->FindClass(name.c_str());
+//    auto randomClass = env->FindClass("com/shajikhan/ladspa/amprack/MainActivity");
+    jclass classClass = env->GetObjectClass(randomClass);
+    auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
+    auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
+                                                 "()Ljava/lang/ClassLoader;");
+    gClassLoader = (jclass) env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
+    gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
+                                        "(Ljava/lang/String;)Ljava/lang/Class;");
+
+    OUT
+}

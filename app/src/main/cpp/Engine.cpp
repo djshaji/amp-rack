@@ -98,6 +98,7 @@ bool Engine::setEffectOn(bool isOn) {
         } else {
             if (mFullDuplexPass.recordingActive) {
                 fileWriter->stopRecording() ;
+                mFullDuplexPass.recordingActive = false;
             }
 
 //            LOGD("stopping meter");

@@ -8,7 +8,6 @@
 #include "json.hpp"
 
 class PluginControl {
-    unsigned long port;
     const LADSPA_PortDescriptor *desc;
     const LADSPA_PortRangeHint *hint;
     /* values selected in the interface */
@@ -24,6 +23,7 @@ class PluginControl {
     };
 
 public:
+    unsigned long port;
     LADSPA_Data min;
     LADSPA_Data max;
     LADSPA_Data default_value = 1; // 1 == no change in signal

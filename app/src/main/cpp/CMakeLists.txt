@@ -127,3 +127,6 @@ target_include_directories(camera_textureview PRIVATE ${COMMON_SOURCE_DIR})
 
 # add lib dependencies
 target_link_libraries(camera_textureview dl android log m camera2ndk mediandk)
+
+# optimize
+target_compile_options(amprack PRIVATE -Wall -Ofast)

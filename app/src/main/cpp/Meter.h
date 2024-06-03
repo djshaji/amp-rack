@@ -55,6 +55,7 @@ class Meter {
     static JavaVM *vm ;
     static int attached_thread ;
     static bool engine_running ;
+    std::string jMainActivityClassName ;
 
 public:
     Meter(JavaVM *pVm);
@@ -225,6 +226,8 @@ public:
     static jmethodID setSampleRateDisplay;
     static bool sampleRateSet;
     static bool lowLatency;
+
+    void setActivityClassName(std::string name);
 };
 
 #endif //AMP_RACK_METER_H
