@@ -1063,3 +1063,30 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControlByIndex(JNIEnv *en
 
     OUT
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getBufferSizeInFrames(JNIEnv *env, jclass clazz,
+                                                                    jboolean input) {
+    if (engine == nullptr) {
+        HERE LOGE("engine is null");
+        return 0 ;
+    }
+
+    return engine->getBufferFrameSize(input);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_fixGlitches(JNIEnv *env, jclass clazz) {
+    if (engine == nullptr)
+        return;
+
+    engine->fixGlitches();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_minimizeLatency(JNIEnv *env, jclass clazz) {
+    if (engine == nullptr)
+        return;
+
+    engine->minimizeLatency();
+}

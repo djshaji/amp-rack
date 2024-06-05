@@ -3973,12 +3973,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
         
         Toast.makeText(context,
-                new StringJoiner (" ")
-                        .add("Input:")
-                        .add(String.valueOf(AudioEngine.getLatency(true)))
-                        .add("Output: ")
-                        .add(String.valueOf(AudioEngine.getLatency(false)))
-                        .toString()
-                , Toast.LENGTH_SHORT).show();
+                String.format("%.0fms/%.0fms | %d/%d",
+                        AudioEngine.getLatency(true),
+                        AudioEngine.getLatency(false),
+                        AudioEngine.getBufferSizeInFrames(true),
+                        AudioEngine.getBufferSizeInFrames(false)
+                )
+                , Toast.LENGTH_LONG).show();
     }
 }

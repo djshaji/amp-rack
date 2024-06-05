@@ -178,8 +178,8 @@ oboe::Result  Engine::openStreams() {
     latencyTunerOut->tune();
     warnIfNotLowLatency(mRecordingStream);
 
-    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
-    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
+//    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
+//    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
     mFullDuplexPass.setInputStream(mRecordingStream);
     mFullDuplexPass.setOutputStream(mPlayStream);
 
@@ -444,6 +444,14 @@ void Engine::buildPluginChain () {
         mFullDuplexPass.handle [mFullDuplexPass.activePlugins] = p->handle ;
         mFullDuplexPass.activePlugins ++ ;
     }
+
+    if (mIsEffectOn) {
+        LOGD("adjusting latency ...");
+
+        latencyTuner->tune();
+        latencyTunerOut->tune();
+    }
+
     OUT
 }
 
@@ -567,11 +575,11 @@ std::string Engine::tuneLatency () {
     oboe::Result result = latencyTuner->tune() ;
     latencyTunerOut->requestReset();
     oboe::Result resultOut = latencyTunerOut->tune() ;
-    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
+//    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
     char tmp [450];
     // hello, old friend
     sprintf (tmp, "Latency: %.0fms, Xruns: %d/%d, Buffer size: %d/%d",
-             getLatency(false),
+             getLatency(true) + getLatency(false),
              mRecordingStream->getXRunCount(),mPlayStream->getXRunCount(),
              mRecordingStream->getBufferSizeInFrames(), mPlayStream->getBufferSizeInFrames());
     LOGD ("%s",tmp);
@@ -629,10 +637,33 @@ double Engine::getLatency (bool input) {
                 mPlayStream->getBufferSizeInFrames(),
                 mPlayStream->getBufferCapacityInFrames());
 //        mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
-        return latency.value() - bufferLatencyMillis;
+        return latency.value() ;// - bufferLatencyMillis;
     }
 }
 
 void Engine::popFunction () {
     queueManager.pop_function();
+}
+
+int Engine::getBufferFrameSize (bool input) {
+    if (input)
+        return mRecordingStream->getBufferSizeInFrames();
+    else
+        return mPlayStream->getBufferSizeInFrames();
+}
+
+void Engine::fixGlitches () {
+    IN
+    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getBufferCapacityInFrames());
+    OUT
+}
+
+void Engine::minimizeLatency () {
+    IN
+
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
+    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
+
+    OUT
 }

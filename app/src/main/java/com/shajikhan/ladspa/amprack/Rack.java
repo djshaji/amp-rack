@@ -57,6 +57,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.Slider;
@@ -644,7 +645,45 @@ public class Rack extends Fragment {
             }
         });
 
-        MenuItem exit_item = optionsMenu.getMenu().getItem(11);
+        MenuItem glitch = optionsMenu.getMenu().findItem(R.id.glitch);
+        glitch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                if (! mainActivity.running)
+                    return false;
+
+                AudioEngine.fixGlitches();
+                Toast.makeText(mainActivity,
+                        String.format(
+                                "Latency: %.0f, Buffer size: %d",
+                                AudioEngine.getLatency(true) + AudioEngine.getLatency(false),
+                                AudioEngine.getBufferSizeInFrames(false)
+                        )
+                        , Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        MenuItem minimize = optionsMenu.getMenu().findItem(R.id.minimize);
+        minimize.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                if (! mainActivity.running)
+                    return false;
+
+                AudioEngine.minimizeLatency();
+                Toast.makeText(mainActivity,
+                        String.format(
+                                "Latency: %.0f, Buffer size: %d",
+                                AudioEngine.getLatency(true) + AudioEngine.getLatency(false),
+                                AudioEngine.getBufferSizeInFrames(false)
+                        )
+                        , Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        MenuItem exit_item = optionsMenu.getMenu().findItem(R.id.menu_exit);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -1154,5 +1193,13 @@ public class Rack extends Fragment {
         mainActivity.patchName.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("name"));
         mainActivity.patchDesc.setText((CharSequence) mainActivity.quickPatch.myPresetsAdapter.allPresets.get(p).get("desc"));
 
+    }
+
+    public void latencyDialog () {
+        LinearLayout linearLayout = (LinearLayout) mainActivity.getLayoutInflater().inflate(R.layout.latency_tuner, null);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mainActivity);
+        builder.setTitle("Latency Tuner")
+                .setView(linearLayout)
+                .setPositiveButton("Close", null);
     }
 }

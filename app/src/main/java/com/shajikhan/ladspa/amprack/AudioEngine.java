@@ -129,4 +129,7 @@ public class AudioEngine {
     public static native void pushToLockFreeBeforeOutputVolumeAaaaaargh (boolean setting) ;
     public static native void setLamePreset (int preset);
     public static native int getActiveEnabledPlugins ();
+    public static native int getBufferSizeInFrames (boolean input) ;
+    public static native void fixGlitches ();
+    public static native void minimizeLatency ();
 }

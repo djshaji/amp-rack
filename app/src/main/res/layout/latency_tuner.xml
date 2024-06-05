@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/latency"
+        android:background="@drawable/rounded_corners_transparent"
+        android:fontFamily="@font/gruppo"
+        android:text="20ms"
+        android:drawableLeft="@drawable/ic_baseline_refresh_24"
+        android:textSize="24dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Auto"
+        android:background="@drawable/rounded_corners_transparent"
+        android:drawableLeft="@drawable/baseline_auto_fix_high_24"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Automatically tune latency"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/minimize"
+        android:drawableLeft="@drawable/baseline_bolt_24"
+        android:layout_gravity="center"
+        android:text="Minimize Latency"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_corners_transparent"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:text="Set latency to minimum supported by device.\nMay cause glitches"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Fix Glitches"
+        android:drawableLeft="@drawable/baseline_settings_suggest_24"
+        android:background="@drawable/rounded_corners_transparent"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:text="Remove glitches by increasing latency"/>
+
+</LinearLayout>

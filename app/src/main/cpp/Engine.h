@@ -120,6 +120,12 @@ public:
     void setPluginFilename(std::string filename, int plugin);
 
     void popFunction();
+
+    int getBufferFrameSize(bool input);
+
+    void fixGlitches();
+
+    void minimizeLatency();
 } ;
 
 #endif // __ENGINE__H
