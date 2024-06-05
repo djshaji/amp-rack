@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
@@ -640,45 +641,8 @@ public class Rack extends Fragment {
         tuneLatency.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                MainActivity.toast(AudioEngine.tuneLatency());
-                return false;
-            }
-        });
-
-        MenuItem glitch = optionsMenu.getMenu().findItem(R.id.glitch);
-        glitch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-                if (! mainActivity.running)
-                    return false;
-
-                AudioEngine.fixGlitches();
-                Toast.makeText(mainActivity,
-                        String.format(
-                                "Latency: %.0f, Buffer size: %d",
-                                AudioEngine.getLatency(true) + AudioEngine.getLatency(false),
-                                AudioEngine.getBufferSizeInFrames(false)
-                        )
-                        , Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-        MenuItem minimize = optionsMenu.getMenu().findItem(R.id.minimize);
-        minimize.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-                if (! mainActivity.running)
-                    return false;
-
-                AudioEngine.minimizeLatency();
-                Toast.makeText(mainActivity,
-                        String.format(
-                                "Latency: %.0f, Buffer size: %d",
-                                AudioEngine.getLatency(true) + AudioEngine.getLatency(false),
-                                AudioEngine.getBufferSizeInFrames(false)
-                        )
-                        , Toast.LENGTH_SHORT).show();
+//                MainActivity.toast(AudioEngine.tuneLatency());
+                latencyDialog();
                 return false;
             }
         });
@@ -1197,9 +1161,92 @@ public class Rack extends Fragment {
 
     public void latencyDialog () {
         LinearLayout linearLayout = (LinearLayout) mainActivity.getLayoutInflater().inflate(R.layout.latency_tuner, null);
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mainActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Latency Tuner")
                 .setView(linearLayout)
                 .setPositiveButton("Close", null);
+
+        Button latency  = linearLayout.findViewById(R.id.latency);
+        latency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (! mainActivity.running) {
+                    Toast.makeText(mainActivity, "Audio Engine not running", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                latency.setText(
+                        String.format( "%.0f ms",
+                                AudioEngine.getLatency(true) +
+                                AudioEngine.getLatency(false)
+                        )
+                );
+            }
+        });
+
+        if (mainActivity.running)
+            latency.performClick();
+
+        Button ato = linearLayout.findViewById(R.id.autofix);
+        ato.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (! mainActivity.running) {
+                    Toast.makeText(mainActivity, "Audio Engine not running", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                AudioEngine.tuneLatency();
+                latency.performClick();
+            }
+        });
+
+        Button minimize = linearLayout.findViewById(R.id.minimize);
+        minimize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (! mainActivity.running) {
+                    Toast.makeText(mainActivity, "Audio Engine not running", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                AudioEngine.minimizeLatency();
+                latency.performClick();
+            }
+        });
+
+        Button glitch = linearLayout.findViewById(R.id.glitch);
+        glitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (! mainActivity.running) {
+                    Toast.makeText(mainActivity, "Audio Engine not running", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                AudioEngine.fixGlitches();
+                latency.performClick();
+            }
+        });
+
+        android.os.Handler handler = new Handler();
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                latency.performClick();
+                handler.postDelayed(this, 500);
+            }
+        };
+        handler.postDelayed(r, 500);
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Log.d(TAG, "onDismiss: closing handler");
+                handler.removeCallbacks(r);
+            }
+        });
+
+        builder.show();
     }
 }
