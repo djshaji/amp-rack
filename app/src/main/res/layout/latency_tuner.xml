@@ -13,7 +13,7 @@
         android:id="@+id/latency"
         android:padding="10dp"
         android:fontFamily="@font/gruppo"
-        android:text="20ms"
+        android:text=""
         android:textSize="34dp"/>
 
     <Button

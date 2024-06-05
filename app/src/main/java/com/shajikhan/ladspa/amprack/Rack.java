@@ -1186,6 +1186,8 @@ public class Rack extends Fragment {
 
         if (mainActivity.running)
             latency.performClick();
+        else
+            Toast.makeText(mainActivity, "Turn on the audio engine to use Latency Tuner", Toast.LENGTH_SHORT).show();
 
         Button ato = linearLayout.findViewById(R.id.autofix);
         ato.setOnClickListener(new View.OnClickListener() {
@@ -1233,10 +1235,12 @@ public class Rack extends Fragment {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                latency.performClick();
+                if (mainActivity.running)
+                    latency.performClick();
                 handler.postDelayed(this, 500);
             }
         };
+
         handler.postDelayed(r, 500);
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {

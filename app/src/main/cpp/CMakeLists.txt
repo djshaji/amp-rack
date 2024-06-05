@@ -130,4 +130,5 @@ target_link_libraries(camera_textureview dl android log m camera2ndk mediandk)
 
 # optimize
 target_compile_options(amprack PRIVATE -Wall -Ofast)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Ofast")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE}")

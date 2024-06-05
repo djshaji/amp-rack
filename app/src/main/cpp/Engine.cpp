@@ -180,6 +180,8 @@ oboe::Result  Engine::openStreams() {
 
 //    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
 //    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst());
+    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst() * 2);
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst() * 2);
     mFullDuplexPass.setInputStream(mRecordingStream);
     mFullDuplexPass.setOutputStream(mPlayStream);
 
