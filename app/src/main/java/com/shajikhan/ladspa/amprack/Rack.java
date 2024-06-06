@@ -801,8 +801,14 @@ public class Rack extends Fragment {
                     });
                 }
                 mixer.setVisibility(View.VISIBLE);
+                ((TextView) mainActivity.findViewById(R.id.m_camera)).setVisibility(View.VISIBLE);
+                ((TextView) mainActivity.findViewById(R.id.m_on)).setVisibility(View.VISIBLE);
+                ((TextView) mainActivity.findViewById(R.id.m_mixer)).setVisibility(View.VISIBLE);
             } else {
                 mixer.setVisibility(View.GONE);
+                ((TextView) mainActivity.findViewById(R.id.m_camera)).setVisibility(View.GONE);
+                ((TextView) mainActivity.findViewById(R.id.m_on)).setVisibility(View.GONE);
+                ((TextView) mainActivity.findViewById(R.id.m_mixer)).setVisibility(View.GONE);
             }
         });
 

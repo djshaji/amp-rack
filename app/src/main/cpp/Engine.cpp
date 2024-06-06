@@ -573,6 +573,9 @@ std::string Engine::tuneLatency () {
     if (! mIsEffectOn)
         return std::string ("Turn on audio engine first") ;
 
+    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst() * 2);
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst() * 2);
+
     latencyTuner->requestReset();
     oboe::Result result = latencyTuner->tune() ;
     latencyTunerOut->requestReset();

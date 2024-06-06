@@ -66,39 +66,73 @@
                 android:layout_height="wrap_content"/>
 
 
-            <ToggleButton
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:textOff=""
-                android:textOn=""
-                android:padding="5dp"
-                android:drawableRight="@drawable/ic_baseline_volume_up_24"
-                android:gravity="right"
-                android:layout_marginRight="5dp"
-                android:id="@+id/mixer_toggle"
-                android:background="@color/fui_transparent"
-                android:layout_gravity="right"
-                android:fontFamily="@font/comfortaa"/>
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/onoff"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp" />
+                android:orientation="vertical">
+                <ToggleButton
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:textOff=""
+                    android:textOn=""
+                    android:padding="5dp"
+                    android:drawableRight="@drawable/ic_baseline_volume_up_24"
+                    android:gravity="right"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/mixer_toggle"
+                    android:background="@color/fui_transparent"
+                    android:layout_gravity="right"
+                    android:fontFamily="@font/comfortaa"/>
+                <TextView
+                    android:id="@+id/m_mixer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mixer"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/gruppo"
+                    android:textStyle="bold"
+                    android:foregroundTint="@color/white"
+                    android:textSize="14dp"/>
+            </LinearLayout>
 
-            <ToggleButton
-                android:id="@+id/onofftoggle"
-                android:visibility="gone"
-                android:textOn=""
-                android:layout_gravity="right"
-                android:gravity="center|center_vertical"
-                android:textOff=""
-                android:background="@color/fui_transparent"
-                android:layout_width="48dp"
-                android:padding="5dp"
-                android:paddingLeft="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:id="@+id/on_ll"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/onoff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp" />
+                <ToggleButton
+                    android:id="@+id/onofftoggle"
+                    android:visibility="gone"
+                    android:textOn=""
+                    android:layout_gravity="right"
+                    android:gravity="center|center_vertical"
+                    android:textOff=""
+                    android:background="@color/fui_transparent"
+                    android:layout_width="48dp"
+                    android:padding="5dp"
+                    android:paddingLeft="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp" />
+                <TextView
+                    android:id="@+id/m_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="On"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/gruppo"
+                    android:textStyle="bold"
+                    android:foregroundTint="@color/white"
+                    android:textSize="14dp"/>
+            </LinearLayout>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/settings"
                 android:layout_width="30dp"
@@ -119,18 +153,35 @@
                 android:textOn="Off" />
 
 
-            <ToggleButton
-                android:padding="0dp"
-                android:textOn=""
-                android:textOff=""
-                android:layout_marginTop="0dp"
-                android:id="@+id/video_button"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_width="30dp"
-                android:background="@color/fui_transparent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/baseline_add_a_photo_24"/>
+                android:orientation="vertical">
+                <ToggleButton
+                    android:padding="0dp"
+                    android:textOn=""
+                    android:textOff=""
+                    android:layout_marginTop="0dp"
+                    android:id="@+id/video_button"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="30dp"
+                    android:background="@color/fui_transparent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/baseline_add_a_photo_24"/>
+
+                <TextView
+                    android:id="@+id/m_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Video"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/gruppo"
+                    android:textStyle="bold"
+                    android:foregroundTint="@color/white"
+                    android:textSize="14dp"/>
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/menu_button"

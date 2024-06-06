@@ -250,4 +250,14 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
 
         notifyDataSetChanged();
     }
+
+    boolean contains (Map preset) {
+        for (Map p:
+             allPresets) {
+            if (preset.get("name").equals(p.get("name")) && preset.get("uid").equals(p.get("uid")))
+                return true;
+        }
+
+        return false;
+    }
 }

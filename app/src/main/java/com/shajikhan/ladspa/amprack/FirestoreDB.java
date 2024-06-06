@@ -159,7 +159,15 @@ public class FirestoreDB {
                             Log.d(TAG, "onComplete: skipping empty preset " + preset.get("name"));
                             continue;
                         }
+
                         preset.put("path", document.getReference().getPath());
+
+                        if (shared && presetsAdapter.contains(preset)) {
+                            Log.d(TAG, String.format ("[skip duplicate preset]: %s", preset));
+                            continue;
+                        }
+
+//                        Log.d(TAG, String.format ("[preset]: %s", preset));
                         presetsAdapter.addPreset(preset);
 //                        lastStamp = (String) preset.get(presetsAdapter.sortBy);
                     }

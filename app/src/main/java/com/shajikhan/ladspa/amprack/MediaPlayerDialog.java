@@ -7,12 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -26,6 +28,7 @@ public class MediaPlayerDialog {
     MainActivity mainActivity ;
     MediaPlayer mediaPlayer ;
     AlertDialog dialog ;
+    String TAG = getClass().getSimpleName();
 
     MediaPlayerDialog (MainActivity activity, MediaPlayer player) {
         mainActivity = activity;
@@ -82,6 +85,15 @@ public class MediaPlayerDialog {
         TextView textView = constraintLayout.findViewById(R.id.media_filename);
         File file = new File(mainActivity.lastRecordedFileName);
         textView.setText(file.getName());
+
+        LinearLayout surfaceLayout = constraintLayout.findViewById(R.id.surface_ll);
+        mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+            @Override
+            public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                surface.getHolder().setFixedSize(width, height);
+            }
+        });
+
         toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -90,7 +102,14 @@ public class MediaPlayerDialog {
                     mainActivity.tracks.tracksAdapter.add(mainActivity.lastRecordedFileName);
                     Uri uri = Uri.parse(mainActivity.lastRecordedFileName);
                     try {
-                        surface.setVisibility(View.VISIBLE);
+                        if (mainActivity.lastRecordedFileName.endsWith(".mp4")) {
+                            surface.setVisibility(View.VISIBLE);
+                            Log.d(TAG, "onCheckedChanged: ends with mp4");
+                        } else {
+                            surface.setVisibility(View.GONE);
+                            Log.d(TAG, "onCheckedChanged: no end");
+                        }
+
                         mediaPlayer.stop();
                         mediaPlayer.reset();
                         mediaPlayer.setDataSource(mainActivity.getApplicationContext(), uri);

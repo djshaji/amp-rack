@@ -119,6 +119,13 @@ public class SettingsActivity extends AppCompatActivity implements
                 }
             });
 
+            findPreference("cool").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    MainActivity.about();
+                    return false;
+                }
+            });
         }
     }
 

@@ -933,11 +933,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.media_player_dialog, null);
         SurfaceView surface = constraintLayout.findViewById(R.id.video_player_dialog);
+
+        LinearLayout surfaceLayout = constraintLayout.findViewById(R.id.surface_ll);
+
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                int w = mp.getVideoWidth(), h = mp.getVideoHeight() ;
-                surface.getHolder().setFixedSize(w, h);
+                if (lastRecordedFileName.endsWith(".mp4")) {
+                    int w = mp.getVideoWidth(), h = mp.getVideoHeight();
+                    surfaceLayout.setVisibility(View.VISIBLE);
+                    surface.getHolder().setFixedSize(w, h);
+                    Log.d(TAG, "onPrepared: ends with mp4");
+                } else {
+                    surfaceLayout.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -989,7 +998,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (b) {
                     Uri uri = Uri.parse(lastRecordedFileName);
                     try {
-                        surface.setVisibility(View.VISIBLE);
+                        if (lastRecordedFileName.endsWith(".mp4")) {
+                            surfaceLayout.setVisibility(View.VISIBLE);
+                            Log.d(TAG, "onCheckedChanged: ends with mp4");
+                        } else {
+                            surfaceLayout.setVisibility(View.GONE);
+                            Log.d(TAG, "onCheckedChanged: no end");
+                        }
+
                         mediaPlayer.stop();
                         mediaPlayer.reset();
                         mediaPlayer.setDataSource(getApplicationContext(), uri);
