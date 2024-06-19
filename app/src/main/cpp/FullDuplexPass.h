@@ -31,6 +31,7 @@ public:
     float inputVolume = 1.0 ;
     float outputVolume = 1.0 ;
     bool meterEnabled = true ;
+    bool pause = false ;
     
     // Lock Free Queue Manager
     void (queue)(float * data, int frames) ;
@@ -99,7 +100,7 @@ public:
          * hence the entire vringbuffer stuff
          */
 
-        if (pushToLockFreeBeforeOutputVolume)
+        if (pushToLockFreeBeforeOutputVolume && ! pause)
             lockFreeQueueManager->process(raw, inSamples, samplesToProcess) ;
 
         for (int32_t i = 0; i < samplesToProcess; i++) {
@@ -111,7 +112,7 @@ public:
 //            Meter::process (samplesToProcess, inSamples, false);
 //        }
 
-        if (! pushToLockFreeBeforeOutputVolume)
+        if (! pushToLockFreeBeforeOutputVolume && ! pause)
             lockFreeQueueManager->process(raw, inSamples, samplesToProcess) ;
 
         //        for (int32_t i = 0; i < samplesToProcess; i++) {

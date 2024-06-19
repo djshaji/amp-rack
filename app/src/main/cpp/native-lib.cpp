@@ -1090,3 +1090,22 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_minimizeLatency(JNIEnv *env, jclas
 
     engine->minimizeLatency();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_pause(JNIEnv *env, jclass clazz, jboolean state) {
+    if (engine == nullptr)
+        return;
+
+    engine->mFullDuplexPass.pause = state;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_pushSamples(JNIEnv *env, jclass clazz,
+                                                          jstring method_name) {
+    if (engine == nullptr)
+        return ;
+
+    const char *nativeString = env->GetStringUTFChars(method_name, 0);
+    engine -> setupPushSamples (std::string (nativeString));
+    env->ReleaseStringUTFChars(method_name, nativeString);
+}

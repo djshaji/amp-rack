@@ -54,6 +54,7 @@ public class AudioEngine {
     public static native boolean togglePlugin (int plugin, boolean state) ;
     public static native boolean getActivePluginEnabled (int plugin);
     public static native void bypass (boolean state) ;
+    public static native void pause (boolean state) ;
 
     public static native void setExportFormat (int format);
 

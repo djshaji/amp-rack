@@ -20,11 +20,16 @@ public:
             int   numOutputFrames) {
     }
 
-std::string LIBRARY_PATH ;
+    std::string LIBRARY_PATH ;
     Engine() ;
     std::string tuneLatency();
-    JavaVM * vm ;
-    std::string mainActivityClassName = "";
+    static JavaVM * vm ;
+    static JNIEnv * env ;
+    static bool lockFreeThreadAttached ;
+    static jclass mainActivity;
+    static jmethodID pushSamplesMethod;
+    static jfloatArray pushSamples ;
+    static std::string mainActivityClassName ;
     bool              mIsEffectOn = false;
     bool setPluginBuffer (float * buffer, int buffer_size, int plugin) ;
 
@@ -126,6 +131,16 @@ public:
     void fixGlitches();
 
     void minimizeLatency();
+
+    void setupPushSamples(std::string methodName);
+
+    static JNIEnv *Env();
+
+    static int push(AudioBuffer *buffer);
+
+    static std::string pushSamplesMethodName;
+
+    static jclass findClassWithEnv(JNIEnv *env, const char *name);
 } ;
 
 #endif // __ENGINE__H

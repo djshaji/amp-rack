@@ -55,7 +55,7 @@ class Meter {
     static JavaVM *vm ;
     static int attached_thread ;
     static bool engine_running ;
-    std::string jMainActivityClassName ;
+    static std::string jMainActivityClassName ;
 
 public:
     Meter(JavaVM *pVm);

@@ -140,6 +140,10 @@ public class SettingsActivity extends AppCompatActivity implements
             ListPreference listPreference = findPreference("input");
             ListPreference listPreferenceOutput = findPreference("output");
 
+            Preference purchase = findPreference("purchase_pro");
+            if (! MainActivity.proVersion)
+                purchase.setVisible(true);
+
             ArrayList<CharSequence> entries = new ArrayList<>();
             ArrayList<CharSequence> entryValues = new ArrayList<>();
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();

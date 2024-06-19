@@ -54,9 +54,9 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
             public void onClick(View view) {
                 if (mainActivity.dataAdapter.plugins.size() > 1 && MainActivity.proVersion == false) {
                     Log.w(TAG, "onClick: " + String.format("already %d plugins in queue", mainActivity.dataAdapter.plugins.size()));
-                    Intent intent = new Intent(mainActivity, Purchase.class);
-                    context.startActivity(intent);
-                    return;
+//                    Intent intent = new Intent(mainActivity, Purchase.class);
+//                    context.startActivity(intent);
+//                    return;
                 }
 
                 final int pluginID = plugins.get(holder.getAdapterPosition());

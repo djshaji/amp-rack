@@ -9,6 +9,7 @@
 
 unsigned char * Meter::audioToVideoBytes = NULL ;
 jfloatArray Meter::jfloatArray1 ;
+std::string Meter::jMainActivityClassName = "";
 bool Meter::lowLatency = false;
 int Meter::jfloatArray1_index = 0 ;
 int Meter::jfloatArray1_Size = 0 ;
@@ -143,7 +144,8 @@ int Meter::updateMeterOutput (AudioBuffer * buffer) {
         attached_thread = gettid();
         if (envOutput == nullptr)
             LOGF("envOutput is null");
-        mainActivityOutput = findClassWithEnv(envOutput, "com/shajikhan/ladspa/amprack/MainActivity");
+        mainActivityOutput = findClassWithEnv(envOutput, jMainActivityClassName.c_str ());
+//        mainActivityOutput = findClassWithEnv(envOutput, "com/shajikhan/ladspa/amprack/MainActivity");
         if (mainActivityOutput == nullptr) {
             HERE
             LOGF("cannot find class mainactivityOutput!");

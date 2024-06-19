@@ -4,6 +4,16 @@
 #include "logging_macros.h"
 
 jmethodID Engine::pushAudio = nullptr;
+jclass Engine::mainActivity = nullptr;
+JNIEnv * Engine::env = nullptr;
+JavaVM * Engine::vm = nullptr;
+jmethodID Engine::pushSamplesMethod = nullptr;
+jfloatArray Engine::pushSamples = nullptr;
+bool Engine::lockFreeThreadAttached = false ;
+std::string Engine::mainActivityClassName = "";
+std::string Engine::pushSamplesMethodName = "";
+static jobject gClassLoader;
+static jmethodID gFindClassMethod;
 
 Engine::Engine () {
     assert(mOutputChannelCount == mInputChannelCount);
@@ -671,4 +681,72 @@ void Engine::minimizeLatency () {
     mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst());
 
     OUT
+}
+
+void Engine::setupPushSamples (std::string methodName) {
+    pushSamplesMethodName = methodName ;
+    queueManager.add_function(push);
+}
+
+JNIEnv* Engine::Env() {
+    IN
+    if (vm == nullptr) {
+        LOGE("gJvm == nullptr");
+    }
+
+    JNIEnv *jniEnv;
+    int status = vm->GetEnv((void**)&jniEnv, JNI_VERSION_1_6);
+    if(status < 0) {
+        status = vm->AttachCurrentThread(&jniEnv, NULL);
+        if(status < 0) {
+            OUT
+            LOGE("STATUS < 0");
+            return nullptr;
+        }
+    }
+
+    LOGD("[getenv] attached thread id %d", gettid());
+    OUT
+    return jniEnv;
+}
+
+int Engine::push (AudioBuffer * buffer) {
+    IN
+
+    if (! lockFreeThreadAttached) {
+        env = Env () ;
+        auto randomClass = env->FindClass("java/lang/ClassLoader");
+        jclass classClass = env->GetObjectClass(randomClass);
+        auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
+        auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
+                                                     "()Ljava/lang/ClassLoader;");
+        gClassLoader = (jclass) env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
+        gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
+                                            "(Ljava/lang/String;)Ljava/lang/Class;");
+        mainActivity = findClassWithEnv(env, mainActivityClassName.c_str());
+        if (mainActivity == nullptr) {
+            LOGF ("Cannot find class %s", mainActivityClassName.c_str());
+            abort();
+        }
+
+        pushSamplesMethod = env->GetStaticMethodID(mainActivity, pushSamplesMethodName.c_str(),"([FI)V");
+
+        pushSamples = env->NewFloatArray(4096);
+        lockFreeThreadAttached = true ;
+    }
+
+    float * data = buffer->data ;
+    int samples = buffer -> pos ;
+
+    env->SetFloatArrayRegion(pushSamples, 0, samples+1,
+                                   data);
+    env->CallStaticVoidMethod(mainActivity, pushSamplesMethod, pushSamples,
+                              samples);
+
+    OUT
+    return 0;
+}
+
+jclass Engine::findClassWithEnv(JNIEnv *env, const char* name) {
+    return static_cast<jclass>(env->CallObjectMethod(gClassLoader, gFindClassMethod, env->NewStringUTF(name)));
 }

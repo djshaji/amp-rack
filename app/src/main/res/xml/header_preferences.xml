@@ -2,6 +2,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
+        android:icon="@mipmap/ic_launcher"
+        android:title="Purchase Pro Version"
+        android:summary="Kindly consider upgrading if you find this app useful"
+        app:key="purchase_pro"
+        app:isPreferenceVisible="false"/>
+    <Preference
         app:fragment="com.shajikhan.ladspa.amprack.SettingsActivity$ProfileFragment"
         app:icon="@drawable/ic_baseline_volume_up_24"
         app:key="profile_header"
@@ -58,6 +64,6 @@
     <Preference
         app:key="cool"
         android:icon="@drawable/baseline_auto_graph_24"
-        android:title="Build Variant: Cool 😎"
-        android:summary="Powered by Rock and Roll"/>
+        android:title="@string/variant"
+        android:summary="@string/quote"/>
 </PreferenceScreen>

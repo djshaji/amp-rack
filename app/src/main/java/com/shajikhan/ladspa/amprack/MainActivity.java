@@ -275,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public Rack rack;
     public Tracks tracks, drums;
     public Presets presets;
+    int nag = 0 ;
 //    public MyPresets quickPatch;
     public QuickPatch quickPatch ;
     PopupMenu optionsMenu;
@@ -1546,6 +1547,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         if (record.isChecked())
             record.setChecked(false);
+
+        nag ++ ;
+        if (nag == 3 && ! proVersion) {
+            startActivity(new Intent(this, com.shajikhan.ladspa.amprack.Purchase.class));
+        }
     }
 
     private boolean isRecordPermissionGranted() {
