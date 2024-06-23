@@ -66,4 +66,7 @@
         android:icon="@drawable/baseline_auto_graph_24"
         android:title="@string/variant"
         android:summary="@string/quote"/>
+    <Preference
+        app:key="disclaimer"
+        android:summary="@string/copyright"/>
 </PreferenceScreen>

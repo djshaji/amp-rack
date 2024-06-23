@@ -55,6 +55,7 @@ public class Purchase extends AppCompatActivity {
         setContentView(R.layout.activity_purchase2);
         TextView priceView = findViewById(R.id.price);
         context = this;
+
         TextView oldPrice = findViewById(R.id.old_price);
         oldPrice.setPaintFlags(oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         getSupportActionBar().hide();

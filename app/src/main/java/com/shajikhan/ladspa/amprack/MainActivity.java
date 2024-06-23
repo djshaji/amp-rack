@@ -914,6 +914,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
             proVersion = true ;
         }
+
+//        proVersion = false;
+//        defaultSharedPreferences.edit().putBoolean("pro", false).apply();
     }
 
     void showMediaPlayerDialog() {

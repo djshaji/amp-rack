@@ -107,6 +107,22 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.header_preferences, rootKey);
+
+            Preference purchase = findPreference("purchase_pro");
+            purchase.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(getContext(), Purchase.class));
+                    return false;
+                }
+            });
+
+            if (! PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("pro", false)) {
+                purchase.setVisible(true);
+            }
+
+            Log.d("SETTINGS", String.format ("[pro version]: %b", PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("pro", false)));
+
             Preference privacy = findPreference("privacy_policy") ;
             privacy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -139,10 +155,6 @@ public class SettingsActivity extends AppCompatActivity implements
             setPreferencesFromResource(R.xml.messages_preferences, rootKey);
             ListPreference listPreference = findPreference("input");
             ListPreference listPreferenceOutput = findPreference("output");
-
-            Preference purchase = findPreference("purchase_pro");
-            if (! MainActivity.proVersion)
-                purchase.setVisible(true);
 
             ArrayList<CharSequence> entries = new ArrayList<>();
             ArrayList<CharSequence> entryValues = new ArrayList<>();

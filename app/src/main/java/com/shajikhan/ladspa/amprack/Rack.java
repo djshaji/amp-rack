@@ -395,9 +395,9 @@ public class Rack extends Fragment {
             public void onClick(View view) {
                 if (mainActivity.dataAdapter.plugins.size() > 1 && MainActivity.proVersion == false) {
                     Log.w(TAG, "onClick: " + String.format("already %d plugins in queue", mainActivity.dataAdapter.plugins.size()));
-                    Intent intent = new Intent(mainActivity, Purchase.class);
-                    startActivity(intent);
-                    return;
+//                    Intent intent = new Intent(mainActivity, Purchase.class);
+//                    startActivity(intent);
+//                    return;
                 }
 
 //                linearLayout.setBackground();
@@ -535,15 +535,26 @@ public class Rack extends Fragment {
         optionsMenu.getMenuInflater().inflate(R.menu.options_menu, optionsMenu.getMenu());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser() ;
-        MenuItem settings = optionsMenu.getMenu().getItem(0);
-        MenuItem logout = optionsMenu.getMenu().getItem(1);
-        MenuItem debug = optionsMenu.getMenu().getItem(2);
-        MenuItem getPro = optionsMenu.getMenu().getItem(3);
+        MenuItem settings = optionsMenu.getMenu().findItem(R.id.settings_menu_item);
+        MenuItem logout = optionsMenu.getMenu().findItem(R.id.logout_menu_item);
+        MenuItem debug = optionsMenu.getMenu().findItem(R.id.debug_menu_item);
+        MenuItem getPro = optionsMenu.getMenu().findItem(R.id.get_pro);
         if (mainActivity.defaultSharedPreferences.getBoolean("pro", false)) {
             getPro.setVisible(false);
             TextView textView = view.findViewById(R.id.app_main_title);
             textView.setText("Pro");
             (view.findViewById(R.id.pro_label)).setVisibility(View.VISIBLE);
+        } else {
+            TextView proLabel = view.findViewById(R.id.pro_label);
+            proLabel.setVisibility(View.VISIBLE);
+            proLabel.setEnabled(true);
+            proLabel.setText("Get Pro");
+            proLabel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(mainActivity, Purchase.class));
+                }
+            });
         }
 
         getPro.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

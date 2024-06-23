@@ -26,12 +26,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Press back button to close"
+                android:id="@+id/close"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/rounded_corners_transparent"
+                android:layout_margin="20dp"
+                android:padding="10dp"
+                android:drawableRight="@drawable/ic_baseline_close_24"/>
 
             <LinearLayout
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_width="match_parent"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="4dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <ImageView

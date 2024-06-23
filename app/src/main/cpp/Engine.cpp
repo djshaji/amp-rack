@@ -386,6 +386,11 @@ void Engine::addPluginToRackLazy(char* library, int pluginIndex, SharedLibrary::
     sharedLibrary ->setLibraryPath(LIBRARY_PATH);
     sharedLibrary->load();
 
+    if (sharedLibrary->descriptors.size() == 0) {
+        LOGE("Unable to load shared library!") ;
+        return;
+    }
+
     LOGD("loaded shared library [ok] ... now trying to load plugin");
     Plugin * plugin = new Plugin (sharedLibrary->descriptors.at(pluginIndex), (long) mSampleRate, _type);
     plugin->sharedLibrary = sharedLibrary;

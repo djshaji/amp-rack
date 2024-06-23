@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/settings_menu_item"
-        android:title="Settings"/>
-
-    <item android:id="@+id/logout_menu_item"
-        android:title="Log out"/>
-    <item android:id="@+id/debug_menu_item"
-        android:title="Clear Queue"/>
     <item android:id="@+id/get_pro"
         android:title="Get Full Version"
         android:icon="@drawable/ic_baseline_cloud_upload_24"/>
+
+    <item android:id="@+id/logout_menu_item"
+        android:title="Log out"/>
+    <item android:id="@+id/settings_menu_item"
+        android:title="Settings"/>
+    <item android:id="@+id/debug_menu_item"
+        android:title="Clear Queue"/>
 
     <item android:id="@+id/connect_guitar_menu"
         android:title="Connect Guitar"/>
