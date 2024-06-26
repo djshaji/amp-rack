@@ -1360,5 +1360,9 @@
     "id": 8104,
     "index": 0,
     "library": "rt-neural-generic.so"
+  },
+  "33400": {
+    "id": 8105,
+    "name": "GNUitar Tube Amplifier v2"
   }
 }

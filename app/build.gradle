@@ -119,14 +119,14 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     def billing_version = "5.0.0"
-    implementation "com.android.billingclient:billing:$billing_version"
+    implementation "com.android.billingclient:billing:7.0.0"
 
     // Google Ad Mob
-    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+//    implementation 'com.google.android.gms:play-services-ads:20.6.0'
 
     // round seekbar
 
-    implementation 'com.google.oboe:oboe:1.6.1'
+    implementation 'com.google.oboe:oboe:1.8.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'

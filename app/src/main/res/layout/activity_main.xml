@@ -40,16 +40,5 @@
             app:layout_insetEdge="bottom"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom" />
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adViewBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            ads:adSize="BANNER"
-            android:visibility="gone"
-            ads:adUnitId="ca-app-pub-2182672984086800~2348124251">
-        </com.google.android.gms.ads.AdView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

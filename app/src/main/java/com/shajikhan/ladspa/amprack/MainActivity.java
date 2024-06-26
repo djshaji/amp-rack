@@ -116,7 +116,6 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -541,8 +540,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !forceAds) {
                         Log.d(TAG, "onQueryPurchasesResponse: purchased");
                         proVersion = true;
-                        AdView mAdView = findViewById(R.id.adViewBanner);
-                        mAdView.setVisibility(View.GONE);
                         defaultSharedPreferences.edit().putBoolean("pro", true).apply();
                     } else {
                         Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
