@@ -1,0 +1,102 @@
+{
+  "-1": {
+    "Plugin": true,
+    "pluginName": "GNUitar Tube Amplifier v2"
+  },
+  "0": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 0,
+    "name": "In",
+    "symbol": "input"
+  },
+  "1": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 1,
+    "name": "Out",
+    "symbol": "output"
+  },
+  "2": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": 0,
+    "index": 2,
+    "maximum": "4",
+    "minimum": "0",
+    "name": "Stages",
+    "symbol": "stages"
+  },
+  "3": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": 0,
+    "index": 3,
+    "maximum": "4",
+    "minimum": "0",
+    "name": "Impulse Quality"
+  },
+  "4": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0",
+    "index": 4,
+    "maximum": "1",
+    "minimum": "0",
+    "name": "Impulse Model"
+  },
+  "5": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "-5",
+    "index": 5,
+    "maximum": "25",
+    "minimum": "-25",
+    "name": "Dynamic Bias"
+  },
+  "6": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "-3500",
+    "index": 6,
+    "maximum": "5000",
+    "minimum": "-5000",
+    "name": "Absolute Bias"
+  },
+  "7": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "35",
+    "index": 7,
+    "maximum": "50",
+    "minimum": "-50",
+    "name": "Gain"
+  },
+  "8": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "3",
+    "index": 8,
+    "maximum": "10",
+    "minimum": "-10",
+    "name": "Tone Bass"
+  },
+  "9": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "-10",
+    "index": 9,
+    "maximum": "10",
+    "minimum": "-10",
+    "name": "Tone Middle"
+  },
+  "10": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0",
+    "index": 10,
+    "maximum": "10",
+    "minimum": "-10",
+    "name": "Tone Treble"
+  }
+}

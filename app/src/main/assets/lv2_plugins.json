@@ -1363,6 +1363,8 @@
   },
   "33400": {
     "id": 8105,
-    "name": "GNUitar Tube Amplifier v2"
+    "name": "GNUitar Tube Amplifier v2",
+    "index": 0,
+    "library": "libgnuitar-tubeamp.lv2.so"
   }
 }
