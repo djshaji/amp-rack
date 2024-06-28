@@ -505,6 +505,7 @@
         <item>libconvoLV2.so</item>
         <item>rt-neural-generic.so</item>
         <item>libgnuitar-tubeamp.lv2.so</item>
+        <item>libgnuitar-distort2-np.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

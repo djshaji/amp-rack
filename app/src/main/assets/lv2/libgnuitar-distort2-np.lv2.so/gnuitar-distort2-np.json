@@ -1,0 +1,47 @@
+{
+  "-1": {
+    "Plugin": true,
+    "pluginName": "GNUitar Overdrive v2"
+  },
+  "0": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 0,
+    "name": "In",
+    "symbol": "input"
+  },
+  "1": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 1,
+    "name": "Out",
+    "symbol": "output"
+  },
+  "2": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": 10,
+    "index": 2,
+    "maximum": "100",
+    "minimum": "0",
+    "name": "Drive"
+  },
+  "3": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": 30,
+    "index": 3,
+    "maximum": "100",
+    "minimum": "0",
+    "name": "Level"
+  },
+  "4": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0",
+    "index": 4,
+    "maximum": "6",
+    "minimum": "-6",
+    "name": "Treble"
+  }
+}

@@ -1192,6 +1192,8 @@ public class Rack extends Fragment {
                     return;
                 }
 
+//                AudioEngine.setBufferSizeFactor(0.5f);
+                AudioEngine.latencyTuner();
                 latency.setText(
                         String.format( "%.0f ms",
                                 AudioEngine.getLatency(true) +

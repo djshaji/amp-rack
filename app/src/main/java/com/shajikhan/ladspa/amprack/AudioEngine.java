@@ -133,4 +133,6 @@ public class AudioEngine {
     public static native int getBufferSizeInFrames (boolean input) ;
     public static native void fixGlitches ();
     public static native void minimizeLatency ();
+    public static native void setBufferSizeFactor (float factor);
+    public static native void latencyTuner ();
 }

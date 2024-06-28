@@ -1109,3 +1109,24 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_pushSamples(JNIEnv *env, jclass cl
     engine -> setupPushSamples (std::string (nativeString));
     env->ReleaseStringUTFChars(method_name, nativeString);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setBufferSizeFactor(JNIEnv *env, jclass clazz, jfloat factor) {
+    if (engine == nullptr) {
+        return ;
+    }
+
+    engine->setBufferSizeFactor(factor);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_latencyTuner(JNIEnv *env, jclass clazz) {
+    if (engine == nullptr)
+        return;
+
+    engine->latencyTuner->requestReset();
+    engine->latencyTunerOut->requestReset();
+
+    engine->latencyTuner->tune();
+    engine->latencyTunerOut->tune();
+}

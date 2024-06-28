@@ -1366,5 +1366,11 @@
     "name": "GNUitar Tube Amplifier v2",
     "index": 0,
     "library": "libgnuitar-tubeamp.lv2.so"
+  },
+  "33500": {
+    "id": 8106,
+    "name": "GNUitar Overdrive v2",
+    "index": 0,
+    "library": "libgnuitar-distort2-np.lv2.so"
   }
 }

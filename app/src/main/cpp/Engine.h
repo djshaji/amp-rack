@@ -89,12 +89,12 @@ public:
 
     void test();
     long getTimeStamp();
+    oboe::LatencyTuner *latencyTuner, *latencyTunerOut;
 
 private:
     int32_t           mRecordingDeviceId = oboe::kUnspecified;
     int32_t           mPlaybackDeviceId = oboe::kUnspecified;
     oboe::AudioApi    mAudioApi = oboe::AudioApi::AAudio;
-    oboe::LatencyTuner *latencyTuner, *latencyTunerOut;
     oboe::Result openStreams();
 
     void closeStreams();
@@ -141,6 +141,8 @@ public:
     static std::string pushSamplesMethodName;
 
     static jclass findClassWithEnv(JNIEnv *env, const char *name);
+
+    void setBufferSizeFactor(float factor);
 } ;
 
 #endif // __ENGINE__H

@@ -688,6 +688,15 @@ void Engine::minimizeLatency () {
     OUT
 }
 
+void Engine::setBufferSizeFactor (float factor) {
+    IN
+
+    mPlayStream->setBufferSizeInFrames(mPlayStream->getFramesPerBurst() * factor);
+    mRecordingStream->setBufferSizeInFrames(mRecordingStream->getFramesPerBurst() * factor);
+
+    OUT
+}
+
 void Engine::setupPushSamples (std::string methodName) {
     pushSamplesMethodName = methodName ;
     queueManager.add_function(push);
