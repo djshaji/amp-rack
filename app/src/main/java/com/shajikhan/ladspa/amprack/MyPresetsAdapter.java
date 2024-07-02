@@ -49,6 +49,9 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
     }
 
     void addPreset (Map preset) {
+        if (preset == null)
+            return;
+
         presets.add(preset);
         allPresets.add(preset);
         notifyDataSetChanged();
@@ -168,10 +171,12 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
                     }
 
                     favoritePresets.put(preset.get("path").toString(), preset.get("name"));
+                    mainActivity.addFavoritePreset(preset);
                 } else {
                     compoundButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
                     favoritePresets.remove(preset.get("path"));
                     db.removeAndUnlike(preset);
+                    mainActivity.removeFavoritePreset(preset);
                 }
             }
         });

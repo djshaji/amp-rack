@@ -126,6 +126,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonObject;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
 import org.json.JSONException;
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static String price = "$2";
     MediaPlayerDialog mediaPlayerDialog = null;
     private OrientationEventListener orientationEventListener;
+    public String favPresetsDir = null ;
 
     static class AVBuffer {
         float [] bytes ;
@@ -365,6 +367,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         Log.d(TAG, "onCreate: Welcome! " + getApplicationInfo().toString());
+
+        favPresetsDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath() + "/" + "favoritePresets";
+        File f = new File(favPresetsDir) ;
+        if (! f.exists())
+            f.mkdirs();
+
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add (this, "AudioRecordTest");
@@ -4005,5 +4013,58 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         AudioEngine.getBufferSizeInFrames(false)
                 )
                 , Toast.LENGTH_LONG).show();
+    }
+
+    public void addFavoritePreset (Map preset) {
+        JSONObject jsonObject = new JSONObject(preset);
+        File f = new File(new StringJoiner ("/").add(favPresetsDir).add (preset.get("name").toString()).toString());
+        if (! f.exists())
+            writeFile(f.getPath(), jsonObject.toString());
+    }
+
+    public void removeFavoritePreset (Map preset) {
+        File f = new File(new StringJoiner ("/").add(favPresetsDir).add (preset.get("name").toString()).toString());
+        if (! f.delete()) {
+            Toast.makeText(context, "Cannot remove preset " + preset.get("name"), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static Map JSONtoMap (JsonObject jsonObject) {
+        return jsonObject.asMap();
+    }
+
+    public static Map JSONtoMap (JSONObject j) {
+        try {
+            Log.d(TAG, String.format ("json: %s", j.toString(4)));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        Log.d(TAG, String.format ("%s: %s"));
+        HashMap <String,Object> map = new HashMap();
+        try {
+            String [] params = {
+                    "name",
+                    "uid",
+                    "desc",
+                    "path",
+                    "public",
+                    "timestamp",
+                    "likes"
+            } ;
+
+            for (String s: params)
+                map.put(s, j.get(s));
+
+            // todo: do each control individually
+            map.put("controls", j.getJSONArray("controls"));
+
+        } catch (JSONException e) {
+            Toast.makeText(mainActivity, "Cannot load preset " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "JSONtoMap: ", e);
+            return null ;
+        }
+
+        return map;
     }
 }

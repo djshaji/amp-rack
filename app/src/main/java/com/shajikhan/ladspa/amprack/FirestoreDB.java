@@ -191,6 +191,10 @@ public class FirestoreDB {
                             continue;
                         }
 
+                        if (shared && presetsAdapter.favoritePresets!= null && preset.get("path")!= null && presetsAdapter.favoritePresets.containsKey(preset.get("path").toString())) {
+                            mainActivity.addFavoritePreset(preset);
+                        }
+
 //                        Log.d(TAG, String.format ("[preset]: %s", preset));
                         presetsAdapter.addPreset(preset);
 //                        lastStamp = (String) preset.get(presetsAdapter.sortBy);

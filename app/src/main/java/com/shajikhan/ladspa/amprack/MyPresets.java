@@ -35,16 +35,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 
 public class MyPresets extends Fragment {
     MainActivity mainActivity;
@@ -163,6 +167,18 @@ public class MyPresets extends Fragment {
                         toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
                 }
             });
+
+            File f = new File(mainActivity.favPresetsDir);
+            File[] list = f.listFiles();
+            for (File file: list) {
+                JSONObject jsonObject = ConnectGuitar.loadJSONFromFile(mainActivity, Uri.fromFile(file));
+                if (jsonObject == null) {
+                    Log.e(TAG, "onViewCreated: " + file.getAbsolutePath() + " is null");
+                    continue;
+                }
+
+                myPresetsAdapter.addPreset(MainActivity.JSONtoMap(jsonObject));
+            }
         }
 
         Button sortByButton = (Button) lx.getChildAt(2);
