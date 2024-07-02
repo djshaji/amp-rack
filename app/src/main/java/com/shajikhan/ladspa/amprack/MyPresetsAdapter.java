@@ -54,6 +54,25 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
         notifyDataSetChanged();
     }
 
+    void removePreset (Map preset) {
+        int i = 0 ;
+        for (Map p:
+             presets) {
+            if (p.get("name").toString().equals(preset.get("name").toString())) {
+                break ;
+            } else {
+                i++ ;
+            }
+        }
+
+        if (i >= presets.size())
+            return;
+
+        presets.remove(i);
+        allPresets.remove(i);
+        notifyItemRemoved(i);
+    }
+
     void setMainActivity (MainActivity _mainActivity) {
         mainActivity = _mainActivity;
     }
@@ -106,8 +125,14 @@ public class MyPresetsAdapter extends RecyclerView.Adapter<MyPresetsAdapter.View
             @Override
             public void onClick(View view) {
                 mainActivity.loadPreset(preset);
+                Log.d(TAG, "onClick: loading preset " + preset);
                 mainActivity.patchName.setText(presetName);
                 mainActivity.patchDesc.setText(presetDesc);
+
+                if (preset.containsKey("uid") && preset.containsKey("path")) {
+                    mainActivity.lastPresetLoadedPath = ((String) preset.get("path")).split("/")[1];
+                    mainActivity.lastPresetLoadedUID = (String) preset.get("uid");
+                }
 
                 if (quick)
                     mainActivity.patchNo.setText(String.valueOf(position));

@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,9 +53,18 @@ public class AudioDecoder {
         if (uri == null) {
             Log.e(TAG, "decode: null uri passed", null);
         }
-        ParcelFileDescriptor pfd =
-                mainActivity.getContentResolver().
-                        openFileDescriptor(uri, "r");
+
+        ParcelFileDescriptor pfd = null;
+
+        try {
+                    pfd = mainActivity.getContentResolver().
+                            openFileDescriptor(uri, "r");
+
+        } catch (Exception e) {
+            Log.e(TAG, "decode: ", e);
+            Toast.makeText(mainActivity, "Unable to load an audio file", Toast.LENGTH_SHORT).show();
+            return null;
+        }
 
         FileDescriptor fileDescriptor = pfd.getFileDescriptor();
         float [] samples = decode(fileDescriptor, mime, _sampleRate);

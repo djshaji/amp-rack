@@ -11,10 +11,10 @@ android {
 
     defaultConfig {
         applicationId "com.shajikhan.ladspa.amprack"
-        minSdk 29
+        minSdk 24
         targetSdk 33
-        versionCode 101
-        versionName '4.51'
+        versionCode 103
+        versionName '4.7'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {

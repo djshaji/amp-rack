@@ -189,6 +189,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static long presentationTimeUs = 0;
     int totalBytesRead = 0;
 
+    String lastPresetLoadedPath = null ;
+    String lastPresetLoadedUID = null ;
+
     ExtendedFloatingActionButton fab ;
     Button hidePanel;
     SwitchMaterial onOff = null ;

@@ -217,12 +217,20 @@ public class Presets extends Fragment {
                 MaterialButton save = (MaterialButton) linearLayout1.getChildAt(1);
                 ProgressBar progressBar = (ProgressBar) linearLayout.getChildAt(4);
                 AlertDialog dialog = builder.create() ;
+
+                EditText name = (EditText) linearLayout.getChildAt(1);
+                EditText desc = (EditText) linearLayout.getChildAt(2);
+
+                if (mainActivity.lastPresetLoadedUID != null && mainActivity.lastPresetLoadedUID .equals( mAuth.getUid())) {
+                    name.setText(mainActivity.patchName.getText());
+                    desc.setText(mainActivity.patchDesc.getText());
+                }
+
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        EditText name = (EditText) linearLayout.getChildAt(1);
-                        EditText desc = (EditText) linearLayout.getChildAt(2);
                         LinearLayout layout = (LinearLayout) linearLayout.getChildAt(0);
+
                         SwitchMaterial switchMaterial = (SwitchMaterial) layout.getChildAt(1);
 
                         if (name.getText().toString().length() == 0) {
@@ -231,8 +239,27 @@ public class Presets extends Fragment {
                         }
 
                         progressBar.setVisibility(View.VISIBLE);
-                        db.savePreset(name.getText().toString(), desc.getText().toString(), switchMaterial.isChecked(), preset, dialog, fragmentStateAdapter.getMyPresets());
-
+                        Log.d(TAG, String.format ("[%b] %s: %s",
+                                name.getText().toString().equals(mainActivity.patchName.getText().toString()),
+                                name.getText().toString(),mainActivity.patchName.getText().toString()));
+                        if (mainActivity.lastPresetLoadedUID != null && mainActivity.lastPresetLoadedUID .equals( mAuth.getUid()) && name.getText().toString().equals(mainActivity.patchName.getText().toString())) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage("Do you want to overwrite this preset?")
+                                    .setPositiveButton("Overwrite", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface _dialog, int id) {
+                                            db.savePreset(name.getText().toString(), desc.getText().toString(), switchMaterial.isChecked(), preset, dialog, fragmentStateAdapter.getMyPresets(), mainActivity.lastPresetLoadedPath);
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    });
+                            builder.show();
+                        } else {
+                            db.savePreset(name.getText().toString(), desc.getText().toString(), switchMaterial.isChecked(), preset, dialog, fragmentStateAdapter.getMyPresets(), null);
+                            mainActivity.patchName.setText(name.getText());
+                            mainActivity.patchDesc.setText(desc.getText());
+                        }
                     }
                 });
 

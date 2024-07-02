@@ -66,7 +66,7 @@ public class FirestoreDB {
     }
 
     @ServerTimestamp
-    public void savePreset(String name, String desc, boolean shared, Map values, AlertDialog dialog, MyPresets myPresets) {
+    public void savePreset(String name, String desc, boolean shared, Map values, AlertDialog dialog, MyPresets myPresets, String path) {
         FirebaseAuth auth = FirebaseAuth.getInstance() ;
         if (auth == null) {
             Log.e(TAG, "savePreset: uid is null", null);
@@ -87,30 +87,54 @@ public class FirestoreDB {
         data.put ("uid", auth.getUid());
         data.put ("timestamp",  FieldValue.serverTimestamp());
 
-        db.collection("presets")
-                .add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
+        OnSuccessListener<DocumentReference> successListener = new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
 //                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                        dialog.dismiss();
-                        Toast.makeText(context,
+                dialog.dismiss();
+                Toast.makeText(context,
                                 "Patch saved successfully",
                                 Toast.LENGTH_LONG)
-                                .show();
-                        myPresets.myPresetsAdapter.addPreset(data);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                        Toast.makeText(context,
+                        .show();
+                data.put("path", documentReference.getPath());
+                data.put("uid", auth.getUid());
+                ((MainActivity) context).lastPresetLoadedPath = documentReference.getPath().split("presets")[1];
+                ((MainActivity) context).lastPresetLoadedUID = auth.getUid();
+                myPresets.myPresetsAdapter.addPreset(data);
+            }
+        };
+
+        OnFailureListener failureListener = new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+                Toast.makeText(context,
                                 "Could not save patch: " + e.getMessage(),
                                 Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
+                        .show();
+            }
+        };
+
+        if (path != null) {
+            db.collection("presets")
+                    .document(path)
+                    .set(data)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(context, "Preset updated successfully", Toast.LENGTH_SHORT).show();
+                            myPresets.myPresetsAdapter.removePreset(data);
+                            myPresets.myPresetsAdapter.addPreset(data);
+                            dialog.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(failureListener);
+        } else {
+            db.collection("presets")
+                    .add(data)
+                    .addOnSuccessListener(successListener)
+                    .addOnFailureListener(failureListener);
+        }
     }
 
     public void loadUserPresets (MyPresetsAdapter presetsAdapter, boolean shared, boolean quick) {
@@ -257,7 +281,13 @@ public class FirestoreDB {
     }
 
     void deletePreset(Map preset, ArrayList<Map> presets, MyPresetsAdapter myPresetsAdapter, int position) {
-        db.document(preset.get("path").toString())
+        String __path__ = (String) preset.get("path");
+        if (__path__ == null) {
+            Log.e(TAG, "deletePreset: preset path is null");
+            return;
+        }
+
+        db.document(__path__)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

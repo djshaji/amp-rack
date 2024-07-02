@@ -673,6 +673,10 @@ public class Rack extends Fragment {
 //                mainActivity.printDebugLog();
                 AudioEngine.clearActiveQueue();
                 mainActivity.dataAdapter.reset();
+                mainActivity.lastPresetLoadedUID = null ;
+                mainActivity.lastPresetLoadedPath = null ;
+                mainActivity.patchName.setText("");
+                mainActivity.patchDesc.setText("");
                 return true;
             }
         });
