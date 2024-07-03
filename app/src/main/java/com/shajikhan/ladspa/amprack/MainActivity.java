@@ -4029,10 +4029,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    public static Map JSONtoMap (JsonObject jsonObject) {
-        return jsonObject.asMap();
-    }
-
     public static Map JSONtoMap (JSONObject j) {
         try {
             Log.d(TAG, String.format ("json: %s", j.toString(4)));
@@ -4040,7 +4036,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             throw new RuntimeException(e);
         }
 
-        Log.d(TAG, String.format ("%s: %s"));
+//        Log.d(TAG, String.format ("%s: %s"));
         HashMap <String,Object> map = new HashMap();
         try {
             String [] params = {
@@ -4056,8 +4052,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             for (String s: params)
                 map.put(s, j.get(s));
 
+            HashMap <String, HashMap> hashMap = new HashMap();
+            map.put("controls", hashMap);
+
             // todo: do each control individually
-            map.put("controls", j.getJSONArray("controls"));
+            JSONObject controls = j.getJSONObject ("controls");
+            Iterator<String> keys = controls.keys();
+            String next = keys.next();
+            while (keys.hasNext()) {
+                JSONObject settings = controls.getJSONObject(next);
+                HashMap <String, Object> set = new HashMap<>();
+
+                set.put("name", settings.get("name"));
+                set.put ("controls", ((String) settings.get("controls")).split (";"));
+                hashMap.put(next, set);
+
+                next = keys.next();
+            }
 
         } catch (JSONException e) {
             Toast.makeText(mainActivity, "Cannot load preset " + e.getMessage(), Toast.LENGTH_SHORT).show();
