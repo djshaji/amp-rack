@@ -59,12 +59,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     String [] bypassContains = {
             "Pull the",
             "witch",
-            "oggle"};
+            "oggle"
+    };
     String [] bypassIs = {
             "prefilter",
             "bypass",
             "stick it!",
-            "vibe"
+            "vibe",
+            "hold"
     } ;
 
     int totalItems = 0;

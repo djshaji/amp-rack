@@ -1372,5 +1372,11 @@
     "name": "GNUitar Overdrive v2",
     "index": 0,
     "library": "libgnuitar-distort2-np.lv2.so"
+  },
+  "33600": {
+    "id": 8107,
+    "name": "x42 DARC",
+    "index": 0,
+    "library": "libdarc.so"
   }
 }
