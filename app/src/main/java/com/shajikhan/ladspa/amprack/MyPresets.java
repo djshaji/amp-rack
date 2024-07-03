@@ -121,7 +121,7 @@ public class MyPresets extends Fragment {
 //                    loadProgress.setVisibility(View.INVISIBLE);
 //                    loadProgress.setVisibility(View.VISIBLE);
 //                    loadMore.setVisibility(View.INVISIBLE);
-                    if (! favToggle.isChecked())
+                    if (favToggle == null || ! favToggle.isChecked())
                         db.loadUserPresets(myPresetsAdapter,shared, quick);
                 }
             }
