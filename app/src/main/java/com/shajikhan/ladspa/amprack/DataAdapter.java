@@ -644,8 +644,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         Button fileChooser = null;
-        if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| pluginName.equals("SWH Impulse convolver")) {
-            if (audioFiles.containsKey(position) && pluginName.equals("Looper") || pluginName.equals("SWH Impulse convolver")) {
+        if (pluginName.equals("AIDA-X") || pluginName .equals( "Looper") || pluginName.equals("Neural Amp Modeler") || pluginName.equals("TAP IR")|| pluginName.equals("SWH Impulse convolver") || pluginName.equals("Simple IR Loader")) {
+            if (audioFiles.containsKey(position) && pluginName.equals("Looper") || pluginName.equals("SWH Impulse convolver")|| pluginName.equals("Simple IR Loader")) {
                 holder.audioFile = audioFiles.get(position);
                 if (holder.audioFile != null) {
                     AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
@@ -694,7 +694,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent_upload = new Intent();
-                    if (pluginName.equals("Looper")|| pluginName.equals("SWH Impulse convolver"))
+                    if (pluginName.equals("Looper")|| pluginName.equals("SWH Impulse convolver")||pluginName.equals("Simple IR Loader"))
                         intent_upload.setType("audio/*");
                     else {
                         intent_upload.setType("application/zip");

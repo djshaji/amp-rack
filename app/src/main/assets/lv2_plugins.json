@@ -1378,5 +1378,11 @@
     "name": "x42 DARC",
     "index": 0,
     "library": "libdarc.so"
+  },
+  "33700": {
+    "id": 8108,
+    "name": "Simple IR Loader",
+    "index": 0,
+    "library": "libir_cab.so"
   }
 }

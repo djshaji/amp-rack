@@ -1,0 +1,20 @@
+{
+  "-1": {
+    "Plugin": true,
+    "pluginName": "Simple IR Loader"
+  },
+  "1": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 0,
+    "name": "In",
+    "symbol": "input"
+  },
+  "2": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 1,
+    "name": "Out",
+    "symbol": "output"
+  }
+}

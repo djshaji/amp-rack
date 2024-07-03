@@ -507,6 +507,7 @@
         <item>libgnuitar-tubeamp.lv2.so</item>
         <item>libgnuitar-distort2-np.lv2.so</item>
         <item>libdarc.so</item>
+        <item>libir_cab.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
