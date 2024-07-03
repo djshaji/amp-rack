@@ -62,6 +62,7 @@ public class MyPresets extends Fragment {
     PopupMenu sortMenu = null;
     boolean shared = false;
     boolean quick = false ;
+    public ToggleButton favToggle;
 
     public MyPresets () {
 
@@ -120,7 +121,8 @@ public class MyPresets extends Fragment {
 //                    loadProgress.setVisibility(View.INVISIBLE);
 //                    loadProgress.setVisibility(View.VISIBLE);
 //                    loadMore.setVisibility(View.INVISIBLE);
-                    db.loadUserPresets(myPresetsAdapter,shared, quick);
+                    if (! favToggle.isChecked())
+                        db.loadUserPresets(myPresetsAdapter,shared, quick);
                 }
             }
         });
@@ -156,6 +158,7 @@ public class MyPresets extends Fragment {
             });
 
             ToggleButton toggleButton = (ToggleButton) lx.getChildAt(1);
+            favToggle = toggleButton;
             toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
             toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
