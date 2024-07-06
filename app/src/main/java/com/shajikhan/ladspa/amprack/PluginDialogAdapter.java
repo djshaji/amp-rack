@@ -210,7 +210,10 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
 
         JSONArray IDs = null;
         try {
-            IDs = (JSONArray) MainActivity.pluginCategories.get(category);
+            if (mainActivity.pluginDialogSortBy.getSelectedItemPosition() == 0)
+                IDs = (JSONArray) MainActivity.pluginCategories.get(category);
+            else
+                IDs = (JSONArray) MainActivity.pluginCreators.get(category);
         } catch (JSONException e) {
             e.printStackTrace();
             return;

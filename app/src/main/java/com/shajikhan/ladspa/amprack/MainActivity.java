@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private static final String CHANNEL_ID = "default";
     Surface surface_ = null;
+    Spinner pluginDialogSortBy ;
     public static TextView sampleRateLabel ;
     public static ImageView latencyWarnLogo ;
     public static LinearLayout srLayout; ;
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     boolean running = false ;
     long bootFinish = 0 ;
     static boolean showIntro = false ;
-    static public JSONObject pluginCategories;
+    static public JSONObject pluginCategories, pluginCreators;
     public Spinner pluginDialogCategorySpinner;
     AudioDeviceInfo[] audioDevicesInput, audioDevicesOutput;
     int defaultInputDevice = 0;
@@ -459,6 +460,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         pluginCategories = MainActivity.loadJSONFromAsset("plugins.json");
+        pluginCreators = MainActivity.loadJSONFromAsset("creator.json");
         availablePlugins = ConnectGuitar.loadJSONFromAssetFile(this, "all_plugins.json");
         availablePluginsLV2 = ConnectGuitar.loadJSONFromAssetFile(this, "lv2_plugins.json");
         ampModels = ConnectGuitar.loadJSONFromAssetFile(this, "amps.json");
@@ -1991,6 +1993,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        Button clear = linearLayoutPluginDialog.findViewById(R.id.search_clear);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editText.setText("");
+            }
+        });
+
         ToggleButton toggleButton = (ToggleButton) linearLayoutPluginDialog.findViewById(R.id.pl_favs);
         toggleButton.setButtonDrawable(R.drawable.ic_baseline_favorite_border_24);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -2015,8 +2025,50 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ArrayAdapter<String> categoriesDataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, categories);
 
+        List <String> creators = new ArrayList<>();
+        keys = pluginCreators.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Log.d(TAG, "pluginCreator: key " + key);
+            creators.add(key);
+        }
+
+        ArrayAdapter<String> creatorDataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, creators);
+
+        String [] sortBy = {
+                "Category",
+                "Creator"
+        } ;
+
+        ArrayAdapter<String> sortByAdaptor = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, sortBy);
+
+        pluginDialogSortBy = (Spinner) linearLayoutPluginDialog.findViewById(R.id.sort_by);
+        pluginDialogSortBy.setAdapter(sortByAdaptor);
+
+        pluginDialogSortBy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        pluginDialogCategorySpinner.setAdapter(categoriesDataAdapter);
+                        break;
+                    case 1:
+                        pluginDialogCategorySpinner.setAdapter(creatorDataAdapter);
+                        break ;
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         // Drop down layout style - list view with radio button
+        sortByAdaptor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoriesDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        creatorDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pluginDialogCategorySpinner = (Spinner) linearLayoutPluginDialog.findViewById(R.id.plugin_types);
         // attaching data adapter to spinner
         pluginDialogCategorySpinner.setAdapter(categoriesDataAdapter);
