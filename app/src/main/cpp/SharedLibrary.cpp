@@ -16,15 +16,18 @@ void SharedLibrary::unload () {
 //> Returns NULL if ok, error otherwise
 char * SharedLibrary::load () {
     IN ;
-    dl_handle = dlopen (so_file.c_str(), RTLD_LAZY);
-    if (dl_handle == NULL) {
-        char * err = dlerror () ;
-        LOGE ("Failed to load library %s: %s\n", so_file.c_str(), err);
-        OUT ;
-        return err ;
+    if (type != LILV) {
+        dl_handle = dlopen (so_file.c_str(), RTLD_LAZY);
+        if (dl_handle == NULL) {
+            char * err = dlerror () ;
+            LOGE ("Failed to load library %s: %s\n", so_file.c_str(), err);
+            OUT ;
+            return err ;
+        }
+        
+        LOGD("dlopen [ok]. Looking for descriptor function ...");
     }
 
-    LOGD("dlopen [ok]. Looking for descriptor function ...");
     if (type == LADSPA) {
         descriptorFunction = (LADSPA_Descriptor_Function) dlsym(dl_handle, "ladspa_descriptor");
         // count plugins
@@ -42,7 +45,7 @@ char * SharedLibrary::load () {
 
             LOGI("\t\t... found %d plugins", total_plugins);
         }
-    } else if (type == LV2 ){
+    } else if (type == LV2 || type == LILV ){
         LOGI("[LV2] Loading plugin library %s", so_file.c_str());
         feature_list = (const LV2_Feature**)calloc(1, sizeof(features));
         LOGD("[LV2] %s calloc [ok], trying memcpy ...", so_file.c_str());
@@ -84,7 +87,38 @@ char * SharedLibrary::load () {
 //            lv2Feature ++;
 //        }
 
-        lv2DescriptorFunction = (LV2_Descriptor_Function) dlsym(dl_handle, "lv2_descriptor");
+
+        if (type == LILV) {
+#ifndef __ANDROID__
+            LilvWorld* world = (LilvWorld* )lilv_world_new();
+            lilv_world_load_all(world);
+            
+            LOGD ("[lilv] world loaded [ok]\n");
+            LilvPlugins* plugins = (LilvPlugins* )lilv_world_get_all_plugins(world);
+
+            LOGD ("[lilv] get all plugins [ok], loading %s\n", so_file.c_str ());
+            
+            LilvNode* plugin_uri = lilv_new_uri(world, so_file.c_str ());
+            plugin = (LilvPlugin *)lilv_plugins_get_by_uri(plugins, plugin_uri);
+            
+            LOGD ("[lilv] plugin loaded [ok]\n");
+            const char * name = lilv_node_as_string (lilv_plugin_get_name (plugin));
+            printf("[LV2] %s\n", name);
+
+            // todo: get sample rate automatically
+            LOGD ("got plugin\n");
+            instance = lilv_plugin_instantiate(plugin, 48000.0, NULL);
+            LOGD ("got instance\n");
+            descriptors.push_back(reinterpret_cast<const _LADSPA_Descriptor *const>(instance->lv2_descriptor));
+            
+            const LilvNode* const bundle_uri = lilv_plugin_get_bundle_uri(plugin);
+            LIBRARY_PATH = std::string (lilv_node_as_string (bundle_uri)) ;
+            so_file = std::string ("");
+#endif
+            return NULL ;
+        } else {
+            lv2DescriptorFunction = (LV2_Descriptor_Function) dlsym(dl_handle, "lv2_descriptor");
+        }
         if (lv2DescriptorFunction == NULL) {
             LOGE("[LV2]: Failed to find descriptor function");
         } else {

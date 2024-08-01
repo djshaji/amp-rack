@@ -19,6 +19,7 @@
 #include "lv2/data-access/data-access.h"
 #include <jni.h>
 #include <map>
+#include "lilv/lilv.h"
 
 typedef struct {
     LV2_Feature                map_feature;
@@ -52,10 +53,14 @@ class SharedLibrary {
 public:
     typedef enum {
         LADSPA,
-        LV2
+        LV2,
+        LILV
     } PluginType ;
 
     std::string mainActivityClassName ;
+    LilvPlugin* plugin = nullptr ;
+    LilvInstance* instance = nullptr;
+    std::string lv2_config_path ;
     //! feature storage
     std::vector<LV2_Feature> m_features;
     //! pointers to m_features, required for lilv_plugin_instantiate

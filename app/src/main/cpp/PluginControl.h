@@ -34,6 +34,7 @@ public:
     LADSPA_Data presetValue = -1;
     Type type ;
     std::string lv2_name ;
+    bool name_allocated = false ;
 
     LADSPA_Data control_rounding(LADSPA_Data _val);
 

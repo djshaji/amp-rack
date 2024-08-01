@@ -66,6 +66,9 @@ public:
     void load();
 
     int addPluginControl(const LV2_Descriptor *_descriptor, nlohmann::json _j);
+#ifndef __ANDROID__
+    std::string getLV2JSON_PC (std::string pluginName) ;
+#endif
 
     void setFileName(std::string filename);
 

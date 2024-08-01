@@ -24,7 +24,7 @@ void PluginControl::setSampleRate (unsigned long rate) {
 
 PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
     IN ;
-    LOGD("Setting up control %d: %s for %s", _port, descriptor -> PortNames [_port], descriptor -> Name);
+    //~ LOGD("Setting up control %d: %s for %s", _port, descriptor -> PortNames [_port], descriptor -> Name);
 //        return;
     port = _port ;
 //        ctrl = _control ;
@@ -35,7 +35,7 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
     LADSPA_Data upper_bound = hint -> UpperBound;
     name = descriptor -> PortNames [port] ;
 
-    LOGD("[control] %s", name);
+    //~ LOGD("[control] %s", name);
 
     /* control->min, control->max */
     if (LADSPA_IS_HINT_SAMPLE_RATE(ladspaPortRangeHintDescriptor)) {
@@ -109,7 +109,7 @@ PluginControl::PluginControl(const LADSPA_Descriptor *descriptor, int _port) {
             default:
 //                free(def), def = NULL;
                 *def = -678 ;
-                LOGV("[plugin] %s has no defaults", name);
+                LOGD("[plugin] %s has no defaults", name);
         }
     }
     else
@@ -199,17 +199,22 @@ void PluginControl::print () {
 }
 
 void PluginControl::freeMemory () {
+    IN
     free (def);
+    if (name_allocated)
+        free ((void *) name);
+    OUT
 }
 
 PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j) {
     IN ;
     int _port = j .find("index").value();
-    name = j.find("name").value().dump().c_str();
+    name = strdup (j.find("name").value().dump().c_str());
+    name_allocated = true ;
     lv2_name = j.find("name").value();
     port = _port ;
 
-    LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);
+    //~ LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);
     std::string _min  ;
     std::string _max  ;
     LADSPA_Data lower_bound  ;
@@ -230,7 +235,7 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
         lower_bound = j.find("minimum").value();
     }
 
-    LOGD("[control] %s", name);
+    //~ LOGD("[control] %s", name);
 
     min = lower_bound;
     max = upper_bound;
@@ -261,7 +266,7 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
         sel = min;
     val = sel;
 
-    LOGD("[LV2 Plugin] %s: found control %s <%f - %f> default value %f",
-         descriptor ->URI, name, lower_bound, upper_bound, *def);
+    //~ LOGD("[LV2 Plugin] %s: found control %s <%f - %f> default value %f",
+         //~ descriptor ->URI, name, lower_bound, upper_bound, *def);
     OUT ;
 }

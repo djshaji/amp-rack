@@ -37,8 +37,8 @@
 #define ASSERT(cond, ...) if (!(cond)) {__android_log_assert(#cond, MODULE_NAME, __VA_ARGS__);}
 #else
 
-#define LOGV(...)
-#define LOGD(...)
+#define LOGV(...);printf ("\n");
+#define LOGD(...);printf ("\n");
 #define LOGI(...)
 #define LOGW(...)
 #define LOGE(...)

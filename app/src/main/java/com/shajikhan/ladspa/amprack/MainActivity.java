@@ -2126,6 +2126,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (lazyLoad == false)
             ret = AudioEngine.addPlugin(library, plug);
         else {
+            // query the plugin and replace the following with
+            // if plugin is LADSPA
             if (library > 149 /* because we have 149 lADSPA libraries */) {
                 ret = AudioEngine.addPluginLazyLV2(sharedLibrariesLV2[library - sharedLibraries.length], plug);
             } else
