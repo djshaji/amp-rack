@@ -16,7 +16,7 @@
 #include "SharedLibrary.h"
 #include "json.hpp"
 #include "lv2_ext.h"
-#include "lv2/atom/forge.h"
+//~ #include "lv2/atom/forge.h"
 
 class Plugin {
     LADSPA_Data ** portControls ;

@@ -140,7 +140,7 @@ void Plugin::load () {
     HERE
     //~ LOGD("Creating plugin: %s from %s @ %s\n", lv2Descriptor->URI, sharedLibrary->LIBRARY_PATH.c_str(), sharedLibrary->so_file.c_str());
     std::string lib_path = sharedLibrary->LIBRARY_PATH + "/" + sharedLibrary -> so_file + ".lv2/" ;
-    //~ LOGD("[LV2] library path: %s\n", lib_path.c_str());
+    LOGD("[LV2] library path: %s\n", lib_path.c_str());
 
     if (lv2Descriptor == NULL) {
         HERE LOGF("[LV2] lv2Descriptor is NULL, we will probably crash ...!\nplugin: %s\n", sharedLibrary->so_file.c_str());
@@ -500,6 +500,7 @@ void Plugin::setFilePortValue1 (std::string filename) {
 
 #ifndef __ANDROID__
 std::string Plugin::getLV2JSON_PC (std::string pluginName) {
+    IN
     //~ HERE LOGD ("[%s] plugin: %s\n", sharedLibrary->so_file.c_str (), pluginName.c_str ());
     // todo:
     // file name here, load and return this json file
@@ -514,10 +515,13 @@ std::string Plugin::getLV2JSON_PC (std::string pluginName) {
     lib = lib.substr (lib.find_last_of ("/") + 1, lib.size ());
     std::string path = sharedLibrary->lv2_config_path ;
     path.append ("/").append (lib).append ("/").append (stub).append (".json");
-    //~ LOGD ("[LV2] config for %s: %s\n", pluginName.c_str (), path.c_str ());
+    std::replace(path.begin(), path.end(), ':', '_');
+
+    LOGD ("[LV2 %s] config for %s: %s\n", stub.c_str (), pluginName.c_str (), path.c_str ());
     std::ifstream fJson(path.c_str ());
     std::stringstream buffer;
     buffer << fJson.rdbuf();
+    OUT
     return buffer.str () ;
     
     /*
