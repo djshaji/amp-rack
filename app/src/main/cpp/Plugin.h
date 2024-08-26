@@ -71,6 +71,8 @@ public:
 #endif
 
     void setFileName(std::string filename);
+    std::string loadedFileName ;
+    int loadedFileType = -1 ;
 
     void lv2FeaturesInit();
     void lv2FeaturesURID();

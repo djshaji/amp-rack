@@ -182,6 +182,7 @@ void FileWriter::setChannels (int channels) {
 void FileWriter::closeFile () {
     IN
     if (fileType == MP3) {
+        LOGD ("[mp3] free buffer\n");
         unsigned char       *mp3buf  ;
         mp3buf = (unsigned char *) malloc (8192*3);
         lame_encode_flush(lame, mp3buf, 8192*3);
@@ -195,11 +196,14 @@ void FileWriter::closeFile () {
     }
 
     else if (fileType == WAV && outputFile) {
+        LOGD ("[wav] free buffer\n");
         fclose(outputFile);
         outputFile = NULL;
     }
 
     else if (fileType == OPUS )  {
+        LOGD ("[opus] free buffer\n");
+
         if (oggOpusEnc) {
             ope_encoder_drain(oggOpusEnc);
             ope_encoder_destroy(oggOpusEnc);
@@ -210,6 +214,7 @@ void FileWriter::closeFile () {
     }
 
     if (soundfile) {
+        LOGD ("[sndfile] free buffer\n");
         sf_close(soundfile);
         soundfile = NULL;
     }
@@ -344,9 +349,10 @@ void FileWriter::stopRecording () {
 //    vringbuffer_stop_callbacks(vringbuffer);
     ready = false ;
     closeFile();
+    HERE
     // fileWriteThread.join();
     LOGD("recording stopped: %d buffer underruns", total_overruns);
-    bg_buffer->pos = 0 ;
+    //~ bg_buffer->pos = 0 ;
     OUT
 }
 

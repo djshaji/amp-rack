@@ -343,6 +343,8 @@ void Plugin::setFileName (std::string filename) {
     float s = filename.size() ;
     lv2Descriptor->connect_port(handle, 99, (void *) &s);
     lv2Descriptor->connect_port(handle, 100, (void *) filename.c_str());
+    loadedFileName = std::string (filename);
+    loadedFileType = 1 ;
     OUT
 }
 

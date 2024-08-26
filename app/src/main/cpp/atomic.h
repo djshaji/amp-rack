@@ -4,7 +4,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
+#include <cstdlib>
 
 #define ATOMIC_NAME(name) \
   name##_atomic
