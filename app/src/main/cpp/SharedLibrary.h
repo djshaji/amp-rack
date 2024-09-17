@@ -58,6 +58,7 @@ public:
     } PluginType ;
 
     std::string mainActivityClassName ;
+
     LilvPlugin* plugin = nullptr ;
     LilvInstance* instance = nullptr;
     std::string lv2_config_path ;

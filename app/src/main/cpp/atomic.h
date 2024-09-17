@@ -4,7 +4,11 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#ifndef __ANDROID__
 #include <cstdlib>
+#else
+#include <stdlib.h>
+#endif
 
 #define ATOMIC_NAME(name) \
   name##_atomic
