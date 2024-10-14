@@ -11,7 +11,11 @@
 #include <ctime>
 #include <thread>
 #include "logging_macros.h"
+
+#ifdef __linux__
 #include "sndfile.h"
+#endif
+
 #include "opus.h"
 #include "opus_multistream.h"
 #include "opus_projection.h"
@@ -59,12 +63,17 @@ class FileWriter {
     static int buffer_write_index  ;
     static int unreported_overruns;
 
+    #ifdef __linux__
     SF_INFO sf_info ;
+    #endif
+    
     public: int bitRate = 64000 ;
     static OggOpusComments *comments;
     static lame_t lame ;
 
+#ifndef LOCK_FREE_SIZE
 #define LOCK_FREE_SIZE 4096
+#endif
     static LockFreeQueue<buffer_t *, LOCK_FREE_SIZE> lockFreeQueue ;
 
     static int num_channels;
@@ -173,7 +182,9 @@ public:
 
     void stopRecording();
 
+    #ifdef __linux__
     static SNDFILE *soundfile;
+    #endif
 
     static int process(int nframes, const float *arg);
 

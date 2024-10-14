@@ -89,6 +89,7 @@ char * SharedLibrary::load () {
 
 
         if (type == LILV) {
+# ifdef __linux__
 #ifndef __ANDROID__
             LilvWorld* world = (LilvWorld* )lilv_world_new();
             lilv_world_load_all(world);
@@ -114,6 +115,7 @@ char * SharedLibrary::load () {
             const LilvNode* const bundle_uri = lilv_plugin_get_bundle_uri(plugin);
             LIBRARY_PATH = std::string (lilv_node_as_string (bundle_uri)) ;
             so_file = std::string ("");
+#endif
 #endif
             return NULL ;
         } else {

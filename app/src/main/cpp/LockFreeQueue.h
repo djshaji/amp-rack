@@ -20,6 +20,10 @@
 #ifndef AMP_RACK_LOCKFREEQUEUE_H
 #define AMP_RACK_LOCKFREEQUEUE_H
 
+#ifndef __linux__
+#define gettid getpid
+#endif
+
 #include <cstdint>
 #include <atomic>
 #include <thread>

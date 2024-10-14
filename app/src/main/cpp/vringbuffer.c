@@ -111,6 +111,7 @@ static void *my_malloc(size_t size1, size_t size2) {
     }
 
     // Touch all pages. (earlier all memory was nulled out, but that puts a strain on the memory bus)
+    # ifdef __linux__
     {
         long pagesize = sysconf(_SC_PAGESIZE);
         char *cret = ret;
@@ -118,6 +119,7 @@ static void *my_malloc(size_t size1, size_t size2) {
         for (i = 0; i < size; i += pagesize)
             cret[i] = 0;
     }
+    # endif
 
     return ret;
 }
@@ -131,7 +133,7 @@ static bool vringbuffer_increase_writer1(vringbuffer_t *vrb, int num_elements, b
     if (num_elements == 0)
         return true;
 
-    vringbuffer_list_t *element = my_malloc(1, sizeof(vringbuffer_list_t) +
+    vringbuffer_list_t *element = (vringbuffer_list_t *)my_malloc(1, sizeof(vringbuffer_list_t) +
                                                (num_elements * vrb->element_size));
     if (element == NULL)
         return false;
@@ -155,9 +157,11 @@ static bool vringbuffer_increase_writer1(vringbuffer_t *vrb, int num_elements, b
 
         for (int i = 0; i < num_elements; i++) {
             char *pointer = das_buffer + (i * vrb->element_size);
+            #ifdef __linux__
             jack_ringbuffer_write(vrb->for_writer1,
                                   (char *) &pointer,
                                   sizeof(char *));
+            # endif                      
         }
 
         vrb->curr_num_elements += num_elements;
@@ -173,12 +177,13 @@ vringbuffer_t *
 vringbuffer_create(int num_elements_during_startup, int max_num_elements, size_t element_size) {
     IN LOGD("vringbuffer_create(int num_elements_during_startup, int max_num_elements, size_t element_size) %d, %d, %d", num_elements_during_startup, max_num_elements, element_size);
     //fprintf(stderr,"Creating %d %d %d\n",num_elements_during_startup,max_num_elements,element_size);
-    vringbuffer_t *vrb = calloc(1, sizeof(struct vringbuffer_t));
+    vringbuffer_t *vrb = (vringbuffer_t *)calloc(1, sizeof(struct vringbuffer_t));
 
+#ifdef __linux__
     vrb->for_writer1 = jack_ringbuffer_create(sizeof(void *) * max_num_elements);
     vrb->for_writer2 = jack_ringbuffer_create(sizeof(void *) * max_num_elements);
     vrb->for_reader = jack_ringbuffer_create(sizeof(void *) * max_num_elements);
-
+#endif
     vrb->element_size = element_size;
     vrb->max_num_elements = max_num_elements;
 
@@ -224,18 +229,18 @@ void vringbuffer_delete(vringbuffer_t *vrb) {
         free(vrb->allocated_mem);
         vrb->allocated_mem = next;
     }
-
+#ifdef __linux__
     jack_ringbuffer_free(vrb->for_writer1);
     jack_ringbuffer_free(vrb->for_writer2);
     jack_ringbuffer_free(vrb->for_reader);
-
+#endif
     free(vrb);
 }
 
 
 static void *autoincrease_func(void *arg) {
     IN
-    vringbuffer_t *vrb = arg;
+    vringbuffer_t *vrb = (vringbuffer_t *) arg;
     vrb->autoincrease_callback(vrb, true, 0, 0);
     SEM_SIGNAL(vrb->autoincrease_started);
     while (vrb->please_stop == false) {
@@ -290,8 +295,10 @@ void vringbuffer_increase(vringbuffer_t *vrb, int num_elements, void **elements)
 
     pthread_mutex_lock(&vrb->increase_lock);
     {
+#ifdef __linux__
         jack_ringbuffer_write(vrb->for_writer1, (char *) elements, sizeof(void *) * num_elements);
         vrb->curr_num_elements += num_elements;
+#endif
     }
     pthread_mutex_unlock(&vrb->increase_lock);
     OUT
@@ -303,26 +310,33 @@ void vringbuffer_increase(vringbuffer_t *vrb, int num_elements, void **elements)
 void *vringbuffer_get_reading(vringbuffer_t *vrb) {
     void *ret = NULL;
     IN
+    #ifdef __linux__
     jack_ringbuffer_read(vrb->for_reader, (char *) &ret, sizeof(void *));
+    #endif
     OUT
     return ret;
 }
 
 void vringbuffer_return_reading(vringbuffer_t *vrb, void *data) {
     IN
+    #ifdef __linux__
     jack_ringbuffer_write(vrb->for_writer2, (char *) &data, sizeof(void *));
+    #endif
     OUT
 }
 
 int vringbuffer_reading_size(vringbuffer_t *vrb) {
     IN OUT
+    #ifdef __linux__
     return (jack_ringbuffer_read_space(vrb->for_reader) / sizeof(void *));
+    #endif
+    return 0 ;
 }
 
 
 static void *receiver_func(void *arg) {
     IN
-    vringbuffer_t *vrb = arg;
+    vringbuffer_t *vrb = (vringbuffer_t *)arg;
 //    LOGD("[ringbuffer id] %d", gettid ());
 
     vrb->receiver_callback(vrb, true, NULL);
@@ -373,9 +387,11 @@ void vringbuffer_set_receiver_callback(vringbuffer_t *vrb,
 void *vringbuffer_get_writing(vringbuffer_t *vrb) {
     IN
     void *ret = NULL;
+    #ifdef __linux__
     if (jack_ringbuffer_read(vrb->for_writer2, (char *) &ret, sizeof(void *)) ==
         0) // Checking writer2 first since that memory is more likely to already be in the cache.
         jack_ringbuffer_read(vrb->for_writer1, (char *) &ret, sizeof(void *));
+    #endif
     OUT
     return ret;
 }
@@ -385,17 +401,22 @@ void vringbuffer_return_writing(vringbuffer_t *vrb, void *data) {
     vringbuffer_buffer_t  * bf = (vringbuffer_buffer_t *) data ;
 //    vrb->receiver_callback(vrb, false, data) ;
 //    return;
+#ifdef __linux__
     jack_ringbuffer_write(vrb->for_reader, (char *) &data, sizeof(void *));
+#endif    
     upwaker_wake_up(vrb->receiver_trigger);
     OUT
 }
 
 int vringbuffer_writing_size(vringbuffer_t *vrb) {
     IN OUT
-    return
+    #ifdef __linux__
+        return
             ((jack_ringbuffer_read_space(vrb->for_writer1) +
               jack_ringbuffer_read_space(vrb->for_writer2))
              / sizeof(void *));
+    #else return 0;
+    #endif
 }
 
 #ifdef __cplusplus

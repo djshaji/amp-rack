@@ -10,7 +10,7 @@ extern "C" {
 
 upwaker_t *create_upwaker(void) {
     IN
-  upwaker_t *upwaker = calloc(1, sizeof(upwaker_t));
+  upwaker_t *upwaker = (upwaker_t *)calloc(1, sizeof(upwaker_t));
   ATOMIC_SET(upwaker->please_wakeup, false);
   pthread_mutex_init(&upwaker->mutex, NULL);
   pthread_cond_init(&upwaker->cond, NULL);

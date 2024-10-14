@@ -18,7 +18,9 @@ long FileWriter::processed = 0 ;
 int FileWriter::bufferUsed = 0;
 int FileWriter::unreported_overruns = 0 ;
 int FileWriter::total_overruns = 0;
+# ifdef __linux__
 SNDFILE * FileWriter::soundfile = NULL;
+# endif
 buffer_t *FileWriter::current_buffer;
 buffer_t *FileWriter::bg_buffer;
 int FileWriter::num_channels = 1 ;
@@ -98,10 +100,11 @@ FileWriter::FileWriter () {
 void FileWriter::openFile () {
     IN
     LOGD("opening file [%s] using sample rate: [%d]\tchannels: [%d]", filename.c_str(), jack_samplerate, num_channels);
-    memset(&sf_info,0,sizeof(SF_INFO));
     memset (&opusIn, 0, 960*2);
     memset (&opusOut, 0, 3*1276);
-
+    
+    # ifdef __linux__
+    memset(&sf_info,0,sizeof(SF_INFO));
     sf_info.channels = num_channels ;
     // why the below?
 //    sf_info.samplerate = jack_samplerate * num_channels ;
@@ -113,8 +116,11 @@ void FileWriter::openFile () {
         LOGE ("\nFileformat not supported by libsndfile. Try other options.\n");
         return ;
     }
+    
+    # endif
 
     if (fileType == WAV) {
+        # ifdef __linux__
         LOGD("[%s] %d %d %d", __PRETTY_FUNCTION__, sf_info.samplerate, sf_info.channels,
              sf_info.format);
         FileWriter::soundfile = sf_open(filename.c_str(), SFM_WRITE, &sf_info);
@@ -126,6 +132,7 @@ void FileWriter::openFile () {
             LOGD("[%s] Opened file %s", __PRETTY_FUNCTION__, filename.c_str());
 //            sf_command (soundfile, SFC_SET_CLIPPING, NULL, SF_TRUE) ;
         }
+        # endif
     }
 
     else if (fileType == OPUS) {
@@ -144,6 +151,9 @@ void FileWriter::openFile () {
         outputFile = NULL ;
         int error = 0 ;
         LOGD("going to create opus encoder with filename: %s", filename.c_str());
+        
+        # ifdef __linux__
+        
         comments = ope_comments_create() ;
         ope_comments_add(comments, "TITLE", "AmpRack Demo");
 
@@ -152,8 +162,10 @@ void FileWriter::openFile () {
             HERE LOGF("cannot create encoder: %s", ope_strerror(error));
         }
         err = ope_encoder_ctl(oggOpusEnc, OPUS_SET_BITRATE(bitRate));
+        # endif
 
     } else if (fileType == MP3) {
+        # ifdef __linux__
         LOGD("init lame encoder");
         lame = lame_init();
         lame_set_in_samplerate(lame, jack_samplerate);
@@ -170,6 +182,7 @@ void FileWriter::openFile () {
         }
         outputFile = fopen(filename.c_str(), "wb");
         mp3_buffer =  malloc ((block_size * 1.25) + 7200);
+        #endif
     }
 
     OUT
@@ -182,6 +195,7 @@ void FileWriter::setChannels (int channels) {
 void FileWriter::closeFile () {
     IN
     if (fileType == MP3) {
+        # ifdef __linux__
         LOGD ("[mp3] free buffer\n");
         unsigned char       *mp3buf  ;
         mp3buf = (unsigned char *) malloc (8192*3);
@@ -193,6 +207,7 @@ void FileWriter::closeFile () {
         outputFile = NULL;
         lame = NULL ;
         free(mp3_buffer);
+        # endif
     }
 
     else if (fileType == WAV && outputFile) {
@@ -205,19 +220,23 @@ void FileWriter::closeFile () {
         LOGD ("[opus] free buffer\n");
 
         if (oggOpusEnc) {
+            # ifdef __linux__
             ope_encoder_drain(oggOpusEnc);
             ope_encoder_destroy(oggOpusEnc);
             ope_comments_destroy(comments);
             oggOpusEnc = NULL ;
             comments = NULL ;
+            # endif
         }
     }
 
+    # ifdef __linux__
     if (soundfile) {
         LOGD ("[sndfile] free buffer\n");
         sf_close(soundfile);
         soundfile = NULL;
     }
+    # endif
 
     OUT
 }
@@ -264,6 +283,7 @@ int FileWriter::disk_write(AudioBuffer * buffer) {
 //    LOGD("disk write [%d] %d frames", disk_writes, frames);
     disk_writes ++ ;
     if (fileType == MP3) {
+        # ifdef __linux__
         int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (block_size * 1.25) + 7200);
         if (write < 0) {
             LOGF("unable to encode mp3 stream: %d", write);
@@ -272,11 +292,14 @@ int FileWriter::disk_write(AudioBuffer * buffer) {
         }
 
 //        OUT
+        # endif
         return 0 ;
     }
 
     if (fileType== OPUS) {
+        # ifdef __linux__
         ope_encoder_write_float(oggOpusEnc, data, frames);
+        #endif
 //        OUT
         return 1;
     }
@@ -309,6 +332,7 @@ int FileWriter::disk_write(AudioBuffer * buffer) {
         }
     }
 
+    # ifdef __linux__
     if((size_t)sf_writef_float(FileWriter::soundfile, data,frames) != frames){
         LOGF("Error. Can not write sndfile (%s)\n",
                       sf_strerror(FileWriter::soundfile)
@@ -316,6 +340,7 @@ int FileWriter::disk_write(AudioBuffer * buffer) {
 //        OUT
         return 0;
     }
+    #endif
 
 //    OUT
     return 1;
@@ -618,6 +643,8 @@ void FileWriter::setFileType (int fType) {
 
 void FileWriter::setLamePreset (int preset) {
     IN
+    # ifdef __linux__
     lame_set_preset(lame, preset);
+    # endif
     OUT
 }
