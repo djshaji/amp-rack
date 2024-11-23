@@ -168,13 +168,13 @@ private:
 
 class LockFreeQueueManager {
     static LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> lockFreeQueue ;
-    AudioBuffer * pAudioBuffer [SPARE_BUFFERS];
+    static AudioBuffer * pAudioBuffer [SPARE_BUFFERS];
     int buffer_size ;
-    int buffer_counter ;
-    bool ready = false ;
+    static int buffer_counter ;
+    static bool ready ;
 
     #define MAX_FUNCTIONS 10
-    void (* functions [MAX_FUNCTIONS])(AudioBuffer *) ;
+    static void (* functions [MAX_FUNCTIONS])(AudioBuffer *) ;
     int functions_count ;
 
     static std::thread fileWriteThread ;

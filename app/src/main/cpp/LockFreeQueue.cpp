@@ -6,6 +6,10 @@
 
 LockFreeQueue<AudioBuffer *, LOCK_FREE_SIZE> LockFreeQueueManager::lockFreeQueue;
 std::thread LockFreeQueueManager::fileWriteThread  ;
+bool LockFreeQueueManager::ready = false;
+void (* LockFreeQueueManager::functions [MAX_FUNCTIONS])(AudioBuffer *) ;
+AudioBuffer * LockFreeQueueManager::pAudioBuffer [SPARE_BUFFERS]; 
+int  LockFreeQueueManager::buffer_counter ;
 
 void LockFreeQueueManager::init (int _buffer_size) {
     IN

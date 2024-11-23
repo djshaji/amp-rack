@@ -165,7 +165,6 @@ void FileWriter::openFile () {
         # endif
 
     } else if (fileType == MP3) {
-        # ifdef __linux__
         LOGD("init lame encoder");
         lame = lame_init();
         lame_set_in_samplerate(lame, jack_samplerate);
@@ -182,7 +181,6 @@ void FileWriter::openFile () {
         }
         outputFile = fopen(filename.c_str(), "wb");
         mp3_buffer =  malloc ((block_size * 1.25) + 7200);
-        #endif
     }
 
     OUT
@@ -195,7 +193,6 @@ void FileWriter::setChannels (int channels) {
 void FileWriter::closeFile () {
     IN
     if (fileType == MP3) {
-        # ifdef __linux__
         LOGD ("[mp3] free buffer\n");
         unsigned char       *mp3buf  ;
         mp3buf = (unsigned char *) malloc (8192*3);
@@ -207,7 +204,6 @@ void FileWriter::closeFile () {
         outputFile = NULL;
         lame = NULL ;
         free(mp3_buffer);
-        # endif
     }
 
     else if (fileType == WAV && outputFile) {
@@ -283,7 +279,6 @@ int FileWriter::disk_write(AudioBuffer * buffer) {
 //    LOGD("disk write [%d] %d frames", disk_writes, frames);
     disk_writes ++ ;
     if (fileType == MP3) {
-        # ifdef __linux__
         int write = lame_encode_buffer_ieee_float(lame, data, NULL, frames, (unsigned char *) mp3_buffer, (block_size * 1.25) + 7200);
         if (write < 0) {
             LOGF("unable to encode mp3 stream: %d", write);
@@ -292,7 +287,6 @@ int FileWriter::disk_write(AudioBuffer * buffer) {
         }
 
 //        OUT
-        # endif
         return 0 ;
     }
 
@@ -643,8 +637,6 @@ void FileWriter::setFileType (int fType) {
 
 void FileWriter::setLamePreset (int preset) {
     IN
-    # ifdef __linux__
     lame_set_preset(lame, preset);
-    # endif
     OUT
 }

@@ -114,7 +114,7 @@ static void *my_malloc(size_t size1, size_t size2) {
     # ifdef __linux__
     {
         long pagesize = sysconf(_SC_PAGESIZE);
-        char *cret = ret;
+        char *cret = (char *) ret;
         size_t i = 0;
         for (i = 0; i < size; i += pagesize)
             cret[i] = 0;
