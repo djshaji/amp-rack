@@ -14,7 +14,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 105
-        versionName '4.9'
+        versionName '5.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -26,7 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        versionNameSuffix '-Razor'
+        versionNameSuffix '-Raptor'
     }
 
     buildTypes {

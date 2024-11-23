@@ -1,33 +1,25 @@
 package com.shajikhan.ladspa.amprack;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SubMenu;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -35,9 +27,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,43 +37,40 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.Slider;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class Rack extends Fragment {
     MainActivity mainActivity ;
@@ -654,6 +640,15 @@ public class Rack extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
 //                MainActivity.toast(AudioEngine.tuneLatency());
                 latencyDialog();
+                return false;
+            }
+        });
+
+        MenuItem sync_item = optionsMenu.getMenu().findItem(R.id.menu_sync);
+        sync_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                syncDialog();
                 return false;
             }
         });
@@ -1276,4 +1271,127 @@ public class Rack extends Fragment {
 
         builder.show();
     }
+
+    void syncDialog () {
+        LinearLayout linearLayout = (LinearLayout) mainActivity.getLayoutInflater().inflate(R.layout.sync_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setTitle("Sync with PC / Smart Pedal")
+                .setView(linearLayout)
+                .setPositiveButton("Close", null);
+
+        Button btn = linearLayout.findViewById(R.id.sync);
+        EditText editText = linearLayout.findViewById(R.id.ip);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = editText.getText().toString();
+                if (text.isEmpty())
+                    return;
+
+//                String host = text.split(":")[0];
+//                int port = Integer.parseInt(text.split(":")[1]);
+
+                JSONObject collection = new JSONObject();
+                for (int i = 0 ; i < mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.size() ; i ++) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.allPresets.get(i)) ;
+                        collection.put(String.valueOf(i), jsonObject);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "[sync]: ", e);
+                    }
+                }
+
+                Log.d(TAG, "[sync]: got presets: " + collection.toString());
+                SyncTask syncTask = new SyncTask();
+                String  data [] = {
+                        text.split (":") [0],
+                        text.split (":") [1],
+                        collection.toString() + "}"
+                };
+
+                try {
+                    String result = syncTask.execute(data).get();
+                    Log.d(TAG, "[sync]: " + result);
+
+                    if (result.isEmpty()) {
+                        Log.w(TAG, "[sync]: no presets received from server");
+                        return;
+                    }
+
+                    JSONObject j = new JSONObject (result);
+                    Log.d(TAG, "[sync json]: " + j.toString());
+                    Iterator<String> keys = j.keys();
+
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        JSONObject jo = j.getJSONObject(key);
+                        Log.d(TAG, "[preset]: " + jo.toString());
+                    }
+
+                    Log.d(TAG, "[sync]: end presets processing");
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    public String syncData(String host, int port, String toSend){
+        Socket socket ;
+        PrintWriter out ;
+        BufferedReader in ;
+        String result = "";
+
+        try{
+            socket = new Socket(host, port);
+            out = new PrintWriter(socket.getOutputStream(),
+                    true);
+            in = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
+        } catch (UnknownHostException e) {
+            System.out.println("Unknown host: " + host);
+            return result;
+        } catch  (IOException e) {
+            System.out.println("No I/O");
+            return result;
+        }
+
+        out.println(toSend);
+
+        // Receive text from server
+        try{
+            String line = in.readLine();
+            Log.d(TAG, "syncData: Text received: " + line);
+            result = line ;
+        } catch (IOException e){
+            Log.d(TAG, "syncData: Read failed");
+            return result;
+        }
+
+        return result;
+    }
+
+    private class SyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params)
+        {
+            String host = params[0];
+            int port = Integer.parseInt(params[1]);
+            String toSend = params [2];
+            return syncData(host, port, toSend);
+        }
+
+        @Override
+        protected void onPostExecute(String result)
+        {
+            super.onPostExecute(result);
+            // do something with the result
+        }
+    }
+
 }
