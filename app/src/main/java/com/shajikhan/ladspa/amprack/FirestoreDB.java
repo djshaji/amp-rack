@@ -157,15 +157,36 @@ public class FirestoreDB {
 
         while(keys.hasNext()) {
             String key = keys.next();
+
             JSONObject jo ;
             Map<String, Object> data = new HashMap<>();
             try {
                 jo = jsonObject.getJSONObject(key);
+                Log.d(TAG, String.format ("[db]: uploading preset %s", jo.toString()));
+
+                if (! jo.has("controls") || jo.isNull("controls"))
+                    continue;
+
+                boolean duplicate = false ;
+
+                for (int i = 0 ; i < myPresets.myPresetsAdapter.presets.size(); i ++) {
+                    JSONObject myP = new JSONObject(myPresets.myPresetsAdapter.presets.get(i)) ;
+                    if (myP.getString("name").equals(jo.getString("name"))) {
+                        Log.d(TAG, String.format ("skip duplicate preset: %s", myP.getString("name")));
+                        duplicate = true ;
+                        break ;
+                    }
+                }
+
+                if (duplicate)
+                    continue;
+
                 data.put("name", jo.get("name"));
                 data.put("desc", jo.get("desc"));
                 data.put("likes", 0);
 
                 data.put("public", shared);
+                Log.d(TAG, String.format ("json object: %s", jo.getJSONObject("controls")));
                 data.put("controls", MainActivity.JSONtoMap(jo.getJSONObject("controls")));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -227,6 +248,12 @@ public class FirestoreDB {
                     JSONObject jo;
                     try {
                         jo = jsonObject.getJSONObject(key);
+
+                        if (! jo.has("controls") || jo.isNull("controls")) {
+                            Log.d(TAG, String.format ("[sync]: not loading empty preset %s", jo.toString()));
+                            continue;
+                        }
+
                         myPresets.myPresetsAdapter.addPreset(MainActivity.JSONtoMap(jo));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
