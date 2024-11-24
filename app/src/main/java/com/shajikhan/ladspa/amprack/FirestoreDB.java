@@ -30,10 +30,13 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firestore.v1.WriteResult;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -135,6 +138,112 @@ public class FirestoreDB {
                     .addOnSuccessListener(successListener)
                     .addOnFailureListener(failureListener);
         }
+    }
+
+    @ServerTimestamp
+    public void savePresets(JSONObject jsonObject, boolean shared, AlertDialog dialog, MyPresets myPresets) {
+        FirebaseAuth auth = FirebaseAuth.getInstance() ;
+        WriteBatch batch = db.batch();
+        CollectionReference collectionReference = db.collection("presets");
+        if (auth == null) {
+            Log.e(TAG, "savePreset: uid is null", null);
+            return ;
+        } else if (auth.getUid() == null) {
+            Log.e(TAG, "loadUserPresets: uid is null", null);
+            return ;
+        }
+
+        Iterator<String> keys = jsonObject.keys();
+
+        while(keys.hasNext()) {
+            String key = keys.next();
+            JSONObject jo ;
+            Map<String, Object> data = new HashMap<>();
+            try {
+                jo = jsonObject.getJSONObject(key);
+                data.put("name", jo.get("name"));
+                data.put("desc", jo.get("desc"));
+                data.put("likes", 0);
+
+                data.put("public", shared);
+                data.put("controls", MainActivity.JSONtoMap(jo.getJSONObject("controls")));
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+            data.put("uid", auth.getUid());
+            data.put("timestamp", FieldValue.serverTimestamp());
+
+            OnSuccessListener<DocumentReference> successListener = new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    //                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    dialog.dismiss();
+                    Toast.makeText(context,
+                                    "Patch saved successfully",
+                                    Toast.LENGTH_LONG)
+                            .show();
+                    data.put("path", documentReference.getPath());
+                    data.put("uid", auth.getUid());
+                    ((MainActivity) context).lastPresetLoadedPath = documentReference.getPath().split("presets")[1];
+                    ((MainActivity) context).lastPresetLoadedUID = auth.getUid();
+                    myPresets.myPresetsAdapter.addPreset(data);
+                }
+            };
+
+            OnFailureListener failureListener = new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "Error adding document", e);
+                    Toast.makeText(context,
+                                    "Could not save patch: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                            .show();
+                }
+            };
+
+            DocumentReference documentReference = collectionReference.document() ;
+            batch.set(documentReference, data);
+
+//            db.collection("presets")
+//                    .add(data)
+//                    .addOnSuccessListener(successListener)
+//                    .addOnFailureListener(failureListener);
+        }
+
+        Task<Void> task = batch.commit();
+        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                dialog.dismiss();
+                Toast.makeText(context,
+                                "Patch saved successfully",
+                                Toast.LENGTH_LONG)
+                        .show();
+
+                Iterator<String> keys = jsonObject.keys();
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    JSONObject jo;
+                    try {
+                        jo = jsonObject.getJSONObject(key);
+                        myPresets.myPresetsAdapter.addPreset(MainActivity.JSONtoMap(jo));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+                Toast.makeText(context,
+                                "Could not save imported presets to cloud: " + e.getMessage(),
+                                Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     public void loadUserPresets (MyPresetsAdapter presetsAdapter, boolean shared, boolean quick) {

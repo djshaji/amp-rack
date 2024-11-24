@@ -1281,6 +1281,8 @@ public class Rack extends Fragment {
 
         Button btn = linearLayout.findViewById(R.id.sync);
         EditText editText = linearLayout.findViewById(R.id.ip);
+        AlertDialog dialog = builder.create();
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1328,6 +1330,7 @@ public class Rack extends Fragment {
                         Log.d(TAG, "[preset]: " + jo.toString());
                     }
 
+                    mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.db.savePresets(j, false, dialog, mainActivity.presets.fragmentStateAdapter.myPresets);
                     Log.d(TAG, "[sync]: end presets processing");
                 } catch (ExecutionException e) {
                     throw new RuntimeException(e);
@@ -1338,7 +1341,8 @@ public class Rack extends Fragment {
                 }
             }
         });
-        builder.show();
+
+        dialog.show();
     }
 
     public String syncData(String host, int port, String toSend){
