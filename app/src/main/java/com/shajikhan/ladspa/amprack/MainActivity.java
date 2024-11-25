@@ -4104,7 +4104,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             } ;
 
             for (String s: params)
-                map.put(s, j.get(s));
+                if (j.has(s))
+                    map.put(s, j.get(s));
 
             HashMap <String, HashMap> hashMap = new HashMap();
             map.put("controls", hashMap);

@@ -1321,14 +1321,15 @@ public class Rack extends Fragment {
                     }
 
                     JSONObject j = new JSONObject (result);
+//                    j.put("uid", FirebaseAuth.getInstance().getUid());
                     Log.d(TAG, "[sync json]: " + j.toString());
                     Iterator<String> keys = j.keys();
 
-                    while(keys.hasNext()) {
-                        String key = keys.next();
-                        JSONObject jo = j.getJSONObject(key);
-                        Log.d(TAG, "[preset]: " + jo.toString());
-                    }
+//                    while(keys.hasNext()) {
+//                        String key = keys.next();
+//                        JSONObject jo = j.getJSONObject(key);
+//                        Log.d(TAG, "[preset]: " + jo.toString());
+//                    }
 
                     mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.db.savePresets(j, false, dialog, mainActivity.presets.fragmentStateAdapter.myPresets);
                     Log.d(TAG, "[sync]: end presets processing");

@@ -182,12 +182,30 @@ public class FirestoreDB {
                     continue;
 
                 data.put("name", jo.get("name"));
+                data.put("uid", FirebaseAuth.getInstance().getUid());
                 data.put("desc", jo.get("desc"));
                 data.put("likes", 0);
 
                 data.put("public", shared);
                 Log.d(TAG, String.format ("json object: %s", jo.getJSONObject("controls")));
-                data.put("controls", MainActivity.JSONtoMap(jo.getJSONObject("controls")));
+
+                JSONObject controls = jo.getJSONObject("controls");
+                Iterator<String> controlKeys = controls.keys();
+                Map<String, String> controlsMap = new HashMap<>();
+
+                while (controlKeys.hasNext()) {
+                    String control = controlKeys.next();
+                    JSONObject controlJson = controls.getJSONObject(control);
+                    Log.d(TAG, String.format ("[%s] control: %s: %s %s", jo.get("name"), control,
+                            controlJson.get("name"), controlJson.get("controls")));
+                    Map <String, String> controlMap = new HashMap<>();
+                    controlMap.put("controls", controlJson.getString("controls"));
+                    controlMap.put("name", controlJson.getString("name"));
+                    controlsMap.put(control, controlJson.getString("controls"));
+                }
+
+                Log.d(TAG, String.format ("[controls] %s: %s", jo.get("name"), controlsMap));
+                data.put("controls", controlsMap);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -248,6 +266,7 @@ public class FirestoreDB {
                     JSONObject jo;
                     try {
                         jo = jsonObject.getJSONObject(key);
+                        jo.put("uid", auth.getUid());
 
                         if (! jo.has("controls") || jo.isNull("controls")) {
                             Log.d(TAG, String.format ("[sync]: not loading empty preset %s", jo.toString()));
