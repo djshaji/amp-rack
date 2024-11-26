@@ -219,7 +219,7 @@ public class FirestoreDB {
                     //                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                     dialog.dismiss();
                     Toast.makeText(context,
-                                    "Patch saved successfully",
+                                    "Synced presets successfully",
                                     Toast.LENGTH_LONG)
                             .show();
                     data.put("path", documentReference.getPath());

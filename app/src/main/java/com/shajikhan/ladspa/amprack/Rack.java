@@ -1279,6 +1279,16 @@ public class Rack extends Fragment {
                 .setView(linearLayout)
                 .setPositiveButton("Close", null);
 
+        Button download = linearLayout.findViewById(R.id.download);
+        download.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://amprack.in"));
+                startActivity(browserIntent);
+
+            }
+        });
         Button btn = linearLayout.findViewById(R.id.sync);
         EditText editText = linearLayout.findViewById(R.id.ip);
         AlertDialog dialog = builder.create();
