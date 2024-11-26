@@ -199,9 +199,9 @@ public class FirestoreDB {
                     Log.d(TAG, String.format ("[%s] control: %s: %s %s", jo.get("name"), control,
                             controlJson.get("name"), controlJson.get("controls")));
                     Map <String, String> controlMap = new HashMap<>();
-                    controlMap.put("controls", controlJson.getString("controls"));
-                    controlMap.put("name", controlJson.getString("name"));
-                    controlsMap.put(control, controlJson.getString("controls"));
+                    controlsMap.put("controls", controlJson.getString("controls"));
+                    controlsMap.put("name", controlJson.getString("name"));
+//                    controlsMap.put(control, controlMap);
                 }
 
                 Log.d(TAG, String.format ("[controls] %s: %s", jo.get("name"), controlsMap));
