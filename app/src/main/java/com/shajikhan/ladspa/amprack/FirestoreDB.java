@@ -191,7 +191,7 @@ public class FirestoreDB {
 
                 JSONObject controls = jo.getJSONObject("controls");
                 Iterator<String> controlKeys = controls.keys();
-                Map<String, String> controlsMap = new HashMap<>();
+                Map<String, Object> controlsMap = new HashMap<>();
 
                 while (controlKeys.hasNext()) {
                     String control = controlKeys.next();
@@ -199,9 +199,9 @@ public class FirestoreDB {
                     Log.d(TAG, String.format ("[%s] control: %s: %s %s", jo.get("name"), control,
                             controlJson.get("name"), controlJson.get("controls")));
                     Map <String, String> controlMap = new HashMap<>();
-                    controlsMap.put("controls", controlJson.getString("controls"));
-                    controlsMap.put("name", controlJson.getString("name"));
-//                    controlsMap.put(control, controlMap);
+                    controlMap.put("controls", controlJson.getString("controls"));
+                    controlMap.put("name", controlJson.getString("name"));
+                    controlsMap.put(control, controlMap);
                 }
 
                 Log.d(TAG, String.format ("[controls] %s: %s", jo.get("name"), controlsMap));
@@ -256,7 +256,7 @@ public class FirestoreDB {
             public void onSuccess(Void unused) {
                 dialog.dismiss();
                 Toast.makeText(context,
-                                "Patch saved successfully",
+                                "Synced presets successfully",
                                 Toast.LENGTH_LONG)
                         .show();
 

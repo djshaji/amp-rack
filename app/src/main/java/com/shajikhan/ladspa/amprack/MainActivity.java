@@ -4113,6 +4113,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             // todo: do each control individually
             JSONObject controls = j.getJSONObject ("controls");
             Iterator<String> keys = controls.keys();
+            if (! keys.hasNext()) {
+                Log.e(TAG, "JSONtoMap: no controls found! error! error!");
+                return map;
+            }
             String next = keys.next();
             while (keys.hasNext()) {
                 JSONObject settings = controls.getJSONObject(next);
