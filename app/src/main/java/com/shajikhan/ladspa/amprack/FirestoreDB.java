@@ -243,6 +243,7 @@ public class FirestoreDB {
 
             DocumentReference documentReference = collectionReference.document() ;
             batch.set(documentReference, data);
+            myPresets.myPresetsAdapter.addPreset(data);
 
 //            db.collection("presets")
 //                    .add(data)
@@ -259,25 +260,6 @@ public class FirestoreDB {
                                 "Synced presets successfully",
                                 Toast.LENGTH_LONG)
                         .show();
-
-                Iterator<String> keys = jsonObject.keys();
-                while(keys.hasNext()) {
-                    String key = keys.next();
-                    JSONObject jo;
-                    try {
-                        jo = jsonObject.getJSONObject(key);
-                        jo.put("uid", auth.getUid());
-
-                        if (! jo.has("controls") || jo.isNull("controls")) {
-                            Log.d(TAG, String.format ("[sync]: not loading empty preset %s", jo.toString()));
-                            continue;
-                        }
-
-                        myPresets.myPresetsAdapter.addPreset(MainActivity.JSONtoMap(jo));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
             }
         });
         task.addOnFailureListener(new OnFailureListener() {

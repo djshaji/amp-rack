@@ -1296,6 +1296,11 @@ public class Rack extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mainActivity.presets.fragmentStateAdapter == null) {
+                    MainActivity.alert("Presets not loaded", "Load presets first by switching to the presets Tab.");
+                    return;
+                }
+
                 String text = editText.getText().toString();
                 if (text.isEmpty())
                     return;
@@ -1325,8 +1330,10 @@ public class Rack extends Fragment {
                     String result = syncTask.execute(data).get();
                     Log.d(TAG, "[sync]: " + result);
 
-                    if (result.isEmpty()) {
+                    if (result == null || result.isEmpty()) {
                         Log.w(TAG, "[sync]: no presets received from server");
+                        Toast.makeText(mainActivity, "No presets received from server", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                         return;
                     }
 
@@ -1341,14 +1348,18 @@ public class Rack extends Fragment {
 //                        Log.d(TAG, "[preset]: " + jo.toString());
 //                    }
 
+                    if (mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.db == null) {
+//                        Toast.makeText(mainActivity, "Cannot upload: db is null", Toast.LENGTH_SHORT).show();
+//                        return;
+                        mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.db = new FirestoreDB(mainActivity);
+                    }
+
                     mainActivity.presets.fragmentStateAdapter.myPresets.myPresetsAdapter.db.savePresets(j, false, dialog, mainActivity.presets.fragmentStateAdapter.myPresets);
                     Log.d(TAG, "[sync]: end presets processing");
-                } catch (ExecutionException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                } catch (ExecutionException | InterruptedException | JSONException e) {
+//                    throw new RuntimeException(e);
+                    Log.e(TAG, "[sync]: ", e);
+                    Toast.makeText(mainActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

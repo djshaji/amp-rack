@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-            android:hint="Enter IP Address of PC / Smart Pedal"
+            android:hint="PC / Pedal IP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
