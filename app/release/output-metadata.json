@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 107,
-      "versionName": "5.01-Raptor",
+      "versionCode": 108,
+      "versionName": "5.02-Raptor",
       "outputFile": "app-release.apk"
     }
   ],
