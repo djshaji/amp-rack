@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 5 Raptor</string>
-    <string name="build_id">649</string>
+    <string name="build_id">662</string>
     <string name="variant">Turbocharged version</string>
     <string name="quote">Powered by Rock and Roll</string>
     <string name="copyright">All trademarks are copyrights of their respective owners and do not represent affiliation or endorsement.</string>
