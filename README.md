@@ -53,4 +53,11 @@ This is the biggest update of Amp Rack till date, and contains tons of new featu
 
 ### Screenshots
 <div class="row">
+<img width=200 src="https://github.com/user-attachments/assets/b3af4ca9-4090-4cf1-8f2d-4bd7b430c471">
+<img width=200 src="https://github.com/user-attachments/assets/4389bc97-c039-4bd9-bbbb-f4643ebbac18">
+<img width=200 src="https://github.com/user-attachments/assets/3cf4f508-2efd-489f-a4cf-a2db22c7d582">
+<img width=200 src="https://github.com/user-attachments/assets/fb51b294-5dc8-4b31-8070-44399c4619e7">
+<img width=200 src="https://github.com/user-attachments/assets/3e2e7e2e-0cab-4582-b6b2-d9020d8903ee">
+<img width=200 src="https://github.com/user-attachments/assets/2243d369-de98-4685-afb8-d714f9bebd8f">
+
 </div>
