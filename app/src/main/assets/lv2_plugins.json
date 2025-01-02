@@ -1384,5 +1384,23 @@
     "name": "Simple IR Loader",
     "index": 0,
     "library": "libir_cab.so"
+  },
+  "33800": {
+    "id": 8109,
+    "name": "Fonin Overdrive",
+    "index": 0,
+    "library": "libfonin-overdrive.lv2.so"
+  },
+  "33900": {
+    "id": 8110,
+    "name": "Fonin Tube Amplifier",
+    "index": 0,
+    "library": "libfonin-tubeamp.lv2.so"
+  },
+  "34000": {
+    "id": 8111,
+    "name": "Fonin Distortion",
+    "index": 0,
+    "library": "libfonin-distortion.lv2.so"
   }
 }
