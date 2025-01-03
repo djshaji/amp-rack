@@ -1402,5 +1402,11 @@
     "name": "Fonin Distortion",
     "index": 0,
     "library": "libfonin-distortion.lv2.so"
+  },
+  "34100": {
+    "id": 8112,
+    "name": "Fonin Sustain",
+    "index": 0,
+    "library": "libfonin-sustain.lv2.so"
   }
 }

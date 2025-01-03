@@ -511,6 +511,7 @@
         <item>libfonin-overdrive.lv2.so</item>
         <item>libfonin-tubeamp.lv2.so</item>
         <item>libfonin-distortion.lv2.so</item>
+        <item>libfonin-sustain.lv2.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
