@@ -12,8 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:gwpAsanMode="always"
         android:allowBackup="true"
+        android:gwpAsanMode="always"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
@@ -21,9 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySplash">
         <activity
-            android:name=".About"
             android:theme="@style/Theme.AmpRack"
+            android:name=".NAMDownloader"
             android:exported="false" />
+        <activity
+            android:name=".About"
+            android:exported="false"
+            android:theme="@style/Theme.AmpRack" />
         <activity
             android:name=".Camera"
             android:exported="false"
