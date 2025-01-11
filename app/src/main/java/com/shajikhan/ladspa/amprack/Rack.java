@@ -1,6 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -20,6 +21,8 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -75,6 +78,7 @@ import java.util.concurrent.ExecutionException;
 public class Rack extends Fragment {
     MainActivity mainActivity ;
     LinearProgressIndicator quickPatchProgress ;
+    Dialog youtubePlayer ;
     String TAG = getClass().getSimpleName();
     PopupMenu optionsMenu ;
     ToggleButton toggleVideo, videoRecord ;
@@ -654,10 +658,21 @@ public class Rack extends Fragment {
         });
 
         MenuItem nam = optionsMenu.getMenu().findItem(R.id.nam);
+        nam.setVisible(false);
         nam.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
                 startActivity(new Intent(mainActivity, NAMDownloader.class));
+                return false;
+            }
+        });
+
+        MenuItem ytMenu = optionsMenu.getMenu().findItem(R.id.youtube);
+        ytMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                youtubePlayer.show();
+//                ((WebView) youtubePlayer.findViewById(R.id.webview)).loadUrl("https://youtube.com");
                 return false;
             }
         });
@@ -1127,6 +1142,64 @@ public class Rack extends Fragment {
 //            mixerLabel.setBackgroundColor(getResources().getColor(R.color.wheat));
         }
 
+        youtubePlayer = new Dialog(mainActivity);
+        youtubePlayer.setContentView(mainActivity.getLayoutInflater().inflate(R.layout.youtube, null));
+
+        WebView yt = youtubePlayer.findViewById(R.id.webview);
+        yt.getSettings().setJavaScriptEnabled(true);
+        yt.getSettings().setDomStorageEnabled(true);
+        yt.setWebViewClient(new WebViewClient());
+
+        ((Button)(youtubePlayer.findViewById(R.id.patch_up))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                patchUp.performClick();
+            }
+        });
+
+        ((Button)(youtubePlayer.findViewById(R.id.reload))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((WebView) youtubePlayer.findViewById(R.id.webview)).reload();
+            }
+        });
+
+        ((Button)(youtubePlayer.findViewById(R.id.prev))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((WebView) youtubePlayer.findViewById(R.id.webview)).goBack();
+            }
+        });
+
+        ((Button)(youtubePlayer.findViewById(R.id.next))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((WebView) youtubePlayer.findViewById(R.id.webview)).goForward();
+            }
+        });
+
+        ((Button)(youtubePlayer.findViewById(R.id.close))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                youtubePlayer.hide();
+            }
+        });
+
+        ((Button)(youtubePlayer.findViewById(R.id.power))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.onOff.performClick();
+            }
+        });
+
+        ((Button)(youtubePlayer.findViewById(R.id.patch_down))).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                patchDown.performClick();
+            }
+        });
+
+        yt.loadUrl("https://youtube.com");
     }
 
     public void saveBugReport (AlertDialog dialog, String title, String description, String email, boolean notify) {

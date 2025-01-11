@@ -38,6 +38,8 @@
         android:icon="@drawable/baseline_sync_24"
         android:title="Sync with PC / Smart Pedal"/>
 
+    <item android:id="@+id/youtube"
+        android:title="Play with YouTube Video"/>
     <item android:id="@+id/nam"
         android:title="NAM Model Downloader"/>
     <item android:id="@+id/menu_exit"

@@ -76,12 +76,13 @@ public class NAMDownloader extends AppCompatActivity {
                 super.onPageFinished(view, url);
                 progressBar.setVisibility(View.GONE);
                 Log.d(TAG, "onPageFinished: " + url);
-                webView.evaluateJavascript("JSON.parse (document.forms [1].children[2].value)[0].downloadUrl\n", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.d(TAG, "onReceiveValue: " + value);
-                    }
-                });
+//                String js = "(function () {return JSON.parse (document.forms [1].children[2].value)[0].downloadUrl})()";
+//                webView.evaluateJavascript(js, new ValueCallback<String>() {
+//                    @Override
+//                    public void onReceiveValue(String value) {
+//                        Log.d(TAG, "onReceiveValue: " + value);
+//                    }
+//                });
             }
         });
 
