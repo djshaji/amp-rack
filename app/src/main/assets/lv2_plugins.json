@@ -1408,5 +1408,29 @@
     "name": "Fonin Sustain",
     "index": 0,
     "library": "libfonin-sustain.lv2.so"
+  },
+  "34200": {
+    "id": 8113,
+    "name": "PowerAmpImpulses",
+    "index": 0,
+    "library": "libPowerAmpImpulses.so"
+  },
+  "34300": {
+    "id": 8114,
+    "name": "PowerAmps",
+    "index": 0,
+    "library": "libPowerAmps.so"
+  },
+  "34400": {
+    "id": 8115,
+    "name": "PreAmpImpulses",
+    "index": 0,
+    "library": "libPreAmpImpulses.so"
+  },
+  "34500": {
+    "id": 8116,
+    "name": "PreAmps",
+    "index": 0,
+    "library": "libPreAmps.so"
   }
 }

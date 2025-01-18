@@ -1,15 +1,16 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 5 Raptor</string>
-    <string name="build_id">664</string>
+    <string name="build_id">671</string>
     <string name="variant">Turbocharged version</string>
     <string name="quote">Powered by Rock and Roll</string>
     <string name="copyright">All trademarks are copyrights of their respective owners and do not represent affiliation or endorsement.</string>
     <string name="onboard_description">
         [new] Video Recorder\n\n
-        Welcome to Version 4: \n\n
+        Welcome to Version 5: \n\n
         ✓ High Quality Audio / Video Recording Capability\n\n
         ✓ Low Latency\n\n
+        ✓ AI/ML Powered Neural Amp Modeling\n\n
         ✓ More than 200 High Quality Effect Plugins\n\n
         ✓ Floating point precision at native device sample rate\n\n
         ✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n
@@ -512,6 +513,10 @@
         <item>libfonin-tubeamp.lv2.so</item>
         <item>libfonin-distortion.lv2.so</item>
         <item>libfonin-sustain.lv2.so</item>
+        <item>libPowerAmpImpulses.so</item>
+        <item>libPowerAmps.so</item>
+        <item>libPreAmpImpulses.so</item>
+        <item>libPreAmps.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

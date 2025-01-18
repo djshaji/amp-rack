@@ -697,5 +697,62 @@
       "Marshall G15R",
       "Princeton II"
     ]
+  },
+  "PowerAmpImpulses": {
+    "3": [
+      "Blackat Leon",
+      "Cicognani Imperivm Luxury",
+      "DV Mark Triple 6",
+      "Engl Retro Tube",
+      "Engl Special Edition",
+      "EVH 5150 III",
+      "Fortin Natas",
+      "Kaos Sludge 15",
+      "Krank Krankenstein",
+      "Laney ironheart",
+      "MakosampCustomHatred",
+      "Marshall JMP 2203",
+      "Marshall MG 15",
+      "Mesa Boogie Mark V",
+      "Peavey Vypyr 15",
+      "Randall Satan",
+      "Randall thrasher",
+      "Splawn Nitro",
+      "Splawn Quick Rod",
+      "Taurus Stomphead"
+    ]
+  },
+
+  "PreAmps": {
+    "3": [
+      "12ax7",
+      "12au7",
+      "12at7",
+      "6DJ8"
+    ]
+  },
+  "PreAmpImpulses": {
+    "3": [
+      "AC30 Style",
+      "Bassman Style",
+      "Tube Style",
+      "Fender Style",
+      "JCM800 Style",
+      "JTM45 Style",
+      "Mesa Boogie Style",
+      "Boutique Style",
+      "Ampeg Style",
+      "Rectifier Style"
+    ]
+  },
+  "PowerAmps": {
+    "3": [
+      "Push Pull EL84",
+      "Push Pull EL34",
+      "Push Pull 6L6",
+      "Single ended 6V6GT",
+      "Single ended EL84",
+      "Single ended 6V6"
+    ]
   }
 }
