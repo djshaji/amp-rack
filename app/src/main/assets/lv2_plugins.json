@@ -1432,5 +1432,11 @@
     "name": "PreAmps",
     "index": 0,
     "library": "libPreAmps.so"
+  },
+  "34600": {
+    "id": 8117,
+    "name": "Ratatouille",
+    "index": 0,
+    "library": "libRatatouille.so"
   }
 }

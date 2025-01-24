@@ -517,6 +517,7 @@
         <item>libPowerAmps.so</item>
         <item>libPreAmpImpulses.so</item>
         <item>libPreAmps.so</item>
+        <item>libRatatouille.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
