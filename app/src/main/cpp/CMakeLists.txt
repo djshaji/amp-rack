@@ -24,6 +24,7 @@ set_target_properties( # Specifies the target library.
         # Provides the path to the library you want to import.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libsndfile.a )
 add_library(libopus STATIC IMPORTED)
+add_library(libzix STATIC IMPORTED)
 set_target_properties( # Specifies the target library.
         libopus
 
@@ -32,6 +33,9 @@ set_target_properties( # Specifies the target library.
 
         # Provides the path to the library you want to import.
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libopus.a )
+
+set_target_properties(libzix PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libzix.a)
 
 add_library(libopusenc STATIC IMPORTED)
 
@@ -77,6 +81,7 @@ add_library( # Sets the name of the library.
         Meter.cpp
         LockFreeQueue.cpp
         lv2_ext.cpp
+        worker.c
         )
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -99,6 +104,7 @@ find_package (oboe REQUIRED CONFIG)
 
 target_link_libraries( # Specifies the target library.
         amprack
+        libzix
         oboe::oboe
         libsndfile
         libopusenc
