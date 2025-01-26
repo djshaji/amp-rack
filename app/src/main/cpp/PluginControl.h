@@ -5,6 +5,7 @@
 #include "logging_macros.h"
 #include "ladspa.h"
 #include "lv2.h"
+#include "lv2/atom/atom.h"
 #include "json.hpp"
 
 class PluginControl {
@@ -19,7 +20,25 @@ class PluginControl {
     enum Type {
         FLOAT = 0,
         INT = 1,
-        TOGGLE = 2
+        TOGGLE = 2,
+        /*
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠂⠀⠀⠀⢀⣠⠔⠈⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠎⠀⠀⠀⣠⡶⠛⠁⠀⠀⠀⢀⣠⠄⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠁⠀⢀⣴⡿⠋⠀⠀⢀⣠⣴⠿⠋⠁⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠀⢀⣴⡿⠋⠀⢀⣠⣾⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⣠⣾⠏⢀⣴⡿⠋⠀⣠⣶⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⣴⡿⠁⣴⡿⠋⢀⣴⣾⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⢀⣼⠋⢠⣾⠟⠁⣴⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⡾⠁⣴⡿⠁⣠⣾⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⢠⣶⣀⡅⠘⠋⢰⣾⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⣿⣿⣿⣷⣾⣇⣈⣁⣠⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⣿⣿⣿⣿⣿⣿⣿⣭⣥⣴⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⣿⣿⢿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠉⠀⠀⠀⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+         */
+        ATOM = 3
     };
 
 public:
@@ -35,6 +54,7 @@ public:
     Type type ;
     std::string lv2_name ;
     bool name_allocated = false ;
+    LV2_Atom_Sequence * lv2AtomSequence ;
 
     LADSPA_Data control_rounding(LADSPA_Data _val);
 

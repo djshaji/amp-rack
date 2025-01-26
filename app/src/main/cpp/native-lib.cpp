@@ -1130,3 +1130,13 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_latencyTuner(JNIEnv *env, jclass c
     engine->latencyTuner->tune();
     engine->latencyTunerOut->tune();
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlType(JNIEnv *env, jclass clazz, jint plugin,
+                                                             jint control) {
+    // TODO: implement getControlType()
+    if (engine == nullptr)
+        return -1;
+
+    return engine->activePlugins.at(plugin)->pluginControls.at(control)->type;
+}

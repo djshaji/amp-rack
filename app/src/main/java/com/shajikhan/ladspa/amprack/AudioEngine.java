@@ -29,6 +29,7 @@ public class AudioEngine {
     public static native float [] getPluginControlValues (int plugin, int control) ;
     public static native float getPluginPresetValue (int plugin, int control) ;
     public static native String getControlName (int plugin, int control) ;
+    public static native int getControlType (int plugin, int control);
     public static native String getActivePluginName (int plugin);
 
     public static native String getRecordingFileName ();

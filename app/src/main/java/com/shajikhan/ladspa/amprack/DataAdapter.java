@@ -123,6 +123,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         if (mainActivity.useTheme)
             mainActivity.skinEngine.cardText(holder.getTextView());
         int numControls = AudioEngine.getPluginControls(position);
+        int notSliders = 0 ;
+
+        for (int i = 0 ; i < numControls ; i ++) {
+            if (AudioEngine.getControlType(position, i) > 1)
+                notSliders++;
+        }
 
         LinearLayout knobsLayout = new LinearLayout (mainActivity);
         knobsLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -132,13 +138,17 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         boolean pluginsHasKnobs = true;
         JSONObject knobsConfig = null;
         try {
-            knobsConfig = mainActivity.knobsLayout.getJSONObject(String.valueOf(numControls));
+            knobsConfig = mainActivity.knobsLayout.getJSONObject(String.valueOf(numControls - notSliders));
         } catch (JSONException e) {
             pluginsHasKnobs = false ;
             Log.e(TAG, "onBindViewHolder: no json config for knobs: " + numControls, e);
         }
 
         for (int i = 0 ; i < numControls ; i ++) {
+            boolean isAtom = false ;
+            if (AudioEngine.getControlType(position, i) == 3)
+                isAtom = true ;
+
             LinearLayout layout = new LinearLayout(context);
             layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -183,6 +193,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                             isBypass = true ;
                             break;
                         }
+
+                    // new: get if control is bypass from json
+                    // remember I added this here
+                    // coz it wasnt here before
+                    if (AudioEngine.getControlType(position, i) == 2)
+                        isBypass = true;
                 }
 
 //                isBypass = string.equalsIgnoreCase("bypass") ||  || string.contains("witch") || string.equalsIgnoreCase("prefilter");
@@ -301,6 +317,30 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 bypass.setLayoutParams(layoutParams);
 //                if (mainActivity.useTheme)
 //                    mainActivity.skinEngine.toggle(bypass, false);
+            }
+
+            if (isAtom) {
+                Button fileChooser = new Button(mainActivity);
+                fileChooser.setText("Load file");
+                if (mainActivity.useTheme)
+                    mainActivity.skinEngine.button(fileChooser, SkinEngine.Resize.None, 0);
+
+                LinearLayout layout_button = new LinearLayout(mainActivity);
+                linearLayout.addView(layout_button);
+                layout_button.addView(fileChooser);
+
+                TextView textView_button = new TextView(mainActivity);
+                textView_button.setText("Load from file or import from zip");
+                textView_button.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                textView_button.setEnabled(false);
+
+                layout_button.setOrientation(LinearLayout.VERTICAL);
+                layout_button.setGravity(Gravity.CENTER);
+                fileChooser.setGravity(Gravity.CENTER);
+                layout_button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                slider.setVisibility(View.GONE);
+                editText.setVisibility(View.GONE);
+
             }
 
             layout.addView(slider);
@@ -485,7 +525,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             });
 
             if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob() && pluginsHasKnobs) {
-                if (! isSpinner && ! isBypass) {
+                if (! isSpinner && ! isBypass && ! isAtom) {
                     int row = 0, knobType = 3, knobPos = i ;
 
                     for (Iterator<String> it = knobsConfig.keys(); it.hasNext(); ) {

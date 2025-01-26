@@ -214,11 +214,22 @@ void Plugin::load () {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
 //            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("InputPort") != jsonPort.end()) {
-//            filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof(LV2_Atom_Sequence)));
-            filePortIndex = port ;
-            lv2Descriptor->connect_port(handle, filePortIndex, filePort);
+            if (filePort == nullptr)
+                filePort = (LV2_Atom_Sequence *) malloc (jsonPort .find("minimumSize").value());
 
-            LOGD("[%s %d]: found possible file port", lv2Descriptor->URI, port);
+            int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
+            lv2Descriptor->connect_port(handle, port, filePort);
+
+            LOGD("[%s %d/%d]: found possible atom port", lv2Descriptor->URI, port, pluginIndex);
+        } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("OutputPort") != jsonPort.end()) {
+            if (notifyPort == nullptr) {
+                notifyPort = (LV2_Atom_Sequence *) malloc(jsonPort.find("minimumSize").value());
+//                notifyPort->atom.type =
+            }
+
+            lv2Descriptor->connect_port(handle, port, notifyPort);
+
+            LOGD("[%s %d]: found possible notify port", lv2Descriptor->URI, port);
         } else {
             LOGD("[LV2] Cannot understand port %d of %s: %s", port, pluginName, portName);
         }
