@@ -187,6 +187,7 @@ void Plugin::load () {
         const char * pluginName = sharedLibrary->so_file.c_str() ;
 
         LADSPA_PortDescriptor port = jsonPort .find ("index").value();
+        LOGD("[%s %s:%d]", pluginName, portName, port);
         if (jsonPort.find ("AudioPort") != jsonPort.end ()) {
             if (jsonPort.find ("InputPort")  != jsonPort.end ()) {
                 //~ LOGD("[%s %d]: found input port", portName, port);
@@ -212,19 +213,27 @@ void Plugin::load () {
             lv2Descriptor->connect_port(handle, port, pluginControls.at (pluginIndex) ->def);
         } else if (jsonPort.find ("OutputPort") != jsonPort.end() && jsonPort.find("ControlPort") != jsonPort.end()) {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
-//            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
+            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("InputPort") != jsonPort.end()) {
-            if (filePort == nullptr)
-                filePort = (LV2_Atom_Sequence *) malloc (jsonPort .find("minimumSize").value());
+            LOGD ("configuring atom control port");
+            if (filePort == nullptr) {
+                int portSize = (int) jsonPort.find("minimumSize").value() + sizeof(LV2_Atom_Sequence) + 1 ;
+                filePort = (LV2_Atom_Sequence *) malloc(portSize);
+                filePort->atom.size = jsonPort.find("minimumSize").value() ;
+                LOGD ("file port allocated ok");
+            }
 
             int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
+
             lv2Descriptor->connect_port(handle, port, filePort);
 
             LOGD("[%s %d/%d]: found possible atom port", lv2Descriptor->URI, port, pluginIndex);
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("OutputPort") != jsonPort.end()) {
             if (notifyPort == nullptr) {
-                notifyPort = (LV2_Atom_Sequence *) malloc(jsonPort.find("minimumSize").value());
+                notifyPort = (LV2_Atom_Sequence *) malloc((int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + 1);
+                notifyPort->atom.size = 8192 ;
 //                notifyPort->atom.type =
+
             }
 
             lv2Descriptor->connect_port(handle, port, notifyPort);
