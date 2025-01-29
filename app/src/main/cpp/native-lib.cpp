@@ -1140,3 +1140,22 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlType(JNIEnv *env, jclass
 
     return engine->activePlugins.at(plugin)->pluginControls.at(control)->type;
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_setAtomPort(JNIEnv *env, jclass clazz, jint plugin, jstring text) {
+    // TODO: implement setAtomPort()
+    IN
+    if (engine == nullptr) {
+        OUT
+        return;
+    }
+
+    if (engine->activePlugins.size() <= plugin)
+        return;
+
+    const char *nativeString = env->GetStringUTFChars(text, 0);
+    engine->activePlugins.at(plugin)->setFilePortValue(std::string (nativeString));
+
+    env->ReleaseStringUTFChars(text, nativeString);
+    OUT
+}

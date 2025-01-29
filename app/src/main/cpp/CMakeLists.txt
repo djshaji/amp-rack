@@ -82,6 +82,7 @@ add_library( # Sets the name of the library.
         LockFreeQueue.cpp
         lv2_ext.cpp
         worker.c
+        atom.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a

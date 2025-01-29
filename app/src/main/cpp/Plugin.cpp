@@ -427,6 +427,21 @@ uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) {
     return 0u;
 }
 
+void Plugin::setAtomPortValue (std::string text) {
+    IN
+    if (filePort == nullptr) {
+        LOGD("no atom control port for %s", lv2_name.c_str());
+        OUT
+        return ;
+    }
+
+    /*  some mechanism here to figure out which button was clicked
+     *  on the plugin. maybe separate with | ?
+     */
+    ampAtom.createFilenameMessage()
+    OUT
+}
+
 void Plugin::setFilePortValue (std::string filename) {
     IN
     int size = filename.size();

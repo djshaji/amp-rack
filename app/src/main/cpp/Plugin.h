@@ -16,6 +16,7 @@
 #include "SharedLibrary.h"
 #include "json.hpp"
 #include "lv2_ext.h"
+#include "atom.h"
 //~ #include "lv2/atom/forge.h"
 
 class Plugin {
@@ -28,6 +29,7 @@ public:
     LV2_URID_Map lv2UridMap ;
     LV2_Feature featureURID ;
     LV2_Log_Log logLog ;
+    AmpAtom ampAtom ;
     LV2_Feature featureLog ;
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;
@@ -87,6 +89,7 @@ public:
     void setFilePortValue(std::string filename);
 
     void setFilePortValue1(std::string filename);
+    void setAtomPortValue (std::string text) ;
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);
