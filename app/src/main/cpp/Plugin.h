@@ -29,7 +29,7 @@ public:
     LV2_URID_Map lv2UridMap ;
     LV2_Feature featureURID ;
     LV2_Log_Log logLog ;
-    AmpAtom ampAtom ;
+    AmpAtom * ampAtom = nullptr;
     LV2_Feature featureLog ;
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;

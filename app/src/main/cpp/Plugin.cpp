@@ -221,6 +221,16 @@ void Plugin::load () {
                 filePort = (LV2_Atom_Sequence *) malloc(portSize);
                 filePort->atom.size = jsonPort.find("minimumSize").value() ;
                 LOGD ("file port allocated ok");
+                /*
+                 *  Implement map properly here
+                 *  it's simply a function? that returns an int approximation
+                 *  of a string
+                 *  i think rest of it is done
+                 */
+                LV2_URID_Map * uridMap = static_cast<LV2_URID_Map *>(malloc(sizeof(LV2_URID_Map)));
+                uridMap->map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle,
+                                                             const char *)>((LV2_URID_Map *) lv2_urid_map);
+                ampAtom = new AmpAtom (uridMap, portSize);
             }
 
             int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
@@ -404,6 +414,7 @@ void Plugin::lv2FeaturesURID () {
 void Plugin::lv2FeaturesInit () {
     IN
     lv2FeaturesURID();
+
     OUT
 }
 
@@ -438,7 +449,7 @@ void Plugin::setAtomPortValue (std::string text) {
     /*  some mechanism here to figure out which button was clicked
      *  on the plugin. maybe separate with | ?
      */
-    ampAtom.createFilenameMessage()
+    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
     OUT
 }
 

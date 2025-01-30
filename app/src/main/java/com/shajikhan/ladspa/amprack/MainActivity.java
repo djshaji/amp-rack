@@ -1833,6 +1833,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Log.e(TAG, "onActivityResult: ", e);
             }
         }
+
+        if (resultCode == RESULT_OK && requestCode > 9999) {
+            Uri returnUri = data.getData();
+            int parse = requestCode - 10000 ;
+            int plugin = parse / 100 ;
+            int control = parse - plugin ;
+            Log.d(TAG, String.format ("[load atom]: %d %d %d", requestCode, plugin, control));
+            DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
+            if (returnUri != null) {
+                Log.d(TAG, String.format ("[load atom]: got filename %s", returnUri));
+            }
+
+            return;
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

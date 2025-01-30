@@ -341,6 +341,32 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 slider.setVisibility(View.GONE);
                 editText.setVisibility(View.GONE);
 
+                int finalI1 = i;
+                fileChooser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent_upload = new Intent();
+                        intent_upload.setType("application/json");
+                        String mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension("json");
+                        String [] mimeTypes = {
+                                "text/*",
+                                "application/x-zip",
+                                "application/ld-json",
+                                "application/json",
+                                mimetype
+                        };
+
+
+                        intent_upload.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
+                        intent_upload.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                        intent_upload.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                        intent_upload.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        int requestCode = 10000 + holder.getLayoutPosition() * 100 + finalI1;
+                        mainActivity.startActivityForResult(intent_upload,requestCode);
+                    }
+                });
             }
 
             layout.addView(slider);
