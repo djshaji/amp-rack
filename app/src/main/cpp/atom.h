@@ -15,6 +15,7 @@
 #include <lv2/atom/forge.h>
 #include <cstring>
 #include <stdexcept>
+#include "logging_macros.h"
 
 // Define custom URIs for our host
 struct HostURIs {
@@ -32,7 +33,7 @@ struct HostURIs {
 class AmpAtom {
 private:
     HostURIs uris;
-    LV2_URID_Map* urid_map;
+    LV2_URID_Map* urid_map = nullptr;
     LV2_Atom_Forge forge;
 
     // Buffer for atom sequence

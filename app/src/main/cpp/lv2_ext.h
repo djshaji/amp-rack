@@ -19,6 +19,9 @@ public:
     std::list<std::string> urids;
 } ;
 
+LV2_URID_Map * ampMap_new () ;
+LV2_URID ampMap_map (LV2_URID_Map_Handle handle, const char* uri) ;
+
 int logger_printf (LV2_Log_Handle handle, LV2_URID type, const char* fmt, ...) ;
 int lv2_urid_map (URID * handle, const char * string);
 void lv2_urid_unmap (URID * handle, int at);

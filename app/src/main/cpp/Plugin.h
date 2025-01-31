@@ -24,6 +24,7 @@ class Plugin {
     unsigned long sampleRate ;
 public:
     URID urid = URID ();
+    LV2_URID_Map * ampMap = nullptr;
     std::vector<const LV2_Feature*> features;
     std::vector<const LV2_Feature*> m_featurePointers;
     LV2_URID_Map lv2UridMap ;
@@ -89,7 +90,7 @@ public:
     void setFilePortValue(std::string filename);
 
     void setFilePortValue1(std::string filename);
-    void setAtomPortValue (std::string text) ;
+    void setAtomPortValue (int control, std::string text) ;
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);

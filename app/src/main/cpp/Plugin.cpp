@@ -227,10 +227,10 @@ void Plugin::load () {
                  *  of a string
                  *  i think rest of it is done
                  */
-                LV2_URID_Map * uridMap = static_cast<LV2_URID_Map *>(malloc(sizeof(LV2_URID_Map)));
-                uridMap->map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle,
-                                                             const char *)>((LV2_URID_Map *) lv2_urid_map);
-                ampAtom = new AmpAtom (uridMap, portSize);
+
+                ampMap = ampMap_new ();
+//                ampMap->map = ampMap_map ;
+                ampAtom = new AmpAtom (ampMap, portSize);
             }
 
             int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
@@ -241,7 +241,7 @@ void Plugin::load () {
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("OutputPort") != jsonPort.end()) {
             if (notifyPort == nullptr) {
                 notifyPort = (LV2_Atom_Sequence *) malloc((int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + 1);
-                notifyPort->atom.size = 8192 ;
+                notifyPort->atom.size = (int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + 1 ;
 //                notifyPort->atom.type =
 
             }
@@ -438,7 +438,7 @@ uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) {
     return 0u;
 }
 
-void Plugin::setAtomPortValue (std::string text) {
+void Plugin::setAtomPortValue (int control, std::string text) {
     IN
     if (filePort == nullptr) {
         LOGD("no atom control port for %s", lv2_name.c_str());

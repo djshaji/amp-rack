@@ -26,7 +26,7 @@ public class AudioEngine {
     public static native boolean getFilePort (int plugin);
     public static native void setFilePortValue (int plugin, String filename);
     public static native void setFileName (String fileName);
-    public static native void setAtomPort (int plugin, String text);
+    public static native void setAtomPort (int plugin, int control, String text);
     public static native float [] getPluginControlValues (int plugin, int control) ;
     public static native float getPluginPresetValue (int plugin, int control) ;
     public static native String getControlName (int plugin, int control) ;

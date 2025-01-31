@@ -5,8 +5,16 @@
 #include "lv2_ext.h"
 
 int lv2_urid_map (URID * handle, const char * string) {
-    handle -> urids.push_back(std::string (string));
-    return handle -> urids.size();
+    IN
+    auto f = std::find(handle->urids.begin(), handle->urids.end(),std::string (string)) ;
+    if (f == handle->urids.end ()) {
+        handle->urids.push_back(std::string(string));
+        OUT
+        return handle->urids.size();
+    } else {
+        OUT
+        return std::distance(handle->urids.begin(), f) + 1 ;
+    }
 }
 
 void lv2_urid_unmap (URID * handle, int at) {
@@ -58,4 +66,29 @@ int logger_vprintf(LV2_Log_Handle handle,
 
 int logger_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...) {
     return 0;
+}
+
+LV2_URID ampMap_map (LV2_URID_Map_Handle handle, const char* uri) {
+    IN
+    std::vector <std::string> * v = static_cast<std::vector<std::string> *>(handle);
+    auto i = std::find(v->begin(), v->end(),std::string (uri)) ;
+    if (i == v->end ()) {
+        v->push_back(std::string (uri));
+        LOGD ("[map] %s -> %d", uri, v->size() + 1);
+        OUT
+        return v->size() + 1;
+    } else {
+        OUT
+        LOGD ("[map] %s -> %d", uri, std::distance(v->begin(), i) + 2 );
+        return std::distance(v->begin(), i) + 2 ;
+    }
+}
+
+LV2_URID_Map * ampMap_new () {
+    IN
+    LV2_URID_Map * ampMap = (LV2_URID_Map *) malloc (sizeof (LV2_URID_Map)) ;
+    ampMap->handle = new std::vector <std::string> ();
+    ampMap->map = ampMap_map ;
+    return ampMap;
+    OUT
 }

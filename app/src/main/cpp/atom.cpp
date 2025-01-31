@@ -14,6 +14,12 @@ void AmpAtom::release () {
 
 void AmpAtom::mapURIs() {
     // Map all required URIs
+    IN
+    if (urid_map == nullptr) {
+        LOGE ("urid_map is null! owowow");
+        abort();
+    }
+
     uris.atom_Sequence = urid_map->map(urid_map->handle, LV2_ATOM__Sequence);
     uris.atom_String = urid_map->map(urid_map->handle, LV2_ATOM__String);
     uris.atom_Path = urid_map->map(urid_map->handle, LV2_ATOM__Path);
@@ -24,9 +30,11 @@ void AmpAtom::mapURIs() {
     uris.patch_value = urid_map->map(urid_map->handle, LV2_PATCH__value);
     uris.filename_URI = urid_map->map(urid_map->handle,
                                       "http://lv2plugin.com/ns/filename");
+    OUT
 }
 
 LV2_Atom* AmpAtom::createFilenameMessage(const char* filename) {
+    IN
     // Set up forge buffer
     lv2_atom_forge_set_buffer(&forge, buffer, sizeof(buffer));
 
@@ -51,10 +59,12 @@ LV2_Atom* AmpAtom::createFilenameMessage(const char* filename) {
     lv2_atom_forge_pop(&forge, &frame);
     lv2_atom_forge_pop(&forge, &seq_frame);
 
+    OUT
     return (LV2_Atom*)buffer;
 }
 
 void AmpAtom::sendFilenameToPlugin(LV2_Atom_Sequence* output_port, const char* filename) {
+    IN
     if (!output_port || !filename) {
         throw std::runtime_error("Invalid parameters");
     }
@@ -69,12 +79,16 @@ void AmpAtom::sendFilenameToPlugin(LV2_Atom_Sequence* output_port, const char* f
     }
 
     memcpy(output_port, msg, msg->size + sizeof(LV2_Atom));
+    OUT
 }
 
-AmpAtom::AmpAtom(LV2_URID_Map* map, int _size) : urid_map(map) {
+AmpAtom::AmpAtom(LV2_URID_Map* map, int _size) {
+        IN
         if (!map) {
             throw std::runtime_error("URID map not provided");
         }
+
+        urid_map = map ;
 
         // Initialize URIs
         mapURIs();
@@ -82,6 +96,7 @@ AmpAtom::AmpAtom(LV2_URID_Map* map, int _size) : urid_map(map) {
         // Initialize forge
         lv2_atom_forge_init(&forge, urid_map);
         buffer = static_cast<uint8_t *>(malloc(_size));
+        OUT
 }
 
 void atom_send_message () {
