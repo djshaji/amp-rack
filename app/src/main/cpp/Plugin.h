@@ -17,6 +17,7 @@
 #include "json.hpp"
 #include "lv2_ext.h"
 #include "atom.h"
+#include "symap.h"
 //~ #include "lv2/atom/forge.h"
 
 class Plugin {
@@ -30,6 +31,7 @@ public:
     LV2_URID_Map lv2UridMap ;
     LV2_Feature featureURID ;
     LV2_Log_Log logLog ;
+    Symap * symap = nullptr;
     AmpAtom * ampAtom = nullptr;
     LV2_Feature featureLog ;
     LV2_Feature featureSchedule ;

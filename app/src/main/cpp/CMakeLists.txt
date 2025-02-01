@@ -83,6 +83,7 @@ add_library( # Sets the name of the library.
         lv2_ext.cpp
         worker.c
         atom.cpp
+        symap.c
         )
 
 # Searches for a specified prebuilt library and stores the path as a

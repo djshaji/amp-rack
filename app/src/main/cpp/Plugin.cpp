@@ -229,6 +229,7 @@ void Plugin::load () {
                  */
 
                 ampMap = ampMap_new ();
+                ampMap->handle = symap;
 //                ampMap->map = ampMap_map ;
                 ampAtom = new AmpAtom (ampMap, portSize);
             }
@@ -379,8 +380,11 @@ void Plugin::setFileName (std::string filename) {
 }
 
 void Plugin::lv2FeaturesURID () {
-    lv2UridMap.handle = &urid ;
-    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
+//    lv2UridMap.handle = &urid ;
+    symap = symap_new();
+    lv2UridMap.handle = symap;
+//    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
+    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(symap_map);
 //    lv2UridMap.unmap = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_unmap);
 
     featureURID.URI = strdup (LV2_URID__map);
@@ -449,7 +453,10 @@ void Plugin::setAtomPortValue (int control, std::string text) {
     /*  some mechanism here to figure out which button was clicked
      *  on the plugin. maybe separate with | ?
      */
-    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
+//    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
+//    ampAtom->send_filename_to_plugin(ampMap, text.c_str(), reinterpret_cast<uint8_t *>(filePort), 8192 + sizeof (LV2_Atom));
+    ampAtom->son_of_a(filePort, text.c_str());
+//    ampAtom->setControl(filePort, const_cast<char *>(text.c_str()));
     OUT
 }
 

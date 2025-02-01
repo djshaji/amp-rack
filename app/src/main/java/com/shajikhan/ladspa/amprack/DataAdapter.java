@@ -349,7 +349,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         intent_upload.setType("application/json");
                         String mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension("json");
                         String [] mimeTypes = {
+                                "*/*",
                                 "text/*",
+                                "audio/*",
                                 "application/x-zip",
                                 "application/ld-json",
                                 "application/json",

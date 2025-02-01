@@ -1843,6 +1843,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
             if (returnUri != null) {
                 Log.d(TAG, String.format ("[load atom]: got filename %s", returnUri));
+                AudioEngine.setAtomPort(plugin, control, returnUri.getPath());
             }
 
             return;

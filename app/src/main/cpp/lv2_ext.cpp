@@ -87,8 +87,9 @@ LV2_URID ampMap_map (LV2_URID_Map_Handle handle, const char* uri) {
 LV2_URID_Map * ampMap_new () {
     IN
     LV2_URID_Map * ampMap = (LV2_URID_Map *) malloc (sizeof (LV2_URID_Map)) ;
-    ampMap->handle = new std::vector <std::string> ();
-    ampMap->map = ampMap_map ;
+//    ampMap->handle = new std::vector <std::string> ();
+//    ampMap->handle = symap_new();
+    ampMap->map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(symap_map);
     return ampMap;
     OUT
 }

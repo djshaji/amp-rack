@@ -15,11 +15,21 @@
 #include <lv2/atom/forge.h>
 #include <cstring>
 #include <stdexcept>
+#include <stdint.h>
 #include "logging_macros.h"
+#include "zix/ring.h"
+
+typedef struct {
+  uint32_t index;
+  uint32_t protocol;
+  unsigned long size;
+  // Followed immediately by size bytes of data
+} ControlChange;
 
 // Define custom URIs for our host
 struct HostURIs {
     LV2_URID atom_Sequence;
+    LV2_URID atom_Object;
     LV2_URID atom_String;
     LV2_URID atom_Path;
     LV2_URID atom_URID;
@@ -40,6 +50,7 @@ private:
     uint8_t * buffer;
 
 public:
+    ZixRing * ring = zix_ring_new(NULL, 10000);
     AmpAtom(LV2_URID_Map *map, int _size);
 
     void sendFilenameToPlugin(LV2_Atom_Sequence *output_port, const char *filename);
@@ -49,6 +60,20 @@ public:
     void mapURIs();
 
     void release();
+
+    void send_filename_to_plugin(LV2_URID_Map *map, const char *filename, uint8_t *atom_port_buffer,
+                                 size_t atom_port_buffer_size);
+
+    void setControl(LV2_Atom_Sequence * control, char *path);
+
+    int write_control_change(const void *const header,
+                             const uint32_t header_size, const void *const body,
+                             const uint32_t body_size);
+
+    int write_event( const uint32_t port_index, const uint32_t size,
+                    const LV2_URID type, const void *const body);
+
+    void son_of_a(LV2_Atom_Sequence *control, const char *filename);
 };
 
 
