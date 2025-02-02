@@ -36,6 +36,7 @@ struct HostURIs {
     LV2_URID atom_eventTransfer;
     LV2_URID patch_Set;
     LV2_URID patch_property;
+    LV2_URID xlv2_model;
     LV2_URID patch_value;
     LV2_URID filename_URI;
 };
@@ -74,6 +75,8 @@ public:
                     const LV2_URID type, const void *const body);
 
     void son_of_a(LV2_Atom_Sequence *control, const char *filename);
+
+    void write_control(LV2_Atom_Sequence *control, const char *filename);
 };
 
 

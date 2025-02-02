@@ -29,6 +29,7 @@ void AmpAtom::mapURIs() {
     uris.patch_Set = urid_map->map(urid_map->handle, LV2_PATCH__Set);
     uris.atom_Object = urid_map->map(urid_map->handle, LV2_ATOM__Object);
     uris.patch_property = urid_map->map(urid_map->handle, LV2_PATCH__property);
+    uris.xlv2_model = urid_map->map(urid_map->handle, "urn:brummer:ratatouille#Neural_Model");
 //    uris.patch_property = urid_map->map(urid_map->handle, "urn:brummer:ratatouille#Neural_Model");
     uris.patch_value = urid_map->map(urid_map->handle, LV2_PATCH__value);
     uris.filename_URI = urid_map->map(urid_map->handle,
@@ -251,5 +252,61 @@ void AmpAtom::son_of_a (LV2_Atom_Sequence * control, const char * filename) {
 
 // Example: Connect the Atom Sequence to the plugin's Atom port
     memcpy(control, buffer, sizeof(buffer));
+    OUT
+}
+
+void AmpAtom::write_control (LV2_Atom_Sequence * control, const char * filename) {
+
+    IN
+    LV2_Atom_Forge_Frame frame;
+    LV2_Atom_Forge forge;
+
+    LV2_Atom_Forge_Frame         notify_frame;
+    lv2_atom_forge_init(&forge, urid_map);
+    lv2_atom_forge_set_buffer(&forge, (uint8_t*)control, 8192 + sizeof (LV2_Atom));
+    lv2_atom_forge_sequence_head(&forge, &notify_frame, 0);
+
+    lv2_atom_forge_frame_time(&forge, 0);
+    LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_object(
+            &forge, &frame, 1, uris.patch_Set);
+
+    HERE
+    lv2_atom_forge_key(&forge, uris.patch_property);
+    lv2_atom_forge_urid(&forge, /* xlv2_model*/ uris.xlv2_model);
+    lv2_atom_forge_key(&forge, uris.patch_value);
+    lv2_atom_forge_path(&forge, filename, strlen(filename) + 1);
+
+    lv2_atom_forge_pop(&forge, &frame);
+    HERE
+//    memcpy(control, set, strlen(filename) + sizeof (LV2_Atom_Sequence ));
+//    control = (LV2_Atom_Sequence *) set;
+    LV2_ATOM_SEQUENCE_FOREACH(control, ev) {
+//    auto ev = control ;
+//    {
+        HERE
+        LOGD ("[atom host] BODY TYPE: %d [%d|%d|%d]", ev->body.type, forge.Object, forge.Resource,
+              forge.Blank);
+//        ev->body.type = 11 ;
+        LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body ;
+//        obj->body.otype = uris.patch_Set;
+        LOGD ("did the value change: %d/%d", ev->body.type, obj->body);
+        const LV2_Atom* file_path = NULL;
+        LOGD ("tried to send %s", filename);
+        lv2_atom_object_get(obj, uris.patch_value, &file_path, 0);
+        if (file_path == nullptr)
+            LOGD ("file _path is null!");
+        else
+            LOGD ("[atom host] filename: %d %s", file_path->type, (const char *)file_path);
+    }
+
+    LV2_Atom * a = (LV2_Atom *) control ;
+    const LV2_Atom* file_path = NULL;
+    LOGD ("control atom %d", control->atom);
+    LV2_Atom_Object* obj = (LV2_Atom_Object*)&control->body;
+    lv2_atom_object_get(obj, uris.patch_value, &file_path, 0);
+    if (file_path != nullptr)
+        LOGD("[file_path] %d", file_path->type);
+    else
+        LOGD("[host file_path] is null");
     OUT
 }
