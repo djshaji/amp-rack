@@ -7,6 +7,7 @@ jmethodID Engine::pushAudio = nullptr;
 jclass Engine::mainActivity = nullptr;
 JNIEnv * Engine::env = nullptr;
 JavaVM * Engine::vm = nullptr;
+std::vector<Plugin *> Engine::activePlugins ;
 jmethodID Engine::pushSamplesMethod = nullptr;
 jfloatArray Engine::pushSamples = nullptr;
 bool Engine::lockFreeThreadAttached = false ;
@@ -21,6 +22,7 @@ Engine::Engine () {
     fileWriter = new FileWriter ();
     queueManager.add_function (fileWriter->disk_write);
     queueManager.add_function (meter->updateMeterOutput);
+    queueManager.add_function (resetAtomPorts);
 //    discoverPlugins();
 //    loadPlugins();
 }
@@ -763,4 +765,14 @@ int Engine::push (AudioBuffer * buffer) {
 
 jclass Engine::findClassWithEnv(JNIEnv *env, const char* name) {
     return static_cast<jclass>(env->CallObjectMethod(gClassLoader, gFindClassMethod, env->NewStringUTF(name)));
+}
+
+int Engine::resetAtomPorts (AudioBuffer * buffer) {
+    for (int i = 0 ; i < activePlugins.size(); i ++) {
+        if (activePlugins.at(i)->notifyPort != nullptr) {
+            activePlugins.at(i)->check_notify();
+        }
+    }
+
+    return 0 ;
 }

@@ -37,6 +37,7 @@ public:
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;
     LV2_Feature featureState ;
+    int filePortSize = 8192 ;
     LV2_Atom_Sequence * filePort = nullptr;//= static_cast<LV2_Atom_Sequence *>(malloc(sizeof (LV2_Atom_Sequence)));
     LV2_Atom_Sequence * notifyPort = nullptr;//= static_cast<LV2_Atom_Sequence *>(malloc(sizeof (LV2_Atom_Sequence)));
     int filePortIndex = -1 ;
@@ -93,6 +94,8 @@ public:
 
     void setFilePortValue1(std::string filename);
     void setAtomPortValue (int control, std::string text) ;
+
+    void check_notify();
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);

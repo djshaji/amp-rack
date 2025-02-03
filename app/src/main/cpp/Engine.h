@@ -68,7 +68,7 @@ public:
     std::string externalStoragePath ;
 
     std::vector <SharedLibrary *> libraries ;
-    std::vector<Plugin *> activePlugins ;
+    static std::vector<Plugin *> activePlugins ;
 
     void loadPlugin(char *filename, SharedLibrary::PluginType type = SharedLibrary::LADSPA );
     void loadPlugins();
@@ -143,6 +143,8 @@ public:
     static jclass findClassWithEnv(JNIEnv *env, const char *name);
 
     void setBufferSizeFactor(float factor);
+
+    static int resetAtomPorts(AudioBuffer *buffer);
 } ;
 
 #endif // __ENGINE__H

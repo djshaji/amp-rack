@@ -232,6 +232,7 @@ void Plugin::load () {
                 ampMap->handle = symap;
 //                ampMap->map = ampMap_map ;
                 ampAtom = new AmpAtom (ampMap, portSize);
+                filePortSize = portSize;
             }
 
             int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
@@ -248,6 +249,7 @@ void Plugin::load () {
             }
 
             lv2Descriptor->connect_port(handle, port, notifyPort);
+//            lv2Descriptor->connect_port(handle, port, filePort);
 
             LOGD("[%s %d]: found possible notify port", lv2Descriptor->URI, port);
         } else {
@@ -456,7 +458,8 @@ void Plugin::setAtomPortValue (int control, std::string text) {
 //    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
 //    ampAtom->send_filename_to_plugin(ampMap, text.c_str(), reinterpret_cast<uint8_t *>(filePort), 8192 + sizeof (LV2_Atom));
 //    ampAtom->son_of_a(filePort, text.c_str());
-    ampAtom->write_control(filePort, text.c_str());
+    ampAtom->write_control(filePort, filePortSize, text.c_str());
+    ampAtom->write_control(notifyPort, filePortSize, text.c_str());
 //    ampAtom->setControl(filePort, const_cast<char *>(text.c_str()));
     OUT
 }
@@ -552,6 +555,23 @@ void Plugin::setFilePortValue1 (std::string filename) {
 
     }
     OUT
+}
+
+void Plugin::check_notify () {
+//    IN
+    if (notifyPort == nullptr) {
+//        LOGD ("notify port is null, so .. well.. this is awkward");
+        return;
+    }
+
+    if (ampAtom->has_file_path(filePort)) {
+        LOGD ("[atom port] reset file port");
+        ampAtom->resetAtom(filePort, filePortSize);
+        LOGD ("[atom port] reset notify port");
+        ampAtom->resetAtom(notifyPort, filePortSize);
+    }
+
+//    OUT
 }
 
 #ifndef __ANDROID__

@@ -76,7 +76,11 @@ public:
 
     void son_of_a(LV2_Atom_Sequence *control, const char *filename);
 
-    void write_control(LV2_Atom_Sequence *control, const char *filename);
+    void write_control(LV2_Atom_Sequence *control, int, const char *filename);
+
+    void resetAtom(LV2_Atom_Sequence *control, int portSize);
+
+    bool has_file_path(LV2_Atom_Sequence *port);
 };
 
 
