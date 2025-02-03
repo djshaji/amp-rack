@@ -459,7 +459,7 @@ void Plugin::setAtomPortValue (int control, std::string text) {
 //    ampAtom->send_filename_to_plugin(ampMap, text.c_str(), reinterpret_cast<uint8_t *>(filePort), 8192 + sizeof (LV2_Atom));
 //    ampAtom->son_of_a(filePort, text.c_str());
     ampAtom->write_control(filePort, filePortSize, text.c_str());
-    ampAtom->write_control(notifyPort, filePortSize, text.c_str());
+//    ampAtom->write_control(notifyPort, filePortSize, text.c_str());
 //    ampAtom->setControl(filePort, const_cast<char *>(text.c_str()));
     OUT
 }
