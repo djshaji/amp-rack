@@ -184,8 +184,13 @@ void Plugin::load () {
         }
 
         json jsonPort = json::parse (el.value ().dump ());
-        const char * portName = std::string (jsonPort ["name"]).c_str ();
-        const char * pluginName = sharedLibrary->so_file.c_str() ;
+        std::string portNameStr = std::string (jsonPort ["name"]);
+        const char * portName = portNameStr.c_str ();
+        // ayyo why ...?
+        // this used to be the following
+        // i can;t remember why tho
+//        const char * pluginName = sharedLibrary->so_file.c_str() ;
+        const char * pluginName = lv2_name.c_str();
 
         LADSPA_PortDescriptor port = jsonPort .find ("index").value();
         LOGD("[%s %s:%d]", pluginName, portName, port);
@@ -240,6 +245,7 @@ void Plugin::load () {
             int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
 
             pluginControls.at(pluginIndex)->urid = ampAtom->urid_map->map (ampAtom->urid_map->handle, uri_.c_str());
+            LOGD ("[urid] %s -> %d", uri_.c_str(), pluginControls.at(pluginIndex)->urid);
             lv2Descriptor->connect_port(handle, port, filePort);
 
             LOGD("[%s %d/%d]: found possible atom port", lv2Descriptor->URI, port, pluginIndex);
@@ -461,6 +467,7 @@ void Plugin::setAtomPortValue (int control, std::string text) {
 //    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
 //    ampAtom->send_filename_to_plugin(ampMap, text.c_str(), reinterpret_cast<uint8_t *>(filePort), 8192 + sizeof (LV2_Atom));
 //    ampAtom->son_of_a(filePort, text.c_str());
+    LOGD ("writing control for %d / %s [%d]", control, pluginControls.at(control)->name, pluginControls.at(control)->urid);
     ampAtom->write_control(filePort, filePortSize, pluginControls.at(control)->urid, text.c_str());
 //    ampAtom->write_control(notifyPort, filePortSize, text.c_str());
 //    ampAtom->setControl(filePort, const_cast<char *>(text.c_str()));

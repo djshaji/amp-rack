@@ -277,7 +277,9 @@ void AmpAtom::write_control (LV2_Atom_Sequence * control, int portSize, uint32_t
     lv2_atom_forge_path(&forge, filename, strlen(filename) + 1);
 
     lv2_atom_forge_pop(&forge, &frame);
-    HERE
+//    HERE
+    OUT
+    return ;
 //    memcpy(control, set, strlen(filename) + sizeof (LV2_Atom_Sequence ));
 //    control = (LV2_Atom_Sequence *) set;
     LV2_ATOM_SEQUENCE_FOREACH(control, ev) {
