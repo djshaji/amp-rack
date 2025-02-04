@@ -1872,6 +1872,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 Log.d(TAG, String.format ("[copy file]: %s -> %s", returnUri.getPath(), dest));
                 Log.d(TAG, String.format ("[load atom]: got filename %s", dest));
+                int selection = setSpinnerFromDir(dataAdapter.holders.get(plugin).atomSpinners.get(control), dir, file.getName());
+                dataAdapter.holders.get(plugin).atomSpinners.get(control).setSelection(selection);
                 AudioEngine.setAtomPort(plugin, control, dest);
             }
 

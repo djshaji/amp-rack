@@ -385,6 +385,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
 
                 Spinner spinner_f = new Spinner(context);
+                holder.atomSpinners.put(i, spinner_f);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
                         android.R.layout.simple_spinner_item, models);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -1086,6 +1087,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         LinearLayout root ;
         TextView pluginName ;
         SwitchMaterial switchMaterial ;
+        HashMap<Integer, Spinner> atomSpinners = new HashMap<>();
         ToggleButton toggleButton ;
         int selectedModel = -1 ;
         String audioFile = null ;

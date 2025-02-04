@@ -1154,7 +1154,9 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setAtomPort(JNIEnv *env, jclass cl
         return;
 
     const char *nativeString = env->GetStringUTFChars(text, 0);
+    engine -> mFullDuplexPass.bypass = true ;
     engine->activePlugins.at(plugin)->setAtomPortValue(control, std::string (nativeString));
+    engine -> mFullDuplexPass.bypass = false ;
 
     env->ReleaseStringUTFChars(text, nativeString);
     OUT
