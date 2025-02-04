@@ -29,7 +29,7 @@ void AmpAtom::mapURIs() {
     uris.patch_Set = urid_map->map(urid_map->handle, LV2_PATCH__Set);
     uris.atom_Object = urid_map->map(urid_map->handle, LV2_ATOM__Object);
     uris.patch_property = urid_map->map(urid_map->handle, LV2_PATCH__property);
-    uris.xlv2_model = urid_map->map(urid_map->handle, "urn:brummer:ratatouille#Neural_Model");
+//    uris.xlv2_model = urid_map->map(urid_map->handle, "urn:brummer:ratatouille#Neural_Model");
 //    uris.patch_property = urid_map->map(urid_map->handle, "urn:brummer:ratatouille#Neural_Model");
     uris.patch_value = urid_map->map(urid_map->handle, LV2_PATCH__value);
     uris.filename_URI = urid_map->map(urid_map->handle,
@@ -255,7 +255,7 @@ void AmpAtom::son_of_a (LV2_Atom_Sequence * control, const char * filename) {
     OUT
 }
 
-void AmpAtom::write_control (LV2_Atom_Sequence * control, int portSize, const char * filename) {
+void AmpAtom::write_control (LV2_Atom_Sequence * control, int portSize, uint32_t uri, const char * filename) {
 
     IN
     LV2_Atom_Forge_Frame frame;
@@ -272,7 +272,7 @@ void AmpAtom::write_control (LV2_Atom_Sequence * control, int portSize, const ch
 
     HERE
     lv2_atom_forge_key(&forge, uris.patch_property);
-    lv2_atom_forge_urid(&forge, /* xlv2_model*/ uris.xlv2_model);
+    lv2_atom_forge_urid(&forge, /* xlv2_model*/ uri);
     lv2_atom_forge_key(&forge, uris.patch_value);
     lv2_atom_forge_path(&forge, filename, strlen(filename) + 1);
 

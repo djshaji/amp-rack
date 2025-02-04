@@ -2,6 +2,7 @@
   "-1": {
     "http://xmlns.com/foaf/0.1/Person": true,
     "http://xmlns.com/foaf/0.1/name": "brummer",
+    "prefix": "urn:brummer:ratatouille#",
     "pluginName": "Ratatouille"
   },
   "0": {

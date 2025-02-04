@@ -172,6 +172,7 @@ void Plugin::load () {
     //~ LOGD ("parsing json: %s\n", json_.c_str ());
     json j = json::parse(json_);
     lv2_name = j ["-1"]["pluginName"];
+    prefix = j ["-1"]["prefix"];
 
     //~ LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
     for (auto& el : j.items())
@@ -235,8 +236,10 @@ void Plugin::load () {
                 filePortSize = portSize;
             }
 
+            std::string uri_ = std::string (prefix).append(portName);
             int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
 
+            pluginControls.at(pluginIndex)->urid = ampAtom->urid_map->map (ampAtom->urid_map->handle, uri_.c_str());
             lv2Descriptor->connect_port(handle, port, filePort);
 
             LOGD("[%s %d/%d]: found possible atom port", lv2Descriptor->URI, port, pluginIndex);
@@ -458,7 +461,7 @@ void Plugin::setAtomPortValue (int control, std::string text) {
 //    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
 //    ampAtom->send_filename_to_plugin(ampMap, text.c_str(), reinterpret_cast<uint8_t *>(filePort), 8192 + sizeof (LV2_Atom));
 //    ampAtom->son_of_a(filePort, text.c_str());
-    ampAtom->write_control(filePort, filePortSize, text.c_str());
+    ampAtom->write_control(filePort, filePortSize, pluginControls.at(control)->urid, text.c_str());
 //    ampAtom->write_control(notifyPort, filePortSize, text.c_str());
 //    ampAtom->setControl(filePort, const_cast<char *>(text.c_str()));
     OUT

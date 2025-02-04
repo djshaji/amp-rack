@@ -43,6 +43,7 @@ class PluginControl {
 
 public:
     unsigned long port;
+    uint32_t urid ;
     LADSPA_Data min;
     LADSPA_Data max;
     LADSPA_Data default_value = 1; // 1 == no change in signal

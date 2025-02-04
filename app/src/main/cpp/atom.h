@@ -36,7 +36,7 @@ struct HostURIs {
     LV2_URID atom_eventTransfer;
     LV2_URID patch_Set;
     LV2_URID patch_property;
-    LV2_URID xlv2_model;
+//    LV2_URID xlv2_model;
     LV2_URID patch_value;
     LV2_URID filename_URI;
 };
@@ -44,13 +44,13 @@ struct HostURIs {
 class AmpAtom {
 private:
     HostURIs uris;
-    LV2_URID_Map* urid_map = nullptr;
     LV2_Atom_Forge forge;
 
     // Buffer for atom sequence
     uint8_t * buffer;
 
 public:
+    LV2_URID_Map* urid_map = nullptr;
     ZixRing * ring = zix_ring_new(NULL, 10000);
     AmpAtom(LV2_URID_Map *map, int _size);
 
@@ -76,11 +76,14 @@ public:
 
     void son_of_a(LV2_Atom_Sequence *control, const char *filename);
 
-    void write_control(LV2_Atom_Sequence *control, int, const char *filename);
+//    void write_control(LV2_Atom_Sequence *control, int, int32_t, const char *filename);
 
     void resetAtom(LV2_Atom_Sequence *control, int portSize);
 
     bool has_file_path(LV2_Atom_Sequence *port);
+
+    void
+    write_control(LV2_Atom_Sequence *control, int portSize, uint32_t uri, const char *filename);
 };
 
 
