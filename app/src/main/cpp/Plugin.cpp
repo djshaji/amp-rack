@@ -172,7 +172,8 @@ void Plugin::load () {
     //~ LOGD ("parsing json: %s\n", json_.c_str ());
     json j = json::parse(json_);
     lv2_name = j ["-1"]["pluginName"];
-    prefix = j ["-1"]["prefix"];
+    if (j["-1"].contains("prefix"))
+        prefix = j ["-1"]["prefix"];
 
     //~ LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
     for (auto& el : j.items())
@@ -189,8 +190,8 @@ void Plugin::load () {
         // ayyo why ...?
         // this used to be the following
         // i can;t remember why tho
-//        const char * pluginName = sharedLibrary->so_file.c_str() ;
-        const char * pluginName = lv2_name.c_str();
+        const char * pluginName = sharedLibrary->so_file.c_str() ;
+//        const char * pluginName = lv2_name.c_str();
 
         LADSPA_PortDescriptor port = jsonPort .find ("index").value();
         LOGD("[%s %s:%d]", pluginName, portName, port);
