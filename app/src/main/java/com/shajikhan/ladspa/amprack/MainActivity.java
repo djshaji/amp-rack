@@ -142,6 +142,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1838,12 +1840,39 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Uri returnUri = data.getData();
             int parse = requestCode - 10000 ;
             int plugin = parse / 100 ;
-            int control = parse - plugin ;
+            int control = parse - (plugin * 100) ;
+            DocumentFile file = DocumentFile.fromSingleUri(mainActivity, returnUri);
+            Log.d(TAG, String.format ("ayyo filename: %s [%s]", file.getName(), file.getUri()));
             Log.d(TAG, String.format ("[load atom]: %d %d %d", requestCode, plugin, control));
             DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(plugin);
             if (returnUri != null) {
-                Log.d(TAG, String.format ("[load atom]: got filename %s", returnUri));
-                AudioEngine.setAtomPort(plugin, control, returnUri.getPath());
+                String dir = context.getExternalFilesDir(
+                        Environment.DIRECTORY_DOWNLOADS) + "/" + AudioEngine.getActivePluginName(plugin);
+
+//                String basename = file.getName() ; //returnUri.getLastPathSegment();
+//                basename = basename.substring(basename.lastIndexOf(":") + 1);
+//                Log.d(TAG, String.format("[basename]: %s", basename));
+                String dest = dir + "/" + file.getName();
+                File fDir = new File (dir) ;
+                if (! fDir.exists()) {
+                    if (!fDir.mkdirs()) {
+                        alert("Cannot create directory", "Error loading model: " + dir);
+                        return;
+                    }
+                }
+
+                try {
+//                    copy (new File(file.getUri().getPath()), new File(dest));
+                    copyFile(returnUri, Uri.parse("file://" + dest));
+                } catch (IOException e) {
+                    alert("Error loading file", e.getMessage());
+                    Log.e(TAG, "onActivityResult: ", e);
+                    return;
+                }
+
+                Log.d(TAG, String.format ("[copy file]: %s -> %s", returnUri.getPath(), dest));
+                Log.d(TAG, String.format ("[load atom]: got filename %s", dest));
+                AudioEngine.setAtomPort(plugin, control, dest);
             }
 
             return;
@@ -4152,4 +4181,35 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         return map;
     }
+
+    public static void copy(File src, File dst) throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try (InputStream in = Files.newInputStream(src.toPath())) {
+                try (OutputStream out = Files.newOutputStream(dst.toPath())) {
+                    // Transfer bytes from in to out
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
+                }
+            }
+        }
+    }
+
+    private void copyFile(Uri pathFrom, Uri pathTo) throws IOException {
+        try (InputStream in = getContentResolver().openInputStream(pathFrom)) {
+            if(in == null) return;
+            try (OutputStream out = getContentResolver().openOutputStream(pathTo)) {
+                if(out == null) return;
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+        }
+    }
+
 }

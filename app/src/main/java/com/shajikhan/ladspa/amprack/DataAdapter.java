@@ -256,21 +256,23 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 prev.setText("<");
                 next.setText(">");
 
+                Spinner finalSpinner3 = spinner;
                 prev.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int selected = spinner.getSelectedItemPosition();
+                        int selected = finalSpinner3.getSelectedItemPosition();
                         if (selected > 0)
-                            spinner.setSelection(selected - 1);
+                            finalSpinner3.setSelection(selected - 1);
                     }
                 });
 
+                Spinner finalSpinner2 = spinner;
                 next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int selected = spinner.getSelectedItemPosition();
+                        int selected = finalSpinner2.getSelectedItemPosition();
                         if (selected < adapter.getCount() - 1)
-                            spinner.setSelection(selected + 1);
+                            finalSpinner2.setSelection(selected + 1);
                     }
                 });
             }
@@ -369,6 +371,137 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         mainActivity.startActivityForResult(intent_upload,requestCode);
                     }
                 });
+
+                String dir = context.getExternalFilesDir(
+                        Environment.DIRECTORY_DOWNLOADS) + "/" + pluginName + "/";
+
+                DocumentFile root = DocumentFile.fromFile(new File(dir));
+                DocumentFile [] files = root.listFiles() ;
+                ArrayList <String> models = new ArrayList<>();
+                models.add("");
+                for (DocumentFile file: files) {
+                    Log.d(TAG, String.format ("%s: %s", file.getName(), file.getUri()));
+                    models.add(file.getName());
+                }
+
+                Spinner spinner_f = new Spinner(context);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
+                        android.R.layout.simple_spinner_item, models);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner_f.setAdapter(adapter);
+
+                LinearLayout hz = new LinearLayout(mainActivity);
+                holder.modelSpinnerLayout = hz ;
+                prev = new Button(context);
+                next = new Button(context);
+
+                prev.setText("<");
+                next.setText(">");
+
+                Spinner finalSpinner = spinner_f;
+                prev.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int selected = finalSpinner.getSelectedItemPosition();
+                        if (selected > 0)
+                            finalSpinner.setSelection(selected - 1);
+                    }
+                });
+
+                Spinner finalSpinner1 = spinner_f;
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int selected = finalSpinner1.getSelectedItemPosition();
+                        if (selected < finalSpinner1.getAdapter().getCount() - 1)
+                            finalSpinner1.setSelection(selected + 1);
+                    }
+                });
+
+                Button manage = new Button (mainActivity);
+                manage.setText("⚙️");
+                layout.addView(hz);
+//                layout.addView(textView);
+                hz.addView(prev);
+                hz.addView(spinner_f);
+                hz.addView(manage);
+                hz.addView(next);
+
+                manage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainActivity.manageNAMModels(finalSpinner, dir);
+                    }
+                });
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, ViewGroup.LayoutParams.WRAP_CONTENT);
+                next.setLayoutParams(layoutParams);
+                prev.setLayoutParams(layoutParams);
+                manage.setLayoutParams(layoutParams);
+
+                prev.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+                manage.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+                next.setBackgroundColor(mainActivity.getResources().getColor(com.firebase.ui.auth.R.color.fui_transparent));
+
+                LinearLayout.LayoutParams l3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                hz.setLayoutParams(l3);
+
+                LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                spinnerLayoutParams.setMargins(0,20,0,20);
+                spinner_f.setLayoutParams(spinnerLayoutParams);
+
+//                spinner.setSelection(0);
+
+                int finalI2 = i;
+                spinner_f.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int _position, long id) {
+                        String m = finalSpinner.getAdapter().getItem(_position).toString();
+
+                        Uri ri = Uri.parse("file://" + dir + m);
+                        /*
+                        if (hasFilePort) {
+//                            AudioEngine.setFilePortValue(holder.getAdapterPosition(), ri.getPath());
+                            AudioDecoder audioDecoder = new AudioDecoder(mainActivity);
+                            try {
+                                int samplerate = AudioEngine.getSampleRate() ;
+                                if (samplerate < 44100 )
+                                    samplerate = 48000 ;
+                                String p = ri.getPath() ;
+                                Log.d(TAG, "onItemSelected: loading file " + ri.toString());
+                                float [] samples = audioDecoder.decode(ri, null, samplerate);
+                                AudioEngine.setPluginBuffer(samples, holder.getAdapterPosition());
+//                                Log.d(TAG, String.format ("[decoder]: %d", samples.length));
+                            } catch (IOException e) {
+                                MainActivity.toast(e.getMessage());
+                                Log.e(TAG, "onActivityResult: ", e);
+                            }
+
+                        }
+                        else */
+                        {
+//                            String s = mainActivity.getFileContent(ri);
+//                            Log.d(TAG, String.format("[content]: %s", s));
+//                            AudioEngine.setPluginFilename(s, holder.getAdapterPosition());
+                            Log.d(TAG, String.format ("sending filename: %s", ri.getPath()));
+                            AudioEngine.setAtomPort(holder.getAdapterPosition(), finalI2, ri.getPath());
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                if (selectedModels.containsKey(position)) {
+                    if (spinner_f.getAdapter().getCount() > position)
+                        spinner_f.setSelection(selectedModels.get(position));
+                    else
+                        MainActivity.toast("Unable to load preset properly: a user loaded json file is missing");
+
+                    selectedModels.remove(position);
+                }
             }
 
             layout.addView(slider);
