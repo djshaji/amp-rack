@@ -1861,6 +1861,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 }
 
+                String path = file.getName();
+                String ext = path.substring(path.toString().lastIndexOf('.')+1) ;
+
+                Log.d(TAG, String.format ("extension: %s", ext));
+                if (ext.equalsIgnoreCase("zip")) {
+                    unzipNAMModel(dir, returnUri);
+                    Spinner spinner = dataAdapter.holders.get(plugin).atomSpinners.get(control) ;
+                    if (spinner == null) {
+                        Log.d(TAG, "onActivityResult: spinner is null! why???");
+                    } else
+                        setSpinnerFromDir(dataAdapter.holders.get(plugin).atomSpinners.get(control), dir, null);
+                    return;
+                }
+
                 try {
 //                    copy (new File(file.getUri().getPath()), new File(dest));
                     copyFile(returnUri, Uri.parse("file://" + dest));
