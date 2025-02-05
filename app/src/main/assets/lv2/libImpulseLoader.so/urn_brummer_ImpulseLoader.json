@@ -1,0 +1,78 @@
+{
+  "-1": {
+    "http://lv2plug.in/ns/extensions/ui#notifyType": "http://lv2plug.in/ns/ext/atom#Blank",
+    "http://lv2plug.in/ns/extensions/ui#plugin": "urn:brummer:ImpulseLoader",
+    "symbol": "NOTIFY",
+    "prefix": "urn:brummer:ImpulseLoader#",
+    "pluginName": "ImpulseLoader"
+  },
+  "0": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 0,
+    "name": "In0",
+    "symbol": "in0"
+  },
+  "1": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 1,
+    "name": "Out0",
+    "symbol": "out0"
+  },
+  "2": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1.0",
+    "designation": "http://lv2plug.in/ns/lv2core#enabled",
+    "index": 2,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "name": "bypass",
+    "toggle": true,
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "Bypass"
+  },
+  "3": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0.0",
+    "index": 3,
+    "maximum": "20.0",
+    "minimum": "-20.0",
+    "name": "input",
+    "symbol": "INPUT"
+  },
+  "4": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "100.0",
+    "index": 4,
+    "maximum": "100.0",
+    "minimum": "0.0",
+    "name": "dry_wet",
+    "symbol": "DRY_WET"
+  },
+  "5": {
+    "InputPort": true,
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 5,
+    "name": "irfile",
+    "symbol": "CONTROL"
+  },
+  "6": {
+    "OutputPort": true,
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 6,
+    "name": "NOTIFY",
+    "symbol": "NOTIFY"
+  }
+}
