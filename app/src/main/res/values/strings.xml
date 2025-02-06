@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 5 Raptor</string>
-    <string name="build_id">671</string>
+    <string name="build_id">691</string>
     <string name="variant">Turbocharged version</string>
     <string name="quote">Powered by Rock and Roll</string>
     <string name="copyright">All trademarks are copyrights of their respective owners and do not represent affiliation or endorsement.</string>
@@ -11,7 +11,7 @@
         ✓ High Quality Audio / Video Recording Capability\n\n
         ✓ Low Latency\n\n
         ✓ AI/ML Powered Neural Amp Modeling\n\n
-        ✓ More than 200 High Quality Effect Plugins\n\n
+        ✓ More than 300 High Quality Effect Plugins\n\n
         ✓ Floating point precision at native device sample rate\n\n
         ✓ Tube Amp Emulation, Cabinet Emulation, Distortions, Chorus, Phasers, Delay, Reverb and more\n\n
         ✓ Fully Skinnable User Interface\n\n

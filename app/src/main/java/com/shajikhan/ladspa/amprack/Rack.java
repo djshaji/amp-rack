@@ -147,6 +147,14 @@ public class Rack extends Fragment {
         quickPatchProgress = mainActivity.findViewById(R.id.patch_loading);
 
         mainActivity.onOff = view.findViewById(R.id.onoff);
+        mainActivity.onOff.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(mainActivity.onOff, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.UI);
+                return false;
+            }
+        });
+
         rackMaster = view.findViewById(R.id.rack_master);
         pane_2 = view.findViewById(R.id.pane_2);
         /*
@@ -874,6 +882,14 @@ public class Rack extends Fragment {
         mainActivity.outputVolume.setValue(mainActivity.defaultSharedPreferences.getFloat("outputVolume", 1.0f));
 
         ToggleButton toggleButton = mainActivity.findViewById(R.id.onofftoggle);
+        toggleButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(toggleButton, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.UI);
+                return false;
+            }
+        });
+
         patchUp = mainActivity.findViewById(R.id.patch_up);
         TextView patchName = mainActivity.findViewById(R.id.patch_name),
                 patchNo = mainActivity.findViewById(R.id.patch_no);
@@ -1501,5 +1517,6 @@ public class Rack extends Fragment {
             // do something with the result
         }
     }
+
 
 }

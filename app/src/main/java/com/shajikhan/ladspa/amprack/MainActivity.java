@@ -65,6 +65,8 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.midi.MidiDeviceInfo;
+import android.media.midi.MidiManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -172,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean headphoneWarning = true;
     public boolean experimentalBuild = false;
     static Context context;
+    ArrayList <MIDIControl> midiControls ;
+    MidiManager midiManager ;
     static FileOutputStream fileOutputStream = null ;
     static DataOutputStream dataOutputStream = null ;
     static MainActivity mainActivity;
@@ -396,6 +400,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
+
+        midiControls = new ArrayList<>();
+        midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
+        MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
 
         Log.d(TAG, "onCreate: " + String.format("" +
                 "%d: %d", BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)));
@@ -4228,4 +4236,54 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    void setMidiControl (View view, int plugin, int control, MIDIControl.Type type, MIDIControl.Scope scope) {
+        midiControls.remove(view);
+
+        MIDIControl midiControl = new MIDIControl() ;
+        midiControl.plugin = plugin ;
+        midiControl.scope = scope ;
+        midiControl.control = control ;
+        midiControl.view = view ;
+
+        View layout = getLayoutInflater().inflate(R.layout.midi_add_control, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        if (scope == MIDIControl.Scope.PLUGIN)
+            builder.setTitle("Set MIDI Control for " + AudioEngine.getActivePluginName(plugin) + " " + AudioEngine.getControlName(plugin, control));
+        else
+            builder.setTitle("Set MIDI Control");
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = ((EditText) layout.findViewById(R.id.channel)).getText().toString();
+                String program = ((EditText) layout.findViewById(R.id.control)).getText().toString();
+
+                int ch = -1 ;
+                int pr =  -1 ;
+
+                try {
+                    pr = Integer.parseInt(program);
+                    ch = Integer.parseInt(channel);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "onDismiss: ", e);
+                    alert("Failed to set MIDI control", e.getMessage());
+                    return;
+                }
+
+                midiControl.channel = ch ;
+                midiControl.control = pr ;
+                midiControls.add(midiControl);
+
+                Log.d(TAG, "[midi controls]: " + midiControls.toString());
+            }
+        }) ;
+
+        builder.setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create() ;
+
+
+        dialog.show();
+    }
 }
