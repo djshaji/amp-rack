@@ -65,8 +65,11 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.midi.MidiDevice;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
+import android.media.midi.MidiOutputPort;
+import android.media.midi.MidiReceiver;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -145,6 +148,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -162,6 +166,66 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, TextureView.SurfaceTextureListener {
+    MidiOutputPort midiOutputPort;
+    MyReceiver midiReciever;
+
+    class MyReceiver extends MidiReceiver {
+        MainActivity mainActivity ;
+        MidiFramer midiFramer ;
+        MyReceiver (MainActivity m) {
+            mainActivity = m ;
+            midiFramer = new MidiFramer(this);
+        }
+
+        public void logMidiMessage(byte[] data, int offset, int count) {
+            String text = "Received: ";
+            for (int i = 0; i < count; i++) {
+                text += String.format("0x%02X, ", data[offset + i]);
+            }
+            Log.i(TAG, text);
+        }
+
+        public void onSend(byte[] data, int offset,
+                           int count, long timestamp) throws IOException {
+            byte command = (byte) (data[offset] & MidiConstants.STATUS_COMMAND_MASK);
+            int channel = (byte) (data[offset] & MidiConstants.STATUS_CHANNEL_MASK);
+            Log.i(TAG, "onSend: recieved message on channel " + channel);
+            switch (command) {
+                case MidiConstants.STATUS_NOTE_OFF:
+//                    noteOff(channel, data[1], data[2]);
+                    break;
+                case MidiConstants.STATUS_NOTE_ON:
+//                    noteOn(channel, data[1], data[2]);
+                    break;
+                case MidiConstants.STATUS_PITCH_BEND:
+                    int bend = (data[2] << 7) + data[1];
+//                    pitchBend(channel, bend);
+                    break;
+                case MidiConstants.STATUS_PROGRAM_CHANGE:
+//                    mProgram = data[1];
+//                    mFreeVoices.clear();
+                    Log.d(TAG, "onSend: program change");
+                    logMidiMessage(data, offset, count);
+                    break;
+                case MidiConstants.STATUS_CONTROL_CHANGE:
+                    ShortMessage shortMessage = new ShortMessage(data);
+                    Log.d(TAG, "onSend: control change " );
+                    Log.d(TAG, String.format ("[midi control change] %s [%d] %d: %d",
+                            shortMessage.getCommand(), shortMessage.getChannel(),
+                            // data 1
+                            data [offset+1] & 0xFF,
+                            //data 2
+                            data [offset+2] & 0xFF));
+                    logMidiMessage(data, offset, count);
+                    break;
+                default:
+                    Log.i(TAG, "onSend: command not understood, instructions unclear ...!");
+                    logMidiMessage(data, offset, count);
+                    break;
+            }
+        }
+    }
+
     private static final String TAG = "Amp Rack MainActivity";
 
     private static final String CHANNEL_ID = "default";
@@ -176,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static Context context;
     ArrayList <MIDIControl> midiControls ;
     MidiManager midiManager ;
+    MidiDevice midiDevice ;
     static FileOutputStream fileOutputStream = null ;
     static DataOutputStream dataOutputStream = null ;
     static MainActivity mainActivity;
@@ -402,8 +467,39 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
 
         midiControls = new ArrayList<>();
+        midiReciever = new MyReceiver(this);
         midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
         MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
+        Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
+        for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
+            Log.d(TAG, String.format ("[midi device] %s: %s",
+                    midiDeviceInfo.getId(), midiDeviceInfo.toString()));
+            Log.d(TAG, String.format ("%d %d: %s", midiDeviceInfo.getInputPortCount(), midiDeviceInfo.getOutputPortCount(), midiDeviceInfo.getPorts().toString()));
+            int outputPort = -1 ;
+            for (MidiDeviceInfo.PortInfo portInfo : midiDeviceInfo.getPorts()) {
+                Log.d(TAG, String.format ("[midi port] %s: %d [%d]", portInfo.getName(), portInfo.getPortNumber(), portInfo.getType()));
+                if (portInfo.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                    outputPort = portInfo.getPortNumber() ;
+                    Log.d(TAG, String.format ("[midi port] output port: %d", outputPort));
+                    break ;
+                }
+            }
+
+            if (midiDevice == null) {
+                int finalOutputPort = outputPort;
+                Log.d(TAG, String.format ("[midi] opening device: %s", midiDeviceInfo.toString()));
+                midiManager.openDevice(midiDeviceInfo, device -> {
+                    midiDevice = device ;
+                    Log.d(TAG, String.format ("[midi] device opened: opening port..."));
+                    midiOutputPort = device.openOutputPort(finalOutputPort);
+                    Log.d(TAG, String.format ("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
+                    midiOutputPort.connect(midiReciever);
+
+                }, null);
+            }
+
+        }
+
 
         Log.d(TAG, "onCreate: " + String.format("" +
                 "%d: %d", BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)));
