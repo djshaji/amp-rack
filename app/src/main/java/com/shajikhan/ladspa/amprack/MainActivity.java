@@ -2540,7 +2540,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Log.d(TAG, "loadActivePreset: skipping loading preset");
             return;
         }
-
+        
+        loadGlobalMidi();
+        
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset = sharedPreferences.getString("activePreset", null);
         AudioEngine.toggleMixer(sharedPreferences.getBoolean("toggleMixer", true));
@@ -4335,7 +4337,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void setMidiControl (View view, int plugin, int control, MIDIControl.Type type, MIDIControl.Scope scope) {
-        midiControls.remove(view);
+        String channel = "";
+        String data1 = "";
+
+        for (MIDIControl midiControl: midiControls) {
+            if (midiControl.view.getId() == view.getId()) {
+                midiControls.remove(midiControl);
+                data1 = String.valueOf(midiControl.control);
+                channel = String.valueOf(midiControl.channel);
+                break ;
+            }
+        }
 
         MIDIControl midiControl = new MIDIControl() ;
         midiControl.plugin = plugin ;
@@ -4344,6 +4356,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         midiControl.view = view ;
 
         View layout = getLayoutInflater().inflate(R.layout.midi_add_control, null);
+        ((EditText) layout.findViewById(R.id.channel)).setText(channel);
+        ((EditText) layout.findViewById(R.id.control)).setText(data1);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(layout);
         if (scope == MIDIControl.Scope.PLUGIN)
@@ -4374,6 +4389,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 midiControls.add(midiControl);
 
                 Log.d(TAG, "[midi controls]: " + midiControls.toString());
+                if (scope == MIDIControl.Scope.GLOBAL) {
+                    saveGlobalMidi();
+                }
             }
         }) ;
 
@@ -4394,6 +4412,35 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    void loadGlobalMidi () {
+        Log.i(TAG, "loadGlobalMidi: loading settings");
+        String s = defaultSharedPreferences.getString("global_midi", null);
+        if (s == null) {
+            Log.i(TAG, "loadGlobalMidi: no saved settings");
+            return;
+        }
+
+        JSONArray jsonArray;
+        try {
+            jsonArray = new JSONArray(s);
+            for (int i = 0 ; i < jsonArray.length(); i ++) {
+                JSONObject j = jsonArray.getJSONObject(i);
+                MIDIControl midiControl = new MIDIControl();
+                midiControl.scope = MIDIControl.Scope.GLOBAL;
+                String idString = j.getString("view");
+                midiControl.view = findViewById(stringToId(idString));
+                midiControl.type = MIDIControl.Type.TOGGLE;
+                midiControl.channel = j.getInt("channel");
+                midiControl.control = j.getInt("control");
+                midiControls.add(midiControl);
+                Log.i(TAG, "loadGlobalMidi: added control " + midiControl);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     void saveGlobalMidi () {
         JSONArray jsonArray = new JSONArray();
         for (MIDIControl midiControl: midiControls) {
@@ -4408,5 +4455,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Log.i(TAG, "saveGlobalMidi: " + jsonArray.toString());
         defaultSharedPreferences.edit().putString("global_midi", jsonArray.toString()).apply();
+    }
+
+    int stringToId (String s) {
+        return getResources().getIdentifier(s, "id", getPackageName());
     }
 }

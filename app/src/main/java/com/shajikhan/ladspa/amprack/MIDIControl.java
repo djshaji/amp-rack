@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.google.android.material.slider.Slider;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,7 +47,7 @@ public class MIDIControl {
         jsonObject.put("control", control);
         jsonObject.put("type", type);
         jsonObject.put("channel", channel);
-        jsonObject.put("program", program);
+        jsonObject.put("control", control);
         jsonObject.put("scope", scope);
 
         return jsonObject;
