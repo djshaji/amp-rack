@@ -150,7 +150,7 @@ public class Rack extends Fragment {
         mainActivity.onOff.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mainActivity.setMidiControl(mainActivity.onOff, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.UI);
+                mainActivity.setMidiControl(mainActivity.onOff, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
                 return false;
             }
         });
@@ -885,7 +885,7 @@ public class Rack extends Fragment {
         toggleButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mainActivity.setMidiControl(toggleButton, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.UI);
+                mainActivity.setMidiControl(toggleButton, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
                 return false;
             }
         });

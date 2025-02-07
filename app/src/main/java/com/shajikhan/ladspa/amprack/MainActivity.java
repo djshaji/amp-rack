@@ -134,6 +134,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.JsonObject;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -2515,6 +2516,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void saveActivePreset() {
+        saveGlobalMidi();
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String preset;
         preset = presetToString();
@@ -4381,5 +4383,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
         dialog.show();
+    }
+
+    void processMIDIMessage (int channel, int data1, int data2) {
+        for (MIDIControl midiControl: midiControls) {
+            if (midiControl.channel == channel && data1 == midiControl.control) {
+                midiControl.process(data2);
+                break ;
+            }
+        }
+    }
+
+    void saveGlobalMidi () {
+        JSONArray jsonArray = new JSONArray();
+        for (MIDIControl midiControl: midiControls) {
+            try {
+                JSONObject jsonObject = midiControl.get() ;
+                Log.i(TAG, "saveGlobalMidi: " + jsonObject.toString());
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Log.i(TAG, "saveGlobalMidi: " + jsonArray.toString());
+        defaultSharedPreferences.edit().putString("global_midi", jsonArray.toString()).apply();
     }
 }
