@@ -1052,21 +1052,23 @@ public class Rack extends Fragment {
                 outLabel = mainActivity.findViewById(R.id.mixer_output_label);
 
 
-        inLabel.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mainActivity.setMidiControl(mainActivity.inputVolume, -1, -1, MIDIControl.Type.SLIDER, MIDIControl.Scope.GLOBAL);
-                return false;
-            }
-        });
+        if (mainActivity.skinEngine == null || ! mainActivity.skinEngine.hasKnob()) {
+            inLabel.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mainActivity.setMidiControl(mainActivity.inputVolume, -1, -1, MIDIControl.Type.SLIDER, MIDIControl.Scope.GLOBAL);
+                    return false;
+                }
+            });
 
-        outLabel.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mainActivity.setMidiControl(mainActivity.outputVolume, -1, -1, MIDIControl.Type.SLIDER, MIDIControl.Scope.GLOBAL);
-                return false;
-            }
-        });
+            outLabel.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mainActivity.setMidiControl(mainActivity.outputVolume, -1, -1, MIDIControl.Type.SLIDER, MIDIControl.Scope.GLOBAL);
+                    return false;
+                }
+            });
+        }
 
         if (mainActivity.useTheme) {
             mainActivity.skinEngine.cardText(mainActivity.patchDesc);
