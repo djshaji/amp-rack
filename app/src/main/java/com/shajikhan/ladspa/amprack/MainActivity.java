@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             data [offset+1] & 0xFF,
                             //data 2
                             data [offset+2] & 0xFF));
+                    mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
                     logMidiMessage(data, offset, count);
                     break;
                 default:
@@ -269,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     ExtendedFloatingActionButton fab ;
     Button hidePanel;
+    TextView midiDisplay ;
     SwitchMaterial onOff = null ;
     AudioEncoder audioEncoder ;
     String exportFormat ;
@@ -4411,6 +4413,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         MIDIControl midiControl = new MIDIControl() ;
         midiControl.plugin = plugin ;
         midiControl.scope = scope ;
+        if (scope == MIDIControl.Scope.GLOBAL) {
+            midiControl.type = MIDIControl.Type.TOGGLE;
+        }
 //        midiControl.control = control ;
         midiControl.pluginControl = control ;
         midiControl.view = view ;
@@ -4469,7 +4474,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void processMIDIMessage (int channel, int data1, int data2) {
+        Log.d(TAG, "processMIDIMessage: process message " +
+                String.format("%d %d %d", channel, data1, data2));
         for (MIDIControl midiControl: midiControls) {
+            Log.i(TAG, "processMIDIMessage: probe midiControl " + midiControl);
+            String msg = String.format(
+                    "%d %d %d",
+                    channel, data1, data2
+            );
+
+            mainActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    midiDisplay.setText(msg);
+                }
+            });
+
             if (midiControl.channel == channel && data1 == midiControl.control) {
                 midiControl.process(data2);
                 break ;

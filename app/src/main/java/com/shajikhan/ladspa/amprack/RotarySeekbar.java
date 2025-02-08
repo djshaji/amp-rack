@@ -145,7 +145,7 @@ public class RotarySeekbar extends View {
     private Paint mKnobPaint;
 
     private GestureDetector mDetector;
-    private OnValueChangedListener mListener = null;
+    public OnValueChangedListener mListener = null;
 
     public interface OnValueChangedListener {
         void onValueChanged(RotarySeekbar sourceSeekbar, float value);

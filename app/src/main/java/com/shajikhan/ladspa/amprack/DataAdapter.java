@@ -135,12 +135,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 //        knobsLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.addView(knobsLayout);
         int knobslayer = 0;
-        boolean pluginsHasKnobs = true;
+        holder.pluginsHasKnobs = true;
         JSONObject knobsConfig = null;
         try {
             knobsConfig = mainActivity.knobsLayout.getJSONObject(String.valueOf(numControls - notSliders));
         } catch (JSONException e) {
-            pluginsHasKnobs = false ;
+            holder.pluginsHasKnobs = false ;
             Log.e(TAG, "onBindViewHolder: no json config for knobs: " + numControls, e);
         }
 
@@ -728,7 +728,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 midiControl.type = MIDIControl.Type.SLIDER;
             }
 
-            if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob() && pluginsHasKnobs) {
+            if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob() && holder.pluginsHasKnobs) {
                 if (! isSpinner && ! isBypass && ! isAtom) {
                     int row = 0, knobType = 3, knobPos = i ;
 
@@ -883,6 +883,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                     display.setText (String.valueOf(slider.getValue()));
                     display.setGravity(Gravity.CENTER);
+                    rotarySeekbar.setOnValueChangedListener(new RotarySeekbar.OnValueChangedListener() {
+                        @Override
+                        public void onValueChanged(RotarySeekbar sourceSeekbar, float value) {
+                            slider.setValue(rotarySeekbar.getValue());
+                            display.setText(String.format("%.2f", rotarySeekbar.getValue()));
+                            linearLayout.requestDisallowInterceptTouchEvent(true);
+
+                        }
+                    });
 
                     rotarySeekbar.setOnTouchListener(new View.OnTouchListener() {
                         @Override
@@ -1167,6 +1176,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         LinearLayout modelSpinnerLayout ;
         boolean hasFileSpinner ;
         MaterialButton deleteButton, moveUpButton, moveDownButton ;
+        boolean pluginsHasKnobs = false ;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

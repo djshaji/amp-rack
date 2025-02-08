@@ -42,6 +42,8 @@
         android:title="Play with YouTube Video"/>
     <item android:id="@+id/nam"
         android:title="NAM Model Downloader"/>
+    <item android:id="@+id/clear_midi"
+        android:title="Clear MIDI Controls"/>
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>

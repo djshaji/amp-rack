@@ -109,22 +109,43 @@ public class MIDIControl {
         switch (type) {
             case SLIDER:
                 Slider slider = (Slider) view;
-                value = ((slider.getValueFrom() - slider.getValueTo()) * (data / 127)) + slider.getValueFrom(); 
-                Log.i(TAG, String.format("plugin %d control %d value %f", plugin, control, value));
-                slider.setValue(value);
+                value = ((slider.getValueFrom() - slider.getValueTo()) * (data / 127f)) + slider.getValueFrom();
+//                Log.i(TAG, String.format("plugin %d control %d value %f", plugin, control, value));
+                float finalValue1 = value;
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        slider.setValue(finalValue1);
+                    }
+                });
                 break ;
             case KNOB:
                 RotarySeekbar rotarySeekbar = (RotarySeekbar) view;
-                value = ((rotarySeekbar.getMaxValue() - rotarySeekbar.getMinValue()) * (data / 127)) + rotarySeekbar.getMinValue() ;
-                Log.i(TAG, String.format("plugin %d control %d value %f", plugin, control, value));
-                rotarySeekbar.setValue(value);
+                value = ((rotarySeekbar.getMaxValue() - rotarySeekbar.getMinValue()) * ((float) data / 127)) + rotarySeekbar.getMinValue() ;
+//                Log.i(TAG, String.format("plugin %d control %d data %d value [%f / %f] %f", plugin, control, data,
+//                        rotarySeekbar.getMinValue(), rotarySeekbar.getMaxValue(),
+//                        value));
+                float finalValue = value;
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        rotarySeekbar.setValue(finalValue);
+                        rotarySeekbar.mListener.onValueChanged(rotarySeekbar, finalValue);
+                    }
+                });
                 break ;
             case TOGGLE:
                 Log.i(TAG, "process: view click!");
-                view.performClick();
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.performClick();
+                    }
+                });
                 break ;
             default:
                 Log.w(TAG, "process: unknown control type " + type);
         }
     }
+
 }

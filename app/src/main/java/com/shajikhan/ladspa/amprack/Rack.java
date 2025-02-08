@@ -699,6 +699,16 @@ public class Rack extends Fragment {
             }
         });
 
+        MenuItem clear_midi = optionsMenu.getMenu().findItem(R.id.clear_midi);
+        clear_midi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                mainActivity.midiControls.clear();
+                return false;
+            }
+        });
+
+        mainActivity.midiDisplay = mainActivity.findViewById(R.id.midi_display);
         MenuItem exit_item = optionsMenu.getMenu().findItem(R.id.menu_exit);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -912,6 +922,14 @@ public class Rack extends Fragment {
         });
 
         patchUp = mainActivity.findViewById(R.id.patch_up);
+        patchUp.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(v, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
+
         TextView patchName = mainActivity.findViewById(R.id.patch_name),
                 patchNo = mainActivity.findViewById(R.id.patch_no);
 
@@ -992,6 +1010,13 @@ public class Rack extends Fragment {
             }
         });
 
+        patchDown.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(v, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
         patchDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
