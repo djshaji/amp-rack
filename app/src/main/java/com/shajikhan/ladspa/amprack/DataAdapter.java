@@ -120,6 +120,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
 
         holder.getTextView().setText(pluginName);
+
         if (mainActivity.useTheme)
             mainActivity.skinEngine.cardText(holder.getTextView());
         int numControls = AudioEngine.getPluginControls(position);
@@ -169,6 +170,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
             EditText editText = new EditText(context);
             Slider slider = new Slider(context);
+
+            int finalI6 = i;
+            textView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mainActivity.setMidiControl(slider, position, finalI6, MIDIControl.Type.SLIDER, MIDIControl.Scope.PLUGIN);
+                    return false;
+                }
+            });
+
             slider.setId(100 * position + i);
             Spinner spinner = new Spinner(context);
             SeekBar seekBar = new SeekBar(context);
@@ -641,13 +652,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             });
 
             int finalI4 = i;
-            slider.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mainActivity.setMidiControl(v, position, finalI4, MIDIControl.Type.SLIDER, MIDIControl.Scope.PLUGIN);
-                    return false;
-                }
-            });
+//            slider.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    mainActivity.setMidiControl(v, position, finalI4, MIDIControl.Type.SLIDER, MIDIControl.Scope.PLUGIN);
+//                    return false;
+//                }
+//            });
 
             slider.addOnChangeListener(new Slider.OnChangeListener() {
                 @Override

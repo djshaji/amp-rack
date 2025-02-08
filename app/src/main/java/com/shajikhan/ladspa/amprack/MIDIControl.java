@@ -109,8 +109,10 @@ public class MIDIControl {
         switch (type) {
             case SLIDER:
                 Slider slider = (Slider) view;
-                value = ((slider.getValueFrom() - slider.getValueTo()) * (data / 127f)) + slider.getValueFrom();
-//                Log.i(TAG, String.format("plugin %d control %d value %f", plugin, control, value));
+                value = ((slider.getValueTo() - slider.getValueFrom()) * (data / 127f)) + slider.getValueFrom();
+                Log.i(TAG, String.format("plugin %d control %d value [%f / %f] %f", plugin, control,
+                        slider.getValueFrom(), slider.getValueTo(),
+                        value));
                 float finalValue1 = value;
                 mainActivity.runOnUiThread(new Runnable() {
                     @Override

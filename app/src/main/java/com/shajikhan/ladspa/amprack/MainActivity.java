@@ -4413,9 +4413,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         MIDIControl midiControl = new MIDIControl() ;
         midiControl.plugin = plugin ;
         midiControl.scope = scope ;
-        if (scope == MIDIControl.Scope.GLOBAL) {
-            midiControl.type = MIDIControl.Type.TOGGLE;
-        }
+        midiControl.type = type;
+//        if (scope == MIDIControl.Scope.GLOBAL) {
+//            midiControl.type = MIDIControl.Type.TOGGLE;
+//        }
 //        midiControl.control = control ;
         midiControl.pluginControl = control ;
         midiControl.view = view ;
@@ -4476,19 +4477,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     void processMIDIMessage (int channel, int data1, int data2) {
         Log.d(TAG, "processMIDIMessage: process message " +
                 String.format("%d %d %d", channel, data1, data2));
+        String msg = String.format(
+                "%d %d %d",
+                channel, data1, data2
+        );
+
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                midiDisplay.setText(msg);
+            }
+        });
+
         for (MIDIControl midiControl: midiControls) {
             Log.i(TAG, "processMIDIMessage: probe midiControl " + midiControl);
-            String msg = String.format(
-                    "%d %d %d",
-                    channel, data1, data2
-            );
-
-            mainActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    midiDisplay.setText(msg);
-                }
-            });
 
             if (midiControl.channel == channel && data1 == midiControl.control) {
                 midiControl.process(data2);
@@ -4520,7 +4522,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     continue;
                 }
                 midiControl.view = findViewById(stringToId(idString));
-                midiControl.type = MIDIControl.Type.TOGGLE;
+                switch (j.getString ("type")) {
+                    case "KNOB":
+                        midiControl.type = MIDIControl.Type.KNOB ;
+                        break ;
+                    case "SLIDER":
+                        midiControl.type = MIDIControl.Type.SLIDER ;
+                        break ;
+                    case "TOGGLE":
+                    default:
+                        midiControl.type = MIDIControl.Type.TOGGLE ;
+                        break ;
+                }
+
                 midiControl.scope = MIDIControl.Scope.GLOBAL;
                 midiControl.channel = j.getInt("channel");
                 midiControl.control = j.getInt("control");

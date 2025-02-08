@@ -1,5 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
+import static android.view.View.GONE;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -254,7 +256,7 @@ public class Rack extends Fragment {
                 mainActivity.RequestCamera();
                 mainActivity.videoRecording = isChecked;
                 if (!isChecked) {
-                    videoPreview.setVisibility(View.GONE);
+                    videoPreview.setVisibility(GONE);
                     boolean mStarted = mainActivity.camera2.mMuxerStarted ;
                     mainActivity.camera2.closeCamera();
                     mainActivity.rack.videoRecord.setChecked(false);
@@ -704,6 +706,7 @@ public class Rack extends Fragment {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
                 mainActivity.midiControls.clear();
+                Toast.makeText(mainActivity, "MIDI Controls cleared", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -878,10 +881,10 @@ public class Rack extends Fragment {
                 ((TextView) mainActivity.findViewById(R.id.m_on)).setVisibility(View.VISIBLE);
                 ((TextView) mainActivity.findViewById(R.id.m_mixer)).setVisibility(View.VISIBLE);
             } else {
-                mixer.setVisibility(View.GONE);
-                ((TextView) mainActivity.findViewById(R.id.m_camera)).setVisibility(View.GONE);
-                ((TextView) mainActivity.findViewById(R.id.m_on)).setVisibility(View.GONE);
-                ((TextView) mainActivity.findViewById(R.id.m_mixer)).setVisibility(View.GONE);
+                mixer.setVisibility(GONE);
+                ((TextView) mainActivity.findViewById(R.id.m_camera)).setVisibility(GONE);
+                ((TextView) mainActivity.findViewById(R.id.m_on)).setVisibility(GONE);
+                ((TextView) mainActivity.findViewById(R.id.m_mixer)).setVisibility(GONE);
             }
         });
 
@@ -1039,20 +1042,37 @@ public class Rack extends Fragment {
             }
         });
 
+        TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label),
+                inLabel = mainActivity.findViewById(R.id.mixer_input_label),
+                patchLabel = mainActivity.findViewById(R.id.patch_label),
+                inRotaryDisplay = mainActivity.findViewById(R.id.rotary_input_display),
+                inRotaryLabel = mainActivity.findViewById(R.id.rotary_input_label),
+                outRotaryDisplay = mainActivity.findViewById(R.id.rotary_output_display),
+                outRotaryLabel = mainActivity.findViewById(R.id.rotary_output_label),
+                outLabel = mainActivity.findViewById(R.id.mixer_output_label);
+
+
+        inLabel.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(mainActivity.inputVolume, -1, -1, MIDIControl.Type.SLIDER, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
+
+        outLabel.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(mainActivity.outputVolume, -1, -1, MIDIControl.Type.SLIDER, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
+
         if (mainActivity.useTheme) {
             mainActivity.skinEngine.cardText(mainActivity.patchDesc);
             mainActivity.skinEngine.cardText(mainActivity.hidePanel);
             mainActivity.skinEngine.cardText(mainActivity.triggerRecordToggle);
             mainActivity.toggleMixer.setCompoundDrawables(null,null,null,null);
-
-            TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label),
-                    inLabel = mainActivity.findViewById(R.id.mixer_input_label),
-                    patchLabel = mainActivity.findViewById(R.id.patch_label),
-                    inRotaryDisplay = mainActivity.findViewById(R.id.rotary_input_display),
-                    inRotaryLabel = mainActivity.findViewById(R.id.rotary_input_label),
-                    outRotaryDisplay = mainActivity.findViewById(R.id.rotary_output_display),
-                    outRotaryLabel = mainActivity.findViewById(R.id.rotary_output_label),
-                    outLabel = mainActivity.findViewById(R.id.mixer_output_label);
 
             mainActivity.skinEngine.cardText(mixerLabel);
             mainActivity.skinEngine.cardText(patchName);
@@ -1088,7 +1108,7 @@ public class Rack extends Fragment {
             });
 
             toggleButton.setVisibility(View.VISIBLE);
-            mainActivity.onOff.setVisibility(View.GONE);
+            mainActivity.onOff.setVisibility(GONE);
 
             mainActivity.skinEngine.view (optionsBtn, "menu", "overflow", SkinEngine.Resize.Height, .5f);
             optionsBtn.setCompoundDrawables(null, null, null, null);
@@ -1134,6 +1154,15 @@ public class Rack extends Fragment {
                 mainActivity.rotarySeekbarIn.setVisibility(View.VISIBLE);
                 mainActivity.rotarySeekbarOut.setVisibility(View.VISIBLE);
 
+                mainActivity.rotarySeekbarIn.setOnValueChangedListener(new RotarySeekbar.OnValueChangedListener() {
+                    @Override
+                    public void onValueChanged(RotarySeekbar sourceSeekbar, float value) {
+                        mainActivity.displayIn.setText(String.valueOf((int) value));
+                        mainActivity.inputVolume.setValue(value/100);
+
+                    }
+                });
+
                 mainActivity.rotarySeekbarIn.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -1141,6 +1170,14 @@ public class Rack extends Fragment {
                         mainActivity.displayIn.setText(String.valueOf((int) value));
                         mainActivity.inputVolume.setValue(value/100);
                         return false;
+                    }
+                });
+
+                mainActivity.rotarySeekbarOut.setOnValueChangedListener(new RotarySeekbar.OnValueChangedListener() {
+                    @Override
+                    public void onValueChanged(RotarySeekbar sourceSeekbar, float value) {
+                        mainActivity.displayOut.setText(String.valueOf((int) value));
+                        mainActivity.outputVolume.setValue(value/100);
                     }
                 });
 
@@ -1155,8 +1192,24 @@ public class Rack extends Fragment {
                 });
 
 
-                mainActivity.inputVolume.setVisibility(View.GONE);
-                mainActivity.outputVolume.setVisibility(View.GONE);
+                inRotaryLabel.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        mainActivity.setMidiControl(mainActivity.rotarySeekbarIn, -1, -1, MIDIControl.Type.KNOB, MIDIControl.Scope.GLOBAL);
+                        return false;
+                    }
+                });
+
+                outRotaryLabel.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        mainActivity.setMidiControl(mainActivity.rotarySeekbarOut, -1, -1, MIDIControl.Type.KNOB, MIDIControl.Scope.GLOBAL);
+                        return false;
+                    }
+                });
+
+                mainActivity.inputVolume.setVisibility(GONE);
+                mainActivity.outputVolume.setVisibility(GONE);
             }
         }
 
@@ -1191,14 +1244,14 @@ public class Rack extends Fragment {
             rackMaster.setLayoutParams(lp);
             MainActivity.applyWallpaper(mainActivity, mainActivity.pluginDialog.getWindow(), getResources(), mainActivity.pluginDialogWallpaper, mainActivity.deviceWidth, mainActivity.deviceHeight);
 
-            mainActivity.fab.setVisibility(View.GONE);
+            mainActivity.fab.setVisibility(GONE);
             Log.w(TAG, "onViewCreated: tablet mode activated");
         } else {
             Log.d(TAG, String.format ("[display dimensions]: %d x %d {%f}", mainActivity.deviceWidth, mainActivity.deviceHeight, (float) (1.0 * mainActivity.deviceWidth/mainActivity.deviceHeight)));
         }
 
         if (mainActivity.experimentalBuild) {
-            TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label);
+//            TextView mixerLabel = mainActivity.findViewById(R.id.mixer_label);
             mixerLabel.setText("Beta " + String.valueOf(BuildConfig.VERSION_CODE));
 //            mixerLabel.setTextColor(getResources().getColor(R.color.dark_red));
 //            mixerLabel.setBackgroundColor(getResources().getColor(R.color.wheat));
