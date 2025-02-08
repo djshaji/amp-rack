@@ -27,6 +27,7 @@ public class MIDIControl {
 
     View view ;
     int plugin ;
+    int pluginControl ;
     int control ;
     Type type ;
     Scope scope ;
@@ -36,8 +37,19 @@ public class MIDIControl {
 
     String getID () {
         View v = view ;
-        return (v.getId() == View.NO_ID) ? "" :
-                v.getResources().getResourceName(v.getId()).split(":id/")[1];
+        if (v == null)
+            return "" ;
+        if (scope == Scope.PLUGIN)
+            return String.valueOf(v.getId());
+        else {
+            try {
+                return (v.getId() == View.NO_ID) ? "" :
+                        v.getResources().getResourceName(v.getId()).split(":id/")[1];
+            } catch (Exception e) {
+                Log.e(TAG, "getID: ", e);
+                return "";
+            }
+        }
     }
 
     JSONObject get () throws JSONException {
@@ -48,6 +60,7 @@ public class MIDIControl {
         jsonObject.put("type", type);
         jsonObject.put("channel", channel);
         jsonObject.put("control", control);
+        jsonObject.put("pluginControl", pluginControl);
         jsonObject.put("scope", scope);
 
         return jsonObject;
@@ -60,6 +73,7 @@ public class MIDIControl {
                 ", view=" + view.getResources().getIdentifier(getID(), "id", mainActivity.getPackageName()) +
                 ", plugin=" + plugin +
                 ", control=" + control +
+                ", pluginControl=" + pluginControl +
                 ", type=" + type +
                 ", scope=" + scope +
                 ", channel=" + channel +

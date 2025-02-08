@@ -629,6 +629,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
 
+            int finalI4 = i;
+            slider.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mainActivity.setMidiControl(v, position, finalI4, MIDIControl.Type.SLIDER, MIDIControl.Scope.PLUGIN);
+                    return false;
+                }
+            });
+
             slider.addOnChangeListener(new Slider.OnChangeListener() {
                 @Override
                 public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
@@ -685,6 +694,28 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 public void afterTextChanged(Editable editable) {
                 }
             });
+
+
+            MIDIControl midiControl = null;
+            for (int r = 0 ; r < mainActivity.midiControls.size(); r ++) {
+                midiControl = mainActivity.midiControls.get(r) ;
+                if (midiControl.plugin == position && midiControl.pluginControl == i) {
+                    Log.i(TAG, "onBindViewHolder: found midi control " + position + ' ' + i);
+                    try {
+                        Log.i(TAG, "onBindViewHolder: " + midiControl.get());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                }
+                midiControl = null ;
+            }
+
+            if (midiControl != null) {
+                Log.d(TAG, "onBindViewHolder: midicontrol add slider " + position + ' ' + i);
+                midiControl.view = slider;
+                midiControl.type = MIDIControl.Type.SLIDER;
+            }
 
             if (mainActivity.useTheme && mainActivity.skinEngine.hasKnob() && pluginsHasKnobs) {
                 if (! isSpinner && ! isBypass && ! isAtom) {
@@ -745,8 +776,33 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     knobsLayout.setLayoutParams(lpk);
 
                     RotarySeekbar rotarySeekbar = new RotarySeekbar(mainActivity);
+                    if (midiControl != null) {
+                        Log.d(TAG, "onBindViewHolder: midicontrol add knob " + position + ' ' + i);
+                        midiControl.view = rotarySeekbar;
+                        midiControl.type = MIDIControl.Type.KNOB;
+                    }
+
+                    int finalI3 = i;
+                    rotarySeekbar.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Log.i(TAG, "onLongClick: rotary " + position + ' ' + finalI3);
+                            mainActivity.setMidiControl(v, position, finalI3, MIDIControl.Type.KNOB, MIDIControl.Scope.PLUGIN);
+                            return false;
+                        }
+                    });
+
                     TextView label = new TextView(mainActivity),
                             display = new TextView(mainActivity);
+
+                    rotarySeekbar.setId(100 * position + i);
+                    label.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            mainActivity.setMidiControl(rotarySeekbar, position, finalI3, MIDIControl.Type.KNOB, MIDIControl.Scope.PLUGIN);
+                            return false;
+                        }
+                    });
 
                     mainActivity.skinEngine.cardText(label);
                     mainActivity.skinEngine.cardText(display);

@@ -449,6 +449,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add (this, "AudioRecordTest");
+        hashCommands.add (this, "resetMIDI");
+        hashCommands.add (this, "printMidi");
         hashCommands.add (this, "cameraPreview");
         hashCommands.add(this, "saveActivePreset");
         hashCommands.add(this, "printActivePreset");
@@ -689,10 +691,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             purchasesUpdatedListener = new PurchasesUpdatedListener() {
 
                 @Override
-                public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<com.android.billingclient.api.Purchase> list) {
+                public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
                             && list != null) {
-                        for (com.android.billingclient.api.Purchase purchase : list) {
+                        for (Purchase purchase : list) {
                             handlePurchase(purchase);
                         }
                     } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -925,7 +927,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         NotificationChannel channel = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel = new NotificationChannel(
                     CHANNEL_ID,
                     getResources().getString(R.string.app_name),
@@ -2340,6 +2342,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     String presetToString() {
+        JSONObject midiJSON = midiPluginControlsAsJSON();
+
         int totalPresets = AudioEngine.getActivePlugins();
         JSONObject preset = new JSONObject();
 
@@ -2371,6 +2375,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             try {
                 jo.put("name", AudioEngine.getActivePluginName(i));
+                if (midiJSON.has(String.valueOf(i))) {
+                    jo.put("midi", midiJSON.getJSONArray(String.valueOf(i)));
+                }
+
                 jo.put("controls", vals);
                 if (spinnerValue > -1)
                     jo.put("selectedModel", spinnerValue);
@@ -2573,6 +2581,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // forgot to add this. that this was forgotten was very difficult to guess
         AudioEngine.bypass(true);
         AudioEngine.clearActiveQueue();
+        resetPluginMIDI();
 
         Log.d(TAG, "loadPreset: " + preset);
         JSONObject jsonObject;
@@ -2611,6 +2620,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             try {
                 name = jo.getString("name");
                 controls = jo.getString("controls");
+
+                if (jo.has("midi")) {
+                    JSONArray jsonArray = jo.getJSONArray("midi");
+                    for (int d = 0 ; d < jsonArray.length(); d ++) {
+                        JSONObject jControl = jsonArray.getJSONObject(d);
+                        MIDIControl midiControl = new MIDIControl();
+                        midiControl.plugin = plugin ;
+                        midiControl.pluginControl = jControl.getInt("pluginControl");
+                        midiControl.scope = MIDIControl.Scope.PLUGIN ;
+                        midiControl.channel = jControl.getInt("channel");
+                        midiControl.control = jControl.getInt("control");
+                        midiControls.add(midiControl);
+                        Log.i(TAG, "loadPreset: added midi control " + midiControl.get());
+                    }
+                }
+
                 if (jo.has("selectedModel"))
                     spinnerValue = jo.getInt("selectedModel");
                 if (jo.has("audioFile"))
@@ -2807,8 +2832,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    private void handlePurchase(com.android.billingclient.api.Purchase purchase) {
-        if (purchase.getPurchaseState() == com.android.billingclient.api.Purchase.PurchaseState.PURCHASED) {
+    private void handlePurchase(Purchase purchase) {
+        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged()) {
                 AcknowledgePurchaseParams acknowledgePurchaseParams =
                         AcknowledgePurchaseParams.newBuilder()
@@ -4337,12 +4362,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void setMidiControl (View view, int plugin, int control, MIDIControl.Type type, MIDIControl.Scope scope) {
+        Log.i(TAG, String.format(
+                "[set midi control] plugin: %d, control: %d",
+                plugin, control
+        ));
+
         String channel = "";
         String data1 = "";
 
+        MIDIControl old = null;
+        
         for (MIDIControl midiControl: midiControls) {
+            Log.d(TAG, String.format ("[midi plugin check] %d: %d",
+                    midiControl.view.getId(), view.getId()
+                    ));
+
             if (midiControl.view.getId() == view.getId()) {
-                midiControls.remove(midiControl);
+                old = midiControl ;
                 data1 = String.valueOf(midiControl.control);
                 channel = String.valueOf(midiControl.channel);
                 break ;
@@ -4352,7 +4388,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         MIDIControl midiControl = new MIDIControl() ;
         midiControl.plugin = plugin ;
         midiControl.scope = scope ;
-        midiControl.control = control ;
+//        midiControl.control = control ;
+        midiControl.pluginControl = control ;
         midiControl.view = view ;
 
         View layout = getLayoutInflater().inflate(R.layout.midi_add_control, null);
@@ -4366,9 +4403,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         else
             builder.setTitle("Set MIDI Control");
 
+        MIDIControl finalOld = old;
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if (finalOld != null)
+                    midiControls.remove(finalOld);
                 String channel = ((EditText) layout.findViewById(R.id.channel)).getText().toString();
                 String program = ((EditText) layout.findViewById(R.id.control)).getText().toString();
 
@@ -4430,6 +4470,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 String idString = j.getString("view");
                 midiControl.view = findViewById(stringToId(idString));
                 midiControl.type = MIDIControl.Type.TOGGLE;
+                midiControl.scope = MIDIControl.Scope.GLOBAL;
                 midiControl.channel = j.getInt("channel");
                 midiControl.control = j.getInt("control");
                 midiControls.add(midiControl);
@@ -4444,6 +4485,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     void saveGlobalMidi () {
         JSONArray jsonArray = new JSONArray();
         for (MIDIControl midiControl: midiControls) {
+            if (midiControl.scope == MIDIControl.Scope.PLUGIN)
+                continue;
+
             try {
                 JSONObject jsonObject = midiControl.get() ;
                 Log.i(TAG, "saveGlobalMidi: " + jsonObject.toString());
@@ -4459,5 +4503,61 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     int stringToId (String s) {
         return getResources().getIdentifier(s, "id", getPackageName());
+    }
+
+    JSONObject midiPluginControlsAsJSON () {
+        JSONObject jsonObject = new JSONObject();
+        for (MIDIControl midiControl: midiControls) {
+            if (midiControl.scope == MIDIControl.Scope.GLOBAL)
+                continue;
+
+            try {
+                if (! jsonObject.has(String.valueOf(midiControl.plugin)))
+                    jsonObject.put(String.valueOf(midiControl.plugin), new JSONArray());
+                jsonObject.getJSONArray(String.valueOf(midiControl.plugin)).put(midiControl.get());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Log.i(TAG, "midiPluginControlsAsJSON: " + jsonObject);
+        return jsonObject;
+    }
+
+    JSONObject midiPluginControlsAsJSONObject () {
+        JSONObject jsonObject = new JSONObject();
+        for (MIDIControl midiControl: midiControls) {
+            if (midiControl.scope == MIDIControl.Scope.GLOBAL)
+                continue;
+
+            try {
+                if (! jsonObject.has(String.valueOf(midiControl.plugin)))
+                    jsonObject.put(String.valueOf(midiControl.plugin), new JSONObject());
+                if (! (jsonObject.getJSONObject(String.valueOf(midiControl.plugin)).has (String.valueOf(midiControl.pluginControl))))
+                    (jsonObject.getJSONObject(String.valueOf(midiControl.plugin))).put(String.valueOf(midiControl.pluginControl), midiControl.get ());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Log.i(TAG, "midiPluginControlsAsJSONObject: " + jsonObject);
+        return jsonObject;
+    }
+
+    void resetPluginMIDI () {
+        for (MIDIControl midiControl: midiControls) {
+            if (midiControl.scope == MIDIControl.Scope.GLOBAL)
+                continue;
+
+            midiControls.remove(midiControl);
+        }
+    }
+
+    public static void resetMIDI () {
+        mainActivity.midiControls.clear();
+    }
+
+    public static void printMidi () {
+        Log.i(TAG, "printMidi: " + mainActivity.midiControls);
     }
 }
