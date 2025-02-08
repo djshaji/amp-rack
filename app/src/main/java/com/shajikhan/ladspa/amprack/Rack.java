@@ -193,6 +193,13 @@ public class Rack extends Fragment {
         }
 
         videoRecord = mainActivity.findViewById(R.id.toggle_video);
+        videoRecord.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(v, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
         videoPreview = mainActivity.findViewById(R.id.video_preview);
         swapCamera = mainActivity.findViewById(R.id.flip_camera);
         videoTexture = mainActivity.findViewById(R.id.video_texture);
@@ -295,6 +302,13 @@ public class Rack extends Fragment {
 
         mainActivity.triggerRecordToggle = view.findViewById(R.id.record_trigger);
         mainActivity.record = view.findViewById(R.id.record_button);
+        mainActivity.record.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(v, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
         mainActivity.triggerRecordToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -815,6 +829,13 @@ public class Rack extends Fragment {
         mixer = mainActivity.findViewById(R.id.mixer);
 
         mainActivity. toggleMixer = mainActivity.findViewById(R.id.mixer_toggle);
+        mainActivity.toggleMixer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mainActivity.setMidiControl(v, -1, -1, MIDIControl.Type.TOGGLE, MIDIControl.Scope.GLOBAL);
+                return false;
+            }
+        });
 
         mainActivity.hidePanel = mainActivity.findViewById(R.id.hide_panel);
         mainActivity.hidePanel.setOnClickListener(new View.OnClickListener() {

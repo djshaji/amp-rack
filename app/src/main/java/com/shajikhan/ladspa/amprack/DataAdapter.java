@@ -169,6 +169,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
             EditText editText = new EditText(context);
             Slider slider = new Slider(context);
+            slider.setId(100 * position + i);
             Spinner spinner = new Spinner(context);
             SeekBar seekBar = new SeekBar(context);
             boolean isSpinner = false ;
@@ -296,6 +297,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             ToggleButton bypass = new ToggleButton(mainActivity);
             if (isBypass) {
 //                Log.d(TAG, "onBindViewHolder: turning on bypass switch");
+                int finalI5 = i;
+                bypass.setId(100 * position + i);
+                bypass.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        mainActivity.setMidiControl(v, position, finalI5, MIDIControl.Type.TOGGLE, MIDIControl.Scope.PLUGIN);
+                        return false;
+                    }
+                });
+
                 bypass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -898,6 +909,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     layoutRotary.addView(label);
 
                 }
+            }
+
+            if (isBypass && midiControl != null) {
+                midiControl.view = bypass;
+                midiControl.type = MIDIControl.Type.TOGGLE;
             }
         }
 
