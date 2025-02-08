@@ -11,6 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MIDIControl {
     private final String TAG = getClass().getName();
 
@@ -62,6 +65,26 @@ public class MIDIControl {
         jsonObject.put("control", control);
         jsonObject.put("pluginControl", pluginControl);
         jsonObject.put("scope", scope);
+
+        return jsonObject;
+    }
+
+    String getForDB () {
+        return String.format("%d;%d;%d;%d",
+                plugin, pluginControl, channel, control);
+
+    }
+
+    Map getMap () {
+        HashMap <String, Integer> jsonObject = new HashMap<String, Integer>();
+        jsonObject.put("view", -1);
+        jsonObject.put("plugin", plugin);
+        jsonObject.put("control", control);
+        jsonObject.put("type", type.ordinal());
+        jsonObject.put("channel", channel);
+        jsonObject.put("control", control);
+        jsonObject.put("pluginControl", pluginControl);
+        jsonObject.put("scope", scope.ordinal());
 
         return jsonObject;
     }

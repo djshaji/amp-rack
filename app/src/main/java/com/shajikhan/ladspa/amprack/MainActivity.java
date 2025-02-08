@@ -2431,6 +2431,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             jo.put("name", AudioEngine.getActivePluginName(i));
             jo.put("controls", vals);
+            jo.put("midi", mainActivity.midiControlsForDB(i));
             if (spinnerValue > -1)
                 jo.put("selectedModel", String.valueOf(spinnerValue));
             if (audioFile != null)
@@ -2621,8 +2622,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 name = jo.getString("name");
                 controls = jo.getString("controls");
 
-                if (jo.has("midi")) {
-                    JSONArray jsonArray = jo.getJSONArray("midi");
+                if (jo.has("midi") && ! jo.getString("midi").isEmpty()) {
+                    JSONArray jsonArray ;
+                    String _s = jo.getString("midi");
+                    if (! _s.contains(";"))
+                        jsonArray = jo.getJSONArray("midi");
+                    else {
+                        jsonArray = new JSONArray();
+                        String [] v = _s.split("\\|");
+                        for (String s : v) {
+                            if (s.isEmpty())
+                                continue;
+
+                            String[] vv = s.split(";");
+                            JSONObject _j = new JSONObject();
+                            _j.put("plugin", vv[0]);
+                            _j.put("pluginControl", vv[1]);
+                            _j.put("channel", vv[2]);
+                            _j.put("control", vv[3]);
+                            jsonArray.put(_j);
+                        }
+
+                        Log.i(TAG, "loadPreset: firestore midi controls for " + plugin + " " + jsonArray.toString());
+                    }
+
                     for (int d = 0 ; d < jsonArray.length(); d ++) {
                         JSONObject jControl = jsonArray.getJSONObject(d);
                         MIDIControl midiControl = new MIDIControl();
@@ -4559,5 +4582,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static void printMidi () {
         Log.i(TAG, "printMidi: " + mainActivity.midiControls);
+    }
+
+    String midiControlsForDB (int plugin) {
+        StringBuilder s = new StringBuilder();
+        for (MIDIControl midiControl: midiControls) {
+            if (midiControl.scope == MIDIControl.Scope.GLOBAL|| midiControl.plugin != plugin)
+                continue;
+
+            s.append(midiControl.getForDB()).append("|");
+        }
+
+        return s.toString();
     }
 }
