@@ -4454,6 +4454,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Log.d(TAG, "[midi controls]: " + midiControls.toString());
                 if (scope == MIDIControl.Scope.GLOBAL) {
                     saveGlobalMidi();
+                } else {
+                    saveActivePreset();
                 }
             }
         }) ;
@@ -4481,6 +4483,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (s == null) {
             Log.i(TAG, "loadGlobalMidi: no saved settings");
             return;
+        } else {
+            Log.i(TAG, "loadGlobalMidi: saved settings found " + s);
         }
 
         JSONArray jsonArray;
@@ -4491,6 +4495,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 MIDIControl midiControl = new MIDIControl();
                 midiControl.scope = MIDIControl.Scope.GLOBAL;
                 String idString = j.getString("view");
+                if (idString.isEmpty()) {
+                    Log.w(TAG, "loadGlobalMidi: invalid settings, skipping " + j);
+                    continue;
+                }
                 midiControl.view = findViewById(stringToId(idString));
                 midiControl.type = MIDIControl.Type.TOGGLE;
                 midiControl.scope = MIDIControl.Scope.GLOBAL;
@@ -4508,7 +4516,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     void saveGlobalMidi () {
         JSONArray jsonArray = new JSONArray();
         for (MIDIControl midiControl: midiControls) {
-            if (midiControl.scope == MIDIControl.Scope.PLUGIN)
+            if (midiControl.scope == MIDIControl.Scope.PLUGIN || midiControl.view == null)
                 continue;
 
             try {

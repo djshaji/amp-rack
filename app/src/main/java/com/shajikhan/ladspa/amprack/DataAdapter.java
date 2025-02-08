@@ -699,7 +699,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             MIDIControl midiControl = null;
             for (int r = 0 ; r < mainActivity.midiControls.size(); r ++) {
                 midiControl = mainActivity.midiControls.get(r) ;
-                if (midiControl.plugin == position && midiControl.pluginControl == i) {
+                if (midiControl.scope == MIDIControl.Scope.PLUGIN && midiControl.plugin == position && midiControl.pluginControl == i) {
                     Log.i(TAG, "onBindViewHolder: found midi control " + position + ' ' + i);
                     try {
                         Log.i(TAG, "onBindViewHolder: " + midiControl.get());
