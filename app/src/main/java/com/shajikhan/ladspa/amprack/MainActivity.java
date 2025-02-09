@@ -36,6 +36,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.le.ScanResult;
 import android.companion.AssociationInfo;
 import android.companion.AssociationRequest;
@@ -190,6 +192,7 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, TextureView.SurfaceTextureListener {
     MidiOutputPort midiOutputPort;
     MyReceiver midiReciever;
+    private CompanionDeviceManager deviceManager;
 
     class MyReceiver extends MidiReceiver {
         MainActivity mainActivity ;
@@ -267,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static FileOutputStream fileOutputStream = null ;
     static DataOutputStream dataOutputStream = null ;
     static MainActivity mainActivity;
+    BluetoothDevice deviceToPair  ;
     boolean videoRecording = false ;
     static boolean tabletMode = false ;
     Camera2 camera2 ;
@@ -2029,7 +2033,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (requestCode == SELECT_DEVICE_REQUEST_CODE) {
             Log.i(TAG, "onActivityResult: bluetooth device found");
             if (resultCode == Activity.RESULT_OK && data != null) {
-                BluetoothDevice deviceToPair  ;
                 ScanResult scanResult = data.getParcelableExtra(
                         CompanionDeviceManager.EXTRA_DEVICE
                 );
@@ -2084,7 +2087,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     };
 
                     registerReceiver(receiver, filter);
-                    deviceToPair.createBond();
+//                    deviceToPair.createBond();
+//                    deviceToPair.connectGatt(mainActivity, true, new BluetoothGattCallback() {
+//                        @Override
+//                        public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
+//                            super.onPhyUpdate(gatt, txPhy, rxPhy, status);
+//                        }
+//                    });
                     Log.i(TAG, "onActivityResult: bluetooth device connected");
                     // ... Continue interacting with the paired device.
                     midiManager.openBluetoothDevice(deviceToPair, new MidiManager.OnDeviceOpenedListener() {
@@ -4772,7 +4781,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     void scanBLE () {
-        CompanionDeviceManager deviceManager =
+        deviceManager =
                 (CompanionDeviceManager) getSystemService(
                         Context.COMPANION_DEVICE_SERVICE
                 );
