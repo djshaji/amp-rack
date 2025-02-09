@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.TextureView;
@@ -712,6 +713,15 @@ public class Rack extends Fragment {
         });
 
         mainActivity.midiDisplay = mainActivity.findViewById(R.id.midi_display);
+        MenuItem bt_menu = optionsMenu.getMenu().findItem(R.id.bt_menu);
+        bt_menu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                mainActivity.scanBLE();
+                return false;
+            }
+        });
+
         MenuItem exit_item = optionsMenu.getMenu().findItem(R.id.menu_exit);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

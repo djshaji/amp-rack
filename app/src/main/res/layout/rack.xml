@@ -65,6 +65,21 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_blur_circular_24"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:id="@+id/midi_icon"/>
+
+            <ImageView
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_bluetooth_connected_24"
+                android:id="@+id/bt_icon"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

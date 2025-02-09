@@ -38,6 +38,8 @@
         android:icon="@drawable/baseline_sync_24"
         android:title="Sync with PC / Smart Pedal"/>
 
+    <item android:id="@+id/bt_menu"
+        android:title="Connect Bluetooth MIDI"/>
     <item android:id="@+id/youtube"
         android:title="Play with YouTube Video"/>
     <item android:id="@+id/nam"

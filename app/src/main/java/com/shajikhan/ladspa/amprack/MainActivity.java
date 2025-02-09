@@ -1,5 +1,6 @@
 package com.shajikhan.ladspa.amprack;
 
+import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
 
 import androidx.annotation.ColorInt;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,9 +31,15 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothDevice;
+import android.companion.AssociationInfo;
+import android.companion.AssociationRequest;
+import android.companion.BluetoothDeviceFilter;
+import android.companion.CompanionDeviceManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -70,12 +78,14 @@ import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
 import android.media.midi.MidiOutputPort;
 import android.media.midi.MidiReceiver;
+import android.net.MacAddress;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.ParcelUuid;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -163,7 +173,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.UUID;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, TextureView.SurfaceTextureListener {
@@ -499,6 +512,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     midiOutputPort = device.openOutputPort(finalOutputPort);
                     Log.d(TAG, String.format ("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
                     midiOutputPort.connect(midiReciever);
+                    (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
 
                 }, null);
             }
@@ -1066,7 +1080,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void onPrepared(MediaPlayer mp) {
                 if (lastRecordedFileName.endsWith(".mp4")) {
                     int w = mp.getVideoWidth(), h = mp.getVideoHeight();
-                    surfaceLayout.setVisibility(View.VISIBLE);
+                    surfaceLayout.setVisibility(VISIBLE);
                     surface.getHolder().setFixedSize(w, h);
                     Log.d(TAG, "onPrepared: ends with mp4");
                 } else {
@@ -1124,7 +1138,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     Uri uri = Uri.parse(lastRecordedFileName);
                     try {
                         if (lastRecordedFileName.endsWith(".mp4")) {
-                            surfaceLayout.setVisibility(View.VISIBLE);
+                            surfaceLayout.setVisibility(VISIBLE);
                             Log.d(TAG, "onCheckedChanged: ends with mp4");
                         } else {
                             surfaceLayout.setVisibility(View.GONE);
@@ -1945,7 +1959,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
 
-        if (resultCode == RESULT_OK && requestCode > 9999) {
+        if (resultCode == RESULT_OK && requestCode > 9999 && requestCode < 100000) {
             Uri returnUri = data.getData();
             int parse = requestCode - 10000 ;
             int plugin = parse / 100 ;
@@ -2001,6 +2015,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
 
             return;
+        }
+
+        if (requestCode == SELECT_DEVICE_REQUEST_CODE) {
+            Log.i(TAG, "onActivityResult: bluetooth device found");
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                BluetoothDevice deviceToPair = data.getParcelableExtra(
+                        CompanionDeviceManager.EXTRA_DEVICE
+                );
+
+                if (deviceToPair != null) {
+                    deviceToPair.createBond();
+                    Log.i(TAG, "onActivityResult: bluetooth device connected");
+                    // ... Continue interacting with the paired device.
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -4070,12 +4101,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //        double inputLatency = AudioEngine.getLatency(true), outputLatency = AudioEngine.getLatency(false) ;
 
         mainActivity.handler.post(() -> {
-            srLayout.setVisibility(View.VISIBLE);
+            srLayout.setVisibility(VISIBLE);
             mainActivity.sampleRateLabel.setText(String.format("%dkHz", sampleRateDisplay));
             if (lowLatency)
                 mainActivity.latencyWarnLogo.setVisibility(View.GONE);
             else
-                mainActivity.latencyWarnLogo.setVisibility(View.VISIBLE);
+                mainActivity.latencyWarnLogo.setVisibility(VISIBLE);
 
             while (engineStartListeners.size() > 0) {
                 OnEngineStartListener onEngineStartListener = engineStartListeners.poll();
@@ -4636,5 +4667,74 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         return s.toString();
+    }
+
+    /* BLE MIDI Support */
+
+    private static final int SELECT_DEVICE_REQUEST_CODE = 100000;
+
+    Executor executor = new Executor() {
+        @Override
+        public void execute(Runnable runnable) {
+            runnable.run();
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    void scanBLE () {
+        CompanionDeviceManager deviceManager =
+                (CompanionDeviceManager) getSystemService(
+                        Context.COMPANION_DEVICE_SERVICE
+                );
+
+        // To skip filtering based on name and supported feature flags,
+        // do not include calls to setNamePattern() and addServiceUuid(),
+        // respectively. This example uses Bluetooth.
+        BluetoothDeviceFilter deviceFilter =
+                new BluetoothDeviceFilter.Builder()
+                        .setNamePattern(Pattern.compile("My device"))
+                        .addServiceUuid(
+                                new ParcelUuid(new UUID(0x123abcL, -1L)), null
+                        )
+                        .build();
+
+        // The argument provided in setSingleDevice() determines whether a single
+        // device name or a list of device names is presented to the user as
+        // pairing options.
+        AssociationRequest pairingRequest = new AssociationRequest.Builder()
+                .addDeviceFilter(deviceFilter)
+                .setSingleDevice(true)
+                .build();
+
+        // When the app tries to pair with the Bluetooth device, show the
+        // appropriate pairing request dialog to the user.
+        deviceManager.associate(pairingRequest, executor, new CompanionDeviceManager.Callback() {
+            // Called when a device is found. Launch the IntentSender so the user can
+            // select the device they want to pair with.
+            @Override
+            public void onDeviceFound(IntentSender chooserLauncher) {
+                try {
+                    startIntentSenderForResult(
+                            chooserLauncher, SELECT_DEVICE_REQUEST_CODE, null, 0, 0, 0
+                    );
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e("MainActivity", "Failed to send intent");
+                }
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+            @Override
+            public void onAssociationCreated(AssociationInfo associationInfo) {
+                // AssociationInfo object is created and get association id and the
+                // macAddress.
+                int associationId = associationInfo.getId();
+                MacAddress macAddress = associationInfo.getDeviceMacAddress();
+            }
+
+            @Override
+            public void onFailure(CharSequence errorMessage) {
+                // Handle the failure.
+            }
+        });
     }
 }
