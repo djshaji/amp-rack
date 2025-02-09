@@ -1,5 +1,8 @@
 package com.shajikhan.ladspa.amprack;
 
+import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
+import static android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE;
+import static android.bluetooth.BluetoothDevice.EXTRA_DEVICE;
 import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
 
@@ -32,13 +35,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanResult;
 import android.companion.AssociationInfo;
 import android.companion.AssociationRequest;
 import android.companion.BluetoothDeviceFilter;
 import android.companion.CompanionDeviceManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -358,6 +364,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int READ_STORAGE_REQUEST = 1;
     private static final int WRITE_STORAGE_REQUEST = 2;
     private static final int PERMISSION_REQUEST_CODE_CAMERA = 3;
+    private static final int PERMISSION_REQUEST_CODE_BLUETOOTH = 3;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501; // Any value
 
     // Firebase
@@ -2020,14 +2027,80 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (requestCode == SELECT_DEVICE_REQUEST_CODE) {
             Log.i(TAG, "onActivityResult: bluetooth device found");
             if (resultCode == Activity.RESULT_OK && data != null) {
-                BluetoothDevice deviceToPair = data.getParcelableExtra(
+                BluetoothDevice deviceToPair  ;
+                ScanResult scanResult = data.getParcelableExtra(
                         CompanionDeviceManager.EXTRA_DEVICE
                 );
 
+                deviceToPair = scanResult.getDevice();
+
                 if (deviceToPair != null) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        Log.i(TAG, "onActivityResult: no bluetooth permission");
+                        ActivityCompat.requestPermissions(
+                                this,
+                                new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                                PERMISSION_REQUEST_CODE_BLUETOOTH);
+                        Toast.makeText(mainActivity, "Missing Bluetooth permission", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    IntentFilter filter = new IntentFilter();
+                    filter.addAction(ACTION_BOND_STATE_CHANGED);
+
+                    BroadcastReceiver receiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            //do something based on the intent's action
+                            Toast.makeText(MainActivity.this, "Bluetooth device connected", Toast.LENGTH_SHORT).show();
+                            String state = intent.getStringExtra(EXTRA_BOND_STATE);
+                            String device = intent.getStringExtra(EXTRA_DEVICE);
+                            Log.i(TAG, "onReceive: bluetooth device connected? " + state + ": " + device);
+                        }
+                    };
+
+                    registerReceiver(receiver, filter);
                     deviceToPair.createBond();
                     Log.i(TAG, "onActivityResult: bluetooth device connected");
                     // ... Continue interacting with the paired device.
+                    midiManager.openBluetoothDevice(deviceToPair, new MidiManager.OnDeviceOpenedListener() {
+                        @Override
+                        public void onDeviceOpened(MidiDevice device) {
+                            midiDevice = device ;
+                            MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
+                            Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
+                            for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
+                                Log.d(TAG, String.format("[midi device] %s: %s",
+                                        midiDeviceInfo.getId(), midiDeviceInfo.toString()));
+                                Log.d(TAG, String.format("%d %d: %s", midiDeviceInfo.getInputPortCount(), midiDeviceInfo.getOutputPortCount(), midiDeviceInfo.getPorts().toString()));
+                                int outputPort = -1;
+                                for (MidiDeviceInfo.PortInfo portInfo : midiDeviceInfo.getPorts()) {
+                                    Log.d(TAG, String.format("[midi port] %s: %d [%d]", portInfo.getName(), portInfo.getPortNumber(), portInfo.getType()));
+                                    if (portInfo.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                                        outputPort = portInfo.getPortNumber();
+                                        Log.d(TAG, String.format("[midi port] output port: %d", outputPort));
+                                        break;
+                                    }
+                                }
+
+                                midiOutputPort = midiDevice.openOutputPort(outputPort);
+                                midiOutputPort.connect(midiReciever);
+                                mainActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((findViewById(R.id.bt_icon))).setVisibility(VISIBLE);
+                                    }
+                                });
+                            }
+                        }
+                    }, null);
                 }
             }
         } else {
@@ -4702,8 +4775,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // device name or a list of device names is presented to the user as
         // pairing options.
         AssociationRequest pairingRequest = new AssociationRequest.Builder()
-                .addDeviceFilter(deviceFilter)
-                .setSingleDevice(true)
+//                .addDeviceFilter(deviceFilter)
+//                .setSingleDevice(true)
                 .build();
 
         // When the app tries to pair with the Bluetooth device, show the
