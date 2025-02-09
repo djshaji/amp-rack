@@ -3,6 +3,7 @@ package com.shajikhan.ladspa.amprack;
 import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
 import static android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE;
 import static android.bluetooth.BluetoothDevice.EXTRA_DEVICE;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
 
@@ -92,6 +93,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -1091,7 +1093,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     surface.getHolder().setFixedSize(w, h);
                     Log.d(TAG, "onPrepared: ends with mp4");
                 } else {
-                    surfaceLayout.setVisibility(View.GONE);
+                    surfaceLayout.setVisibility(GONE);
                 }
             }
         });
@@ -1148,7 +1150,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             surfaceLayout.setVisibility(VISIBLE);
                             Log.d(TAG, "onCheckedChanged: ends with mp4");
                         } else {
-                            surfaceLayout.setVisibility(View.GONE);
+                            surfaceLayout.setVisibility(GONE);
                             Log.d(TAG, "onCheckedChanged: no end");
                         }
 
@@ -1171,7 +1173,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 } else {
                     mediaPlayer.pause();
                     toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
-                    surface.setVisibility(View.GONE);
+                    surface.setVisibility(GONE);
                 }
             }
         });
@@ -1182,7 +1184,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void onCompletion(MediaPlayer mediaPlayer) {
                 toggleButton.setButtonDrawable(R.drawable.ic_baseline_play_arrow_24);
                 seekBar.setProgress(0);
-                surface.setVisibility(View.GONE);
+                surface.setVisibility(GONE);
             }
         });
 
@@ -1620,8 +1622,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             notificationManager.cancelAll();
             running = false ;
             mainActivity.sampleRateLabel.setText(null);
-            srLayout.setVisibility(View.GONE);
-            mainActivity.latencyWarnLogo.setVisibility(View.GONE);
+            srLayout.setVisibility(GONE);
+            mainActivity.latencyWarnLogo.setVisibility(GONE);
         } else {
             if (! isHeadphonesPlugged() && headphoneWarning) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -2059,10 +2061,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         @Override
                         public void onReceive(Context context, Intent intent) {
                             //do something based on the intent's action
-                            Toast.makeText(MainActivity.this, "Bluetooth device connected", Toast.LENGTH_SHORT).show();
-                            String state = intent.getStringExtra(EXTRA_BOND_STATE);
-                            String device = intent.getStringExtra(EXTRA_DEVICE);
-                            Log.i(TAG, "onReceive: bluetooth device connected? " + state + ": " + device);
+                            if (intent.getIntExtra(EXTRA_BOND_STATE, -1) == 11) {
+                                mainActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((findViewById(R.id.bt_icon))).setVisibility(VISIBLE);
+                                    }
+                                });
+                                Toast.makeText(MainActivity.this, "Bluetooth device connected", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Bluetooth device disconnected", Toast.LENGTH_SHORT).show();
+                                mainActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((findViewById(R.id.bt_icon))).setVisibility(GONE);
+                                    }
+                                });
+                            }
+
+                            Log.i(TAG, "onReceive: bluetooth device connected? " + intent.getIntExtra(EXTRA_BOND_STATE, -1) + ": " + intent.getParcelableExtra(EXTRA_DEVICE));
                         }
                     };
 
@@ -2368,7 +2385,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             builder.setView(linearLayoutPluginDialog);
         else {
             mainActivity.rack.pane_2.addView(linearLayoutPluginDialog);
-            closeButton.setVisibility(View.GONE);
+            closeButton.setVisibility(GONE);
         }
 
         AlertDialog pluginDialog = builder.create();
@@ -4177,7 +4194,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             srLayout.setVisibility(VISIBLE);
             mainActivity.sampleRateLabel.setText(String.format("%dkHz", sampleRateDisplay));
             if (lowLatency)
-                mainActivity.latencyWarnLogo.setVisibility(View.GONE);
+                mainActivity.latencyWarnLogo.setVisibility(GONE);
             else
                 mainActivity.latencyWarnLogo.setVisibility(VISIBLE);
 
