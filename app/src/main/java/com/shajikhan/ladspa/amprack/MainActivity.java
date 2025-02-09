@@ -2033,11 +2033,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (requestCode == SELECT_DEVICE_REQUEST_CODE) {
             Log.i(TAG, "onActivityResult: bluetooth device found");
             if (resultCode == Activity.RESULT_OK && data != null) {
-                ScanResult scanResult = data.getParcelableExtra(
-                        CompanionDeviceManager.EXTRA_DEVICE
-                );
+                ScanResult scanResult = null ;
+                if (data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE) instanceof ScanResult) {
+                    scanResult = data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE);
+                    deviceToPair = scanResult.getDevice();
+                } else if (data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE) instanceof BluetoothDevice) {
+                    deviceToPair = data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE) ;
+                } else {
+                    Toast.makeText(context, "Unknown device type selected", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                deviceToPair = scanResult.getDevice();
 
                 if (deviceToPair != null) {
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
