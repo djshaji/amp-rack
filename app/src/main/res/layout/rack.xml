@@ -66,16 +66,22 @@
                 android:layout_height="wrap_content"/>
 
             <ImageView
+                android:scaleType="center"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/baseline_blur_circular_24"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
+                android:layout_margin="10dp"
                 android:id="@+id/midi_icon"/>
 
             <ImageView
+                android:scaleType="center"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
                 android:visibility="gone"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/baseline_bluetooth_connected_24"

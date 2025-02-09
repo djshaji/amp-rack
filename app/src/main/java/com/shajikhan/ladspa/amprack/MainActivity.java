@@ -35,6 +35,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -497,9 +498,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
 
+        midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
+        String mac = defaultSharedPreferences.getString("last_bt", null);
+        if (mac != null) {
+            deviceToPair = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac);
+            if (deviceToPair != null) {
+                midiManager.openBluetoothDevice(deviceToPair, new MidiManager.OnDeviceOpenedListener() {
+                    @Override
+                    public void onDeviceOpened(MidiDevice device) {
+
+                    }
+                }, null);
+            }
+        }
+
         midiControls = new ArrayList<>();
         midiReciever = new MyReceiver(this);
-        midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
         MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
         Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
         for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
@@ -525,13 +539,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     midiOutputPort = device.openOutputPort(finalOutputPort);
                     Log.d(TAG, String.format ("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
                     midiOutputPort.connect(midiReciever);
-                    (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
-
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (deviceToPair == null)
+                                (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
+                            else
+                                (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
+                        }
+                    });
                 }, null);
             }
 
         }
-
 
         Log.d(TAG, "onCreate: " + String.format("" +
                 "%d: %d", BuildConfig.VERSION_CODE, defaultSharedPreferences.getInt("currentVersion", 0)));
@@ -2102,6 +2122,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //                    });
                     Log.i(TAG, "onActivityResult: bluetooth device connected");
                     // ... Continue interacting with the paired device.
+                    defaultSharedPreferences.edit().putString("last_bt", deviceToPair.getAddress()).apply();
                     midiManager.openBluetoothDevice(deviceToPair, new MidiManager.OnDeviceOpenedListener() {
                         @Override
                         public void onDeviceOpened(MidiDevice device) {
@@ -2195,6 +2216,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //            initCamera.start();
             mainActivity.rack.toggleVideo.setChecked(false);
 //            mainActivity.rack.toggleVideo.setChecked(true);
+        }
+
+        if (PERMISSION_REQUEST_CODE_BLUETOOTH == requestCode &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            scanBLE();
         }
     }
 
