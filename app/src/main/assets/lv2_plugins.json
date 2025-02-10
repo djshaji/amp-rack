@@ -1444,5 +1444,11 @@
     "name": "Impulse Loader",
     "index": 0,
     "library": "libImpulseLoader.so"
+  },
+  "34800": {
+    "id": 8119,
+    "name": "Neural Amp Modeler NG",
+    "index": 0,
+    "library": "nam.so"
   }
 }

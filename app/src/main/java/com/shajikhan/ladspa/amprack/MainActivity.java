@@ -1,6 +1,7 @@
 package com.shajikhan.ladspa.amprack;
 
 import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
 import static android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE;
 import static android.bluetooth.BluetoothDevice.EXTRA_DEVICE;
 import static android.view.View.GONE;
@@ -418,6 +419,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         savedState = savedInstanceState;
         context = this;
         mainActivity = this;
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
+        String mac = defaultSharedPreferences.getString("last_bt", null);
+        if (mac != null) {
+            Log.i(TAG, "onCreate: trying to connect to previously connected bluetooth device " + mac);
+            deviceToPair = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac);
+            if (deviceToPair != null) {
+                Log.i(TAG, "onCreate: bluetooth device connected !");
+                midiManager.openBluetoothDevice(deviceToPair, new MidiManager.OnDeviceOpenedListener() {
+                    @Override
+                    public void onDeviceOpened(MidiDevice device) {
+                        Log.i(TAG, "onDeviceOpened: bluetooth device " + mac);
+                    }
+                }, null);
+            }
+        }
 
         ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
@@ -495,22 +513,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands.add (this, "cameraTest");
         hashCommands.add (this, "getLatency");
 
-        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         headphoneWarning = defaultSharedPreferences.getBoolean("headphone-warning", true);
-
-        midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
-        String mac = defaultSharedPreferences.getString("last_bt", null);
-        if (mac != null) {
-            deviceToPair = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac);
-            if (deviceToPair != null) {
-                midiManager.openBluetoothDevice(deviceToPair, new MidiManager.OnDeviceOpenedListener() {
-                    @Override
-                    public void onDeviceOpened(MidiDevice device) {
-
-                    }
-                }, null);
-            }
-        }
 
         midiControls = new ArrayList<>();
         midiReciever = new MyReceiver(this);
@@ -542,9 +545,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (deviceToPair == null)
+                            Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
+                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB)
                                 (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
-                            else
+                            else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH)
                                 (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
                         }
                     });
@@ -1083,6 +1087,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             proVersion = true ;
         }
 
+        register_bt_callback();
 //        proVersion = false;
 //        defaultSharedPreferences.edit().putBoolean("pro", false).apply();
     }
@@ -2083,36 +2088,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         return;
                     }
 
-                    IntentFilter filter = new IntentFilter();
-                    filter.addAction(ACTION_BOND_STATE_CHANGED);
-
-                    BroadcastReceiver receiver = new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
-                            //do something based on the intent's action
-                            if (intent.getIntExtra(EXTRA_BOND_STATE, -1) == 11) {
-                                mainActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ((findViewById(R.id.bt_icon))).setVisibility(VISIBLE);
-                                    }
-                                });
-                                Toast.makeText(MainActivity.this, "Bluetooth device connected", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(MainActivity.this, "Bluetooth device disconnected", Toast.LENGTH_SHORT).show();
-                                mainActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ((findViewById(R.id.bt_icon))).setVisibility(GONE);
-                                    }
-                                });
-                            }
-
-                            Log.i(TAG, "onReceive: bluetooth device connected? " + intent.getIntExtra(EXTRA_BOND_STATE, -1) + ": " + intent.getParcelableExtra(EXTRA_DEVICE));
-                        }
-                    };
-
-                    registerReceiver(receiver, filter);
 //                    deviceToPair.createBond();
 //                    deviceToPair.connectGatt(mainActivity, true, new BluetoothGattCallback() {
 //                        @Override
@@ -2220,7 +2195,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         if (PERMISSION_REQUEST_CODE_BLUETOOTH == requestCode &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            scanBLE();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                scanBLE();
+            }
         }
     }
 
@@ -4813,6 +4790,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     void scanBLE () {
+        if (Build.VERSION.SDK_INT < 33) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Bluetooth MIDI only supported on Android 13 and above.");
+            builder.setMessage("To use a Bluetooth MIDI Controller with Amp Rack, install MIDI BLE Connect from the Play store, connect to your BLE MIDI Controller and then restart Amp Rack");
+            builder.setPositiveButton("Install MIDI BLE Connect", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String url = "https://play.google.com/store/apps/details?id=com.mobileer.example.midibtlepairing";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+
+            builder.show();
+            return;
+        }
+
         deviceManager =
                 (CompanionDeviceManager) getSystemService(
                         Context.COMPANION_DEVICE_SERVICE
@@ -4867,5 +4862,40 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 // Handle the failure.
             }
         });
+    }
+
+    void register_bt_callback () {
+        Log.i(TAG, "register_bt_callback: init");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_BOND_STATE_CHANGED);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "[bt receiver] onReceive: " + intent.getIntExtra(EXTRA_BOND_STATE, -1));
+                //do something based on the intent's action
+                if (intent.getIntExtra(EXTRA_BOND_STATE, -1) == 11) {
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((findViewById(R.id.bt_icon))).setVisibility(VISIBLE);
+                        }
+                    });
+                    Toast.makeText(MainActivity.this, "Bluetooth device connected", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Bluetooth device disconnected", Toast.LENGTH_SHORT).show();
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((findViewById(R.id.bt_icon))).setVisibility(GONE);
+                        }
+                    });
+                }
+
+                Log.i(TAG, "onReceive: bluetooth device connected? " + intent.getIntExtra(EXTRA_BOND_STATE, -1) + ": " + intent.getParcelableExtra(EXTRA_DEVICE));
+            }
+        };
+
+        registerReceiver(receiver, filter);
     }
 }

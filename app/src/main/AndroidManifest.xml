@@ -5,7 +5,7 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-feature android:name="android.software.midi" android:required="true"/>
+    <uses-feature android:name="android.software.midi" android:required="false"/>
     <uses-feature android:name="android.software.companion_device_setup"/>
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
