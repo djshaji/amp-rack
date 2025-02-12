@@ -30,6 +30,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     ArrayList<Integer> pluginsAll = new ArrayList<>();
     ArrayList<String> pluginNamesAll = new ArrayList<>();
     MainActivity mainActivity ;
+    ArrayList <ViewHolder> holders = new ArrayList<>();
 
     @NonNull
     @Override
@@ -44,6 +45,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     public void onBindViewHolder(@NonNull PluginDialogAdapter.ViewHolder holder, int position) {
 //        Log.d(TAG, "bid view");
         LinearLayout layout = holder.linearLayout ;
+        holders.add(holder);
         String pluginName = pluginNames.get(position) ;
         if (mainActivity.isPluginLV2(pluginName))
             holder.pluginName.setText(/*"[LV2] " + */ pluginName);

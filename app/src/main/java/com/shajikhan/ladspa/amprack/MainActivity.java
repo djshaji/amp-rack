@@ -36,6 +36,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -496,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         hashCommands = new HashCommands(this);
         hashCommands.setMainActivity(this);
         hashCommands.add (this, "AudioRecordTest");
+        hashCommands.add (this, "pluginsCrashTest");
         hashCommands.add (this, "resetMIDI");
         hashCommands.add (this, "printMidi");
         hashCommands.add (this, "cameraPreview");
@@ -4897,5 +4899,38 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         };
 
         registerReceiver(receiver, filter);
+    }
+
+    public static void pluginsCrashTest () {
+        Handler handler = new Handler();
+        ProgressDialog dialog = ProgressDialog.show((Context) mainActivity, "Plugin Crash Test", "Testing ...", false, false, null);
+        dialog.setIndeterminate(false);
+
+        dialog.setMax(mainActivity.pluginDialogAdapter.pluginNames.size());
+        Runnable runnable = new Runnable() {
+            int p = 195;
+            Runnable r = this;
+
+            public void run() {
+                Log.i(TAG, "plugin crash test: " + String.format("plugin %s [%d of %d]", mainActivity.pluginDialogAdapter.pluginNames.get(p), p, mainActivity.pluginDialogAdapter.pluginNames.size()));
+                AudioEngine.clearActiveQueue();
+                mainActivity.dataAdapter.reset();
+
+                dialog.setProgress(p);
+                dialog.setMessage(p + "/" + totalPlugins + ": " + mainActivity.pluginDialogAdapter.pluginNames.get(p));
+                Log.i("plugin crash test", p + "/" + totalPlugins + ": " + mainActivity.pluginDialogAdapter.pluginNames.get(p));
+                mainActivity.addPluginByName(mainActivity.pluginDialogAdapter.pluginNames.get(p));
+                p++;
+
+                if (p >= totalPlugins) {
+                    alert("Test complete", "Successfully, probably, since we didn't crash ...");
+                    return;
+                }
+
+                handler.postDelayed(r, 500);
+            }
+        } ;
+
+        handler.postDelayed(runnable, 2000);
     }
 }

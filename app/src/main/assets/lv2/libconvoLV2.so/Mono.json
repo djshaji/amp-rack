@@ -1,36 +1,69 @@
 {
   "-1": {
-    "pluginName": "convoLV2"
+    "Plugin": true,
+    "http://lv2plug.in/ns/ext/buf-size#maxBlockLength": 8192,
+    "http://lv2plug.in/ns/ext/buf-size#minBlockLength": 64,
+    "http://lv2plug.in/ns/ext/options#supportedOption": "http://lv2plug.in/ns/ext/buf-size#maxBlockLength",
+    "http://lv2plug.in/ns/ext/patch#writable": "http://gareus.org/oss/lv2/convoLV2#impulse",
+    "extensionData": "http://lv2plug.in/ns/ext/state#interface",
+    "microVersion": 0,
+    "prefix": "http://gareus.org/oss/lv2/convoLV2#",
+    "minorVersion": 4,
+    "optionalFeature": "http://lv2plug.in/ns/ext/state#freePath",
+    "port": "_:n4068599cb29e49c68b8fd50728b36e9fb18",
+    "project": "http://gareus.org/oss/lv2/convoLV2",
+    "requiredFeature": "http://lv2plug.in/ns/ext/worker#schedule",
+    "http://usefulinc.com/ns/doap#license": "http://usefulinc.com/doap/licenses/gpl",
+    "http://usefulinc.com/ns/doap#name": "LV2 Convolution Mono=>Stereo",
+    "http://www.w3.org/2000/01/rdf-schema#comment": "Zero latency True Stereo Signal Convolution Processor; 2 signals, 4 chan IR (L -> L, R -> R, L -> R, R -> L)",
+    "pluginName": "x42 LV2 Convolution"
   },
   "0": {
     "InputPort": true,
-    "ControlPort": true,
-    "default": "0.0",
-    "index": 8,
-    "maximum": "24.0",
-    "minimum": "-24.0",
-    "name": "Output Gain",
-    "symbol": "gain"
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 0,
+    "name": "impulse",
+    "symbol": "CONTROL"
   },
   "1": {
-    "AudioPort": true,
     "OutputPort": true,
-    "index": 3,
-    "name": "Out",
-    "symbol": "out"
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 1,
+    "name": "NOTIFY",
+    "symbol": "NOTIFY"
   },
   "2": {
-    "AudioPort": true,
     "InputPort": true,
-    "index": 5,
-    "name": "In",
-    "symbol": "in"
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#db",
+    "default": "0.0",
+    "index": 2,
+    "maximum": "24.0",
+    "minimum": "-24.0",
+    "name": "Gain",
+    "symbol": "gain"
   },
   "3": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "designation": "http://lv2plug.in/ns/ext/port-groups#left",
+    "index": 3,
+    "name": "OutL",
+    "symbol": "out_1"
+  },
+  "4": {
+    "AudioPort": true,
     "InputPort": true,
-    "AtomPort": true,
-    "index": 0,
-    "name": "Impulse file",
-    "symbol": "control_port"
+    "index": 4,
+    "name": "In",
+    "symbol": "in"
   }
 }

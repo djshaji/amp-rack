@@ -575,7 +575,7 @@ void Plugin::check_notify () {
         return;
     }
 
-    if (ampAtom->has_file_path(filePort)) {
+    if (ampAtom != nullptr && filePort != nullptr && ampAtom->has_file_path(filePort)) {
         LOGD ("[atom port] reset file port");
         ampAtom->resetAtom(filePort, filePortSize);
         LOGD ("[atom port] reset notify port");
