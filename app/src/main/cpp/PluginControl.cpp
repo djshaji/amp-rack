@@ -9,7 +9,14 @@ LADSPA_Data PluginControl::control_rounding(LADSPA_Data _val)
 
 void PluginControl::setValue (float value) {
 //    val = value ;
+//    if (isLogarithmic) {
+//        float ex = expf(value) ;
+//        LOGD ("is log %f -> %f", value, ex);
+//        *def = ex;
+//    }
+//    else {
     *def = value;
+//    }
 }
 
 void PluginControl::setPresetValue (float value) {
@@ -208,6 +215,10 @@ void PluginControl::freeMemory () {
 
 PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j) {
     IN ;
+    if (j.contains("logarithmic") and j.find ("logarithmic").value ()) {
+        isLogarithmic = true;
+    }
+
     int _port = j .find("index").value();
     name = strdup (j.find("name").value().dump().c_str());
     name_allocated = true ;
@@ -244,13 +255,23 @@ PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j)
 
         min = lower_bound;
         max = upper_bound;
+
+//        if (isLogarithmic) {
+//            min = logf (lower_bound);
+//            max = logf (upper_bound);
+//        }
+
+
         def = (float *) malloc (sizeof (long int));
         std::string _def ;
         if (j.find("default")->is_string()) {
             LOGD("plugin default is string ..");
             *def = std::stof(std::string(j.find("default").value()));
-        } else
-            *def = j.find ("default").value();
+        } else {
+            *def = j.find("default").value();
+//            if (isLogarithmic)
+//                * def = logf (* def);
+        }
 
         /* Check the default */
         if (def) {

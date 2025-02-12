@@ -1,0 +1,113 @@
+{
+  "-1": {
+    "pluginName": "TamgAmp",
+    "index": 1
+  },
+  "0": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 1,
+    "name": "Out",
+    "symbol": "out"
+  },
+  "1": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 0,
+    "name": "In",
+    "symbol": "in"
+  },
+  "2": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1.0",
+    "designation": "http://lv2plug.in/ns/lv2core#enabled",
+    "index": 2,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "toggle": true,
+    "name": "Enable",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "BYPASS"
+  },
+  "3": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0",
+    "index": 3,
+    "maximum": "18",
+    "minimum": "0.0",
+    "name": "Amplifier Chain",
+    "symbol": "preamp"
+  },
+  "4": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0",
+    "index": 4,
+    "maximum": "29",
+    "minimum": "0.0",
+    "name": "Tone Stack",
+    "symbol": "TONE"
+  },
+  "5": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1",
+    "index": 5,
+    "maximum": "48",
+    "minimum": "-72",
+    "name": "Input Level Correction",
+    "symbol": "VOLUME"
+  },
+  "6": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "50",
+    "index": 6,
+    "maximum": "100",
+    "minimum": "1",
+    "name": "Gain",
+    "symbol": "VOLUME"
+  },
+  "7": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "50",
+    "index": 7,
+    "maximum": "100",
+    "minimum": "1",
+    "name": "Bass",
+    "symbol": "VOLUME"
+  },
+  "8": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "50",
+    "index": 8,
+    "maximum": "100",
+    "minimum": "1",
+    "name": "Middle",
+    "symbol": "VOLUME"
+  },
+  "9": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "50",
+    "index": 6,
+    "maximum": "100",
+    "minimum": "1",
+    "name": "Treble",
+    "symbol": "VOLUME"
+  },
+  "10": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "1",
+    "index": 10,
+    "maximum": "48",
+    "minimum": "-72",
+    "name": "Output Level Correction",
+    "symbol": "VOLUME"
+  }
+}

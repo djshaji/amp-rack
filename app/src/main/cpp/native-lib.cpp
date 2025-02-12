@@ -258,7 +258,7 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setPluginControl(JNIEnv *env, jcla
         return ;
     }
 
-    LOGD("[%s %d] setting control %s to %f", engine->activePlugins.at(plugin)->descriptor->Name, control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
+    LOGD("[%d] setting control %s to %f", control, engine->activePlugins.at(plugin)->pluginControls.at(control)->name, value);
     engine->activePlugins.at(plugin)->pluginControls.at(control)->setValue(value);
 }
 extern "C"
@@ -1160,4 +1160,16 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setAtomPort(JNIEnv *env, jclass cl
 
     env->ReleaseStringUTFChars(text, nativeString);
     OUT
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlIsLogarithmic(JNIEnv *env, jclass clazz,
+                                                                      jint plugin, jint control) {
+    // TODO: implement getControlIsLogarithmic()
+    if (engine == nullptr) {
+        OUT
+        return false;
+    }
+
+    return engine -> activePlugins.at(plugin)->pluginControls.at(control)->isLogarithmic;
 }

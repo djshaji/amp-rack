@@ -1450,5 +1450,11 @@
     "name": "Neural Amp Modeler NG",
     "index": 0,
     "library": "nam.so"
+  },
+  "34900": {
+    "id": 8120,
+    "name": "Tamg Amp",
+    "index": 3,
+    "library": "libtamgamp.so"
   }
 }

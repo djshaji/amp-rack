@@ -29,6 +29,7 @@ public class AudioEngine {
     public static native void setAtomPort (int plugin, int control, String text);
     public static native float [] getPluginControlValues (int plugin, int control) ;
     public static native float getPluginPresetValue (int plugin, int control) ;
+    public static native boolean getControlIsLogarithmic (int plugin, int control);
     public static native String getControlName (int plugin, int control) ;
     public static native int getControlType (int plugin, int control);
     public static native String getActivePluginName (int plugin);

@@ -74,5 +74,17 @@
     "index": 6,
     "name": "NOTIFY",
     "symbol": "NOTIFY"
+  },
+  "7": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0.0",
+    "index": 7,
+    "maximum": "1.0",
+    "minimum": "0.0",
+    "name": "Normalize",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "Normalize",
+    "toggle": true
   }
 }

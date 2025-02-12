@@ -48,6 +48,8 @@ public:
     LADSPA_Data max;
     LADSPA_Data default_value = 1; // 1 == no change in signal
 
+    bool isLogarithmic = false;
+
     /* value in the plugin */
     LADSPA_Data val;
     LADSPA_Data *def;
