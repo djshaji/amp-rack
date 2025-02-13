@@ -1,7 +1,6 @@
 package com.shajikhan.ladspa.amprack;
 
 import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
-import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
 import static android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE;
 import static android.bluetooth.BluetoothDevice.EXTRA_DEVICE;
 import static android.view.View.GONE;
@@ -15,7 +14,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -39,8 +37,6 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.le.ScanResult;
 import android.companion.AssociationInfo;
 import android.companion.AssociationRequest;
@@ -69,10 +65,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
-import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.AudioAttributes;
@@ -98,14 +91,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.ArraySet;
 import android.util.Log;
 import android.util.Size;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -138,23 +129,18 @@ import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ProductDetails;
-import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.QueryProductDetailsParams;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.common.collect.ImmutableList;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.JsonObject;
 import com.shajikhan.ladspa.amprack.databinding.ActivityMainBinding;
 
 import org.json.JSONArray;
@@ -172,7 +158,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -181,7 +166,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -277,6 +261,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     boolean videoRecording = false ;
     static boolean tabletMode = false ;
     Camera2 camera2 ;
+    Dialog midiAddDialog = null ;
+    ConstraintLayout midiLayout = null ;
+    EditText channelEdit = null, controlEdit = null ;
+
     public static String price = "$2";
     MediaPlayerDialog mediaPlayerDialog = null;
     private OrientationEventListener orientationEventListener;
@@ -4562,12 +4550,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         midiControl.pluginControl = control ;
         midiControl.view = view ;
 
-        View layout = getLayoutInflater().inflate(R.layout.midi_add_control, null);
-        ((EditText) layout.findViewById(R.id.channel)).setText(channel);
-        ((EditText) layout.findViewById(R.id.control)).setText(data1);
+        midiLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.midi_add_control, null);
+        ((EditText) midiLayout.findViewById(R.id.channel)).setText(channel);
+        ((EditText) midiLayout.findViewById(R.id.control)).setText(data1);
+
+        channelEdit = midiLayout.findViewById(R.id.channel) ;
+        controlEdit = midiLayout.findViewById(R.id.control) ;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(layout);
+        builder.setView(midiLayout);
         if (scope == MIDIControl.Scope.PLUGIN)
             builder.setTitle("Set MIDI Control for " + AudioEngine.getActivePluginName(plugin) + " " + AudioEngine.getControlName(plugin, control));
         else
@@ -4579,8 +4570,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void onClick(DialogInterface dialog, int which) {
                 if (finalOld != null)
                     midiControls.remove(finalOld);
-                String channel = ((EditText) layout.findViewById(R.id.channel)).getText().toString();
-                String program = ((EditText) layout.findViewById(R.id.control)).getText().toString();
+                String channel = ((EditText) midiLayout.findViewById(R.id.channel)).getText().toString();
+                String program = ((EditText) midiLayout.findViewById(R.id.control)).getText().toString();
 
                 int ch = -1 ;
                 int pr =  -1 ;
@@ -4598,6 +4589,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 midiControl.control = pr ;
                 midiControls.add(midiControl);
 
+                Toast.makeText(MainActivity.this, "MIDI control set successfully", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "[midi controls]: " + midiControls.toString());
                 if (scope == MIDIControl.Scope.GLOBAL) {
                     saveGlobalMidi();
@@ -4611,6 +4603,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         AlertDialog dialog = builder.create() ;
 
+        midiAddDialog = dialog ;
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Log.i(TAG, "onDismiss: midi add dialog set to null");
+                midiAddDialog = null ;
+            }
+        });
 
         dialog.show();
     }
@@ -4627,6 +4627,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void run() {
                 midiDisplay.setText(msg);
+                if (midiAddDialog != null) {
+                    ((EditText) midiAddDialog.findViewById(R.id.channel)).setText(String.valueOf(channel));
+                    ((EditText) midiAddDialog.findViewById(R.id.control)).setText(String.valueOf(data1));
+                }
             }
         });
 
