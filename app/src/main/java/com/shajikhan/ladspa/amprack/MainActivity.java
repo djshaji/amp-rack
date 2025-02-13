@@ -4628,8 +4628,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void run() {
                 midiDisplay.setText(msg);
                 if (midiAddDialog != null) {
-                    ((EditText) midiAddDialog.findViewById(R.id.channel)).setText(String.valueOf(channel));
-                    ((EditText) midiAddDialog.findViewById(R.id.control)).setText(String.valueOf(data1));
+                    EditText ed1 = ((EditText) midiAddDialog.findViewById(R.id.channel));
+                    if (ed1 != null)
+                        ed1.setText(String.valueOf(channel));
+                    EditText ed2 = ((EditText) midiAddDialog.findViewById(R.id.control));
+                    if (ed2 != null)
+                        ed2.setText(String.valueOf(data1));
                 }
             }
         });
