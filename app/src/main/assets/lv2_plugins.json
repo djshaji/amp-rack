@@ -1456,5 +1456,11 @@
     "name": "Tamg Amp",
     "index": 3,
     "library": "libtamgamp.so"
+  },
+  "35000": {
+    "id": 8121,
+    "name": "x42 - IR Convolver Mono => Stereo",
+    "index": 3,
+    "library": "libzconvo.so"
   }
 }

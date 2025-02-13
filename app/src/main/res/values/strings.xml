@@ -522,6 +522,7 @@
         <item>libImpulseLoader.so</item>
         <item>nam.so</item>
         <item>libtamgamp.so</item>
+        <item>libzconvo.so</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

@@ -1,0 +1,120 @@
+{
+  "-1": {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "-60.0",
+    "http://www.w3.org/2000/01/rdf-schema#label": "off",
+    "prefix": "http://gareus.org/oss/lv2/zeroconvolv#",
+    "pluginName": "x42 - IR Convolver Mono => Stereo"
+  },
+  "0": {
+    "InputPort": true,
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 0,
+    "name": "ir",
+    "symbol": "CONTROL"
+  },
+  "1": {
+    "OutputPort": true,
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 1,
+    "name": "NOTIFY",
+    "symbol": "NOTIFY"
+  },
+  "2": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": 1,
+    "index": 2,
+    "toggle": true,
+    "maximum": 1,
+    "minimum": 0,
+    "name": "Buffered/Latent Convolution",
+    "portProperty": "http://lv2plug.in/ns/ext/port-props#notAutomatic",
+    "symbol": "buffered"
+  },
+  "3": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#db",
+    "default": "-60.0",
+    "index": 3,
+    "maximum": "6.0",
+    "minimum": "-60.0",
+    "name": "Dry Signal Level",
+    "scalePoint": "_:n32dee52240b74d24991f02800ede1f55b17",
+    "symbol": "dry"
+  },
+  "4": {
+    "InputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#db",
+    "default": "0.0",
+    "index": 4,
+    "maximum": "6.0",
+    "minimum": "-60.0",
+    "name": "Wet Signal Level",
+    "scalePoint": "_:n32dee52240b74d24991f02800ede1f55b19",
+    "symbol": "wet"
+  },
+  "5": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": 1,
+    "designation": "http://lv2plug.in/ns/lv2core#enabled",
+    "index": 5,
+    "maximum": 1,
+    "minimum": 0,
+    "toggle": true,
+    "name": "Enable",
+    "portProperty": "http://lv2plug.in/ns/lv2core#toggled",
+    "symbol": "enable"
+  },
+  "6": {
+    "OutputPort": true,
+    "AtomPort": true,
+    "bufferType": "Sequence",
+    "supports": "Message",
+    "minimumSize": 8192,
+    "designation": "control",
+    "index": 6,
+    "name": "NOTIFY",
+    "symbol": "NOTIFY"
+  },
+  "7": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 7,
+    "name": "Out",
+    "symbol": "out"
+  },
+  "8": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 8,
+    "name": "In",
+    "symbol": "in"
+  },
+  "9": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "designation": "http://lv2plug.in/ns/ext/port-groups#right",
+    "index": 9,
+    "name": "OutR",
+    "symbol": "out_2"
+  },
+  "10": {
+    "AudioPort": true,
+    "InputPort": true,
+    "designation": "http://lv2plug.in/ns/ext/port-groups#right",
+    "index": 10,
+    "name": "InR",
+    "symbol": "in_2"
+  }
+}
