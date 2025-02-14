@@ -652,6 +652,15 @@
                         android:textAlignment="center"
                         android:layout_gravity="center"
                         android:gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:id="@+id/midi_name"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:textSize="9dp"
+                        android:fontFamily="@font/start"/>
                 </LinearLayout>
                 <Space
                     android:visibility="gone"

@@ -199,28 +199,50 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         public void onSend(byte[] data, int offset,
                            int count, long timestamp) throws IOException {
+            ShortMessage shortMessage = new ShortMessage(data);
             byte command = (byte) (data[offset] & MidiConstants.STATUS_COMMAND_MASK);
             int channel = (byte) (data[offset] & MidiConstants.STATUS_CHANNEL_MASK);
             Log.i(TAG, "onSend: recieved message on channel " + channel);
             switch (command) {
                 case MidiConstants.STATUS_NOTE_OFF:
 //                    noteOff(channel, data[1], data[2]);
+                    mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
+                    Log.d(TAG, String.format ("[midi note off] %s [%d] %d: %d",
+                            shortMessage.getCommand(), shortMessage.getChannel(),
+                            // data 1
+                            data [offset+1] & 0xFF,
+                            //data 2
+                            data [offset+2] & 0xFF));
                     break;
                 case MidiConstants.STATUS_NOTE_ON:
+                    mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
+                    Log.d(TAG, String.format ("[midi note on] %s [%d] %d: %d",
+                            shortMessage.getCommand(), shortMessage.getChannel(),
+                            // data 1
+                            data [offset+1] & 0xFF,
+                            //data 2
+                            data [offset+2] & 0xFF));
 //                    noteOn(channel, data[1], data[2]);
                     break;
                 case MidiConstants.STATUS_PITCH_BEND:
                     int bend = (data[2] << 7) + data[1];
 //                    pitchBend(channel, bend);
+                    mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
+                    Log.d(TAG, String.format ("[midi pitch bend] %s [%d] %d: %d",
+                            shortMessage.getCommand(), shortMessage.getChannel(),
+                            // data 1
+                            data [offset+1] & 0xFF,
+                            //data 2
+                            data [offset+2] & 0xFF));
                     break;
                 case MidiConstants.STATUS_PROGRAM_CHANGE:
 //                    mProgram = data[1];
 //                    mFreeVoices.clear();
                     Log.d(TAG, "onSend: program change");
+                    mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
                     logMidiMessage(data, offset, count);
                     break;
                 case MidiConstants.STATUS_CONTROL_CHANGE:
-                    ShortMessage shortMessage = new ShortMessage(data);
                     Log.d(TAG, "onSend: control change " );
                     Log.d(TAG, String.format ("[midi control change] %s [%d] %d: %d",
                             shortMessage.getCommand(), shortMessage.getChannel(),
@@ -536,7 +558,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         @Override
                         public void run() {
                             Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
-                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB)
+                            ((TextView) findViewById(R.id.midi_name)).setText(midiDeviceInfo.getProperties().getString("name", ""));
+                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL)
                                 (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
                             else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH)
                                 (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
