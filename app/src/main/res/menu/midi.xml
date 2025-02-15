@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_select_midi"
+        android:title="Select MIDI Device"/>
+    <item android:id="@+id/bt_menu"
+        android:title="Connect Bluetooth MIDI"/>
+    <item android:id="@+id/clear_midi"
+        android:title="Clear MIDI Controls"/>
+
+</menu>

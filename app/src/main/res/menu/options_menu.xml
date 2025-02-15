@@ -40,6 +40,8 @@
 
     <item android:id="@+id/bt_menu"
         android:title="Connect Bluetooth MIDI"/>
+    <item android:id="@+id/menu_select_midi"
+        android:title="Select MIDI Device"/>
     <item android:id="@+id/youtube"
         android:title="Play with YouTube Video"/>
     <item android:id="@+id/nam"

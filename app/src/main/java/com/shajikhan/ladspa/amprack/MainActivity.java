@@ -158,6 +158,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -559,10 +560,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         public void run() {
                             Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
                             ((TextView) findViewById(R.id.midi_name)).setText(midiDeviceInfo.getProperties().getString("name", ""));
-                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL)
+                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL) {
                                 (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
-                            else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH)
+                                (findViewById(R.id.midi_icon)).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        selectMidiDevice();
+                                    }
+                                });
+                            }
+                            else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH) {
                                 (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
+                                (findViewById(R.id.bt_icon)).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        selectMidiDevice();
+                                    }
+                                });
+                            }
                         }
                     });
                 }, null);
@@ -4963,5 +4978,110 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         } ;
 
         handler.postDelayed(runnable, 2000);
+    }
+
+    void selectMidiDevice () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.midi_select, null);
+        builder.setView(linearLayout);
+
+        MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
+        Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
+
+        ArrayList <String> devices = new ArrayList<>();
+        for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
+            Log.d(TAG, String.format("[midi device] %s: %s",
+                    midiDeviceInfo.getId(), midiDeviceInfo.toString()));
+            devices.add(midiDeviceInfo.getProperties().getString("name", null));
+            Log.d(TAG, String.format("%d %d: %s", midiDeviceInfo.getInputPortCount(), midiDeviceInfo.getOutputPortCount(), midiDeviceInfo.getPorts().toString()));
+        }
+
+        Spinner dSpinner = linearLayout.findViewById(R.id.select_midi_device);
+        Spinner pSpinner = linearLayout.findViewById(R.id.select_midi_port);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
+                android.R.layout.simple_spinner_item, devices);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dSpinner.setAdapter(adapter);
+
+        dSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<String> ports = new ArrayList<>();
+                for (MidiDeviceInfo.PortInfo portInfo : midiDeviceInfos[position].getPorts()) {
+                    Log.d(TAG, String.format ("[midi port] %s: %d [%d]", portInfo.getName(), portInfo.getPortNumber(), portInfo.getType()));
+                    if (portInfo.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                        int outputPort = portInfo.getPortNumber();
+                        Log.d(TAG, String.format ("[midi port] output port: %d", outputPort));
+                        ports.add(String.valueOf(outputPort));
+                        break ;
+                    }
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,
+                        android.R.layout.simple_spinner_item, ports);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                pSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        builder.setTitle("Select MIDI Device / Port");
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int btn) {
+                if (midiDevice != null) {
+                    try {
+                        midiDevice.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "onClick: ", e);
+                    }
+                }
+
+                int which = dSpinner.getSelectedItemPosition();
+
+                Log.i(TAG, "onClick: select device " + which );
+
+                midiManager.openDevice(midiDeviceInfos [which], device -> {
+                    midiDevice = device ;
+                    Log.d(TAG, String.format ("[midi] device opened: opening port..."));
+
+                    midiOutputPort = device.openOutputPort(pSpinner.getSelectedItemPosition());
+                    Log.d(TAG, String.format ("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
+                    midiOutputPort.connect(midiReciever);
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
+                            ((TextView) findViewById(R.id.midi_name)).setText(midiDeviceInfos [which].getProperties().getString("name", ""));
+                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL) {
+                                (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
+                                (findViewById(R.id.midi_icon)).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        selectMidiDevice();
+                                    }
+                                });
+                            }
+                            else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH) {
+                                (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
+                                (findViewById(R.id.bt_icon)).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        selectMidiDevice();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }, null);
+
+            }
+        });
+
+        builder.show();
     }
 }

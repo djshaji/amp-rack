@@ -722,6 +722,15 @@ public class Rack extends Fragment {
             }
         });
 
+        MenuItem midiSelect = optionsMenu.getMenu().findItem(R.id.menu_select_midi);
+        midiSelect.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                mainActivity.selectMidiDevice();
+                return false;
+            }
+        });
+
         MenuItem exit_item = optionsMenu.getMenu().findItem(R.id.menu_exit);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

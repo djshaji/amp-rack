@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Amp Rack</string>
     <string name="app_version">Version 5 Raptor</string>
-    <string name="build_id">715</string>
+    <string name="build_id">717</string>
     <string name="variant">This version is extra cool</string>
     <string name="quote">Powered by the Rock and Roll in your soul</string>
     <string name="copyright">All trademarks are copyrights of their respective owners and do not represent affiliation or endorsement.</string>
