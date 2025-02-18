@@ -9,8 +9,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import io.grpc.okhttp.internal.Util;
+import okhttp3.OkHttpClient;
 
 public class Skinner {
     String TAG = getClass().getSimpleName();

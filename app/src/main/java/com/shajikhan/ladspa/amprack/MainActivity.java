@@ -574,7 +574,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 (findViewById(R.id.bt_icon)).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        selectMidiDevice();
+                                        detachBLE();
                                     }
                                 });
                             }
@@ -5030,7 +5030,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         builder.setTitle("Select MIDI Device / Port");
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int btn) {
                 if (midiDevice != null) {
@@ -5071,7 +5071,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 (findViewById(R.id.bt_icon)).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        selectMidiDevice();
+                                        detachBLE();
                                     }
                                 });
                             }
@@ -5079,6 +5079,35 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     });
                 }, null);
 
+                Toast.makeText(MainActivity.this, "MIDI Device connected", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.show();
+    }
+    
+    void detachBLE () {
+        Log.i(TAG, "detachBLE: ");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Disconnect and forget Bluetooth device?");
+        builder.setPositiveButton("Disconnect and forget", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                defaultSharedPreferences.edit ().remove("last_bt").commit();
+                if (deviceToPair != null) {
+                    deviceToPair = null ;
+                    if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH) {
+                        try {
+                            midiDevice.close();
+                            ((TextView) findViewById(R.id.midi_name)).setText("");
+                        } catch (IOException e) {
+                            Log.e(TAG, "onClick: ", e);
+                        }
+                    }
+                }
+
+                Toast.makeText(mainActivity, "Bluetooth device disconnected", Toast.LENGTH_SHORT).show();
+                (findViewById(R.id.bt_icon)).setVisibility(GONE);
             }
         });
 
