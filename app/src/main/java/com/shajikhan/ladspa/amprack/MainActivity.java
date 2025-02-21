@@ -890,7 +890,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (! lowMemoryMode) {
             color = getDominantColor(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
         } else {
-            color = getResources().getColor(androidx.navigation.ui.R.color.design_default_color_primary);
+            color = getResources().getColor(primaryColor);
         }
 //        getWindow().setStatusBarColor(color);
         color = adjustAlpha(color, .5f);

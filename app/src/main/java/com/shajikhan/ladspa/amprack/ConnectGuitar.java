@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-import io.grpc.internal.JsonParser;
-
 public class ConnectGuitar extends AppCompatActivity {
     Context context ;
     static String TAG = "Connect Guitar";
