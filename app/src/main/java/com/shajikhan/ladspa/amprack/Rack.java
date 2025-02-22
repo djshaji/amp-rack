@@ -835,6 +835,13 @@ public class Rack extends Fragment {
             }
         });
 
+        ((ImageView) mainActivity.findViewById(R.id.midi_bt_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.scanBLE();
+            }
+        });
+
         ImageView logoBtn = view.findViewById(R.id.logo_img) ;
         /*
         logoBtn.setOnKeyListener(new View.OnKeyListener() {

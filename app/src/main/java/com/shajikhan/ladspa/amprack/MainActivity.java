@@ -574,7 +574,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
 
-            if (found == false && midiDevice == null && midiDeviceInfo != null) {
+//            if (!found && midiDevice == null && midiDeviceInfo != null) {
+            if (midiLastConnectedDevice == null) {
                 midiConnect(midiDeviceInfo, outputPort);
             }
 
@@ -2150,6 +2151,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                     @Override
                                     public void run() {
                                         ((findViewById(R.id.bt_icon))).setVisibility(VISIBLE);
+                                        ((TextView)mainActivity.findViewById(R.id.midi_name)).setText(midiLastConnectedDevice);
                                     }
                                 });
                             }
