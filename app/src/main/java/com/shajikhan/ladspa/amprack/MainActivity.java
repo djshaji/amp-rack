@@ -2125,6 +2125,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         @Override
                         public void onDeviceOpened(MidiDevice device) {
                             midiDevice = device ;
+                            midiLastConnectedDevice = device.getInfo().getProperties().getString("name", null);
                             MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
                             Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
                             for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
@@ -2143,6 +2144,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                                 midiOutputPort = midiDevice.openOutputPort(outputPort);
                                 midiOutputPort.connect(midiReciever);
+                                defaultSharedPreferences.edit().putString("last_midi", midiLastConnectedDevice).commit();
+                                defaultSharedPreferences.edit().putInt("last_midi_port", outputPort).commit();
                                 mainActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -5169,7 +5172,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         if (midiDevice == null)
                             return;
 
-                        Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
+                        Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType() + " >" + midiDeviceInfo.getProperties().getString("name", ""));
                         ((TextView) findViewById(R.id.midi_name)).setText(midiDeviceInfo.getProperties().getString("name", ""));
                         if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL) {
                             (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
