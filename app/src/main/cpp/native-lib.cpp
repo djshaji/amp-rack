@@ -335,6 +335,12 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_getControlName(JNIEnv *env, jclass
         LOGF ("engine is NULL");
         return NULL;
     }
+
+    if (engine->activePlugins.size() == 0) {
+        LOGD ("%d plugin info requested but no plugins in queue", plugin);
+        return NULL;
+    }
+
     if (engine->activePlugins.at(plugin)->type == SharedLibrary::LADSPA)
         return env ->NewStringUTF(engine->activePlugins.at(plugin)->descriptor->PortNames [control]);
     else if (engine->activePlugins.at(plugin)->type == SharedLibrary::LV2) {
