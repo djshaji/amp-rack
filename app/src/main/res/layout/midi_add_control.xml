@@ -19,6 +19,15 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/comfortaa"
             android:text="Trigger MIDI control to auto fill values"/>
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textOn="Trigger"
+            android:textOff="Off"
+            android:id="@+id/midi_trigger"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_margin="20dp"

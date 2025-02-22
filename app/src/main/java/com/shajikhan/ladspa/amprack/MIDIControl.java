@@ -91,9 +91,14 @@ public class MIDIControl {
 
     @Override
     public String toString() {
+        String vid = "null";
+        if (view != null) {
+            vid = String.valueOf(view.getResources().getIdentifier(getID(), "id", mainActivity.getPackageName()));
+        }
+
         return "MIDIControl{" +
                 "TAG='" + TAG + '\'' +
-                ", view=" + view.getResources().getIdentifier(getID(), "id", mainActivity.getPackageName()) +
+                ", view=" + vid +
                 ", plugin=" + plugin +
                 ", control=" + control +
                 ", pluginControl=" + pluginControl +

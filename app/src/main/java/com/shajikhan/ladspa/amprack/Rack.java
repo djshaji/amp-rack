@@ -819,6 +819,22 @@ public class Rack extends Fragment {
             }
         });
 
+        TextView midi_map = mainActivity.findViewById(R.id.midi_port_mappings);
+        midi_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.midiMappingsDialog();;
+            }
+        });
+
+        TextView midiDevice = mainActivity.findViewById(R.id.midi_port_button);
+        midiDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.selectMidiDevice();
+            }
+        });
+
         ImageView logoBtn = view.findViewById(R.id.logo_img) ;
         /*
         logoBtn.setOnKeyListener(new View.OnKeyListener() {

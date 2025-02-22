@@ -677,6 +677,35 @@
                     android:background="@color/fui_transparent"
                     android:text="Hide"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/midi_port_button"
+                    android:fontFamily="@font/start"
+                    android:textSize="12dp"
+                    android:padding="5dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/fui_transparent"
+                    android:text="MIDI Port"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:fontFamily="@font/start"
+                    android:id="@+id/midi_port_mappings"
+                    android:textSize="12dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:background="@color/fui_transparent"
+                    android:layout_height="wrap_content"
+                    android:text="Mappings"/>
+            </LinearLayout>
+
             <TextView
                 android:layout_margin="0dp"
                 android:padding="0dp"

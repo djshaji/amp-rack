@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             for (int i = 0; i < count; i++) {
                 text += String.format("0x%02X, ", data[offset + i]);
             }
-            Log.i(TAG, text);
+//            Log.i(TAG, text);
         }
 
         public void onSend(byte[] data, int offset,
@@ -203,59 +203,59 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             ShortMessage shortMessage = new ShortMessage(data);
             byte command = (byte) (data[offset] & MidiConstants.STATUS_COMMAND_MASK);
             int channel = (byte) (data[offset] & MidiConstants.STATUS_CHANNEL_MASK);
-            Log.i(TAG, "onSend: recieved message on channel " + channel);
+//            Log.i(TAG, "onSend: recieved message on channel " + channel);
             switch (command) {
                 case MidiConstants.STATUS_NOTE_OFF:
 //                    noteOff(channel, data[1], data[2]);
                     mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
-                    Log.d(TAG, String.format ("[midi note off] %s [%d] %d: %d",
-                            shortMessage.getCommand(), shortMessage.getChannel(),
-                            // data 1
-                            data [offset+1] & 0xFF,
-                            //data 2
-                            data [offset+2] & 0xFF));
+//                    Log.d(TAG, String.format ("[midi note off] %s [%d] %d: %d",
+//                            shortMessage.getCommand(), shortMessage.getChannel(),
+//                            // data 1
+//                            data [offset+1] & 0xFF,
+//                            //data 2
+//                            data [offset+2] & 0xFF));
                     break;
                 case MidiConstants.STATUS_NOTE_ON:
                     mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
-                    Log.d(TAG, String.format ("[midi note on] %s [%d] %d: %d",
-                            shortMessage.getCommand(), shortMessage.getChannel(),
-                            // data 1
-                            data [offset+1] & 0xFF,
-                            //data 2
-                            data [offset+2] & 0xFF));
+//                    Log.d(TAG, String.format ("[midi note on] %s [%d] %d: %d",
+//                            shortMessage.getCommand(), shortMessage.getChannel(),
+//                            // data 1
+//                            data [offset+1] & 0xFF,
+//                            //data 2
+//                            data [offset+2] & 0xFF));
 //                    noteOn(channel, data[1], data[2]);
                     break;
                 case MidiConstants.STATUS_PITCH_BEND:
                     int bend = (data[2] << 7) + data[1];
 //                    pitchBend(channel, bend);
                     mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
-                    Log.d(TAG, String.format ("[midi pitch bend] %s [%d] %d: %d",
-                            shortMessage.getCommand(), shortMessage.getChannel(),
-                            // data 1
-                            data [offset+1] & 0xFF,
-                            //data 2
-                            data [offset+2] & 0xFF));
+//                    Log.d(TAG, String.format ("[midi pitch bend] %s [%d] %d: %d",
+//                            shortMessage.getCommand(), shortMessage.getChannel(),
+//                            // data 1
+//                            data [offset+1] & 0xFF,
+//                            //data 2
+//                            data [offset+2] & 0xFF));
                     break;
                 case MidiConstants.STATUS_PROGRAM_CHANGE:
 //                    mProgram = data[1];
 //                    mFreeVoices.clear();
-                    Log.d(TAG, "onSend: program change");
+//                    Log.d(TAG, "onSend: program change");
                     mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
                     logMidiMessage(data, offset, count);
                     break;
                 case MidiConstants.STATUS_CONTROL_CHANGE:
-                    Log.d(TAG, "onSend: control change " );
-                    Log.d(TAG, String.format ("[midi control change] %s [%d] %d: %d",
-                            shortMessage.getCommand(), shortMessage.getChannel(),
-                            // data 1
-                            data [offset+1] & 0xFF,
-                            //data 2
-                            data [offset+2] & 0xFF));
+//                    Log.d(TAG, "onSend: control change " );
+//                    Log.d(TAG, String.format ("[midi control change] %s [%d] %d: %d",
+//                            shortMessage.getCommand(), shortMessage.getChannel(),
+//                            // data 1
+//                            data [offset+1] & 0xFF,
+//                            //data 2
+//                            data [offset+2] & 0xFF));
                     mainActivity.processMIDIMessage(channel, data [offset+1] & 0xFF, data [offset+2] & 0xFF);
                     logMidiMessage(data, offset, count);
                     break;
                 default:
-                    Log.i(TAG, "onSend: command not understood, instructions unclear ...!");
+//                    Log.i(TAG, "onSend: command not understood, instructions unclear ...!");
                     logMidiMessage(data, offset, count);
                     break;
             }
@@ -277,6 +277,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     ArrayList <MIDIControl> midiControls ;
     MidiManager midiManager ;
     MidiDevice midiDevice ;
+    String midiLastConnectedDevice = null ;
+    int midiLastConnectedPort = -1 ;
     static FileOutputStream fileOutputStream = null ;
     static DataOutputStream dataOutputStream = null ;
     static MainActivity mainActivity;
@@ -285,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     static boolean tabletMode = false ;
     Camera2 camera2 ;
     Dialog midiAddDialog = null ;
+    ToggleButton triggerMidiButton = null ;
     ConstraintLayout midiLayout = null ;
     EditText channelEdit = null, controlEdit = null ;
 
@@ -432,6 +435,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         context = this;
         mainActivity = this;
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        midiLastConnectedDevice = defaultSharedPreferences.getString("last_midi", null);
+        midiLastConnectedPort = defaultSharedPreferences.getInt("last_midi_port", -1);
 
         midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
         String mac = defaultSharedPreferences.getString("last_bt", null);
@@ -531,7 +536,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         midiControls = new ArrayList<>();
         midiReciever = new MyReceiver(this);
         MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
+        Log.i(TAG, "onCreate: [midi] last connected device " + midiLastConnectedDevice);
         Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
+        boolean found = false ;
         for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
             Log.d(TAG, String.format ("[midi device] %s: %s",
                     midiDeviceInfo.getId(), midiDeviceInfo.toString()));
@@ -542,45 +549,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (portInfo.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
                     outputPort = portInfo.getPortNumber() ;
                     Log.d(TAG, String.format ("[midi port] output port: %d", outputPort));
-                    break ;
+                    if (midiLastConnectedDevice == null && midiLastConnectedPort == -1) {
+//                        found = true;
+                        break;
+                    }
+
+                    String mName = midiDeviceInfo.getProperties().getString("name", null) ;
+                    Log.i(TAG, "onCreate: [midi] compare: " + String.format("%s -> %s [%b]", midiLastConnectedDevice, mName, midiLastConnectedDevice.equals(mName)));
+                    if (midiLastConnectedDevice != null && midiLastConnectedDevice.equals(mName)) {
+                        if (midiLastConnectedPort == -1)
+                            midiLastConnectedPort = 0;
+
+                        outputPort = midiLastConnectedPort ;
+                        found = true;
+                        Log.i(TAG, "onCreate: [midi] found last connected device " + midiLastConnectedDevice);
+                        midiConnect(midiDeviceInfo, outputPort);
+                        break ;
+                    }
+                }
+
+                if (found) {
+                    Log.i(TAG, "onCreate: [midi] found: break");
+                    break;
                 }
             }
 
-            if (midiDevice == null) {
-                int finalOutputPort = outputPort;
-                Log.d(TAG, String.format ("[midi] opening device: %s", midiDeviceInfo.toString()));
-                midiManager.openDevice(midiDeviceInfo, device -> {
-                    midiDevice = device ;
-                    Log.d(TAG, String.format ("[midi] device opened: opening port..."));
-                    midiOutputPort = device.openOutputPort(finalOutputPort);
-                    Log.d(TAG, String.format ("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
-                    midiOutputPort.connect(midiReciever);
-                    mainActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
-                            ((TextView) findViewById(R.id.midi_name)).setText(midiDeviceInfo.getProperties().getString("name", ""));
-                            if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL) {
-                                (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
-                                (findViewById(R.id.midi_icon)).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        selectMidiDevice();
-                                    }
-                                });
-                            }
-                            else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH) {
-                                (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
-                                (findViewById(R.id.bt_icon)).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        detachBLE();
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }, null);
+            if (found == false && midiDevice == null && midiDeviceInfo != null) {
+                midiConnect(midiDeviceInfo, outputPort);
             }
 
         }
@@ -4400,6 +4395,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public static int setSpinnerFromDir (Spinner spinner, String dir, String toSelect) {
+        if (spinner == null) {
+            return 0 ;
+        }
+
         int selection = 0 ;
         ArrayList <String> models = new ArrayList<>();
         DocumentFile root = DocumentFile.fromFile(new File(dir));
@@ -4592,6 +4591,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ((EditText) midiLayout.findViewById(R.id.channel)).setText(channel);
         ((EditText) midiLayout.findViewById(R.id.control)).setText(data1);
 
+        triggerMidiButton = midiLayout.findViewById(R.id.midi_trigger);
+
         channelEdit = midiLayout.findViewById(R.id.channel) ;
         controlEdit = midiLayout.findViewById(R.id.control) ;
 
@@ -4654,8 +4655,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     void processMIDIMessage (int channel, int data1, int data2) {
-        Log.d(TAG, "processMIDIMessage: process message " +
-                String.format("%d %d %d", channel, data1, data2));
+//        Log.d(TAG, "processMIDIMessage: process message " +
+//                String.format("%d %d %d", channel, data1, data2));
         String msg = String.format(
                 "%d %d %d",
                 channel, data1, data2
@@ -4665,7 +4666,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void run() {
                 midiDisplay.setText(msg);
-                if (midiAddDialog != null) {
+
+                if (midiAddDialog != null && triggerMidiButton != null && triggerMidiButton.isChecked()) {
                     EditText ed1 = ((EditText) midiAddDialog.findViewById(R.id.channel));
                     if (ed1 != null)
                         ed1.setText(String.valueOf(channel));
@@ -4677,7 +4679,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         for (MIDIControl midiControl: midiControls) {
-            Log.i(TAG, "processMIDIMessage: probe midiControl " + midiControl);
+//            Log.i(TAG, "processMIDIMessage: probe midiControl " + midiControl);
 
             if (midiControl.channel == channel && data1 == midiControl.control) {
                 midiControl.process(data2);
@@ -4926,7 +4928,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ((findViewById(R.id.bt_icon))).setVisibility(VISIBLE);
+                            View icon = mainActivity.findViewById(R.id.bt_icon) ;
+                            if (icon != null)
+                                icon.setVisibility(VISIBLE);
                         }
                     });
                     Toast.makeText(MainActivity.this, "Bluetooth device connected", Toast.LENGTH_SHORT).show();
@@ -5003,6 +5007,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dSpinner.setAdapter(adapter);
 
+        int x = 0;
+        if (midiLastConnectedDevice != null) {
+            for (String d : devices) {
+                if (d.equals(midiLastConnectedDevice)) {
+                    dSpinner.setSelection(x);
+                    break;
+                }
+
+                x++;
+            }
+        }
+
         dSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -5021,6 +5037,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         android.R.layout.simple_spinner_item, ports);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 pSpinner.setAdapter(adapter);
+
+                if (midiLastConnectedPort != -1) {
+                    int x = 0 ;
+                    for (MidiDeviceInfo.PortInfo p: midiDeviceInfos [position].getPorts()) {
+                        if (midiLastConnectedPort == p.getPortNumber()) {
+                            pSpinner.setSelection(x);
+                            break;
+                        }
+
+                        x++;
+                    }
+                }
+
             }
 
             @Override
@@ -5044,12 +5073,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 int which = dSpinner.getSelectedItemPosition();
 
                 Log.i(TAG, "onClick: select device " + which );
+                if (which == -1) {
+                    Toast.makeText(MainActivity.this, "No device selected", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 midiManager.openDevice(midiDeviceInfos [which], device -> {
                     midiDevice = device ;
                     Log.d(TAG, String.format ("[midi] device opened: opening port..."));
 
                     midiOutputPort = device.openOutputPort(pSpinner.getSelectedItemPosition());
+                    midiLastConnectedDevice = midiDeviceInfos [which].getProperties().getString("name", null);
+                    midiLastConnectedPort = pSpinner.getSelectedItemPosition() ;
+                    Log.i(TAG, "onClick: [midi] save midi device " + midiLastConnectedDevice + " " + midiLastConnectedPort);
+                    defaultSharedPreferences.edit().putString("last_midi", midiLastConnectedDevice).commit();
+                    defaultSharedPreferences.edit().putInt("last_midi_port", midiLastConnectedPort).commit();
+
                     Log.d(TAG, String.format ("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
                     midiOutputPort.connect(midiReciever);
                     mainActivity.runOnUiThread(new Runnable() {
@@ -5113,4 +5152,117 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         builder.show();
     }
+
+    void midiConnect (MidiDeviceInfo midiDeviceInfo, int outputPort) {
+        int finalOutputPort = outputPort;
+        Log.d(TAG, String.format ("[midi] opening device: %s", midiDeviceInfo.toString()));
+        try {
+            midiManager.openDevice(midiDeviceInfo, device -> {
+                midiDevice = device;
+                Log.d(TAG, String.format("[midi] device opened: opening port..."));
+                midiOutputPort = device.openOutputPort(finalOutputPort);
+                Log.d(TAG, String.format("[midi] port opened: port %d", midiOutputPort.getPortNumber()));
+                midiOutputPort.connect(midiReciever);
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (midiDevice == null)
+                            return;
+
+                        Log.i(TAG, "[bt] run: connected device " + midiDevice.getInfo().getType());
+                        ((TextView) findViewById(R.id.midi_name)).setText(midiDeviceInfo.getProperties().getString("name", ""));
+                        if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_USB || midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_VIRTUAL) {
+                            (findViewById(R.id.midi_icon)).setVisibility(VISIBLE);
+                            (findViewById(R.id.midi_icon)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    selectMidiDevice();
+                                }
+                            });
+                        } else if (midiDevice.getInfo().getType() == MidiDeviceInfo.TYPE_BLUETOOTH) {
+                            (findViewById(R.id.bt_icon)).setVisibility(VISIBLE);
+                            (findViewById(R.id.bt_icon)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    detachBLE();
+                                }
+                            });
+                        }
+                    }
+                });
+            }, null);
+        } catch (Exception e) {
+            Log.e(TAG, "onCreate: ", e);
+//                    Toast.makeText(mainActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void midiMappingsDialog () {
+        ArrayList <Integer> selectedItems = new ArrayList();  // Where we track the selected items
+        ArrayList <String> mappings = new ArrayList<>();
+        for (MIDIControl control: midiControls) {
+            if (control.plugin != -1) {
+                mappings.add(String.format(
+                        "[%d %d] %s %s",
+                        control.channel, control.control,
+                        AudioEngine.getActivePluginName(control.plugin),
+                        AudioEngine.getControlName(control.plugin, control.pluginControl)
+                ));
+            } else {
+                mappings.add(String.format(
+                        "[%d %d] %s",
+                        control.channel, control.control,
+                        control.getID()
+                ));
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title.
+        builder.setTitle("MIDI Mappings")
+                // Specify the list array, the items to be selected by default (null for
+                // none), and the listener through which to receive callbacks when items
+                // are selected.
+                .setMultiChoiceItems((CharSequence[]) mappings.toArray(new CharSequence [mappings.size()]), null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checks the item, add it to the selected
+                                    // items.
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which)) {
+                                    // If the item is already in the array, remove it.
+                                    selectedItems.remove(which);
+                                }
+                            }
+                        })
+                // Set the action buttons
+                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User taps OK, so save the selectedItems results
+                        // somewhere or return them to the component that opens the
+                        // dialog.
+                        for (int i: selectedItems) {
+                            Log.i(TAG, "onClick: [midi control] remove " + midiControls.get(i));
+                            midiControls.remove(i);
+                            Toast.makeText(MainActivity.this, "Selected mappings removed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNeutralButton("Close", null)
+                .setNegativeButton("Remove all", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        midiControls.clear();
+                        Toast.makeText(MainActivity.this, "MIDI Mappings cleared", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        builder.show();
+    }
 }
+
+
