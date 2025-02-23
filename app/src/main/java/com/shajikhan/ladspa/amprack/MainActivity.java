@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     TextView midiDisplay ;
     SwitchMaterial onOff = null ;
     AudioEncoder audioEncoder ;
-    String exportFormat ;
+    String exportFormat = "1";
     TextView patchName, patchNo, patchDesc ;
     ToggleButton triggerRecordToggle ;
     int deviceWidth;
@@ -554,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         break;
                     }
 
-                    String mName = midiDeviceInfo.getProperties().getString("name", null) ;
+                    String mName = midiDeviceInfo.getProperties().getString("name", midiDeviceInfo.toString()) ;
                     Log.i(TAG, "onCreate: [midi] compare: " + String.format("%s -> %s [%b]", midiLastConnectedDevice, mName, midiLastConnectedDevice.equals(mName)));
                     if (midiLastConnectedDevice != null && midiLastConnectedDevice.equals(mName)) {
                         if (midiLastConnectedPort == -1)
@@ -2126,7 +2126,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         @Override
                         public void onDeviceOpened(MidiDevice device) {
                             midiDevice = device ;
-                            midiLastConnectedDevice = device.getInfo().getProperties().getString("name", null);
+                            midiLastConnectedDevice = device.getInfo().getProperties().getString("name", device.getInfo().toString());
                             MidiDeviceInfo[] midiDeviceInfos = midiManager.getDevices();
                             Log.d(TAG, String.format ("[midi] found devices: %d", midiDeviceInfos.length));
                             for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
@@ -5001,7 +5001,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         for (MidiDeviceInfo midiDeviceInfo: midiDeviceInfos) {
             Log.d(TAG, String.format("[midi device] %s: %s",
                     midiDeviceInfo.getId(), midiDeviceInfo.toString()));
-            devices.add(midiDeviceInfo.getProperties().getString("name", null));
+            devices.add(midiDeviceInfo.getProperties().getString("name", midiDeviceInfo.toString()));
             Log.d(TAG, String.format("%d %d: %s", midiDeviceInfo.getInputPortCount(), midiDeviceInfo.getOutputPortCount(), midiDeviceInfo.getPorts().toString()));
         }
 
@@ -5088,7 +5088,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     Log.d(TAG, String.format ("[midi] device opened: opening port..."));
 
                     midiOutputPort = device.openOutputPort(pSpinner.getSelectedItemPosition());
-                    midiLastConnectedDevice = midiDeviceInfos [which].getProperties().getString("name", null);
+                    midiLastConnectedDevice = midiDeviceInfos [which].getProperties().getString("name", midiDeviceInfos [which].toString());
                     midiLastConnectedPort = pSpinner.getSelectedItemPosition() ;
                     Log.i(TAG, "onClick: [midi] save midi device " + midiLastConnectedDevice + " " + midiLastConnectedPort);
                     defaultSharedPreferences.edit().putString("last_midi", midiLastConnectedDevice).commit();
