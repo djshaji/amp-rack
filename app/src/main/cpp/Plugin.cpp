@@ -224,9 +224,9 @@ void Plugin::load () {
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("InputPort") != jsonPort.end()) {
             LOGD ("configuring atom control port");
             if (filePort == nullptr) {
-                int portSize = (int) jsonPort.find("minimumSize").value() + sizeof(LV2_Atom_Sequence) + 1 ;
+                int portSize = (int) jsonPort.find("minimumSize").value() + sizeof(LV2_Atom_Sequence) + sizeof (LV2_Atom) + 1 ;
                 filePort = (LV2_Atom_Sequence *) malloc(portSize);
-                filePort->atom.size = jsonPort.find("minimumSize").value() ;
+                filePort->atom.size = portSize - 1;
                 LOGD ("file port allocated ok");
                 /*
                  *  Implement map properly here
@@ -252,8 +252,8 @@ void Plugin::load () {
             LOGD("[%s %d/%d]: found possible atom port", lv2Descriptor->URI, port, pluginIndex);
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("OutputPort") != jsonPort.end()) {
             if (notifyPort == nullptr) {
-                notifyPort = (LV2_Atom_Sequence *) malloc((int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + 1);
-                notifyPort->atom.size = (int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + 1 ;
+                notifyPort = (LV2_Atom_Sequence *) malloc((int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + sizeof (LV2_Atom) + 1);
+                notifyPort->atom.size = (int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + sizeof (LV2_Atom)  ;
 //                notifyPort->atom.type =
 
             }
@@ -442,8 +442,13 @@ void Plugin::lv2ConnectWorkers () {
 }
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle handle, uint32_t size, const void * data) {
+    IN
     Plugin * plugin = reinterpret_cast<Plugin *>(handle);
-    return plugin->lv2WorkerInterface->work (plugin->handle, plugin->lv2WorkerInterface->work_response, plugin->handle, size, data);
+    LV2_Worker_Status status = plugin->lv2WorkerInterface->work (plugin->handle, plugin->lv2WorkerInterface->work_response, plugin->handle, size, data);
+
+//    plugin->check_notify();
+    OUT
+    return status ;
 }
 
 uint32_t lv2_options_set (LV2_Handle instance, const LV2_Options_Option* options) {

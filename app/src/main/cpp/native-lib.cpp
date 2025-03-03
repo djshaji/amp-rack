@@ -1156,8 +1156,10 @@ Java_com_shajikhan_ladspa_amprack_AudioEngine_setAtomPort(JNIEnv *env, jclass cl
         return;
     }
 
-    if (engine->activePlugins.size() <= plugin)
+    if (engine->activePlugins.size() <= plugin) {
+        LOGW ("plugin %d is more or equal than active plugin size %d", plugin, engine->activePlugins.size());
         return;
+    }
 
     const char *nativeString = env->GetStringUTFChars(text, 0);
     engine -> mFullDuplexPass.bypass = true ;
