@@ -632,6 +632,7 @@ float FileWriter::blocks_to_seconds(int blocks){
 }
 
 void FileWriter::setFileType (int fType) {
+    LOGD ("set export file type: %d", fType);
     fileType = static_cast<FileType>(fType);
 }
 
