@@ -60,7 +60,7 @@
     "name": "Neural_Model",
     "symbol": "CONTROL"
   },
-  "22": {
+  "23": {
     "InputPort": true,
     "AtomPort": true,
     "bufferType": "Sequence",
@@ -71,7 +71,7 @@
     "name": "Neural_Model1",
     "symbol": "CONTROL"
   },
-  "23": {
+  "24": {
     "InputPort": true,
     "AtomPort": true,
     "bufferType": "Sequence",
@@ -82,7 +82,7 @@
     "name": "irfile",
     "symbol": "CONTROL"
   },
-  "24": {
+  "25": {
     "InputPort": true,
     "AtomPort": true,
     "bufferType": "Sequence",
@@ -267,5 +267,16 @@
     "name": "Phase Correction",
     "toggle": true,
     "symbol": "phase"
+  },
+  "22": {
+    "OutputPort": true,
+    "ControlPort": true,
+    "http://lv2plug.in/ns/extensions/units#unit": "http://lv2plug.in/ns/extensions/units#frame",
+    "index": 22,
+    "maximum": 171,
+    "minimum": 0,
+    "name": "Latency_ms",
+    "portProperty": "integer",
+    "symbol": "latency"
   }
 }
