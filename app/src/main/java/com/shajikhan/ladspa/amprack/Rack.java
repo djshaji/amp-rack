@@ -488,7 +488,7 @@ public class Rack extends Fragment {
                     }
 
                     Log.d("Plugin: ", finalI * 100 + finalPlugin + ": " + name + "=>" + uniqueID);
-                    mainActivity.pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name, uniqueID);
+                    mainActivity.pluginDialogAdapter.addItem(finalI * 100 + finalPlugin, name, uniqueID, name);
                 }
             }
         } else if (mainActivity.pluginDialogAdapter.plugins.size() == 0 && mainActivity.lazyLoad) {
@@ -509,7 +509,8 @@ public class Rack extends Fragment {
                         // do something with jsonObject here
                         String name = object.getString("name");
                         String id = object.getString("id");
-                        mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id));
+                        String desc = object.getString("desc");
+                        mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id), desc);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -527,13 +528,14 @@ public class Rack extends Fragment {
                         JSONObject object = plugins.getJSONObject(key);
                         // do something with jsonObject here
                         String name = object.getString("name");
+                        String desc = object.getString("desc");
                         String id = object.getString("id");
                         if (blacklist.has(id) && ! enableBlacklisted) {
                             Log.d(TAG, String.format ("[ladspa] blacklisted: %s", key));
                             continue;
                         }
 //                        Log.d(TAG, "[LV2 plugin]: " + name + ": " + id);
-                        mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id));
+                        mainActivity.pluginDialogAdapter.addItem(Integer.parseInt(key), name, Integer.parseInt(id), desc);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

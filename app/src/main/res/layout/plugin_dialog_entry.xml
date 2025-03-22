@@ -1,32 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_margin="10dp"
     android:background="@drawable/rounded_corners_transparent"
     android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/plugin_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fontFamily="@font/comfortaa"
-        android:text="Plugin"/>
+        android:orientation="horizontal">
 
-    <ToggleButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:textOn=""
-        android:layout_marginTop="7dp"
-        android:textOff=""/>
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="30dp"
-        android:paddingRight="8dp"
-        android:layout_height="30dp"
-        android:textSize="1dp"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:drawableRight="@drawable/ic_baseline_add_box_24"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/comfortaa"
+            android:text="Plugin"/>
+
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:textOn=""
+            android:layout_marginTop="7dp"
+            android:textOff=""/>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="30dp"
+            android:paddingRight="8dp"
+            android:layout_height="30dp"
+            android:textSize="1dp"
+            android:background="@android:color/transparent"
+            android:text=""
+            android:drawableRight="@drawable/ic_baseline_add_box_24"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/plugin_desc"
+        android:fontFamily="@font/comfortaa"
+        android:text="Effect Plugin"/>
 </LinearLayout>

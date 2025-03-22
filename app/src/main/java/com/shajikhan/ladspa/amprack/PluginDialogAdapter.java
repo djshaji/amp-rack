@@ -29,6 +29,8 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     ArrayList<String> pluginNames = new ArrayList<>();
     ArrayList<Integer> pluginsAll = new ArrayList<>();
     ArrayList<String> pluginNamesAll = new ArrayList<>();
+    ArrayList<String> descriptions = new ArrayList<>();
+    ArrayList<String> descriptionsAll = new ArrayList<>();
     MainActivity mainActivity ;
     ArrayList <ViewHolder> holders = new ArrayList<>();
 
@@ -47,6 +49,8 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         LinearLayout layout = holder.linearLayout ;
         holders.add(holder);
         String pluginName = pluginNames.get(position) ;
+        String desc = descriptions.get(position);
+        holder.description.setText(desc);
         if (mainActivity.isPluginLV2(pluginName))
             holder.pluginName.setText(/*"[LV2] " + */ pluginName);
         else
@@ -99,7 +103,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
             layout.post(new Runnable() {
                 @Override
                 public void run() {
-                    mainActivity.skinEngine.card (layout);
+                    mainActivity.skinEngine.card ((View) layout.getParent());
 
                 }
             });
@@ -115,13 +119,15 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         public LinearLayout linearLayout ;
         public TextView pluginName ;
         public MaterialButton button ;
+        public TextView description ;
         public ToggleButton toggleButton ;
          public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            linearLayout = (LinearLayout) itemView ;
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.plugin_layout) ;
             pluginName = (TextView) linearLayout.getChildAt(0);
             button = (MaterialButton) linearLayout.getChildAt(2);
             toggleButton = (ToggleButton) linearLayout.getChildAt(1);
+            description = itemView.findViewById(R.id.plugin_desc);
         }
     }
 
@@ -137,7 +143,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         notifyItemInserted(plugins.size());
     }
 
-    void addItem(int pluginID, String pluginName, int uniqueID) {
+    void addItem(int pluginID, String pluginName, int uniqueID, String desc) {
         if (pluginNamesAll.contains(pluginName))
             return;
 
@@ -145,6 +151,8 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         pluginNames.add(pluginName);
         pluginsAll.add(pluginID);
         pluginsIDs.add(uniqueID);
+        descriptionsAll.add(desc);
+        descriptions.add(desc);
         pluginNamesAll.add(pluginName);
         notifyItemInserted(plugins.size());
     }
@@ -162,11 +170,13 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     void search (String searchTerm) {
         plugins.clear();
         pluginNames.clear();
+        descriptions.clear();
 
         if (searchTerm.length() == 0) {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
                 plugins.add(pluginsAll.get(i));
                 pluginNames.add(pluginNamesAll.get(i));
+                descriptions.add(descriptionsAll.get(i));
             }
         } else {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
@@ -175,6 +185,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
                 if (s.toLowerCase().contains(searchTerm)) {
                     plugins.add(pluginsAll.get(i));
                     pluginNames.add(pluginNamesAll.get(i));
+                    descriptions.add(descriptionsAll.get(i));
                 }
             }
         }
@@ -185,18 +196,21 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     void showOnlyFavorites (boolean show) {
         plugins.clear();
         pluginNames.clear();
+        descriptions.clear();
 
         Log.d(TAG, "showOnlyFavorites: " + mainActivity.getHeartedPlugins());
 
         if (show == false) {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
                 plugins.add(pluginsAll.get(i));
+                descriptions.add(descriptionsAll.get(i));
                 pluginNames.add(pluginNamesAll.get(i));
             }
         } else {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
                 if (mainActivity.isPluginHearted(pluginNamesAll.get (i))) {
                     plugins.add(pluginsAll.get(i));
+                    descriptions.add(descriptionsAll.get(i));
                     pluginNames.add(pluginNamesAll.get(i));
                 }
             }
@@ -209,6 +223,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
     void filterByCategory (String category) {
         plugins.clear();
         pluginNames.clear();
+        descriptions.clear();
 
         JSONArray IDs = null;
         try {
@@ -224,6 +239,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         if (IDs.length() == 0) {
             for (int i = 0; i < pluginNamesAll.size(); i++) {
                 plugins.add(pluginsAll.get(i));
+                descriptions.add(descriptionsAll.get(i));
                 pluginNames.add(pluginNamesAll.get(i));
             }
         } else {
@@ -234,6 +250,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
                         int UID  = IDs.getInt(j);
                         if (UID == pluginID) {
                             plugins.add(pluginsAll.get(i));
+                            descriptions.add(descriptionsAll.get(i));
                             pluginNames.add(pluginNamesAll.get(i));
                         }
                     } catch (JSONException e) {
@@ -253,6 +270,7 @@ public class PluginDialogAdapter extends RecyclerView.Adapter <PluginDialogAdapt
         notifyItemRangeRemoved(0, plugins.size());
         plugins.clear();
         pluginNames.clear();
+        descriptions.clear();
     }
 
     @Override
