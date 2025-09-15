@@ -733,6 +733,20 @@ public class Rack extends Fragment {
             }
         });
 
+        MenuItem downloadPC = optionsMenu.getMenu().findItem(R.id.download_pc);
+        downloadPC.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+                String url = "https://amprack.in";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+                return false;
+            }
+        });
+
+        downloadPC.setVisible(MainActivity.proVersion);
+
         MenuItem exit_item = optionsMenu.getMenu().findItem(R.id.menu_exit);
         exit_item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

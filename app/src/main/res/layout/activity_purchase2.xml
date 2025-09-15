@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     tools:context=".Purchase">
 
@@ -44,6 +45,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_width="match_parent"
                 android:layout_marginTop="4dp"
+                android:id="@+id/purchase_layout"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <ImageView
@@ -62,21 +64,82 @@
                     android:fontFamily="@font/comfortaa"
                     android:text="Purchase Pro"/>
                 <LinearLayout
+                    android:layout_margin="10dp"
+                    android:id="@+id/purchase_lt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
                     <TextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pro Version"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/gruppo"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        android:id="@+id/pro_t"/>
+                    <Button
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-                        android:text=""
+                        android:text="Pro"
                         android:textAlignment="center"
                         android:id="@+id/price"
                         android:textColor="@color/white"
                         android:fontFamily="@font/comfortaa"
                         android:layout_gravity="center"
-                        android:textSize="30dp"
+                        android:breakStrategy="simple"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pro Version"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/gruppo"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        android:id="@+id/premium_t"/>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                        android:visibility="gone"
+                        android:text="Premium"
+                        android:textAlignment="center"
+                        android:id="@+id/premium"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/comfortaa"
+                        android:breakStrategy="simple"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pro Version"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/gruppo"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        android:id="@+id/ultra_t"/>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                        android:text="Amp Rack PC Bundle with Complete Source Code"
+                        android:visibility="gone"
+                        android:textAlignment="center"
+                        android:id="@+id/ultra"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/comfortaa"
+                        android:layout_gravity="center"
                         android:textStyle="bold"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -86,6 +149,7 @@
                         android:textStyle="italic"
                         android:textSize="24dp"
                         android:id="@+id/old_price"
+                        android:breakStrategy="simple"
                         android:visibility="gone"
                         android:layout_marginLeft="20dp"
                         android:fontFamily="@font/gruppo"
@@ -117,7 +181,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Tap to Buy Now"
+                    android:text="Tap above to Buy Now"
                     android:id="@+id/buy"
                     android:textColor="@color/white"
                     android:textStyle="bold"

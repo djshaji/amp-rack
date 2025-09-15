@@ -48,6 +48,9 @@
         android:title="NAM Model Downloader"/>
     <item android:id="@+id/clear_midi"
         android:title="Clear MIDI Controls"/>
+    <item android:id="@+id/download_pc"
+        android:visible="false"
+        android:title="Download for PC"/>
     <item android:id="@+id/menu_exit"
         android:title="Exit"
         android:icon="@drawable/ic_baseline_close_24"/>

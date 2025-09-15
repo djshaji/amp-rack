@@ -431,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
          */
 
+
         savedState = savedInstanceState;
         context = this;
         mainActivity = this;
@@ -735,13 +736,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         return;
                     }
 
-                    Purchase purchase = list.get(0);
-                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !forceAds) {
-                        Log.d(TAG, "onQueryPurchasesResponse: purchased");
-                        proVersion = true;
-                        defaultSharedPreferences.edit().putBoolean("pro", true).apply();
-                    } else {
-                        Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
+                    Log.d(TAG, "onQueryPurchasesResponse: purchase list" + list);
+                    for (Purchase purchase : list) {
+                        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !forceAds) {
+                            Log.d(TAG, "onQueryPurchasesResponse: purchased");
+                            proVersion = true;
+                            defaultSharedPreferences.edit().putBoolean("pro", true).apply();
+                        } else {
+                            Log.d(TAG, "onQueryPurchasesResponse: not PRO version");
                         /*
                         MobileAds.initialize(context, new OnInitializationCompleteListener() {
                             @Override
@@ -760,7 +762,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         });
                          */
 
-                        defaultSharedPreferences.edit().putBoolean("pro", false).apply();
+                            defaultSharedPreferences.edit().putBoolean("pro", false).apply();
+                        }
                     }
                 }
             };

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -38,6 +39,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Purchase extends AppCompatActivity {
@@ -45,6 +47,9 @@ public class Purchase extends AppCompatActivity {
     String TAG = getClass().getSimpleName();
     private PurchasesUpdatedListener purchasesUpdatedListener ;
     private BillingClient billingClient;
+    HashMap<String, Button> productDetailsMap = new HashMap<>();
+    HashMap<String, TextView> detailText = new HashMap<>();
+
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener ;
 //    String PRODUCT_ID = "amprack_pro";
     public static String PRODUCT_ID = "amp_rack_pro";
@@ -55,6 +60,18 @@ public class Purchase extends AppCompatActivity {
         setContentView(R.layout.activity_purchase2);
         TextView priceView = findViewById(R.id.price);
         context = this;
+
+        Button premium = findViewById(R.id.premium);
+        Button ultra = findViewById(R.id.ultra);
+        Button price = findViewById(R.id.price);
+
+        productDetailsMap.put("Amp Rack Pro (Amp Rack Guitar Effects Pedal)", price);
+        productDetailsMap.put("Amp Rack PC Bundle (Amp Rack Guitar Effects Pedal)", premium);
+        productDetailsMap.put("Amp Rack PC Bundle with Source Code (Amp Rack Guitar Effects Pedal)", ultra);
+
+        detailText.put("Amp Rack Pro (Amp Rack Guitar Effects Pedal)", findViewById(R.id.pro_t));
+        detailText.put("Amp Rack PC Bundle (Amp Rack Guitar Effects Pedal)", findViewById(R.id.premium_t));
+        detailText.put("Amp Rack PC Bundle with Source Code (Amp Rack Guitar Effects Pedal)", findViewById(R.id.ultra_t));
 
         TextView oldPrice = findViewById(R.id.old_price);
         oldPrice.setPaintFlags(oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -99,6 +116,10 @@ public class Purchase extends AppCompatActivity {
                     Log.d(TAG, "onBillingSetupFinished: billing client ready");
                     List<String> skuList = new ArrayList<>();
                     skuList.add(PRODUCT_ID);
+                    skuList.add("amprack_bundle_source");
+                    skuList.add("amprack_pc_bundle");
+                    skuList.add("amprack_complete");
+
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                     params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
 
@@ -116,30 +137,76 @@ public class Purchase extends AppCompatActivity {
                                         Log.d(TAG, "onSkuDetailsResponse: empty list");
                                         return;
                                     }
-                                    for (SkuDetails details: skuDetailsList) {
-                                        String price = details.getPrice();
-                                        Log.d(TAG, "onSkuDetailsResponse: " + String.format("%s", price));
-                                        priceView.setText(price);
-                                        materialButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                                                        .setSkuDetails(details)
-                                                        .build();
-                                                int responseCode = billingClient.launchBillingFlow((Activity) context, billingFlowParams).getResponseCode();
-                                                if (responseCode == BillingClient.BillingResponseCode.OK) {
-                                                    Log.d(TAG, "onClick: billing screen launched ok");
-                                                } else {
-                                                    Log.e(TAG, "onClick: unable to launch billing screen with " + responseCode, null);
+
+                                    Log.d(TAG, "onSkuDetailsResponse: all products " + skuDetailsList);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LinearLayout lt = findViewById(R.id.purchase_lt);
+                                            for (SkuDetails details: skuDetailsList) {
+                                                String price = details.getPrice();
+                                                Log.d(TAG, "onSkuDetailsResponse: " + String.format("[%s] %s", details.getTitle(), price));
+
+                                                LinearLayout ll = new LinearLayout(context);
+                                                ll.setOrientation(LinearLayout.VERTICAL);
+                                                LinearLayout.LayoutParams ltParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                ltParams.setMargins(0, 10, 0, 20);
+                                                ll.setLayoutParams(ltParams);
+                                                ll.setBackgroundColor(getResources().getColor(R.color.medium_orchid));
+                                                Button textView = new Button(context);
+                                                textView.setText("Tap to buy: " + price);
+                                                textView.setBackgroundColor(getResources().getColor(R.color.dark_orchid));
+                                                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+                                                TextView det = new TextView(context);
+                                                det.setLayoutParams(ltParams);
+                                                det.setText(details.getDescription());
+                                                det.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+                                                ll.addView(det);
+                                                ll.addView(textView);
+                                                lt.addView(ll);
+
+                                                textView.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                                                .setSkuDetails(details)
+                                                                .build();
+                                                        int responseCode = billingClient.launchBillingFlow((Activity) context, billingFlowParams).getResponseCode();
+                                                        if (responseCode == BillingClient.BillingResponseCode.OK) {
+                                                            Log.d(TAG, "onClick: billing screen launched ok");
+                                                        } else {
+                                                            Log.e(TAG, "onClick: unable to launch billing screen with " + responseCode, null);
+                                                        }
+                                                    }
+                                                });
+
+                                                if (details.getTitle().equals("Amp Rack Pro (Amp Rack Guitar Effects Pedal)")) {
+                                                    priceView.setText(price);
+                                                    materialButton.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                                                    .setSkuDetails(details)
+                                                                    .build();
+                                                            int responseCode = billingClient.launchBillingFlow((Activity) context, billingFlowParams).getResponseCode();
+                                                            if (responseCode == BillingClient.BillingResponseCode.OK) {
+                                                                Log.d(TAG, "onClick: billing screen launched ok");
+                                                            } else {
+                                                                Log.e(TAG, "onClick: unable to launch billing screen with " + responseCode, null);
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
-                                        });
-
-                                    }
+                                        }
+                                    });
                                 }
                             });
                 }
             }
+
             @Override
             public void onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
