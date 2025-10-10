@@ -122,7 +122,9 @@ target_link_libraries( # Specifies the target library.
         ${log-lib})
 
 target_include_directories(amprack PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
+        ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI},
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
 add_library(camera_textureview SHARED
         android_main.cpp
         camera_manager.cpp
